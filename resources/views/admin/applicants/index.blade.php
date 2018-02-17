@@ -41,7 +41,7 @@
 							<td>{{$applicant->name}}</td>
 							<td>{{$applicant->city}}</td>
 							<td> {{$applicant->job_status}}</td>
-							<td>{{$applicant->job->title}}</td>
+							<td>applicant job tilte goes here.</td>
 							<td><a href="/{{$applicant->cv}}"><img src="/uploads/applicants/cv/cv_icon.jpg" alt="" height="50px" width="50px"></a></td>
 							<td>
 								<div class="btn-group">
@@ -51,6 +51,7 @@
 									  </button>
 									  <ul class="dropdown-menu" role="menu">
 									    <li>View</li>
+									    <li><a href="{{route('applicant.hire',['id'=>$applicant->id])}}">Hire</a></li>
 									    <li><a href="{{route ('applicant.delete',['id' =>$applicant->id])}}">Trash</a>
 									    </li>
 									  </ul>

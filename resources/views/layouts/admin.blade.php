@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name', 'HRM') }}</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -32,7 +32,7 @@
 
                     <!-- Branding Image -->
                     <a class="navbar-brand" href="{{ url('/') }}">
-                        {{ config('app.name', 'Laravel') }}
+                        {{ config('app.name', 'HRM') }}
                     </a>
                 </div>
 
@@ -75,7 +75,7 @@
         </nav>
         <div class="container">
             <div class="row">
-                <div class="col-lg-4">
+                <div class="col-lg-3">
                     <ul class="list-group">
                         <li class="list-group-item">
                             <a href="{{route('category.create')}}">Create New category</a>
@@ -93,11 +93,25 @@
                             <a href="{{route('applicants')}}">Applicants</a>
                         </li>
                         <li class="list-group-item">
+                            <a href="{{route('applicants.hired')}}">Hired Applicants</a>
+                        </li> 
+                        <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li>
+                        <li class="list-group-item">
+                            <a href="{{route('users')}}">ALL Users</a>
+                        </li>
+                        @if(Auth::user()->admin)
+                        <li class="list-group-item">
+                            <a href="{{route('user.create')}}">Create Users</a>
+                        </li>   
+                        
+                        
+                        @endif
+                        
                    </ul> 
                 </div>
-                <div class="col-lg-8">
+                <div class="col-lg-9">
                     @yield('content')
                 </div>
                 

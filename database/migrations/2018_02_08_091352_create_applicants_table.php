@@ -20,7 +20,8 @@ class CreateApplicantsTable extends Migration
             $table->string('avatar');
             $table->string('city');
             $table->string('cv');
-            $table->boolean('job_status');
+            $table->string('job_status');
+            $table->boolean('recruited');
             $table->integer('job_id');
             $table->integer('category_id');
             $table->softDeletes();

@@ -166,8 +166,9 @@ return [
 
         /*
          * Package Service Providers...
+
          */
-        //Goodnesskay\LaravelPdfViewer\LaravelPdfViewerServiceProvider::class,
+        Goodnesskay\LaravelPdfViewer\LaravelPdfViewerServiceProvider::class,
 
         /*
          * Application Service Providers...

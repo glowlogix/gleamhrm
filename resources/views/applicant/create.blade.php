@@ -51,8 +51,8 @@
 			<div class="form-group">
 				<label for="job_status" >Job status</label>
 				<select name="job_status" id="job_status" class="form-control">
-					<option value="1">Currently working</option>
-					<option value="0">Currently not working</option>
+					<option value="Employed">Currently working</option>
+					<option value="Unemployed">Currently not working</option>
 				</select>
 			</div>
 			

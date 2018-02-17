@@ -11,23 +11,29 @@ use Auth;
 
 class ApplicantController extends Controller
 {
-    public function index(){
-        return view('admin.applicants.index')->with('applicants',Applicant::all()->with('job')->get());
+    public function index()
+    {
+        $applicants = Applicant::where('recruited', 0)->take(10)->get();
+        return view('admin.applicants.index')->with('applicants',$applicants);
     }
-    public function create(){
+    public function create()
+    {
     	return view('applicant.create')->with('categories',Category::all())->with('jobs',Job::all());
     }
-    public function singleApplicant($id){
+    public function singleApplicant($id)
+    {
         $applicant=Applicant::find($id);
         return view('admin.applicants.single')->with('applicant',$applicant);
     }
 
-    public function findjob(Request $request){
+    public function findjob(Request $request)
+    {
         $data=Job::select('title','id')->where('category_id',$request->id)->take(20)->get();
         return response()->json($data);
     }
 
-    public function store(Request $request){
+    public function store(Request $request)
+    {
     	$this->validate($request,[
     		'name' => 'required',
     		'fname' => 'required',
@@ -52,7 +58,8 @@ class ApplicantController extends Controller
     		'city' =>$request->city,
     		'job_status' => $request->job_status,
             'job_id' => $request->job,
-            'category_id'=>$request->category
+            'category_id'=>$request->category,
+            'recruited' => 0
     	]);
          Session::flash('success','application is submitted succesfully');
         return redirect()->back();
@@ -102,6 +109,25 @@ class ApplicantController extends Controller
         Session::flash('success','Seccessfuly Restored the applicant');
         return redirect()->back();
     }
+    public function hire($id)
+    {
+        $applicant=Applicant::find($id);
+        $applicant->recruited=1;
+        $applicant->save();
+        return redirect()->route('applicants.hired');
+    }
+    
+    public function retire($id)
+    {
+        $applicant=Applicant::find($id);
+        $applicant->recruited=0;
+        $applicant->save();
+        return redirect()->back();
+    }
 
-
+    public function hiredApplicants()
+        {
+            $applicants = Applicant::where('recruited', 1)->take(10)->get();
+            return view('admin.applicants.hiredApplicants')->with('applicants',$applicants);
+        }
 }

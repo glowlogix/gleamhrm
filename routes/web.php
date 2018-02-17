@@ -87,6 +87,39 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'ApplicantController@restore',
 		'as' => 'applicant.restore'
 	]);
+	Route::Get('/applicant/hire/{id}',[
+		'uses' => 'ApplicantController@hire',
+		'as' => 'applicant.hire'
+	]);
+	Route::Get('/applicant/retire/{id}',[
+		'uses' => 'ApplicantController@retire',
+		'as' => 'applicant.retire'
+	]);
+	
+	Route::Get('/applicants/hired',[
+		'uses' => 'ApplicantController@hiredApplicants',
+		'as' => 'applicants.hired'
+	]);
+	Route::Get('/user/create',[
+		'uses' => 'UsersController@create',
+		'as' => 'user.create'
+	]);
+	Route::Get('/users',[
+		'uses' => 'UsersController@index',
+		'as' => 'users'
+	]);
+	Route::Post('/user/store',[
+		'uses' => 'UsersController@store',
+		'as' => 'user.store'
+	]);
+	Route::Get('/user/admin/{id}',[
+		'uses' => 'UsersController@admin',
+		'as' => 'user.admin'
+	]);
+	Route::Get('/user/not_admin/{id}',[
+		'uses' => 'UsersController@Not_Admin',
+		'as' => 'user.not_admin'
+	]);
 });
 	Route::Get('/applicant/apply',[
 		'uses' => 'ApplicantController@create',
