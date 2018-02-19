@@ -2,9 +2,14 @@
 @section('content')
 
 <div class="panel panel-default">
-	<div class="panel-heading text-center">
-		<b>All users</b> <a class="btn pull-right" href="{{route('user.create')}}">Create new User</a>
-	</div>
+	<div class="panel-heading">
+						<p style="text-align: center;">Add User form</p>
+							<div align="right">
+       						 <a href="#" class="btn btn-info btn-lg" align="right">
+          						<span class="glyphicon glyphicon-plus"></span> Add User 
+      						  </a>
+ 							</div>
+					</div>
 	<div class="panel-body">
 		<table class="table">
 			<thead>
@@ -32,7 +37,7 @@
 						@endif	
 					</td>
 					<td>
-					 	Delete
+					 	Delete it 
 					 </td>
 				</tr>
 				
