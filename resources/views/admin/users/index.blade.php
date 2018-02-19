@@ -3,18 +3,26 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading">
-						<p style="text-align: center;">Add User form</p>
-							<div align="right">
-       						 <a href="#" class="btn btn-info btn-lg" align="right">
-          						<span class="glyphicon glyphicon-plus"></span> Add User 
-      						  </a>
- 							</div>
-					</div>
+
+			<div style="padding-left: 359px"><b style="text-align: center;" >Users</b></div>
+				@if(Auth::user()->admin)
+
+       				<div style="padding-left: 91%;">	 <a href="{{route('user.create')}}" class="btn btn-info btn-xs" align="right">
+          					<span class="glyphicon glyphicon-plus"></span> Add User 
+      					 </a>
+      				</div>	 
+      			@endif			 
+ 					
+ 				
+	</div>
 	<div class="panel-body">
 		<table class="table">
 			<thead>
 				<th> Name</th>
 				<th> Permissions  </th>
+				@if(Auth::user()->admin)
+				<th>Activation</th>
+				@endif
 				<th> Delete </th>
 			</thead>
 			<tbody class="table-bordered table-hover table-striped">
@@ -36,8 +44,17 @@
 							{{$user->admin}}
 						@endif	
 					</td>
+					@if(Auth::user()->admin)
 					<td>
-					 	Delete it 
+						@if($user->status)
+						<a href="{{route('user.disable',['id'=>$user->id])}}" class="btn btn-xs btn-danger">Disable </a>
+						@else
+						<a href="{{route('user.activate',['id'=>$user->id])}}" class="btn btn-xs btn-success">Activate</a>
+						@endif
+					</td>
+					@endif
+					<td>
+					 	Delete 
 					 </td>
 				</tr>
 				

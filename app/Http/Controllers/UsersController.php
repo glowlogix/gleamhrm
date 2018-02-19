@@ -27,13 +27,11 @@ class UsersController extends Controller
             'email' => 'required|email'
         ]);
        $user=User::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'fullname' => $request->fullname,
+            'name' => $request->name,
             'email' => $request->email,
-            'phone' => $request->phone,
             'admin' => $request->admin,
-            'password' => Hash::make($request->password)
+            'password' => Hash::make($request->password),
+            'status' => 1
             //'password' =>$request->password
         ]);
 
@@ -55,6 +53,21 @@ class UsersController extends Controller
         $user->save();
         Session::flash('success', 'Seccessfuly changed users permissions.');
         return redirect()->back();
+    }
 
+    public function ActivateUser($id){
+        $user= User::find($id);
+        $user->status=1;
+        $user->save();
+        Session::flash('success', 'User is Activated Seccessfuly.');
+        return redirect()->back();
+    }
+
+    public function DisableUser($id){
+        $user= User::find($id);
+        $user->status=0;
+        $user->save();
+        Session::flash('success', 'User is disabled Seccessfuly.');
+        return redirect()->back();
     }
 }
