@@ -153,6 +153,8 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	Route::get('/findjob','ApplicantController@findjob');
 
+	Route::get('sendmail', 'SendMailController@sendMail');
+
 	//Route::get('/ajax-job',function(){
 	//		$cat_id = Input::get('cat_id');
 	//	$jobs = Jobs::where('category_id', '=',$cat_id)->get();
