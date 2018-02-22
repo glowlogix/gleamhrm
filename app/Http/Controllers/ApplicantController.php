@@ -68,7 +68,7 @@ class ApplicantController extends Controller
             'recruited' => 0
     	]);
 
-                            Mail::to($request->email)->send(new Mymail());
+                            Mail::to($request->email)->send(new Mymail($request->email));
                             dd('mail send successfully');
                             
                     
