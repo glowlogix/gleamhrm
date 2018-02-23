@@ -120,6 +120,26 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@Not_Admin',
 		'as' => 'user.not_admin'
 	]);
+	Route::Get('/user/Activate/{id}',[
+		'uses' => 'UsersController@ActivateUser',
+		'as' => 'user.activate'
+	]);
+	Route::Get('/user/Disable/{id}',[
+		'uses' => 'UsersController@DisableUser',
+		'as' => 'user.disable'
+	]);
+	Route::Get('/employees',[
+		'uses' => 'EmployeeController@index',
+		'as' => 'employees'
+	]);
+	Route::Get('/employee/create',[
+		'uses' => 'EmployeeController@create',
+		'as' => 'employee.create'
+	]);
+	Route::Post('/employee/store',[
+		'uses' => 'EmployeeController@store',
+		'as' => 'employee.store'
+	]);
 });
 	Route::Get('/applicant/apply',[
 		'uses' => 'ApplicantController@create',
@@ -132,6 +152,8 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	Route::get('/findjob','ApplicantController@findjob');
+
+	Route::get('sendmail', 'SendMailController@sendMail');
 
 	//Route::get('/ajax-job',function(){
 	//		$cat_id = Input::get('cat_id');

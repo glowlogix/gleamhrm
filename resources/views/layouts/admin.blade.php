@@ -99,16 +99,11 @@
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="{{route('users')}}">ALL Users</a>
+                            <a href="{{route('users')}}">Users (administrator)</a>
                         </li>
-                        @if(Auth::user()->admin)
-                        <li class="list-group-item">
-                            <a href="{{route('user.create')}}">Create Users</a>
-                        </li>   
-                        
-                        
-                        @endif
-                        
+                         <li class="list-group-item">
+                            <a href="{{route('employees')}}">Employees</a>
+                        </li>
                    </ul> 
                 </div>
                 <div class="col-lg-9">

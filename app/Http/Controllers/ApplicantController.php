@@ -8,6 +8,9 @@ use App\Category;
 use App\Job;
 use Session;
 use Auth;
+use App\Mail\Mymail;
+use Mail;
+use App\Http\Requests;
 
 class ApplicantController extends Controller
 {
@@ -49,10 +52,13 @@ class ApplicantController extends Controller
         $cv=$request->cv;
         $cv_new_name=time().$cv->getClientOriginalName();
         $cv->move('uploads/applicants/cv', $cv_new_name);
+
     	$applicant= Applicant::create([
+
 
     		'name' => $request->name,
     		'fname' => $request->fname,
+            'email' =>$request->email,
     		'avatar' => 'uploads/applicants/image/' . $avatar_new_name,
     		'cv' => 'uploads/applicants/cv/' . $cv_new_name,
     		'city' =>$request->city,
@@ -61,6 +67,11 @@ class ApplicantController extends Controller
             'category_id'=>$request->category,
             'recruited' => 0
     	]);
+
+                            Mail::to($request->email)->send(new Mymail($request->email));
+                            dd('mail send successfully');
+                            
+                    
          Session::flash('success','application is submitted succesfully');
         return redirect()->back();
 
@@ -130,4 +141,9 @@ class ApplicantController extends Controller
             $applicants = Applicant::where('recruited', 1)->take(10)->get();
             return view('admin.applicants.hiredApplicants')->with('applicants',$applicants);
         }
+
+
+
+
+
 }

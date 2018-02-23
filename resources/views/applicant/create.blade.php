@@ -37,6 +37,10 @@
 				<input type="text" name="fname" placeholder="Enter name here" class="form-control">
 			</div>
 			<div class="form-group">
+				<label for="email">Email</label>
+				<input type="text" name="email" placeholder="Enter email here" class="form-control">
+			</div>
+			<div class="form-group">
 				<label for="avatar" >Image</label>
 				<input type="file" name="avatar" class="form-control">
 			</div>

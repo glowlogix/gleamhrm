@@ -5,67 +5,37 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		Create new User
+		<b>Create new User</b>
 	</div>
 	<div class="panel-body">
-			<form class="form-inline" action="{{route('user.store')}}" method="Post">
-				{{csrf_field()}}
-                <div class="row">
-                    <div class="form-group">
-                        <label for="fname">First Name</label>
-                        <input type="text" name="fname" placeholder="Enter first name here" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="lname">Last Name</label>
-                        <input type="text" name="lname" placeholder="Enter last name here" class="form-control">
-                    </div>
-
-                    <div class="form-group">
-                        <label for="fullname">Full Name</label>
-                        <input type="text" name="fullname" placeholder="Enter Full name here" class="form-control">
-                    </div>
+       
+                <form action="{{route('user.store')}}" method="Post">
+                {{csrf_field()}}
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" name="name" placeholder="Enter Name here" class="form-control">
                 </div>
-                <br>
-                <div class="row">
-
-                    <div class="form-group">
-                        <label for="email">Email</label>
-                        <input type="text" name="email" placeholder="Enter Email here" class="form-control">
-                    </div>
-
-                     <div class="form-group">
-                        <label for="phone">Phone</label>
-                        <input type="text" name="phone" placeholder="Enter Phone here" class="form-control">
-                    </div>
-
-				    <div class=" form-group">
-					   <label for="admin">Admin</label>
-    					  	<select>   
-                              <option value="1">Admin</option>
-                              <option value="audi">User</option>
-                            </select>
-				    </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="text" name="email" placeholder="Enter Name email Address" class="form-control">
                 </div>
-                <br>
-                <div class="row">
-                    <div class="checkbox">
-                         <label><input type="checkbox" name="zoho"> Invite to Zoho</label>
-                         <label><input type="checkbox" name="slack"> Invite to Slack</label>
-                         <label><input type="checkbox" name="asana"> Invite to Asana</label>
-                    </div>
-
-                    <div class=" form-group">
-                        <label for="password-confirm" class="control-label"> Password</label>
-                        <input id="password" type="password" class="form-control" name="password" required>
+                <div class="form-group">
+                    <label for="admin">Admin</label><br>
+                        <input type="hidden" name="admin" value="0" />
+                        <input type="checkbox" name="admin" value="1" />
                 </div>
-
-				<div class="form-group" align="center-block">
-					<button class="btn btn-success center-block" type="submit"> Create User</button>
-				</div>
+                <div class="form-group">
+                    <label for="email">Password</label>
+                    <input type="text" name="password" placeholder="Enter password here" class="form-control">
                 </div>
-			</form>
-		</div>
+                <div class="form-group">
+                    <button class="btn btn-success center-block" type="submit"> Create User</button>
+                </div>
+            </form>
+                
+           
+			
+	</div>
 </div>
 
 @stop
