@@ -54,7 +54,11 @@
 					</td>
 					@endif
 					<td>
-					 	Delete 
+						@if(Auth::user()->admin)
+					 	<a href="{{route('user.delete',['id'=>$user->id])}}" class="btn btn-danger">Delete</a> 
+					 	@else
+					 	delete
+					 	@endif
 					 </td>
 				</tr>
 				

@@ -6,9 +6,13 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Employee;
 use Session;
+use App\Traits\AsanaTrait;
+use App\Traits\SlackTrait;
+use App\Traits\ZohoTrait;
 
 class EmployeeController extends Controller
 {
+    use ZohoTrait;
 
     public function index()
     {
@@ -24,15 +28,24 @@ class EmployeeController extends Controller
    
     public function store(Request $request)
     {
-       
-       $user=Employee::create([
-            'fname' => $request->fname,
-            'lname' => $request->lname,
-            'fullname' => $request->fullname,
-            'email' => $request->email,
-            'contact' => $request->contact,
-            'password' => Hash::make($request->password),
-            'inviteToZoho' => $request->zoho,
+       $params = [
+            'emailAddress' => $request->email,
+            "primaryEmailAddress"   => $request->email,
+            "displayName"           => $request->fullname,
+            "password"              => "password",
+            "userExist"             => false,
+            "country"               => "pk"
+       ];
+
+       $response = $this->createZohoAccount( $params );
+       $user = Employee::create([
+            'fname'         => $request->fname,
+            'lname'         => $request->lname,
+            'fullname'      => $request->fullname,
+            'email'         => $request->email,
+            'contact'       => $request->contact,
+            'password'      => Hash::make($request->password),
+            'inviteToZoho'  => $request->zoho,
             'inviteToSlack' => $request->slack,
             'inviteToAsana' => $request->asana
         ]);

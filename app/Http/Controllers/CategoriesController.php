@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Category;
+use Session;
 class CategoriesController extends Controller
 {
     public function index(){
@@ -22,4 +23,18 @@ class CategoriesController extends Controller
     	$category->save();
     	return redirect()->back();
     }
+    public function edit($id)
+    {
+        $category=Category::find($id);
+        return view('admin.categories.edit')->with('category',$category);
+        
+    }
+    public function delete($id)
+    {
+        $category=Category::find($id);
+        $category->delete();
+        Session::flash('success','User is deleted successfully.');
+        return redirect()->back();
+    }
+
 }

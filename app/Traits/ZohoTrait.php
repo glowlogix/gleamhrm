@@ -1,7 +1,7 @@
 <?php
 namespace App\Traits;
 
-use SoapClient;
+use SoapClient as Client;
 
 trait ZohoTrait{
 
@@ -29,6 +29,7 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          * */
+       /* phpinfo();exit;*/
         $env             = $this->getEnv();
         $defaultParams   = [
             "role"                  => "member",

@@ -38,6 +38,16 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'categories'
 	]);
 
+	Route::get('/category/edit/{id}',[
+		'uses' => 'CategoriesController@index',
+		'as' => 'category.edit'
+	]);
+
+	Route::get('/category/delete/{id}',[
+		'uses' => 'CategoriesController@delete',
+		'as' => 'category.delete'
+	]);
+
 	Route::get('/job',[
 		'uses' => 'JobsController@index',
 		'as' => 'jobs'
@@ -112,6 +122,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@store',
 		'as' => 'user.store'
 	]);
+	Route::get('/user/delete/{id}',[
+		'uses' => 'UsersController@delete',
+		'as' => 'user.delete'
+	]);
 	Route::Get('/user/admin/{id}',[
 		'uses' => 'UsersController@admin',
 		'as' => 'user.admin'
@@ -160,6 +174,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	//	$jobs = Jobs::where('category_id', '=',$cat_id)->get();
 	//	return Response::json($jobs);
 	// });
+	
 
 
 Route::any('/search',function(){
@@ -169,3 +184,4 @@ Route::any('/search',function(){
         return view('searchview')->withDetails($applicant)->withQuery ( $q );
     else return view ('searchview')->withMessage('No Details found. Try to search again !');
 });
+Route::get('welcome-mail','UserController@welcomeMail');

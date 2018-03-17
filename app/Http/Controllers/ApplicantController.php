@@ -8,10 +8,9 @@ use App\Category;
 use App\Job;
 use Session;
 use Auth;
-use App\Mail\Mymail;
 use Mail;
+use App\Mail\Reminder;
 use App\Http\Requests;
-
 class ApplicantController extends Controller
 {
     public function index()
@@ -67,12 +66,9 @@ class ApplicantController extends Controller
             'category_id'=>$request->category,
             'recruited' => 0
     	]);
-
-                            Mail::to($request->email)->send(new Mymail($request->email));
-                            dd('mail send successfully');
-                            
-                    
-         Session::flash('success','application is submitted succesfully');
+                  
+       /* Mail::to($request->email)->send(new Reminder);*/
+        Session::flash('success','application is submitted succesfully');
         return redirect()->back();
 
     }
@@ -125,7 +121,7 @@ class ApplicantController extends Controller
         $applicant=Applicant::find($id);
         $applicant->recruited=1;
         $applicant->save();
-        return redirect()->route('applicants.hired');
+        return redirect()->back();
     }
     
     public function retire($id)

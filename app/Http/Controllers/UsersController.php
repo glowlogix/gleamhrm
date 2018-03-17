@@ -7,11 +7,13 @@ use Illuminate\Support\Facades\Hash;
 use App\User;
 use Session;
 
+
+
 class UsersController extends Controller
 {
-    
    public function index()
     {
+        
         return view('admin.users.index')->with('users',User::all());
     }
 
@@ -24,7 +26,8 @@ class UsersController extends Controller
     {
         $this->validate($request,[
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'password' => 'required'
         ]);
        $user=User::create([
             'name' => $request->name,
@@ -37,6 +40,15 @@ class UsersController extends Controller
 
         Session::flash('success', 'user added successfuly.');
         return redirect()->route('users');
+    }
+
+    public function delete($id)
+    {
+        $user= User::find($id);
+        $user->delete();
+
+        Session::flash('success','User is deleted successfully.');
+        return redirect()->back();
     }
 
      public function Admin($id){
