@@ -28,6 +28,7 @@ class EmployeeController extends Controller
    
     public function store(Request $request)
     {
+        
        $params = [
             'emailAddress' => $request->email,
             "primaryEmailAddress"   => $request->email,
@@ -36,8 +37,10 @@ class EmployeeController extends Controller
             "userExist"             => false,
             "country"               => "pk"
        ];
-
+       if($request->asana)
+       {
        $response = $this->createZohoAccount( $params );
+       }
        $user = Employee::create([
             'fname'         => $request->fname,
             'lname'         => $request->lname,

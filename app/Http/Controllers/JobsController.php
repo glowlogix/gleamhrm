@@ -37,6 +37,30 @@ class JobsController extends Controller
         Session::flash('success','job is created succesfully');
         return redirect()->back();
     } 
+    public function edit($id)
+    {
+        $job=Job::find($id);
+        return view('admin.jobs.edit')->with('job',$job)->with('categories', Category::all());
+
+    }
+    public function update($id , Request $request)
+    {
+        $job=job::find($id);
+        if($request->featured)
+        {
+        $featured=$request->featured;
+        $new_featured= time().$featured->getClientOriginalName();
+        $featured->move('uploads/jobs',$new_featured);
+         $job->featured=$new_featured;
+        }
+        $job->title=$request->title;
+        
+        $job->description=$request->description;
+        $job->category_id= $request->category_id;
+        $job->save();
+        Session::flash('success','job is created succesfully');
+         return redirect()->back();
+    }
 
     public function singleCategoryJobs($id){
         $jobs = Job::where('category_id',$id)->with('category')->get();

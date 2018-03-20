@@ -29,6 +29,16 @@ class CategoriesController extends Controller
         return view('admin.categories.edit')->with('category',$category);
         
     }
+    public function update($id, Request $request)
+    {
+        $category=Category::find($id);
+        $category->name=$request->name;
+        $category->save();
+        Session::flash('success', 'Category updated successfully.');
+        return redirect()->back();
+
+
+    }
     public function delete($id)
     {
         $category=Category::find($id);

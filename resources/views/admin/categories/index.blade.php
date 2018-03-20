@@ -13,8 +13,8 @@
 						@foreach($categories as $category)
 						<tr>
 							<td><a href="{{route ('singleCategoryJobs',['id' =>$category->id])}}">{{$category->name}}</a></td>
-							<td> Edite</td>
-							<td> Delete</td>
+							<td><a href="{{route ('category.edit',['id'=>$category->id])}}"> Edite </a></td>
+							<td> <a href="{{route('category.delete',['id' => $category->id])}}"> Delete </a></td>
 						</tr>
 						@endforeach
 					@else

@@ -39,8 +39,12 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	Route::get('/category/edit/{id}',[
-		'uses' => 'CategoriesController@index',
+		'uses' => 'CategoriesController@edit',
 		'as' => 'category.edit'
+	]);
+	Route::Post('/category/update/{id}',[
+		'uses' => 'CategoriesController@update',
+		'as' => 'category.update'
 	]);
 
 	Route::get('/category/delete/{id}',[
@@ -61,6 +65,18 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Post('/job/store',[
 		'uses' => 'JobsController@store',
 		'as' => 'job.store'
+	]);
+	Route::get('/job/edit/{id}',[
+		'uses' => 'JobsController@edit',
+		'as' => 'job.edit'
+	]);
+	Route::Post('/job/update/{id}',[
+		'uses' => 'JobsController@update',
+		'as' => 'job.update'
+	]);
+	Route::get('/job/delete',[
+		'uses' => 'JobsController@delete',
+		'as' => 'job.delete'
 	]);
 	Route::Get('/singleCategoryJobs/{id}',[
 		'uses' => 'JobsController@singleCategoryJobs',

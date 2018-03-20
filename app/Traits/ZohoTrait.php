@@ -29,7 +29,6 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          * */
-       /* phpinfo();exit;*/
         $env             = $this->getEnv();
         $defaultParams   = [
             "role"                  => "member",
@@ -44,7 +43,8 @@ trait ZohoTrait{
         ];
         $defaultParams = array_merge( $defaultParams, $params );
 
-        $client = new Client([
+        $client = new Client(
+         [
             'headers' => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Zoho-authtoken ' . $env['authToken']
