@@ -13,6 +13,7 @@ use App\Traits\ZohoTrait;
 class EmployeeController extends Controller
 {
     use ZohoTrait;
+    use SlackTrait;
 
     public function index()
     {
@@ -28,7 +29,8 @@ class EmployeeController extends Controller
    
     public function store(Request $request)
     {
-        
+        //token get from values.php in config folder 
+       $token = config('values.SlackToken');
        $params = [
             'emailAddress' => $request->email,
             "primaryEmailAddress"   => $request->email,
@@ -41,6 +43,12 @@ class EmployeeController extends Controller
        {
        $response = $this->createZohoAccount( $params );
        }
+       //check if slack is checked for invitation
+       if($request->slack){
+        //call the slack trait method in app/Traits folder
+        $this->createSlackInvitation($request->email,$token);
+       }
+       exit();
        $user = Employee::create([
             'fname'         => $request->fname,
             'lname'         => $request->lname,
