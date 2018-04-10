@@ -19,20 +19,41 @@
 					<th> Name</th>
 					<th> Email</th>
 					<th> Contact </th>
+					<th>Role</th>
 					<th>Invited to zoho</th>
 					<th> invited to slack </th>
-					<th>invited to asana</th>
+					<th> invited to asana </th>
+					@if(Auth::user()->admin)
+					<th>Manage Employees</th>					
+					@endif
 				</thead>
 				<tbody class="table-bordered table-hover table-striped">
-					@if($employees->count() > 0)		
+					@if(count($employees) > 0) 		
 						@foreach($employees as $employee)
 						<tr>		
 							<td>{{$employee->fullname}}</td>
-							<td>{{$employee->email}}</td>
-							<td> {{$employee->contact}}</td>
+							<td>{{$employee->org_email}}</td>
+							@if($employee->contact)
+						    <td>{{$employee->contact}}</td>
+							@else
+							<td>###</td>
+							@endif
+							<td>{{$employee->role}}</td>
+							<td></td>						
 							<td>{{$employee->inviteToZoho}}</td>
 							<td>{{$employee->inviteToSlack}}</td>
-							<td>{{$employee->inviteToZoho}}</td>
+							<td>{{$employee->inviteToAsana}}</td>	
+							<td>					
+							@if(Auth::user()->admin)
+							<form action="{{ route('employee.destroy' , $employee->id ) }}" method="POST">
+								{{ csrf_field() }}
+								<button class="btn btn-danger ">Delete</button>									
+							</form>
+							<br>
+							<a class="btn btn-info" href="{{route('employee.edit',['id'=>$employee->id])}}">Edit</a>
+							
+							@endif
+							</td>
 						</tr>
 						@endforeach
 					@else
@@ -42,5 +63,8 @@
 			</tbody>
 			</table>
 	</div>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+	
+	
 
 @stop

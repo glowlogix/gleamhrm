@@ -99,6 +99,9 @@
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li>
                         <li class="list-group-item">
+                                <a href="{{route('employee.trashed')}}">Trashed Employees</a>
+                            </li>
+                        <li class="list-group-item">
                             <a href="{{route('users')}}">Users (administrator)</a>
                         </li>
                          <li class="list-group-item">
@@ -107,6 +110,12 @@
                    </ul> 
                 </div>
                 <div class="col-lg-9">
+                        @if(Session::has('success'))
+                        <div class="alert alert-success">
+                            <a href="#" class="close" data-dismiss="alert">&times;</a>
+                            <strong>Success!</strong> {{Session::get('success')}}
+                        </div>
+                        @endif
                     @yield('content')
                 </div>
                 

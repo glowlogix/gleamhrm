@@ -170,9 +170,43 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'EmployeeController@store',
 		'as' => 'employee.store'
 	]);
+	//edit
+	Route::get('/employee/edit/{id}',[
+		'uses' => 'EmployeeController@edit',
+		'as' => 'employee.edit'
+	]);
+
+	//update
+	Route::Post('/employee/update/{id}',[
+		'uses' => 'EmployeeController@update',
+		'as' => 'employee.update'
+	]);
+
+	//trash
+	Route::Get('/employee/trashed',[
+		'uses' => 'EmployeeController@trashed',
+		'as' => 'employee.trashed'
+	]);
+
+	Route::Get('/employee/kill/{id}',[
+		'uses' => 'EmployeeController@kill',
+		'as' => 'employee.kill'
+	]);
+	Route::Get('/employee/restore/{id}',[
+		'uses' => 'EmployeeController@restore',
+		'as' => 'employee.restore'
+	]);
+
+	
+	//Delete Employee
+	Route::Post('/employee/delete/{id}',[
+		'uses' => 'EmployeeController@destroy',
+		'as' => 'employee.destroy'
+	]);
+
 });
 	Route::Get('/applicant/apply',[
-		'uses' => 'ApplicantController@create',
+		'uses' => 'ApplicantController@destroy',
 		'as' => 'applicant.apply'
 	]);
 

@@ -11,7 +11,7 @@ class Applicant extends Model
     protected $fillable=[
 		'name','fname','avatar','city','cv','job_status','job_id','category_id','recruited','email'
 	];
-	protected $dates =['deteled_at'];
+    protected $dates = ['deleted_at'];
     public function job()
     {
     	$this->belongsTo('App\Job');
