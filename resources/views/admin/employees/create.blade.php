@@ -41,8 +41,8 @@
 
                     <div class="form-group col-sm-4">
                         <br>
-                        <label for="password">Password:</label>
-                        <input style="width: 250px;"  type="password" class="form-control" id="password" placeholder="Enter Password" name="password"><br>
+                        <label for="password">Org Email:</label>
+                    <input style="width: 250px;"  type="text" class="form-control" id="org_email" placeholder="Enter Organization Email" name="org_email"><br>
                     </div>
                     <br><br><br>
 

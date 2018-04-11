@@ -206,7 +206,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 });
 	Route::Get('/applicant/apply',[
-		'uses' => 'ApplicantController@destroy',
+		'uses' => 'ApplicantController@create',
 		'as' => 'applicant.apply'
 	]);
 

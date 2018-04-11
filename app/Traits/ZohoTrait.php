@@ -10,13 +10,14 @@ trait ZohoTrait{
         return [
             'authToken'        => config('values.zohoToken'),
             'baseUrl'          => 'https://mail.zoho.com/api/organization/'.config('values.zohoOrgId'),
-            'accountId' => '6321206000000008002'
+            'getZohoBaseUrl' => 'http://mail.zoho.com/api/organization/',
+            'ZohoOrgId' => config('values.zohoOrgId')
         ];
     }
     
     protected function countUsersInOrg(){
         $env  = $this->getEnv();        
-        $url = 'http://mail.zoho.com/api/organization/'.config('values.zohoOrgId');
+        $url = $env['getZohoBaseUrl'].$env['ZohoOrgId'];
         $client = new Client(
             [
                'headers' => [
@@ -27,11 +28,17 @@ trait ZohoTrait{
            try{
                $response = $client->request('GET',$url);
                $data = json_decode($response->getBody());
-               $mailBoxCount = $data->data->usersCount; //USers count in org
-               return $mailBoxCount;
            } catch (RequestException $e) {
                return $e->getMessage();
            }
+            if ( $response->getStatusCode() == 200) {
+                $data = json_decode( $response->getBody());
+                $data = $data->data->usersCount; //USers count in org
+                
+            }else{
+                $data = json_decode( $response->getBody());
+            }
+            return response()->json( $data, 200 );
            
     }
 
@@ -39,7 +46,7 @@ trait ZohoTrait{
     protected function getZohoAccount(){
         $limit = $this->countUsersInOrg();
         $env  = $this->getEnv();        
-        $url = 'http://mail.zoho.com/api/organization/'.config('values.zohoOrgId').'/accounts';
+        $url = $env['getZohoBaseUrl'].$env['ZohoOrgId'].'/accounts';
         $client = new Client(
             [
                'headers' => [
@@ -50,15 +57,18 @@ trait ZohoTrait{
            try{
                $response = $client->request('GET',$url,[
                    'query' => [
-                       'limit' => $limit
+                       'limit' => $limit->original
                    ]
                ]);
-            $data = json_decode( $response->getBody()->getContents());
-            return $data;
            } catch (RequestException $e) {
                return $e->getMessage();
-           }
-           
+           }                
+            if ( $response->getStatusCode() == 200) {
+                $data = json_decode( $response->getBody()->getContents());
+            }else{
+                $data = json_decode( $response->getBody()->getContents() );
+            }
+            return response()->json( $data, 200 );
            
    
     }
@@ -112,7 +122,7 @@ trait ZohoTrait{
         return response()->json( $data, 200 );
     }
 
-    protected function updateZohoAccount( $params ){
+    protected function updateZohoAccount( $params , $acc_id){
        
         /*
          * "zuid": 663084666,
@@ -134,7 +144,7 @@ trait ZohoTrait{
             ]
         ]);
         try{
-            $response = $client->request('PUT', $env['baseUrl'] . '/accounts'.'/'.$env['accountId'], [
+            $response = $client->request('PUT', $env['baseUrl'] . '/accounts'.'/'.$acc_id ,[
                 'json' => $defaultParams
             ]);
         } catch (RequestException $e) {

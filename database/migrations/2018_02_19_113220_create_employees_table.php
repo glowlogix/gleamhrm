@@ -23,7 +23,8 @@ class CreateEmployeesTable extends Migration
             $table->string('password');
             $table->integer('zuid');
             $table->integer('account_id');
-            $table->string('org_email')->unique();;        
+            $table->string('org_email')->unique();     
+            $table->string('email')->unique();                 
             $table->string('role');    
             $table->softDeletes();            
             $table->boolean('inviteToZoho');
