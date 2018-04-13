@@ -10,6 +10,11 @@ use App\Traits\AsanaTrait;
 use App\Traits\SlackTrait;
 use App\Traits\ZohoTrait;
 use Mail;
+use File;
+use App\Mail\SlackInvitationMail;
+use App\Mail\ZohoInvitationMail;
+use App\Mail\CompanyPoliciesMail;
+use App\Mail\SimSimMail;
 
 class EmployeeController extends Controller
 {
@@ -32,56 +37,64 @@ class EmployeeController extends Controller
     public function store(Request $request)
     {
         //token get from values.php in config folder 
-       $token = config('values.SlackToken');
+        $token = config('values.SlackToken');      
+        $when = now()->addMinutes(1);
+        
+    //    $params = [
+    //         'emailAddress'          =>$request->org_email,
+    //         "primaryEmailAddress"   => $request->org_email,
+    //         "displayName"           => $request->fullname,
+    //         "password"              => "password",
+    //         "userExist"             => false,
+    //         "country"               => "pk"
+    //    ];
+        if($request->zoho)
+        {
+    //    $response = $this->createZohoAccount( $params );
+    //    if($response->original){
+    //     $user = Employee::create([
+    //                 'fname'         => $request->fname,
+    //                 'lname'         => $request->lname,
+    //                 'fullname'      => $request->fullname,
+    //                 'contact'       => $request->contact,                                        
+    //                 'password'      => $params['password'],   
+    //                 'zuid'          => $response->original->data->zuid,
+    //                 'account_id'    => $response->original->data->accountId,
+    //                  'org_email'     => $request->org_email,
+    //                  'email'        => $request->email,
+    //                 'status'        => 1,
+    //                 'role'          => 'member',
+    //                 'inviteToZoho'  => $request->zoho,
+    //                 'inviteToSlack' => $request->slack,
+    //                 'inviteToAsana' => $request->asana
+    //     ]);
+    //     if($user){
+             // Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input()));
+        
+    //     }
+    //    }     
 
-       $params = [
-            'emailAddress'          =>$request->org_email,
-            "primaryEmailAddress"   => $request->org_email,
-            "displayName"           => $request->fullname,
-            "password"              => "password",
-            "userExist"             => false,
-            "country"               => "pk"
-       ];
-       if($request->zoho)
-       {
-       $response = $this->createZohoAccount( $params );
-       if($response){
-        $user = Employee::create([
-                    'fname'         => $request->fname,
-                    'lname'         => $request->lname,
-                    'fullname'      => $request->fullname,
-                    'contact'       => $request->contact,                                        
-                    'password'      => $params['password'],   
-                    'zuid'          => $response->original->data->zuid,
-                    'account_id'    => $response->original->data->accountId,
-                     'org_email'     => $request->org_email,
-                     'email'        => $request->email,
-                    'status'        => 1,
-                    'role'          => 'member',
-                    'inviteToZoho'  => $request->zoho,
-                    'inviteToSlack' => $request->slack,
-                    'inviteToAsana' => $request->asana
-        ]);
-        if($user){
-            $data = array('name'=>$request->fname,'org_email'=>$request->org_email,'password'=>$params['password']);
-            Mail::send('admin.employees.mail', $data, function($message) {
-                $message->to('shahzaibjafferi888@gmail.com')->subject
-                   ('Zoho Invitation');
-                $message->from('noreply@glowlogix.com','GlowLogix');
-             });
+        
         }
-       }
-    
-
-       }
        //check if slack is checked for invitation
        if($request->slack){
-        //call the slack trait method in app/Traits folder
+        //call the  slack trait method in app/Traits folder
         $this->createSlackInvitation($request->org_email,$token);
-       }
 
-    return redirect()->back()->with('success','Employee is Added succesfully');         
+        //slack mail
+        Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
+        
+
+
     }
+    //policies    
+    Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
+    //simsim
+    Mail::to($request->org_email)->later($when, new SimSimMail());
+    
+   return redirect()->back()->with('success','Employee is updated succesfully');      
+    
+} 
     
     public function edit($id)
     {
