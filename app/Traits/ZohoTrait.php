@@ -5,7 +5,7 @@ use GuzzleHttp\Psr7\Request;
 
 trait ZohoTrait{
 
-    protected function getEnv()
+    protected function getEnv2()
     {
         return [
             'authToken'        => config('values.zohoToken'),
@@ -16,7 +16,7 @@ trait ZohoTrait{
     }
     
     protected function countUsersInOrg(){
-        $env  = $this->getEnv();        
+        $env  = $this->getEnv2();        
         $url = $env['getZohoBaseUrl'].$env['ZohoOrgId'];
         $client = new Client(
             [
@@ -45,7 +45,7 @@ trait ZohoTrait{
 
     protected function getZohoAccount(){
         $limit = $this->countUsersInOrg();
-        $env  = $this->getEnv();        
+        $env  = $this->getEnv2();        
         $url = $env['getZohoBaseUrl'].$env['ZohoOrgId'].'/accounts';
         $client = new Client(
             [
@@ -85,7 +85,7 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          * */
-        $env  = $this->getEnv();
+        $env  = $this->getEnv2();
 
         $defaultParams   = [
             "role"                  => "member",
@@ -130,7 +130,7 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          **/
-        $env             = $this->getEnv();
+        $env             = $this->getEnv2();
         $defaultParams   = [
             "mode"                  => "disableUser", /*enableUser*/
             "zuid"                  => "", #
@@ -166,7 +166,7 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          **/
-        $env             = $this->getEnv();
+        $env             = $this->getEnv2();
         $defaultParams   = [
             "mode"                  => "deleteUser",
             "zuid"                  => "", #

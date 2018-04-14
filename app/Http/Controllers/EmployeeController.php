@@ -18,9 +18,9 @@ use App\Mail\SimSimMail;
 
 class EmployeeController extends Controller
 {
+    use AsanaTrait;    
     use ZohoTrait;
     use SlackTrait;
-    use AsanaTrait;
 
     public function index()
      {
@@ -30,7 +30,8 @@ class EmployeeController extends Controller
 
    
     public function create()
-    { 
+    {  
+        
          return view('admin.employees.create');
     }
 
@@ -40,12 +41,14 @@ class EmployeeController extends Controller
         //token get from values.php in config folder 
         $token = config('values.SlackToken');      
         $when = now()->addMinutes(1);
+        $l=8;
+        $password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
         
        $params = [
             'emailAddress'          =>$request->org_email,
             "primaryEmailAddress"   => $request->org_email,
             "displayName"           => $request->fullname,
-            "password"              => "password",
+            "password"              => $password,
             "userExist"             => false,
             "country"               => "pk"
        ];
@@ -177,12 +180,10 @@ class EmployeeController extends Controller
         $emp->delete();
         return redirect()->back()->with('success','Employee is trash succesfully');     
         
-        $employee = Employee::where('id',$id);
-
 
         $arr = [
-            "zuid" => 665612602,
-            "password" => 'fb1040b5'
+            "zuid" => '',
+            "password" => ''
         ];
         $this->deleteZohoAccount($arr);
 
