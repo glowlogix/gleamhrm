@@ -1,0 +1,9 @@
+.teams{
+    list-style: none;
+    padding: 3px;
+}
+
+.head{
+    color: dimgray;
+    text-decoration: underline;
+}

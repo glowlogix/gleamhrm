@@ -116,6 +116,7 @@ trait ZohoTrait{
 
         if ( $response->getStatusCode() == 200) {
             $data = json_decode( $response->getBody()->getContents());
+            
         }else{
             $data = json_decode( $response->getBody()->getContents() );
         }

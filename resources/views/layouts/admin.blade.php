@@ -11,6 +11,7 @@
     <title>{{ config('app.name', 'HRM') }}</title>
 
     <!-- Styles -->
+    <link href="{{ asset('css/data.css') }}" rel="stylesheet">
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
    @yield('styles')
@@ -18,6 +19,7 @@
 </head>
 <body>
     <div id="app">
+    
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
@@ -116,6 +118,7 @@
                             <strong>Success!</strong> {{Session::get('success')}}
                         </div>
                         @endif
+
                     @yield('content')
                 </div>
                 
@@ -137,5 +140,6 @@
     @endif
     </script>
     @yield('scripts')
+
 </body>
 </html>

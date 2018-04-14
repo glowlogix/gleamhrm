@@ -5,6 +5,7 @@ return [
     'SlackToken' => env('slackToken'),
     'zohoToken' => env('zohoToken'),
     'zohoOrgId' => env('zohoOrgId'),
-    'adminPassword' => env('adminPassword')
+    'adminPassword' => env('adminPassword'),
+    'asanaToken' => env('asanaToken')
 
 ];

@@ -49,7 +49,7 @@
                     <div class="form-group  col-sm-4" style="padding-left: 80px;">
                         <br>
                      <label><input type="hidden" name="asana" value="0" />
-                            <input type="checkbox" name="asana" value="1" /> Invite to Asana
+                            <input type="checkbox" class="asana" name="asana" value="1" /> Invite to Asana
                     </label>
                     </div>
 
@@ -70,13 +70,45 @@
 
                     <div style="margin-bottom: 19px;">
                         <br>
-                    <button  type="submit" class="btn  btn-primary center-block">Add User</button>
+                          <ul id="asana_teams">
+
+                          </ul>
+                    <button  type="submit" id="sub" class="btn  btn-primary center-block">Add User</button>
+
                     </div>
               </form>
-                
-           
+
 			
 	</div>
-</div>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+$(document).ready(function(){
+
+    $('.asana').bind('click', function() {
+    if($(this).is(':checked')){
+        $.ajax({
+            url : 'https://app.asana.com/api/1.0/organizations/42654723239693/teams',
+            type : 'GET',
+            dataType : 'json',
+            headers: {
+                'Authorization' : 'Bearer 0/dc119c4c062c28f1fbd1e740b20ecd9b'
+               },
+            success:function(res){
+                $('#asana_teams').append("<h3 class='head'>Teams in Asana</h3>");
+                res.data.forEach(function(item,index) {
+                    $('#asana_teams').append("<li class='teams'>"+item.name+" <input name='teams[]' value='"+item.id+"' type='checkbox'></li>");
+
+                });
+            }
+
+        })
+    }
+});
+    
+});
+
+</script>
 
 @stop

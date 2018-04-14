@@ -20,6 +20,7 @@ class EmployeeController extends Controller
 {
     use ZohoTrait;
     use SlackTrait;
+    use AsanaTrait;
 
     public function index()
      {
@@ -40,39 +41,41 @@ class EmployeeController extends Controller
         $token = config('values.SlackToken');      
         $when = now()->addMinutes(1);
         
-    //    $params = [
-    //         'emailAddress'          =>$request->org_email,
-    //         "primaryEmailAddress"   => $request->org_email,
-    //         "displayName"           => $request->fullname,
-    //         "password"              => "password",
-    //         "userExist"             => false,
-    //         "country"               => "pk"
-    //    ];
+       $params = [
+            'emailAddress'          =>$request->org_email,
+            "primaryEmailAddress"   => $request->org_email,
+            "displayName"           => $request->fullname,
+            "password"              => "password",
+            "userExist"             => false,
+            "country"               => "pk"
+       ];
         if($request->zoho)
-        {
-    //    $response = $this->createZohoAccount( $params );
-    //    if($response->original){
-    //     $user = Employee::create([
-    //                 'fname'         => $request->fname,
-    //                 'lname'         => $request->lname,
-    //                 'fullname'      => $request->fullname,
-    //                 'contact'       => $request->contact,                                        
-    //                 'password'      => $params['password'],   
-    //                 'zuid'          => $response->original->data->zuid,
-    //                 'account_id'    => $response->original->data->accountId,
-    //                  'org_email'     => $request->org_email,
-    //                  'email'        => $request->email,
-    //                 'status'        => 1,
-    //                 'role'          => 'member',
-    //                 'inviteToZoho'  => $request->zoho,
-    //                 'inviteToSlack' => $request->slack,
-    //                 'inviteToAsana' => $request->asana
-    //     ]);
-    //     if($user){
-             // Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input()));
+        {            
+       $response = $this->createZohoAccount( $params );
+       if($response->original){
+        $this->addUserToTeam($request->teams,$request->org_email);
         
-    //     }
-    //    }     
+        $user = Employee::create([
+                    'fname'         => $request->fname,
+                    'lname'         => $request->lname,
+                    'fullname'      => $request->fullname,
+                    'contact'       => $request->contact,                                        
+                    'password'      => $params['password'],   
+                    'zuid'          => $response->original->data->zuid,
+                    'account_id'    => $response->original->data->accountId,
+                     'org_email'     => $request->org_email,
+                     'email'        => $request->email,
+                    'status'        => 1,
+                    'role'          => 'member',
+                    'inviteToZoho'  => $request->zoho,
+                    'inviteToSlack' => $request->slack,
+                    'inviteToAsana' => $request->asana
+        ]);
+        if($user){
+             Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input()));
+        
+        }
+       }     
 
         
         }
@@ -84,15 +87,13 @@ class EmployeeController extends Controller
         //slack mail
         Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
         
-
-
-    }
+      }
     //policies    
     Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
     //simsim
     Mail::to($request->org_email)->later($when, new SimSimMail());
     
-   return redirect()->back()->with('success','Employee is updated succesfully');      
+  return redirect()->back()->with('success','Employee is updated succesfully');      
     
 } 
     
@@ -176,14 +177,14 @@ class EmployeeController extends Controller
         $emp->delete();
         return redirect()->back()->with('success','Employee is trash succesfully');     
         
-       //s $employee = Employee::where('id',$id);
+        $employee = Employee::where('id',$id);
 
 
-        // $arr = [
-        //     "zuid" => 665612602,
-        //     "password" => 'fb1040b5'
-        // ];
-        // $this->deleteZohoAccount($arr);
+        $arr = [
+            "zuid" => 665612602,
+            "password" => 'fb1040b5'
+        ];
+        $this->deleteZohoAccount($arr);
 
     }
 }
