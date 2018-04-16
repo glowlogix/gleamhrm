@@ -75,8 +75,7 @@ class EmployeeController extends Controller
                     'inviteToAsana' => $request->asana
         ]);
         if($user){
-             Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input()));
-        
+            Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input(),$params['password']));            
         }
        }     
 

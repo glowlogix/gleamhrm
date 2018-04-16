@@ -13,6 +13,7 @@ class ZohoInvitationMail extends Mailable
     public $data;
     public $org_email;
     public $password;
+    public $getPassword;    
     public $fname;
 
     /**
@@ -20,9 +21,9 @@ class ZohoInvitationMail extends Mailable
      *
      * @return void
      */
-    public function __construct(array $data)
+    public function __construct(array $data, $getPassword)
     {
-         $data['password'] = '@password';
+         $data['password'] =  $getPassword;
          $this->fname = $data['fname'];
          $this->org_email = $data['org_email'];
         $this->password = $data['password'];

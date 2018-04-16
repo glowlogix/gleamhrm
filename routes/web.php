@@ -204,6 +204,13 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'employee.destroy'
 	]);
 
+	//attendance
+	Route::Get('/attendance',[
+		'uses' => 'AttendanceController@index',
+		'as' => 'attendance'
+	]);
+
+
 });
 	Route::Get('/applicant/apply',[
 		'uses' => 'ApplicantController@create',
