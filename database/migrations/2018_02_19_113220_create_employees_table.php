@@ -18,7 +18,6 @@ class CreateEmployeesTable extends Migration
             $table->string('fname');
             $table->string('lname');
             $table->string('fullname');
-            $table->string('email');
             $table->string('contact');
             $table->string('password');
             $table->integer('zuid');
