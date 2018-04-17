@@ -15,6 +15,7 @@ use App\Mail\SlackInvitationMail;
 use App\Mail\ZohoInvitationMail;
 use App\Mail\CompanyPoliciesMail;
 use App\Mail\SimSimMail;
+use DB;
 
 class EmployeeController extends Controller
 {
@@ -187,4 +188,65 @@ class EmployeeController extends Controller
         $this->deleteZohoAccount($arr);
 
     }
+    public function EmployeeLogin(){
+        return view('admin.employees.login');
+    }
+
+    public function postEmployeeLogin(Request $request){
+        $this->validate($request,[
+            'email' => 'required',
+            'password' => 'required'
+        ]);
+        $email = $request->email;
+        $password = $request->password;
+         $r = DB::table('employees')->where(['org_email' => $email , 'password' => $password , 'role' => 'member'])
+         ->get();
+
+         if(count($r)>0){
+            foreach($r as $data){                
+                $request->session()->put('emp_auth', $data->id);
+                return redirect()->route('employee.profile');
+            }
+        }       
+       
+         $messages = 'Username/Password Incorrect';
+         return redirect()->back()->with('msg',$messages);    
+         
+
+    }
+    public function EmployeeProfile(Request $request){
+        $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
+        return view('admin.employees.profile',['data' => $data]);
+        
+    }
+
+    public function UpdateEmployeeProfile(Request $request,$id){
+        $this->validate($request,[
+            'fname' => 'required',
+            'lname' => 'required',
+            'contact' => 'required',
+            'password' => 'required'
+        ]);
+        
+        $employee = Employee::find($id);
+        $employee->fname = $request->fname;
+        $employee->lname = $request->lname;
+        $employee->contact = $request->contact;
+        $employee->password = $request->password;
+
+        $employee->save();
+        
+        return redirect()->back()->with('success','Employee is updated succesfully');      
+
+        
+    }
+
+    public function EmployeeLogout(Request $request){
+        $request->session()->forget('emp_auth');
+        return redirect()->route('employee.login');
+        
+        
+    }
+  
+        
 }

@@ -18,8 +18,32 @@ Route::get('/', function () {
 });
 
 Auth::routes();
-
+Route::any('/register', function() {
+	abort(403);
+});
 Route::get('/home', 'HomeController@index')->name('home');
+//Employee Login
+Route::get('/employee/login', [
+	'as' => 'employee.login',
+	'uses' => 'EmployeeController@EmployeeLogin'
+]);
+Route::get('/employee/profile', [
+	'as' => 'employee.profile',
+	'uses' => 'EmployeeController@EmployeeProfile'
+]);
+Route::post('/employee/profile/{id}', [
+	'as' => 'employee.profile.update',
+	'uses' => 'EmployeeController@UpdateEmployeeProfile'
+]);
+
+Route::post('/employee/login', [
+	'as' => 'employee.login',
+	'uses' => 'EmployeeController@postEmployeeLogin'
+]);
+Route::post('/employee/logout', [
+	'as' => 'employee.logout',
+	'uses' => 'EmployeeController@EmployeeLogout'
+]);
 
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 

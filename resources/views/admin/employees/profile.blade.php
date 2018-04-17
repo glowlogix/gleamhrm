@@ -19,7 +19,8 @@
 </head>
 <body>
     <div id="app">
-    
+    @foreach($data as $d)
+
         <nav class="navbar navbar-default navbar-static-top">
             <div class="container">
                 <div class="navbar-header">
@@ -47,32 +48,27 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
-                        @guest
-                        <li><a href="{{ route('employee.login') }}">Employee Login</a></li>
-
-                            <li><a href="{{ route('login') }}">Login</a></li>
-                            <li><a  href="{{ route('register') }}">Register</a></li>
-                        @else
+                         @if (\Session::has('emp_auth'))
                             <li class="dropdown">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-                                    {{ Auth::user()->name }} <span class="caret"></span>
+                                    {{ $d->fname }} <span class="caret"></span>
                                 </a>
 
                                 <ul class="dropdown-menu">
                                     <li>
-                                        <a href="{{ route('logout') }}"
+                                        <a href="{{ route('employee.logout') }}"
                                             onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                             Logout
                                         </a>
 
-                                        <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
+                                        <form id="logout-form" action="{{ route('employee.logout') }}" method="POST" style="display: none;">
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
                                 </ul>
                             </li>
-                        @endguest
+                        @endif
                     </ul>
                 </div>
             </div>
@@ -82,37 +78,7 @@
                 <div class="col-lg-3">
                     <ul class="list-group">
                         <li class="list-group-item">
-                            <a href="{{route('category.create')}}">Create New category</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('categories')}}">Categories</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('job.create')}}">Create new Job</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('jobs')}}">Jobs</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('applicants')}}">Applicants</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('applicants.hired')}}">Hired Applicants</a>
-                        </li> 
-                        <li class="list-group-item">
-                            <a href="{{route('applicant.trashed')}}">Trashed</a>
-                        </li>
-                        <li class="list-group-item">
-                                <a href="{{route('employee.trashed')}}">Trashed Employees</a>
-                            </li>
-                        <li class="list-group-item">
-                            <a href="{{route('users')}}">Users (administrator)</a>
-                        </li>
-                         <li class="list-group-item">
-                            <a href="{{route('employees')}}">Employees</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('attendance')}}">Attendance</a>
+                            <a href="{{route('employee.profile')}}">Update Profile</a>
                         </li>
                    </ul> 
                 </div>
@@ -124,13 +90,51 @@
                         </div>
                         @endif
 
-                    @yield('content')
+                    
+
+
+                        <div class="panel panel-default">
+    <div class="panel-heading text-center">
+        <div ><b style="text-align: center;" >Update Profile</b></div>	
+    </div>
+    <div class="panel-body">
+        
+				<form action="{{route('employee.profile.update',['id'=>$d->id])}}" method="post">
+					{{csrf_field()}}
+					<div class="form-group">
+						<label for="fname">Firstname</label>
+						<input type="text" name="fname" value="{{$d->fname}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+						<label for="lname">Lastname</label>
+						<input type="text" name="lname" value="{{$d->lname}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <label for="contact">Contact</label>
+                        @if($d->contact)
+                        <input type="text" name="contact" value="{{$d->contact}}" class="form-control">
+                        @else
+                        <input type="text" name="contact" placeholder="Please enter contact" class="form-control">                        
+                        @endif
+                    </div>
+                    <div class="form-group">
+						<label for="password">Password</label>
+						<input type="text" name="password" value="{{$d->password}}" class="form-control">
+                    </div>
+                    <div class="form-group">
+                        <button class="btn btn-success center-block" type="submit"> Update</button>
+                    </div>
+
+
+                    
+				</form>
+    </div>
                 </div>
                 
             </div>
         </div>
 
-        
+      @endforeach  
     </div>
 
     <!-- Scripts -->

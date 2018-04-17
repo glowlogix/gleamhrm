@@ -5,7 +5,7 @@
         <meta http-equiv="X-UA-Compatible" content="IE=edge">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>HRM | GlowLogix</title>
 
         <!-- Fonts -->
         <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
@@ -71,8 +71,9 @@
                     @auth
                         <a href="{{ url('/home') }}">Home</a>
                     @else
+                       <a href="{{ route('employee.login') }}">Employee Login</a>
                         <a href="{{ route('login') }}">Login</a>
-                        <a class="reg" href="{{ route('register') }}">Register</a>
+                        <!-- <a class="reg" href="{{ route('register') }}">Register</a> -->
                     @endauth
                 </div>
             @endif
