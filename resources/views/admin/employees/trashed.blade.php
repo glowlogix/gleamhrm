@@ -4,7 +4,7 @@
 
 <div class="panel panel-default">
 		<div class="panel-heading text-center">
-		<b>	Applcants </b>
+		<b>	Applicants </b>
 		</div>
 		<div class="panel-body">
 

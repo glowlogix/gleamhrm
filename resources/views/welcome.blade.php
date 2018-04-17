@@ -72,7 +72,7 @@
                         <a href="{{ url('/home') }}">Home</a>
                     @else
                         <a href="{{ route('login') }}">Login</a>
-                        <a href="{{ route('register') }}">Register</a>
+                        <a class="reg" href="{{ route('register') }}">Register</a>
                     @endauth
                 </div>
             @endif
@@ -88,4 +88,17 @@
             </div>
         </div>
     </body>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+    <script type="text/javascript">
+
+$(document).ready(function(){
+
+    $('.reg').click(function(e) {
+        e.preventDefault();
+    });
+ 
+});
+
+</script>
 </html>
