@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@section('title')
+HRM|Attendance Sheet
+@endsection
 @section('content')
 
 <div class="panel panel-default">

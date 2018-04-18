@@ -1,7 +1,8 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Add Employee
+@endsection
 @section('content')
-	@include('admin.includes.errors')
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">

@@ -1,10 +1,12 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Applicants
+@endsection
 @section('content')
 
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
-		<b>	Applcants </b>
+		<b>	Applicants </b>
 		</div>
 		<div class="panel-body">
 			<form action="/search" method="POST" role="search">

@@ -1,4 +1,7 @@
 @extends('layouts.admin')
+@section('title')
+HRM|User Permitions
+@endsection
 @section('content')
 
 <div class="panel panel-default">

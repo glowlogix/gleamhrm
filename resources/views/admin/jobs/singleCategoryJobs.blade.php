@@ -23,7 +23,7 @@
 							<td><img src="/{{$job->featured}}" alt="{{$job->title}}" height="50px" width="50px"></td>
 							<td>{{$job->title}}</td>
 							<td>{{$job->category->name}}</td>
-							<td> Edite</td>
+							<td> Edit</td>
 							<td> Delete</td>
 						</tr>
 						@endforeach

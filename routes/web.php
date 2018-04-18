@@ -18,6 +18,7 @@ Route::get('/', function () {
 });
 
 Auth::routes();
+
 Route::any('/register', function() {
 	abort(403);
 });
@@ -27,6 +28,12 @@ Route::get('/employee/login', [
 	'as' => 'employee.login',
 	'uses' => 'EmployeeController@EmployeeLogin'
 ]);
+Route::post('/employee/login', [
+	'as' => 'employee.login',
+	'uses' => 'EmployeeController@postEmployeeLogin'
+]);
+
+
 Route::get('/employee/profile', [
 	'as' => 'employee.profile',
 	'uses' => 'EmployeeController@EmployeeProfile'
@@ -36,13 +43,21 @@ Route::post('/employee/profile/{id}', [
 	'uses' => 'EmployeeController@UpdateEmployeeProfile'
 ]);
 
-Route::post('/employee/login', [
-	'as' => 'employee.login',
-	'uses' => 'EmployeeController@postEmployeeLogin'
-]);
+
 Route::post('/employee/logout', [
 	'as' => 'employee.logout',
 	'uses' => 'EmployeeController@EmployeeLogout'
+]);
+
+//docs List
+
+Route::get('/docs/list', [
+	'as' => 'documents.list',
+	'uses' => 'EmployeeController@showDocs'
+]);
+Route::get('/docs/read/{id}', [
+	'as' => 'documents.read',
+	'uses' => 'EmployeeController@readDocs'
 ]);
 
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
@@ -232,6 +247,17 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Get('/attendance',[
 		'uses' => 'AttendanceController@index',
 		'as' => 'attendance'
+	]);
+
+	//upload Docs
+	Route::get('/upload/docs',[
+		'as' => 'documents.upload',
+		'uses' => 'DocumentsController@index'
+	]);
+
+	Route::post('/upload/docs',[
+		'as' => 'documents.upload',
+		'uses' => 'DocumentsController@uploadDocs'
 	]);
 
 

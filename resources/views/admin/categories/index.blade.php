@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Categories
+@endsection
 @section('content')
 
 	<div class="panel panel-default">
@@ -13,7 +15,7 @@
 						@foreach($categories as $category)
 						<tr>
 							<td><a href="{{route ('singleCategoryJobs',['id' =>$category->id])}}">{{$category->name}}</a></td>
-							<td><a href="{{route ('category.edit',['id'=>$category->id])}}"> Edite </a></td>
+							<td><a href="{{route ('category.edit',['id'=>$category->id])}}"> Edit </a></td>
 							<td> <a href="{{route('category.delete',['id' => $category->id])}}"> Delete </a></td>
 						</tr>
 						@endforeach

@@ -1,5 +1,7 @@
 @extends('layouts.app')
-
+@section('title')
+HRM|Register
+@endsection
 @section('content')
 <div class="container">
     <div class="row">

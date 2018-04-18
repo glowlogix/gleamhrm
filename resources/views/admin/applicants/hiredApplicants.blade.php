@@ -1,10 +1,12 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Hired Applicants
+@endsection
 @section('content')
 
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
-		<b>	Applcants </b>
+		<b>	Hired Applicants </b>
 		</div>
 		<div class="panel-body">
 			<table class="table">

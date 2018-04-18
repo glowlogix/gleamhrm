@@ -1,11 +1,13 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Create Job
+@endsection
 @section('content')
 @include('admin.includes.errors')
 	
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
-			<b>	Create new JOB</b>
+			<b>	Create new Job</b>
 		</div>
 		<div class="panel-body">
 		

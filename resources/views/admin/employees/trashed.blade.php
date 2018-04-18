@@ -1,10 +1,12 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Trash Employees
+@endsection
 @section('content')
 
 <div class="panel panel-default">
 		<div class="panel-heading text-center">
-		<b>	Applicants </b>
+		<b>	Trash Employees </b>
 		</div>
 		<div class="panel-body">
 

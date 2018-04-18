@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Trash Applicants
+@endsection
 @section('content')
 
 	<div class="panel panel-default">

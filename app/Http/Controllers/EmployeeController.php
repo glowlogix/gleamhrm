@@ -16,7 +16,8 @@ use App\Mail\ZohoInvitationMail;
 use App\Mail\CompanyPoliciesMail;
 use App\Mail\SimSimMail;
 use DB;
-
+use Response;
+use Illuminate\Support\Facades\Storage;
 class EmployeeController extends Controller
 {
     use AsanaTrait;    
@@ -223,9 +224,7 @@ class EmployeeController extends Controller
     public function UpdateEmployeeProfile(Request $request,$id){
         $this->validate($request,[
             'fname' => 'required',
-            'lname' => 'required',
-            'contact' => 'required',
-            'password' => 'required'
+            'lname' => 'required'
         ]);
         
         $employee = Employee::find($id);
@@ -245,6 +244,35 @@ class EmployeeController extends Controller
         $request->session()->forget('emp_auth');
         return redirect()->route('employee.login');
         
+        
+    }
+
+    public function showDocs(Request $request){
+        
+        $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
+        $data2 = DB::table('uploads')->get();
+        
+        return view('admin.employees.showDocs',['data' => $data,'files' => $data2]);
+    }
+
+    public function readDocs(Request $request,$id){
+            $data2 = DB::table('uploads')->where('id',$id)->first();
+            $storagePath = Storage::disk('local')->getAdapter()->getPathPrefix();
+                $path = $storagePath.$data2->filepath;
+                $ext =File::extension($path);
+                $content_types = '';
+                
+                if($ext=='pdf'){
+                    $content_types='application/pdf';
+                   }elseif ($ext=='doc') {
+                     $content_types='application/msword';  
+                   }elseif ($ext=='docx') {
+                     $content_types='application/vnd.openxmlformats-officedocument.wordprocessingml.document';  
+                   }
+                return response(file_get_contents($path), 200, [
+                    'Content-Type' => [$content_types]
+                ]);
+            
         
     }
   

@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Create Category
+@endsection
 @section('content')
 @include('admin.includes.errors')
 	

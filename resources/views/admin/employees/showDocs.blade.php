@@ -101,51 +101,21 @@
 
                         <div class="panel panel-default">
     <div class="panel-heading text-center">
-        <div ><b style="text-align: center;" >Update Profile</b></div>	
+        <div ><b style="text-align: center;" >All Documents</b></div>	
     </div>
     <div class="panel-body">
-        
-				<form class="form-inline" action="{{route('employee.profile.update',['id'=>$d->id])}}" method="post">
-					{{csrf_field()}}
-					<div class="form-group col-sm-4">
-						<label for="fname">Firstname</label>
-						<input style="width: 250px;" type="text" name="fname" value="{{$d->fname}}" class="form-control">
-                    </div>
-                    <div class="form-group col-sm-4">
-						<label for="lname">Lastname</label>
-						<input style="width: 250px;" type="text" name="lname" value="{{$d->lname}}" class="form-control">
-                    </div>
-                    <div class="form-group col-sm-4">
-                        <label for="contact">Contact</label>
-                        @if($d->contact)
-                        <input style="width: 250px;" type="text" name="contact" value="{{$d->contact}}" class="form-control">
-                        @else
-                        <input style="width: 250px;" type="text" name="contact" placeholder="Please enter contact" class="form-control">                        
-                        @endif
-                    </div>
-                    <div class="form-group col-sm-4">
-						<label for="password">Password</label>
-						<input style="width: 250px;" type="password" name="password" value="{{$d->password}}" class="form-control">
-                    </div>
-                    <div class="form-group col-sm-4" style="margin-top: 20px;padding-left: 80px;">
-                        <button class="btn btn-success center-block" type="submit"> Update</button>
-
-                    </div>
-                    <div class="form-group" style="margin-top: 20px;">
-                        <button type="reset" class="btn btn-success center-block"> Cancel</button>
-
-                    </div>
-
-                    
-				</form>
+    <ul>
+    @foreach($files as $file)
+      <li>
+        <a target="_blank" href="{{route('documents.read',['id' => $file->id])}}">{{$file->filename}}</a>   
+      </li>      
+      @endforeach 
+     
+      @endforeach
+<ul>
     </div>
-                </div>
-                
-            </div>
-        </div>
-
-      @endforeach  
     </div>
+
 
     <!-- Scripts -->
     <script src="{{ asset('js/app.js') }}"></script>

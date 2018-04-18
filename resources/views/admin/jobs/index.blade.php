@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Jobs
+@endsection
 @section('content')
 
 	<div class="panel panel-default">
@@ -23,7 +25,7 @@
 							<td><img src="/{{$job->featured}}" alt="{{$job->title}}" height="50px" width="50px"></td>
 							<td>{{$job->title}}</td>
 							<td>{{$job->category->name}}</td>
-							<td> <a href="{{route('job.edit',['id'=>$job->id])}}">Edite</a></td>
+							<td> <a href="{{route('job.edit',['id'=>$job->id])}}">Edit</a></td>
 							<td><a href="{{route ('job.delete',['id'=>$job->id])}}">Delete</a> </td>
 						</tr>
 						@endforeach

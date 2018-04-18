@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|All Employees
+@endsection
 @section('content')
 
 	<div class="panel panel-default">
@@ -10,6 +12,12 @@
        				<div style="padding-left: 85%;">	 <a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
           					<span class="glyphicon glyphicon-plus"></span> Add Employee
       					 </a>
+      				</div>	 
+					  <br>
+					  <div style="padding-left: 85%;">	 <a href="{{route('employee.trashed')}}"class="btn btn-info btn-xs" align="right">
+          					<span class="glyphicon glyphicon-plus">
+							  </span>Trashed Employees
+</a>
       				</div>	 
       			@endif		
 		</div>

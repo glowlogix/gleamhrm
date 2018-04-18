@@ -1,5 +1,7 @@
 @extends('layouts.admin')
-
+@section('title')
+HRM|Update Category
+@endsection
 @section('content')
 @include('admin.includes.errors')
 	

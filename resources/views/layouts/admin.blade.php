@@ -8,7 +8,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'HRM') }}</title>
+    <title>@yield('title')</title>
 
     <!-- Styles -->
     <link href="{{ asset('css/data.css') }}" rel="stylesheet">
@@ -70,6 +70,11 @@
                                             {{ csrf_field() }}
                                         </form>
                                     </li>
+                                    <li>
+                                    <a href="{{ route('documents.upload') }}">Upload Documents</a>
+
+                                    </li>
+
                                 </ul>
                             </li>
                         @endguest
@@ -102,9 +107,7 @@
                         <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li>
-                        <li class="list-group-item">
-                                <a href="{{route('employee.trashed')}}">Trashed Employees</a>
-                            </li>
+                      
                         <li class="list-group-item">
                             <a href="{{route('users')}}">Users (administrator)</a>
                         </li>
@@ -123,6 +126,7 @@
                             <strong>Success!</strong> {{Session::get('success')}}
                         </div>
                         @endif
+                        @include('admin.includes.errors')
 
                     @yield('content')
                 </div>
