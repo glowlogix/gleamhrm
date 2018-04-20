@@ -14,12 +14,12 @@ class UsersController extends Controller
    public function index()
     {
         
-        return view('admin.users.index')->with('users',User::all());
+        return view('admin.users.index',['title' => 'User Permitions'])->with('users',User::all());
     }
 
     public function create()
     {
-        return view('admin.users.create');
+        return view('admin.users.create',['title' => 'Add User']);
     }
 
     public function store(Request $request)

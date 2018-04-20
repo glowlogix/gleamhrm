@@ -8,10 +8,10 @@ use Session;
 class CategoriesController extends Controller
 {
     public function index(){
-    	return view('admin.categories.index')->with('categories',Category::all());
+    	return view('admin.categories.index',['title' => 'Categories'])->with('categories',Category::all());
     }
     public function create(){
-    	return view('admin.categories.create');
+    	return view('admin.categories.create',['title' => 'Create Category']);
     }
 
     public function store(Request $request){
@@ -26,7 +26,7 @@ class CategoriesController extends Controller
     public function edit($id)
     {
         $category=Category::find($id);
-        return view('admin.categories.edit')->with('category',$category);
+        return view('admin.categories.edit',['title' => 'Update Category'])->with('category',$category);
         
     }
     public function update($id, Request $request)

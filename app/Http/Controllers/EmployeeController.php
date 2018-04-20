@@ -27,14 +27,14 @@ class EmployeeController extends Controller
     public function index()
      {
         $data = Employee::where('role','member')->get();
-        return view('admin.employees.index')->with('employees',$data);
+        return view('admin.employees.index',['title' => 'All Employees'])->with('employees',$data);
     }
 
    
     public function create()
     {  
         
-         return view('admin.employees.create');
+         return view('admin.employees.create',['title' => 'Add Employee']);
     }
 
    
@@ -61,10 +61,11 @@ class EmployeeController extends Controller
         $this->addUserToTeam($request->teams,$request->org_email);
         
         $user = Employee::create([
-                    'fname'         => $request->fname,
-                    'lname'         => $request->lname,
+                    'firstname'     => $request->firstname,
+                    'lastname'      => $request->lastname,
                     'fullname'      => $request->fullname,
-                    'contact'       => $request->contact,                                        
+                    'contact'       => $request->contact,
+                    'emergency_contact' => $request->emergency_contact,                                        
                     'password'      => $params['password'],   
                     'zuid'          => $response->original->data->zuid,
                     'account_id'    => $response->original->data->accountId,
@@ -108,23 +109,24 @@ class EmployeeController extends Controller
             abort(404);
         }
 
-        return view('admin.employees.edit')->with('employee',$employee);
+        return view('admin.employees.edit',['title' => 'Update Employee'])->with('employee',$employee);
     }
 
     public function update(Request $request, $id)
     {
-        $this->validate($request,[
-            'fname' => 'required',
-            'lname' => 'required',
-            'org_email' => 'required|email'
-        ]);
+        // $this->validate($request,[
+        //     'firstname' => 'required',
+        //     'lastname' => 'required',
+        //     'org_email' => 'required|email'
+        // ]);
 
         $employee = Employee::find($id);
-        $employee->fname = $request->fname;
-        $employee->lname = $request->lname;
+        $employee->firstname = $request->firstname;
+        $employee->lastname = $request->lastname;
         $employee->role = $request->employee_id;
         $employee->org_email = $request->org_email;
         $employee->contact = $request->contact;
+        $employee->emergency_contact = $request->emergency_contact;
         
         
         //admin password get
@@ -156,7 +158,7 @@ class EmployeeController extends Controller
     public function trashed()
     {
         $employee=Employee::onlyTrashed()->get();
-        return view('admin.employees.trashed')->with('employees', $employee);
+        return view('admin.employees.trashed',['title' => 'Trash Employees'])->with('employees', $employee);
 
     }
 
@@ -178,16 +180,21 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $emp = Employee::find($id);
-        $emp->delete();
-        return redirect()->back()->with('success','Employee is trash succesfully');     
-        
+        $account_id = $emp->account_id;
+        $zuid = $emp->zuid;
+        $response = $emp->delete();
+        $adminPassword = config('values.adminPassword');
+        if($response){
 
         $arr = [
-            "zuid" => '',
-            "password" => ''
+            "zuid" => $zuid ,
+            "password" => $adminPassword
         ];
-        $this->deleteZohoAccount($arr);
 
+          $this->deleteZohoAccount($arr,$account_id);
+        }
+        return redirect()->back()->with('success','Employee is trash succesfully');     
+        
     }
     public function EmployeeLogin(){
         return view('admin.employees.login');
@@ -200,11 +207,11 @@ class EmployeeController extends Controller
         ]);
         $email = $request->email;
         $password = $request->password;
-         $r = DB::table('employees')->where(['org_email' => $email , 'password' => $password , 'role' => 'member'])
+         $row = DB::table('employees')->where(['org_email' => $email , 'password' => $password , 'role' => 'member'])
          ->get();
 
-         if(count($r)>0){
-            foreach($r as $data){                
+         if(count($row)>0){
+            foreach($row as $data){                
                 $request->session()->put('emp_auth', $data->id);
                 return redirect()->route('employee.profile');
             }
@@ -217,22 +224,24 @@ class EmployeeController extends Controller
     }
     public function EmployeeProfile(Request $request){
         $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-        return view('admin.employees.profile',['data' => $data]);
+        return view('admin.employees.profile',['data' => $data,'title' => 'Update Profile']);
         
     }
 
     public function UpdateEmployeeProfile(Request $request,$id){
+    
         $this->validate($request,[
-            'fname' => 'required',
-            'lname' => 'required'
+            'firstname' => 'required',
+            'lastname' => 'required'
         ]);
         
         $employee = Employee::find($id);
-        $employee->fname = $request->fname;
-        $employee->lname = $request->lname;
+        $employee->firstname = $request->firstname;
+        $employee->lastname = $request->lastname;
         $employee->contact = $request->contact;
         $employee->password = $request->password;
-
+        $employee->emergency_contact = $request->emergency_contact;
+        
         $employee->save();
         
         return redirect()->back()->with('success','Employee is updated succesfully');      
@@ -248,33 +257,13 @@ class EmployeeController extends Controller
     }
 
     public function showDocs(Request $request){
-        
         $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-        $data2 = DB::table('uploads')->get();
-        
-        return view('admin.employees.showDocs',['data' => $data,'files' => $data2]);
+        $data2 = DB::table('uploads')->where('status','=',1)->get();
+        return view('admin.employees.showDocs',['data' => $data,'files' => $data2,'title' => 'All Documents']);
     }
 
-    public function readDocs(Request $request,$id){
-            $data2 = DB::table('uploads')->where('id',$id)->first();
-            $storagePath = Storage::disk('local')->getAdapter()->getPathPrefix();
-                $path = $storagePath.$data2->filepath;
-                $ext =File::extension($path);
-                $content_types = '';
-                
-                if($ext=='pdf'){
-                    $content_types='application/pdf';
-                   }elseif ($ext=='doc') {
-                     $content_types='application/msword';  
-                   }elseif ($ext=='docx') {
-                     $content_types='application/vnd.openxmlformats-officedocument.wordprocessingml.document';  
-                   }
-                return response(file_get_contents($path), 200, [
-                    'Content-Type' => [$content_types]
-                ]);
-            
         
-    }
+    
   
         
 }

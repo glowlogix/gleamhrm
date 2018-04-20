@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|Update Job
+HRM|{{$title}}
 @endsection
 @section('content')
 @include('admin.includes.errors')

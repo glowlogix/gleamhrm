@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|User Permitions
+HRM|{{$title}}
 @endsection
 @section('content')
 

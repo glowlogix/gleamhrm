@@ -9,7 +9,7 @@ class AttendanceController extends Controller
 {
     public function index()
      {
-        return view('admin.attendance.index');
+        return view('admin.attendance.index',['title' => 'Attendance Sheet']);
     }
 
 }

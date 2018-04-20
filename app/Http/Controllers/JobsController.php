@@ -9,11 +9,11 @@ use Session;
 class JobsController extends Controller
 {
     public function index(){
-    	return view('admin.jobs.index')->with('jobs',Job::all())->with('categories',Category::all());
+    	return view('admin.jobs.index',['title' => 'Jobs'])->with('jobs',Job::all())->with('categories',Category::all());
     }
 
     public function create(){
-    	return view('admin.jobs.create')->with('categories', Category::all());
+    	return view('admin.jobs.create',['title' => 'Create Job'])->with('categories', Category::all());
     }
 
     public function store(Request $request)
@@ -40,7 +40,7 @@ class JobsController extends Controller
     public function edit($id)
     {
         $job=Job::find($id);
-        return view('admin.jobs.edit')->with('job',$job)->with('categories', Category::all());
+        return view('admin.jobs.edit',['title' => 'Update Job'])->with('job',$job)->with('categories', Category::all());
 
     }
     public function update($id , Request $request)
@@ -64,6 +64,6 @@ class JobsController extends Controller
 
     public function singleCategoryJobs($id){
         $jobs = Job::where('category_id',$id)->with('category')->get();
-        return view('admin.jobs.singleCategoryJobs')->with('jobs',$jobs);
+        return view('admin.jobs.singleCategoryJobs',['title' => 'Jobs'])->with('jobs',$jobs);
     }
 }

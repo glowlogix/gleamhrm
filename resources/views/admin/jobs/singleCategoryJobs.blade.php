@@ -1,5 +1,5 @@
 @extends('layouts.admin')
-
+@section('title') HRM|{{$title}} @endsection
 @section('content')
 
 	<div class="panel panel-default">

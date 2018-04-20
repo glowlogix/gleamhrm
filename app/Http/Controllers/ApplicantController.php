@@ -16,7 +16,7 @@ class ApplicantController extends Controller
     public function index()
     {
         $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        return view('admin.applicants.index')->with('applicants',$applicants);
+        return view('admin.applicants.index',['title' => 'Applicants'])->with('applicants',$applicants);
     }
     public function create()
     {
@@ -96,7 +96,7 @@ class ApplicantController extends Controller
     public function trashed()
     {
         $applicants=Applicant::onlyTrashed()->get();
-        return view('admin.applicants.trashed')->with('applicants', $applicants);
+        return view('admin.applicants.trashed',['title' => 'Trash Applicants'])->with('applicants', $applicants);
 
     }
 
@@ -135,7 +135,7 @@ class ApplicantController extends Controller
     public function hiredApplicants()
         {
             $applicants = Applicant::where('recruited', 1)->take(10)->get();
-            return view('admin.applicants.hiredApplicants')->with('applicants',$applicants);
+            return view('admin.applicants.hiredApplicants',['title' => 'Hired Applicants'])->with('applicants',$applicants);
         }
 
 

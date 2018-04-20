@@ -55,11 +55,6 @@ Route::get('/docs/list', [
 	'as' => 'documents.list',
 	'uses' => 'EmployeeController@showDocs'
 ]);
-Route::get('/docs/read/{id}', [
-	'as' => 'documents.read',
-	'uses' => 'EmployeeController@readDocs'
-]);
-
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	Route::get('/category/create',[
@@ -259,7 +254,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'documents.upload',
 		'uses' => 'DocumentsController@uploadDocs'
 	]);
-
+	Route::post('/upload/status/{id}',[
+		'as' => 'documents.status',
+		'uses' => 'DocumentsController@statusChange'
+	]);
 
 });
 	Route::Get('/applicant/apply',[

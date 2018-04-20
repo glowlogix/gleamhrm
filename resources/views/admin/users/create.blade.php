@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|Add User
+HRM|{{$title}}
 @endsection
 @section('content')
 	@include('admin.includes.errors')

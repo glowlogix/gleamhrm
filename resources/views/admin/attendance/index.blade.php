@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|Attendance Sheet
+HRM|{{$title}}
 @endsection
 @section('content')
 

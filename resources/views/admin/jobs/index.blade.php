@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|Jobs
+HRM|{{$title}}
 @endsection
 @section('content')
 
