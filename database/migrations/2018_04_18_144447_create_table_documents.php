@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class Uploads extends Migration
+class CreateTableDocument extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,12 @@ class Uploads extends Migration
      */
     public function up()
     {
-        Schema::create('uploads', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('filename');
-            $table->string('originalname');
+            $table->string('name');
+            $table->string('url');
             $table->integer('status')->default(1);
+            $table->timestamps();
         });
     }
 
@@ -28,7 +29,6 @@ class Uploads extends Migration
      */
     public function down()
     {
-        chema::dropIfExists('uploads');
-
+        chema::dropIfExists('documents');
     }
 }

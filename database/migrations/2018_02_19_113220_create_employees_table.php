@@ -20,17 +20,18 @@ class CreateEmployeesTable extends Migration
             $table->string('fullname');
             $table->string('contact');
             $table->string('emergency_contact');            
+            $table->string('emergency_contact_relationship');
             $table->string('password');
             $table->integer('zuid');
             $table->integer('account_id');
             $table->string('org_email')->unique();     
             $table->string('email')->unique();                 
             $table->string('role');    
-            $table->softDeletes();            
             $table->boolean('inviteToZoho');
             $table->boolean('inviteToSlack');
             $table->boolean('inviteToAsana');
-            $table->integer('status')->default(0);
+            $table->integer('status')->default(1);
+            $table->softDeletes();
             $table->timestamps();
         });
     }

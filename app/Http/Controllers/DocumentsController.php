@@ -1,12 +1,12 @@
 <?php
 
 namespace App\Http\Controllers;
-use Session;
+
 use DB;
 use File;
-
-use Illuminate\Http\Request;
+use Session;
 use App\Http\Requests;
+use Illuminate\Http\Request;
 
 class DocumentsController extends Controller
 {
@@ -16,29 +16,28 @@ class DocumentsController extends Controller
     }
 
     public function uploadDocs(Request $request){
-           $this->validate($request, [
-           'docs.*'=>'required|mimes:doc,docx,pdf|max:2000',
-           'application_name' => 'required'
-           ]);
+        $this->validate($request, [
+            'docs.*' => 'required|mimes:doc,docx,pdf|max:2000',
+            'application_name' => 'required'
+        ]);
 
-          $files = $request->file('docs');    
-          $application_name = $request->application_name;
-          foreach($files as $file){
-           
-          $Uniquefilename = uniqid().$file->getClientOriginalName();
-          $path = public_path('storage/public/');
+        $files = $request->file('docs');
+        $application_name = $request->application_name;
+        foreach ($files as $file) {
 
-          $fileObject = $file->move($path, $Uniquefilename);
-          if($fileObject){
-            DB::table('uploads')->insert([
-                'filename' => $Uniquefilename,
-                'originalname' => $application_name,
-                'status' => 1      
-            ]);
-          }
+            $Uniquefilename = uniqid() . $file->getClientOriginalName();
+            $path = public_path('storage/public/');
+
+            $fileObject = $file->move($path, $Uniquefilename);
+            if ($fileObject) {
+                DB::table('uploads')->insert([
+                    'filename' => $Uniquefilename,
+                    'originalname' => $application_name
+                ]);
+            }
         }
-          Session::flash('success','File is upploaded succesfully');
-          return redirect()->back();
+        Session::flash('success', 'File is upploaded succesfully');
+        return redirect()->back();
     }
 
     public function statusChange(Request $request,$id){
@@ -51,6 +50,5 @@ class DocumentsController extends Controller
         Session::flash('success','Status is change succesfully');            
         
         return redirect()->back();
-
     }
 }

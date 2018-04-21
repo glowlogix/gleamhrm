@@ -11,17 +11,33 @@ use Auth;
 use Mail;
 use App\Mail\Reminder;
 use App\Http\Requests;
+
 class ApplicantController extends Controller
 {
+    public function __construct()
+    {
+    }
+
     public function index()
     {
+        $this->meta['title'] = 'Applicants';
+
         $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        return view('admin.applicants.index',['title' => 'Applicants'])->with('applicants',$applicants);
+        return view('admin.applicants.index',$this->meta)->with('applicants',$applicants);
     }
+
+    /**
+     * @return $this
+     */
     public function create()
     {
     	return view('applicant.create')->with('categories',Category::all())->with('jobs',Job::all());
     }
+
+    /**
+     * @param $id
+     * @return $this
+     */
     public function singleApplicant($id)
     {
         $applicant=Applicant::find($id);
@@ -70,7 +86,6 @@ class ApplicantController extends Controller
        /* Mail::to($request->email)->send(new Reminder);*/
         Session::flash('success','application is submitted succesfully');
         return redirect()->back();
-
     }
 
     public function single_Cat_Job($id)
@@ -97,7 +112,6 @@ class ApplicantController extends Controller
     {
         $applicants=Applicant::onlyTrashed()->get();
         return view('admin.applicants.trashed',['title' => 'Trash Applicants'])->with('applicants', $applicants);
-
     }
 
     public function kill($id)
@@ -116,6 +130,7 @@ class ApplicantController extends Controller
         Session::flash('success','Seccessfuly Restored the applicant');
         return redirect()->back();
     }
+
     public function hire($id)
     {
         $applicant=Applicant::find($id);
