@@ -124,6 +124,9 @@
                         <li class="list-group-item">
                             <a href="{{route('attendance')}}">Attendance</a>
                         </li>
+                        <li class="list-group-item">
+                            <a href="{{route('leaves')}}">Leaves</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-lg-9">

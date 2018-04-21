@@ -1,5 +1,7 @@
 @extends('layouts.admin') @section('content')
-
+@section('title')
+{{ config('app.name', 'HRM') }}|{{$title}}
+@endsection
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
 		<b>Upload Documents</b>
@@ -17,12 +19,12 @@
 
 						{{ csrf_field() }}
 						<br />
-						<label fro="application_name">Enter Document Name:</label>
-						<input type="text" class="form-control" placeholder="Enter Document Name" name="application_name">
+						<label for="document_name">Enter Document Name:</label>
+						<input type="text" class="form-control" placeholder="Enter Document Name" name="document_name">
 						<br>
-						<label for="docs">Documents(can attach more than one):</label>
+						<label for="documents">Documents(can attach more than one):</label>
 						
-						<input type="file" class="form-control" name="docs[]" multiple />
+						<input type="file" class="form-control" name="documents[]" multiple />
 
 						<br />
 						<input type="submit" class="btn btn-primary" value="Upload" />
@@ -42,7 +44,7 @@
 						<tbody>
 							<tr>
 								<td>
-									<p>{{ $file->originalname }}</p>
+									<p>{{ $file->name }}</p>
 								</td>
 								<td>
 									<form method="POST" action="{{route('documents.status',$file->id)}}">

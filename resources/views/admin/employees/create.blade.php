@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content')
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
 
 <div class="panel panel-default">
     <div class="panel-heading text-center">
@@ -41,7 +41,15 @@
 
                 <label for="emergency_contact">Emergency Contact#:</label>
                 <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number"
-                    name="contact">
+                    name="emergency_contact">
+            </div>
+
+            <div class="form-group col-sm-4">
+                <br>
+
+                <label for="emergency_contact">Emergency Contact Relationship:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="emergency_contact_relationship" placeholder="Enter Emergency Contact Relationship"
+                    name="emergency_contact_relationship">
             </div>
 
             <div class="form-group col-sm-4">

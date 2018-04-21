@@ -9,7 +9,7 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>HRM|{{ $title}}</title>
+    <title>{{ config('app.name', 'HRM') }}|{{ $title}}</title>
 
     <!-- Styles -->
    @yield('styles')
@@ -113,10 +113,10 @@
                                 <tbody>
                                     <tr>
                                         <td>
-                                            <p>{{ $file->originalname }}</p>
+                                            <p>{{ $file->name }}</p>
                                         </td>
                                         <td>
-                                           <a target="_blank" href="{{asset('storage/public/'.$file->filename)}}">{{ $file->filename }}</a>  
+                                           <a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>  
                                         </td>
                                     </tr>
                                 </tbody>

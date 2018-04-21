@@ -11,19 +11,18 @@ use Auth;
 use Mail;
 use App\Mail\Reminder;
 use App\Http\Requests;
+use App\Traits\MetaTrait;
 
 class ApplicantController extends Controller
 {
-    public function __construct()
-    {
-    }
+    use MetaTrait;
+    
 
     public function index()
     {
         $this->meta['title'] = 'Applicants';
-
         $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        return view('admin.applicants.index',$this->meta)->with('applicants',$applicants);
+        return view('admin.applicants.index',$this->metaResponse())->with('applicants',$applicants);
     }
 
     /**
@@ -110,8 +109,9 @@ class ApplicantController extends Controller
 
     public function trashed()
     {
+        $this->meta['title'] = 'Trash Applicants';        
         $applicants=Applicant::onlyTrashed()->get();
-        return view('admin.applicants.trashed',['title' => 'Trash Applicants'])->with('applicants', $applicants);
+        return view('admin.applicants.trashed',$this->metaResponse())->with('applicants', $applicants);
     }
 
     public function kill($id)
@@ -149,8 +149,10 @@ class ApplicantController extends Controller
 
     public function hiredApplicants()
         {
+
+            $this->meta['title'] = 'Hired Applicants';                    
             $applicants = Applicant::where('recruited', 1)->take(10)->get();
-            return view('admin.applicants.hiredApplicants',['title' => 'Hired Applicants'])->with('applicants',$applicants);
+            return view('admin.applicants.hiredApplicants',$this->metaResponse())->with('applicants',$applicants);
         }
 
 

@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('title')
-HRM|{{$title}}
+{{ config('app.name', 'HRM') }}|{{$title}}
 @endsection
 @section('content')
 

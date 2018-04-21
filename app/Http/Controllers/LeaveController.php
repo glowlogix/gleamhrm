@@ -2,26 +2,27 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\MetaTrait;
-use App\Attandance;
-use App\Employee;
 use App\Leave;
+use App\Employee;
+use Illuminate\Http\Request;
+use App\Traits\MetaTrait;
 
-class AttendanceController extends Controller
+class LeaveController extends Controller
 {
     use MetaTrait;
     
+    /**
+     * Display a listing of the resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
     public function index($id)
     {
-        $this->meta['title'] = 'Show Attendance';  
-        $attendance = Attandance::where('employee_id',$id)->get();
+        $this->meta['title'] = 'Show Leaves';  
+        $leaves = Leave::where('employee_id',$id)->get();
         
-        return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
-     
+        return view('admin.leaves.showleaves',$this->metaResponse(),['leaves' => $leaves]);
     }
-
 
     /**
      * Show the form for creating a new resource.
@@ -30,10 +31,9 @@ class AttendanceController extends Controller
      */
     public function create()
     {
-        $this->meta['title'] = 'Create Attendance';    
-        $leave = Leave::all(); 
-           
-        return view('admin.attendance.index',$this->metaResponse(),['leaves' => $leave]);
+        $this->meta['title'] = 'Create Leave';    
+        $employees = Employee::all(); 
+        return view('admin.leaves.index',$this->metaResponse(),['employees' => $employees]);
     }
 
     /**
@@ -53,6 +53,10 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
+    public function show(Leave $leave)
+    {
+        //
+    }
 
     /**
      * Show the form for editing the specified resource.
@@ -62,11 +66,10 @@ class AttendanceController extends Controller
      */
     public function edit($id)
     {
-        $this->meta['title'] = 'Update Attendance';    
+        $this->meta['title'] = 'Update Leave';    
         
-        $attendance = Attandance::where('id',$id)->first();        
-        return view('admin.attendance.edit',['attendance' => $attendance],$this->metaResponse());
-        
+        $leave = Leave::where('id',$id)->first();        
+        return view('admin.leaves.edit',['leave' => $leave],$this->metaResponse());
     }
 
     /**
@@ -76,8 +79,9 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request, Leave $leave)
     {
+        //
     }
 
     /**
@@ -86,9 +90,8 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function destroy()
+    public function destroy(Leave $leave)
     {
         //
     }
-
 }

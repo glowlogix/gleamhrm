@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content')
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
@@ -59,7 +59,11 @@
 					</form>
 					<br>
 					<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}">Edit</a>
-
+					<br><br>
+					<a class="btn btn-success btn-sm" href="{{route('attendance.show',['id'=>$employee->id])}}">Attendance</a>
+					<br><br>
+					<a class="btn btn-success btn-sm" href="{{route('leave.show',['id'=>$employee->id])}}">Leaves</a>
+					
 					@endif
 				</td>
 			</tr>

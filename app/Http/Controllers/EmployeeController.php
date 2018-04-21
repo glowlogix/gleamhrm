@@ -18,23 +18,28 @@ use App\Mail\SimSimMail;
 use DB;
 use Response;
 use Illuminate\Support\Facades\Storage;
+use App\Traits\MetaTrait;
+
 class EmployeeController extends Controller
 {
     use AsanaTrait;    
     use ZohoTrait;
     use SlackTrait;
-
+    use MetaTrait;
+    
     public function index()
      {
+
+        $this->meta['title'] = 'All Employees';                
         $data = Employee::where('role','member')->get();
-        return view('admin.employees.index',['title' => 'All Employees'])->with('employees',$data);
+        return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
     }
 
    
     public function create()
     {  
-        
-         return view('admin.employees.create',['title' => 'Add Employee']);
+        $this->meta['title'] = 'Add Employee';                        
+        return view('admin.employees.create',$this->metaResponse());
     }
 
    
@@ -65,12 +70,13 @@ class EmployeeController extends Controller
                     'lastname'      => $request->lastname,
                     'fullname'      => $request->fullname,
                     'contact'       => $request->contact,
-                    'emergency_contact' => $request->emergency_contact,                                        
+                    'emergency_contact' => $request->emergency_contact,     
+                    'emergency_contact_relationship' => $request->emergency_contact_relationship,                                                            
                     'password'      => $params['password'],   
                     'zuid'          => $response->original->data->zuid,
                     'account_id'    => $response->original->data->accountId,
-                     'org_email'     => $request->org_email,
-                     'email'        => $request->email,
+                    'org_email'     => $request->org_email,
+                    'email'        => $request->email,
                     'status'        => 1,
                     'role'          => 'member',
                     'inviteToZoho'  => $request->zoho,
@@ -104,12 +110,13 @@ class EmployeeController extends Controller
     
     public function edit($id)
     {
+        $this->meta['title'] = 'Update Employee';                        
         $employee = Employee::find($id);
         if(!$employee){
             abort(404);
         }
 
-        return view('admin.employees.edit',['title' => 'Update Employee'])->with('employee',$employee);
+        return view('admin.employees.edit',$this->metaResponse())->with('employee',$employee);
     }
 
     public function update(Request $request, $id)
@@ -157,8 +164,10 @@ class EmployeeController extends Controller
 
     public function trashed()
     {
+
+        $this->meta['title'] = 'Trash Employees';                                
         $employee=Employee::onlyTrashed()->get();
-        return view('admin.employees.trashed',['title' => 'Trash Employees'])->with('employees', $employee);
+        return view('admin.employees.trashed',$this->metaResponse())->with('employees', $employee);
 
     }
 
@@ -223,8 +232,10 @@ class EmployeeController extends Controller
 
     }
     public function EmployeeProfile(Request $request){
+
+        $this->meta['title'] = 'Update Profile';                                        
         $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-        return view('admin.employees.profile',['data' => $data,'title' => 'Update Profile']);
+        return view('admin.employees.profile',['data' => $data],$this->metaResponse());
         
     }
 
@@ -257,9 +268,11 @@ class EmployeeController extends Controller
     }
 
     public function showDocs(Request $request){
+
+        $this->meta['title'] = 'Show Documents';                                                
         $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-        $data2 = DB::table('uploads')->where('status','=',1)->get();
-        return view('admin.employees.showDocs',['data' => $data,'files' => $data2,'title' => 'All Documents']);
+        $data2 = DB::table('documents')->where('status','=',1)->get();
+        return view('admin.employees.showDocs',['data' => $data,'files' => $data2],$this->metaResponse());
     }
 
         

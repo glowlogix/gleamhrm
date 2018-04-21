@@ -6,20 +6,25 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\User;
 use Session;
+use App\Traits\MetaTrait;
 
 
 
 class UsersController extends Controller
 {
+
+   use MetaTrait;
+    
    public function index()
     {
-        
-        return view('admin.users.index',['title' => 'User Permitions'])->with('users',User::all());
+        $this->meta['title'] = 'User Permitions';                        
+        return view('admin.users.index',$this->metaResponse())->with('users',User::all());
     }
 
     public function create()
     {
-        return view('admin.users.create',['title' => 'Add User']);
+        $this->meta['title'] = 'Add User';                                
+        return view('admin.users.create',$this->metaResponse());
     }
 
     public function store(Request $request)

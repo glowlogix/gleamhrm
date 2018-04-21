@@ -240,8 +240,53 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//attendance
 	Route::Get('/attendance',[
-		'uses' => 'AttendanceController@index',
+		'uses' => 'AttendanceController@create',
 		'as' => 'attendance'
+	]);
+
+	Route::Get('/attendance/edit/{id}',[
+		'uses' => 'AttendanceController@edit',
+		'as' => 'attendance.edit'
+	]);
+
+	Route::Get('/attendance/show/{id}',[
+		'uses' => 'AttendanceController@index',
+		'as' => 'attendance.show'
+	]);
+	Route::Post('/attendance/delete/{id}',[
+		'uses' => 'AttendanceController@destroy',
+		'as' => 'attendance.destroy'
+	]);
+
+	Route::Post('/attendance/update/{id}',[
+		'uses' => 'AttendanceController@update',
+		'as' => 'attendance.update'
+	]);
+
+	//Leaves
+	Route::Get('/leaves',[
+		'uses' => 'LeaveController@create',
+		'as' => 'leaves'
+	]);
+
+	Route::Get('/leave/show/{id}',[
+		'uses' => 'LeaveController@index',
+		'as' => 'leave.show'
+	]);
+
+    Route::Get('/leave/edit/{id}',[
+		'uses' => 'LeaveController@edit',
+		'as' => 'leave.edit'
+	]);
+
+	Route::Post('/leave/update/{id}',[
+		'uses' => 'LeaveController@update',
+		'as' => 'leave.update'
+	]);
+
+	Route::Post('/leave/delete/{id}',[
+		'uses' => 'LeaveController@destroy',
+		'as' => 'leave.destroy'
 	]);
 
 	//upload Docs

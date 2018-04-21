@@ -7,32 +7,37 @@ use File;
 use Session;
 use App\Http\Requests;
 use Illuminate\Http\Request;
+use App\Traits\MetaTrait;
 
 class DocumentsController extends Controller
 {
+    use MetaTrait;
+    
     public function index(){
-        $data = DB::table('uploads')->get();
-        return view('admin.docs.index',['files' => $data]);
+
+        $this->meta['title'] = 'Upload Documnents';        
+        $data = DB::table('documents')->get();
+        return view('admin.docs.index',['files' => $data],$this->metaResponse());
     }
 
     public function uploadDocs(Request $request){
         $this->validate($request, [
-            'docs.*' => 'required|mimes:doc,docx,pdf|max:2000',
-            'application_name' => 'required'
+            'documents.*' => 'required|mimes:doc,docx,pdf|max:2000',
+            'document_name' => 'required'
         ]);
 
-        $files = $request->file('docs');
-        $application_name = $request->application_name;
+        $files = $request->file('documents');
+        $document_name = $request->document_name;
         foreach ($files as $file) {
 
-            $Uniquefilename = uniqid() . $file->getClientOriginalName();
+            $Uniquefilename = time().$file->getClientOriginalName();
             $path = public_path('storage/public/');
 
             $fileObject = $file->move($path, $Uniquefilename);
             if ($fileObject) {
-                DB::table('uploads')->insert([
-                    'filename' => $Uniquefilename,
-                    'originalname' => $application_name
+                DB::table('documents')->insert([
+                    'url' => $Uniquefilename,
+                    'name' => $document_name
                 ]);
             }
         }
@@ -41,9 +46,9 @@ class DocumentsController extends Controller
     }
 
     public function statusChange(Request $request,$id){
-        $data = DB::table('uploads')->where('id',$id)->first();
+        DB::table('documents')->where('id',$id)->first();
         $status = $request->upload_status;
-        $row = DB::table('uploads')
+        DB::table('documents')
         ->where('id', $id)
         ->update(['status' => $status]);
         

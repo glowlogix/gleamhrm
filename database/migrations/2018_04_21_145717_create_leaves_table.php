@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateTableDocument extends Migration
+class CreateLeavesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,14 @@ class CreateTableDocument extends Migration
      */
     public function up()
     {
-        Schema::create('documents', function (Blueprint $table) {
+        Schema::create('leaves', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('name');
-            $table->string('url');
-            $table->integer('status')->default(1);
+            $table->integer('employee_id');
+            $table->string('leave_type');
+            $table->dateTime('datefrom');
+            $table->dateTime('dateto');
+            $table->string('reason');    
+            $table->string('status');                        
             $table->timestamps();
         });
     }
@@ -29,6 +32,6 @@ class CreateTableDocument extends Migration
      */
     public function down()
     {
-        chema::dropIfExists('documents');
+        Schema::dropIfExists('leaves');
     }
 }

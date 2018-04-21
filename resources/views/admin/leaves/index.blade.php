@@ -23,35 +23,39 @@
 			  </div>
 			  <div class="form-group">
 					<div class="col-md-7">
-						<label for="delay">Delay</label>
-						<input type="number" class="form-control" name="delay">
+						<label for="leave_type">Leave Type</label>
+						<input type="number" class="form-control" name="leave_type">
 					</div>
 			  </div>
 			  <div class="form-group">
 					<div class="col-md-7">
-						<label for="checkintime">CheckInTime</label>
-						<input type="text" class="form-control" name="checkintime">
+						<label for="datefrom">Date From</label>
+						<input type="text" class="form-control" name="datefrom">
+					</div>
+			  </div>
+              <div class="form-group">
+					<div class="col-md-7">
+						<label for="dateto">Date to</label>
+						<input type="text" class="form-control" name="dateto">
 					</div>
 			  </div>
 					
 			  <div class="form-group">
 					<div class="col-md-7">
-						<label for="checkouttime">CheckOutTime</label>
-						<input type="text" class="form-control" name="checkouttime">
+						<label for="reason">Reason</label>
+						<input type="text" class="form-control" name="reason">
 					</div>
 			  </div>
 			  <div class="form-group">
 					<div class="col-md-7">
-						<label for="checkouttime">HoursLogged</label>
-						<input type="text" class="form-control" name="checkouttime">
+						<label for="checkouttime">Status</label>
+						<select name="status" class="form-control">
+                            <option value="pending">Pending</option>
+                            <option value="approval">Approval</option>
+                            <option value="declined">Declined</option>
+                        </select>
 					</div>
 			  </div>
-			  <div class="form-group">
-					<div class="col-md-7">
-						<label for="hourslogged">HoursLogged</label>
-						<input type="text" class="form-control" name="hourslogged">
-					</div>
-			  </div>	
 			  <div class="form-group">
 					<div class="col-md-5">
 						<button class="btn btn-success" type="submit"> Create</button>
