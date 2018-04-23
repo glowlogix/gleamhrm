@@ -14,8 +14,10 @@
     <!-- Styles -->
     <link href="{{asset('css/data.css') }}" rel="stylesheet">
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}"> @yield('styles')
-
+    <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
+    @yield('styles')
+    @yield('scripts2')
+    
 </head>
 
 <body>
@@ -135,7 +137,9 @@
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
                         <strong>Success!</strong> {{Session::get('success')}}
                     </div>
-                    @endif @include('admin.includes.errors') @yield('content')
+                    @endif @include('admin.includes.errors') 
+                    
+                    @yield('content')
                 </div>
 
             </div>
@@ -145,7 +149,8 @@
     </div>
 
     <!-- Scripts -->
-    <script src="{{ asset('js/app.js') }}"></script>
+    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
+    
     <script src="{{ asset('js/toastr.min.js')}}"></script>
     <script>
         @if(Session::has('success'))

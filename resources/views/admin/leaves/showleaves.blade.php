@@ -25,11 +25,11 @@
                     <td>{{$leave->datefrom}}</td>
                     <td>{{$leave->dateto}}</td>
                     <td>{{$leave->reason}}</td>
-                    <td>{{$leave->statu}}</td>
+                    <td>{{$leave->status}}</td>
                     
                     <td>
                         @if(Auth::user()->admin)
-                        <form action="{{ route('leave.destroy' , $leave->id )}}" method="post">
+                        <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>

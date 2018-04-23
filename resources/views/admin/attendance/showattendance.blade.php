@@ -9,10 +9,9 @@
     <div class="panel-body">
         <table class="table">
             <thead>
-                <th>Delay</th>
+                <th>Delays</th>
                 <th>CheckinTime</th>
                 <th>CheckoutTime</th>
-                <th>Hours Logged</th>
                 @if(Auth::user()->admin)
                 <th>Manage Attendance</th>
                 @endif
@@ -23,15 +22,14 @@
                     <td>{{$attendance->delay}}</td>
                     <td>{{$attendance->checkintime}}</td>
                     <td>{{$attendance->checkouttime}}</td>
-                    <td>{{$attendance->hourslogged}}</td>
                     <td>
                         @if(Auth::user()->admin)
-                        <form action="{{ route('attendance.destroy' , $attendance->id )}}" method="post">
+                        <form action="{{ route('attendance.destroy' , ['id' => $attendance->employee_id] )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
                         <br>
-                        <a class="btn btn-info btn-sm" href="{{route('attendance.edit',['id'=>$attendance->id])}}">Edit</a>
+                        <a class="btn btn-info btn-sm" href="{{route('attendance.edit',['id'=>$attendance->employee_id])}}">Edit</a>
 
                         @endif
                     </td>

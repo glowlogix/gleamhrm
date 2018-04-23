@@ -104,7 +104,7 @@ class EmployeeController extends Controller
     //simsim
     Mail::to($request->org_email)->later($when, new SimSimMail());
     
-  return redirect()->back()->with('success','Employee is updated succesfully');      
+  return redirect()->back()->with('success','Employee is created succesfully');      
     
 } 
     

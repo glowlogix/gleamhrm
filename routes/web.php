@@ -248,6 +248,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@edit',
 		'as' => 'attendance.edit'
 	]);
+	Route::Post('/attendance/store',[
+		'uses' => 'AttendanceController@store',
+		'as' => 'attendance.store'
+	]);
 
 	Route::Get('/attendance/show/{id}',[
 		'uses' => 'AttendanceController@index',
@@ -264,9 +268,14 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	//Leaves
-	Route::Get('/leaves',[
+	Route::Get('/leave',[
 		'uses' => 'LeaveController@create',
 		'as' => 'leaves'
+	]);
+
+	Route::Post('/leave/store',[
+		'uses' => 'LeaveController@store',
+		'as' => 'leaves.store'
 	]);
 
 	Route::Get('/leave/show/{id}',[
