@@ -45,9 +45,8 @@
 					<div class="col-md-7">
 						<label for="leave_type">Leave Type</label>
 						<select class="form-control" name="leave_type">
-							<option value="Vacation Leave">Vacation Leave</option>
-							<option value="Sick Leave">Sick Leave</option>
-							<option value="Birthday Leave">Birthday Leave</option>
+								<option selected value="Full Leave">Full Leave</option>
+								<option value="Half Leave">Half Leave</option>
 						</select>
 					</div>
 			  </div>

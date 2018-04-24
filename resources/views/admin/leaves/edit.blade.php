@@ -34,19 +34,14 @@
                             
                    <label for="leave_type">Leave Type</label>
                    <select class="form-control" name="leave_type">
-                        @if($leave->leave_type == "Sick Leave")
+                        @if($leave->leave_type == "Full Leave")
                         
-                        <option value="Vacation Leave">Vacation Leave</option>
-                        <option selected value="Sick Leave">Sick Leave</option>
-                        <option value="Birthday Leave">Birthday Leave</option>
-                        @elseif($leave->leave_type == "Vacation Leave")
-                        <option selected value="Vacation Leave">Vacation Leave</option>
-                        <option  value="Sick Leave">Sick Leave</option>
-                        <option value="Birthday Leave">Birthday Leave</option>
+                        <option selected value="Full Leave">Full Leave</option>
+                        <option value="Half Leave">Half Leave</option>
                         @else
-                        <option value="Vacation Leave">Vacation Leave</option>
-                        <option  value="Sick Leave">Sick Leave</option>
-                        <option selected  value="Birthday Leave">Birthday Leave</option>
+                        
+                        <option  value="Full Leave">Full Leave</option>
+                        <option selected value="Half Leave">Half Leave</option>
                         @endif
                     </select>
                 </div>

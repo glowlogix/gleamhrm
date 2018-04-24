@@ -1,5 +1,20 @@
 @extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
+@section('styles')
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
+<!-- Optional theme -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
+
+@endsection
+@section('scripts2')
+
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+
+
+@endsection
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <div>
@@ -20,16 +35,16 @@
                 @if(count($attendances) > 0) @foreach($attendances as $attendance)
                 <tr>
                     <td>{{$attendance->delay}}</td>
-                    <td>{{$attendance->checkintime}}</td>
-                    <td>{{$attendance->checkouttime}}</td>
+                    <td>{{date('Y/m/d g:i A',strtotime($attendance->checkintime))}}</td>
+                    <td>{{date('Y/m/d g:i A',strtotime($attendance->checkouttime))}}</td>
                     <td>
                         @if(Auth::user()->admin)
-                        <form action="{{ route('attendance.destroy' , ['id' => $attendance->employee_id] )}}" method="post">
+                        <form action="{{ route('attendance.destroy' , ['id' => $attendance->id] )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
                         <br>
-                        <a class="btn btn-info btn-sm" href="{{route('attendance.edit',['id'=>$attendance->employee_id])}}">Edit</a>
+                        <a class="btn btn-info btn-sm" href="{{route('attendance.edit',['id'=>$attendance->id])}}">Edit</a>
 
                         @endif
                     </td>

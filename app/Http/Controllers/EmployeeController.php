@@ -19,6 +19,7 @@ use DB;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\MetaTrait;
+use Calendar;
 
 class EmployeeController extends Controller
 {
@@ -275,7 +276,58 @@ class EmployeeController extends Controller
         return view('admin.employees.showDocs',['data' => $data,'files' => $data2],$this->metaResponse());
     }
 
+    public function showAttendance(Request $request){
+        $this->meta['title'] = 'Show Attendance';        
+        $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();  
+        $attendance = DB::table('attandances')->where('employee_id', $request->session()->get('emp_auth'))->get(); 
+        $leave = DB::table('leaves')->where('employee_id', $request->session()->get('emp_auth'))->get(); 
         
+        $events = [];
+        
+               if($data->count()){
+        
+                  foreach ($attendance as $key => $value) {
+
+                    $events[] = Calendar::event(
+        
+                         "present",
+        
+                        true,
+                        new \DateTime($value->checkintime),
+        
+                        new \DateTime($value->checkouttime.' +1 day'),
+                        null,
+                        [
+                            'color' => 'green'
+                        ]
+                    );
+        
+                  }
+                  foreach ($leave as $key => $value) {
+                    
+                    $events[] = Calendar::event(
+        
+                        $value->leave_type,
+        
+                        true,
+                        new \DateTime($value->datefrom),
+        
+                        new \DateTime($value->dateto.' +1 day'),
+                        null,
+                        [
+                            'color' => 'orange'
+                        ]
+                    );
+        
+                    }
+               }
+        
+              $calendar = Calendar::addEvents($events);
+              
+        return view('admin.employees.showAttendance',$this->metaResponse(),['data' => $data,'calendar' => $calendar]);
+        
+        
+    }
     
   
         

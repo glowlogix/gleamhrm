@@ -85,7 +85,9 @@
                             <a href="{{route('documents.list')}}">Document links</a>
 
                         </li>
-
+                        <li class="list-group-item">
+                            <a href="{{route('employee.attendance')}}">Attendance</a> 
+                        </li>
                     </ul>
                 </div>
                 <div class="col-lg-9">

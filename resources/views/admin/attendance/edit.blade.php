@@ -27,7 +27,7 @@
     </div>
     <div class="panel-body">
 
-        <form action="{{route('attendance.update',['id'=>$attendance->employee_id])}}" method="post">
+        <form action="{{route('attendance.update',['id'=>$attendance->id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group">
                     <div class="col-md-7">
@@ -39,7 +39,7 @@
 					<div class="col-md-7">
 						<label for="checkintime">CheckInTime</label>
 						<div class='input-group date' id='checkindatetimepicker' name="checkindatetimepicker">
-                        <input type='text' class="form-control" id="chkin" value="{{$checkinTime}}" name="checkindatetimepicker"/>
+                        <input type='text' class="form-control" id="chkin" value="{{date('Y/m/d g:i A',strtotime($attendance->checkintime))}}" name="checkindatetimepicker"/>
 							<span class="input-group-addon">
 								<span class="glyphicon glyphicon-calendar"></span>
 							</span>
@@ -50,7 +50,7 @@
 				<div class="col-md-7">
 					<label for="checkintime">CheckOutTime</label>
 					<div class="input-group date" id="checkoutdatetimepicker" name="checkoutdatetimepicker">
-                    <input type='text' class="form-control" id="chkout" value="{{$checkoutTime}}" name="checkoutdatetimepicker"/>
+                    <input type='text' class="form-control" id="chkout" value="{{date('Y/m/d g:i A',strtotime($attendance->checkouttime))}}" name="checkoutdatetimepicker"/>
 						<span class="input-group-addon">
 							<span class="glyphicon glyphicon-calendar"></span>
 						</span>

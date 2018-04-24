@@ -44,7 +44,7 @@
 			  <div class="form-group">
 					<div class="col-md-7">
 						<label for="delay">Delay</label>
-						<input type="number" class="form-control" name="delay">
+						<input type="number" value="0" class="form-control" name="delay">
 					</div>
 			  </div>
 			  <div class="form-group">

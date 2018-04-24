@@ -18,7 +18,6 @@ class AttendanceController extends Controller
     {
         $this->meta['title'] = 'Show Attendance';  
         $attendance = Attandance::where('employee_id',$id)->get();
-        
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
      
     }
@@ -88,16 +87,9 @@ class AttendanceController extends Controller
     {
         $this->meta['title'] = 'Update Attendance';    
         
-        $attendance = Attandance::where('employee_id',$id)->first();
-        $checkinTime = $attendance->checkintime;
-        $parsecheckinTime= Carbon::parse($checkinTime);
-        $checkinTime = $parsecheckinTime->format('Y/m/d g:i A');
-
-        $checkoutTime = $attendance->checkouttime;
-        $parsecheckoutTime= Carbon::parse($checkoutTime);
-        $checkoutTime = $parsecheckoutTime->format('Y/m/d g:i A');
+        $attendance = Attandance::where('id',$id)->first();
         
-        return view('admin.attendance.edit',compact('attendance','checkinTime','checkoutTime'),$this->metaResponse());
+        return view('admin.attendance.edit',compact('attendance'),$this->metaResponse());
         
     }
 
@@ -110,8 +102,7 @@ class AttendanceController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $attendance = Attandance::where('employee_id',$id)->first();
-          
+        $attendance = Attandance::where('id',$id)->first();
         $getcheckinTime = $request->checkindatetimepicker;
         $parsecheckinTime= Carbon::parse($getcheckinTime);
 
@@ -129,7 +120,7 @@ class AttendanceController extends Controller
         $attendance->hoursLogged = $hoursLogged;
         $row = $attendance->save();
         if($row){
-            return redirect()->back()->with('success','Attendance is updated succesfully');     
+            return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
             
          }
 
@@ -143,7 +134,7 @@ class AttendanceController extends Controller
      */
     public function destroy($id)
     {
-        $attendance = Attandance::where('employee_id',$id)->first();
+        $attendance = Attandance::where('id',$id)->first();
         $attendance->delete();
         return redirect()->back()->with('success','Attendance is deleted succesfully');     
         

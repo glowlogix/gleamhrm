@@ -38,6 +38,13 @@ Route::get('/employee/profile', [
 	'as' => 'employee.profile',
 	'uses' => 'EmployeeController@EmployeeProfile'
 ]);
+
+//attendance Employee
+Route::get('/employee/attendance', [
+	'as' => 'employee.attendance',
+	'uses' => 'EmployeeController@showAttendance'
+]);
+
 Route::post('/employee/profile/{id}', [
 	'as' => 'employee.profile.update',
 	'uses' => 'EmployeeController@UpdateEmployeeProfile'

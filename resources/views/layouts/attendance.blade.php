@@ -9,11 +9,13 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'HRM') }}|{{ $title}}</title>
+    <title>{{ config('app.name', 'HRM') }}|{{$title}}</title>
 
     <!-- Styles -->
-   @yield('styles')
 
+    @yield('styles')
+    @yield('scripts')
+    
 </head>
 
 <body>
@@ -57,7 +59,7 @@
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="{{ route('employee.logout') }}" onclick="event.preventDefault();
-                                        document.getElementById('logout-form').submit();">
+                                                     document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
 
@@ -70,13 +72,11 @@
                         @endif
                     </ul>
                 </div>
-
-                @endforeach
             </div>
         </nav>
         <div class="container">
             <div class="row">
-                <div class="col-lg-2">
+                <div class="col-lg-3">
                     <ul class="list-group">
                         <li class="list-group-item">
                             <a href="{{route('employee.profile')}}">Update Profile</a>
@@ -87,57 +87,41 @@
 
                         </li>
                         <li class="list-group-item">
-                                <a href="{{route('employee.attendance')}}">Attendance</a>
+                            <a href="{{route('employee.attendance')}}">Attendance</a> 
                         </li>
                     </ul>
                 </div>
-                <div class="col-lg-10">
-                   
-                    @yield('messages2')
-                    
-                    <div class="panel panel-default">
+                <div class="col-lg-9">
+                        @yield('messages2')
+                        
+                    <div class="panel panel-default" id="calendar">
                         <div class="panel-heading text-center">
                             <div>
-                                <b style="text-align: center;">All Documents</b>
+                                <b style="text-align: center;">Attendance</b>
                             </div>
                         </div>
                         <div class="panel-body">
-                            <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Document Name</th>
-                                        <th>Document Url</th>
-                                    </tr>
-                                </thead>
 
-                                @if(count($files) > 0) @foreach($files as $file)
+                                {!! $calendar->calendar() !!}
+                                
+                                {!! $calendar->script() !!}
+                                
 
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <p>{{ $file->name }}</p>
-                                        </td>
-                                        <td>
-                                           <a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>  
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                @endforeach @else
-                                <p class="text-center">No Documnets Found</p>
-                                @endif
+                          
                         </div>
-                        </table>
-
                     </div>
+
                 </div>
+            </div>
 
+            @endforeach
 
-                <!-- Scripts -->
-                @yield('scripts')
-                
-                @yield('messages')
+        </div>
 
-
+        <!-- Scripts -->
+        @yield('messages')
+      
+        
 </body>
 
 </html>
