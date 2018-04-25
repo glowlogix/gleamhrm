@@ -122,11 +122,11 @@ class EmployeeController extends Controller
 
     public function update(Request $request, $id)
     {
-        // $this->validate($request,[
-        //     'firstname' => 'required',
-        //     'lastname' => 'required',
-        //     'org_email' => 'required|email'
-        // ]);
+        $this->validate($request,[
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'org_email' => 'required|email'
+        ]);
 
         $employee = Employee::find($id);
         $employee->firstname = $request->firstname;
@@ -207,7 +207,9 @@ class EmployeeController extends Controller
         
     }
     public function EmployeeLogin(){
-        return view('admin.employees.login');
+        $this->meta['title'] = 'Employee Login';                                
+        
+        return view('admin.employees.login',$this->metaResponse());
     }
 
     public function postEmployeeLogin(Request $request){
@@ -244,7 +246,10 @@ class EmployeeController extends Controller
     
         $this->validate($request,[
             'firstname' => 'required',
-            'lastname' => 'required'
+            'lastname' => 'required',
+            'contact' => 'required',
+            'emergency_contact' => 'required',
+            'emergency_contact_relationship' => 'required'
         ]);
         
         $employee = Employee::find($id);
@@ -253,7 +258,8 @@ class EmployeeController extends Controller
         $employee->contact = $request->contact;
         $employee->password = $request->password;
         $employee->emergency_contact = $request->emergency_contact;
-        
+        $employee->emergency_contact_relationship = $request->emergency_contact_relationship;
+
         $employee->save();
         
         return redirect()->back()->with('success','Employee is updated succesfully');      

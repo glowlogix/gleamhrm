@@ -9,7 +9,11 @@ use App\Attandance;
 use App\Employee;
 use Carbon\Carbon;
 use Session;
-
+use App\Salary;
+use App\MonthlySalary;
+use Box\Spout\Reader\ReaderFactory;
+use Box\Spout\Writer\WriterFactory;
+use Box\Spout\Common\Type;
 class AttendanceController extends Controller
 {
     use MetaTrait;
@@ -124,6 +128,41 @@ class AttendanceController extends Controller
             
          }
 
+    }
+    
+    public function exportattendance(Request $request){
+        $title = ['Name','Basic Salary','Bonus','Leave Deduction','Gross Salary'];
+        $fileName = 'Attendance.csv';
+        $writer = WriterFactory::create(Type::CSV); 
+        $writer->openToBrowser($fileName); 
+        $writer->addRow($title);
+        
+        $salaries = Salary::all();
+        foreach($salaries as $salary){
+            $basic_salary = $salary->basic_salary;
+            $employee_id = $salary->employee_id;
+            $employees = Employee::where('id',$employee_id)->get();
+            foreach($employees as $employee){
+            $employee_name = $employee->fullname;
+            $monthly_salary = MonthlySalary::where('employee_id',$employee->id)->get();
+            foreach($monthly_salary as $mSalary){
+            $bonus = $mSalary->bonus;
+            $grossSalary = $mSalary->gross_salary;
+            $leaveDeduction = $mSalary->leave_deduction;
+            
+            }
+  
+        }
+        $writer->addRow([$employee_name,$basic_salary, $bonus, $leaveDeduction, $grossSalary]); 
+        
+          
+        }
+        
+        
+        
+        $writer->close();
+
+        
     }
 
     /**

@@ -274,6 +274,11 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.update'
 	]);
 
+	Route::Post('/attendance/export',[
+		'uses' => 'AttendanceController@exportattendance',
+		'as' => 'attendance.export'
+	]);
+
 	//Leaves
 	Route::Get('/leave',[
 		'uses' => 'LeaveController@create',

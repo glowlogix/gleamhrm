@@ -1,34 +1,21 @@
 @extends('layouts.docs') 
+@section('content')
+@if(count($files) > 0) @foreach($files as $file)
 
-@section('styles')
-<link href="{{ asset('css/data.css') }}" rel="stylesheet">
-<link href="{{ asset('css/app.css') }}" rel="stylesheet">
-<link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
+        <tbody>
+            <tr>
+                <td>
+                    <p>{{ $file->name }}</p>
+                </td>
+                <td>
+                    <a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>  
+                </td>
+            </tr>
+        </tbody>
+        @endforeach 
+@else
+        <p class="text-center">No Documnets Found</p>
+ @endif
 
-@endsection
+@stop
 
-@section('scripts')
-<script src="{{ asset('js/app.js') }}"></script>
-<script src="{{ asset('js/toastr.min.js')}}"></script>
-@endsection
-
-@section('messages')
-<script>
-@if(Session::has('success'))
-toastr.success("{{Session::get('success')}}")
-@endif
-@if(Session::has('info'))
-toastr.info("{{Session::get('info')}}")
-@endif
-<script>
-@endsection
-
-@section('messages2')
-@if(Session::has('success'))
-<div class="alert alert-success">
-    <a href="#" class="close" data-dismiss="alert">&times;</a>
-    <strong>Success!</strong> {{Session::get('success')}}
-</div>
-@endif
-@endsection

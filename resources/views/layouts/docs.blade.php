@@ -12,7 +12,9 @@
     <title>{{ config('app.name', 'HRM') }}|{{ $title}}</title>
 
     <!-- Styles -->
-   @yield('styles')
+    <link href="{{ asset('css/data.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
 </head>
 
@@ -93,7 +95,12 @@
                 </div>
                 <div class="col-lg-10">
                    
-                    @yield('messages2')
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                    @endif
                     
                     <div class="panel panel-default">
                         <div class="panel-heading text-center">
@@ -110,21 +117,9 @@
                                     </tr>
                                 </thead>
 
-                                @if(count($files) > 0) @foreach($files as $file)
+                                @yield('content')
 
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <p>{{ $file->name }}</p>
-                                        </td>
-                                        <td>
-                                           <a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>  
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                @endforeach @else
-                                <p class="text-center">No Documnets Found</p>
-                                @endif
+                                
                         </div>
                         </table>
 
@@ -133,9 +128,8 @@
 
 
                 <!-- Scripts -->
-                @yield('scripts')
+                <script src="{{ asset('js/app.js') }}"></script>
                 
-                @yield('messages')
 
 
 </body>
