@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content') @include('admin.includes.errors')
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content') 
 
 <div class="panel panel-default">
     <div class="panel-heading text-center">
@@ -7,7 +7,6 @@
         </div>
     </div>
     <div class="panel-body">
-
         <form action="{{route('leave.update',['id'=>$leave->employee_id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group">
@@ -19,10 +18,18 @@
                         
                         <option selected value="Full Leave">Full Leave</option>
                         <option value="Half Leave">Half Leave</option>
-                        @else
+                        <option value="Paid Leave">Paid Leave</option>
+                        
+                        @elseif($leave->leave_type == "Half Leave")
                         
                         <option  value="Full Leave">Full Leave</option>
                         <option selected value="Half Leave">Half Leave</option>
+                        <option value="Paid Leave">Paid Leave</option>
+                        @else
+ 
+                        <option  value="Full Leave">Full Leave</option>
+                        <option value="Half Leave">Half Leave</option>
+                        <option selected  value="Paid Leave">Paid Leave</option>
                         @endif
                     </select>
                 </div>

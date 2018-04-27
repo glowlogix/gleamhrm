@@ -32,7 +32,7 @@ class EmployeeController extends Controller
      {
 
         $this->meta['title'] = 'All Employees';                
-        $data = Employee::where('role','member')->get();
+        $data = Employee::where('role','member')->paginate(10);
         return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
     }
 

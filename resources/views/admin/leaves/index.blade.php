@@ -29,12 +29,15 @@
 						<select class="form-control" name="leave_type">
 								<option selected value="Full Leave">Full Leave</option>
 								<option value="Half Leave">Half Leave</option>
+								<option value="Short Leave">Short Leave</option>								
+								<option value="Paid Leave">Paid Leave</option>
+								
 						</select>
 					</div>
 			  </div>
 			  <div class="form-group">
 					<div class="col-md-7">
-						<label for="datefrom">DateFrom</label>
+						<label for="datefrom">FromDate</label>
 						<div class='input-group date' id='datefrom' name="datefrom">
 							<input type='text' class="form-control" name="datefrom"/>
 							<span class="input-group-addon">
@@ -46,7 +49,7 @@
 					
               <div class="form-group">
 					<div class="col-md-7">
-						<label for="dateto">DateTo</label>
+						<label for="dateto">ToDate</label>
 						<div class='input-group date' id='dateto' name="dateto">
 							<input type='text' class="form-control" name="dateto"/>
 							<span class="input-group-addon">

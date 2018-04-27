@@ -247,7 +247,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//attendance
 	Route::Get('/attendance',[
-		'uses' => 'AttendanceController@create',
+		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
 	]);
 
@@ -274,9 +274,25 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.update'
 	]);
 
+	Route::GET('/attendance/export',[
+		'uses' => 'AttendanceController@showExport',
+		'as' => 'attendance.export.show'
+	]);
+
 	Route::Post('/attendance/export',[
-		'uses' => 'AttendanceController@exportattendance',
+		'uses' => 'AttendanceController@exportAttendance',
 		'as' => 'attendance.export'
+	]);
+
+	//Salary Export
+	Route::Get('/salary/export',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.index'
+	]);
+
+	Route::Post('/salary/export',[
+		'uses' => 'SalariesController@export',
+		'as' => 'salary.export'
 	]);
 
 	//Leaves
