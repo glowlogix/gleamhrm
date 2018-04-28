@@ -242,7 +242,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	//Delete Employee
 	Route::Post('/employee/delete/{id}',[
 		'uses' => 'EmployeeController@destroy',
-		'as' => 'employee.*oy'
+		'as' => 'employee.destroy'
 	]);
 
 	//attendance
