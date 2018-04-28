@@ -242,7 +242,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	//Delete Employee
 	Route::Post('/employee/delete/{id}',[
 		'uses' => 'EmployeeController@destroy',
-		'as' => 'employee.destroy'
+		'as' => 'employee.*oy'
 	]);
 
 	//attendance
@@ -265,7 +265,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.store'
 	]);
 
-	Route::Get('/attendance/show/{id}',[
+	Route::Get('/attendance-/show/{id}',[
 		'uses' => 'AttendanceController@index',
 		'as' => 'attendance.show'
 	]);

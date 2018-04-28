@@ -31,7 +31,7 @@
 
             <div class="form-group col-sm-4">
                     <br>
-                    <label for="text">Add Salary:</label>
+                    <label for="text">Salary:</label>
                     <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
             </div>
 
