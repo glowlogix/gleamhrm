@@ -19,9 +19,9 @@ Route::get('/', function () {
 
 Auth::routes();
 
-Route::any('/register', function() {
-	abort(403);
-});
+// Route::any('/register', function() {
+// 	abort(403);
+// });
 Route::get('/home', 'HomeController@index')->name('home');
 //Employee Login
 Route::get('/employee/login', [
