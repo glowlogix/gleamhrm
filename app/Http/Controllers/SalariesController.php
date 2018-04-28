@@ -33,7 +33,7 @@ class SalariesController extends Controller
     ]);
 
     $title = ['Name','Basic Salary','Bonus','Leave Deduction','Gross Salary'];
-    $fileName = 'Attendance.csv';
+    $fileName = 'Salary.csv';
     $writer = WriterFactory::create(Type::CSV); 
     $writer->openToBrowser($fileName); 
     $writer->addRow($title);

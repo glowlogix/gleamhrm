@@ -20,6 +20,7 @@ use Response;
 use Illuminate\Support\Facades\Storage;
 use App\Traits\MetaTrait;
 use Calendar;
+use App\Salary;
 
 class EmployeeController extends Controller
 {
@@ -46,6 +47,15 @@ class EmployeeController extends Controller
    
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'firstname' => 'required',
+            'lastname' => 'required',
+            'org_email' => 'required|email',
+            'email' => 'required|email',
+            'emergency_contact' => 'required',
+            'emergency_contact_relationship' => 'required'
+        ]);
+
         //token get from values.php in config folder 
         $token = config('values.SlackToken');      
         $when = now()->addMinutes(1);
@@ -61,11 +71,18 @@ class EmployeeController extends Controller
             "country"               => "pk"
        ];
         if($request->zoho)
-        {            
-       $response = $this->createZohoAccount( $params );
-       if($response->original){
-        $this->addUserToTeam($request->teams,$request->org_email);
-        
+       {            
+        // $response = $this->createZohoAccount( $params );
+        // dd($response);
+        // if(!$response->original){
+        //     echo "Data not added in Zoho";
+        // }
+        echo "No Data Added in Zoho because of api problem";
+
+       }
+       if($request->teams){
+        $this->addUserToTeam($request->teams,$request->org_email);        
+       }
         $user = Employee::create([
                     'firstname'     => $request->firstname,
                     'lastname'      => $request->lastname,
@@ -73,9 +90,9 @@ class EmployeeController extends Controller
                     'contact'       => $request->contact,
                     'emergency_contact' => $request->emergency_contact,     
                     'emergency_contact_relationship' => $request->emergency_contact_relationship,                                                            
-                    'password'      => $params['password'],   
-                    'zuid'          => $response->original->data->zuid,
-                    'account_id'    => $response->original->data->accountId,
+                     'password'      => $params['password'],   
+                     'zuid'          => '123',//$response->original->data->zuid,
+                     'account_id'    => '434',//$response->original->data->accountId,
                     'org_email'     => $request->org_email,
                     'email'        => $request->email,
                     'status'        => 1,
@@ -84,13 +101,17 @@ class EmployeeController extends Controller
                     'inviteToSlack' => $request->slack,
                     'inviteToAsana' => $request->asana
         ]);
+     
         if($user){
+            Salary::create([
+                'employee_id' => $user->id,
+                'basic_salary' => $request->salary
+            ]);
             Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input(),$params['password']));            
         }
-       }     
+           
 
         
-        }
        //check if slack is checked for invitation
        if($request->slack){
         //call the  slack trait method in app/Traits folder
@@ -101,11 +122,11 @@ class EmployeeController extends Controller
         
       }
     //policies    
-    Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
-    //simsim
-    Mail::to($request->org_email)->later($when, new SimSimMail());
+        Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
+        //simsim
+        Mail::to($request->org_email)->later($when, new SimSimMail());
     
-  return redirect()->back()->with('success','Employee is created succesfully');      
+       return redirect()->back()->with('success','Employee is created succesfully');      
     
 } 
     
@@ -113,11 +134,12 @@ class EmployeeController extends Controller
     {
         $this->meta['title'] = 'Update Employee';                        
         $employee = Employee::find($id);
+        $salary = Salary::where('employee_id',$id)->first();
         if(!$employee){
             abort(404);
         }
 
-        return view('admin.employees.edit',$this->metaResponse())->with('employee',$employee);
+        return view('admin.employees.edit',$this->metaResponse())->with(['employee'=>$employee,'salary'=>$salary]);
     }
 
     public function update(Request $request, $id)
@@ -125,7 +147,9 @@ class EmployeeController extends Controller
         $this->validate($request,[
             'firstname' => 'required',
             'lastname' => 'required',
-            'org_email' => 'required|email'
+            'org_email' => 'required|email',
+            'emergency_contact' => 'required',
+            'emergency_contact_relationship' => 'required'
         ]);
 
         $employee = Employee::find($id);
@@ -135,28 +159,34 @@ class EmployeeController extends Controller
         $employee->org_email = $request->org_email;
         $employee->contact = $request->contact;
         $employee->emergency_contact = $request->emergency_contact;
-        
+        $employee->emergency_contact_relationship = $request->emergency_contact_relationship;
+        $result = $employee->save();
+        if( $result ){
+        $salary = Salary::where('employee_id',$id)->first();
+        $salary->basic_salary = $request->salary;
+        $salary->save();
+        }
         
         //admin password get
-        $adminPassword = config('values.adminPassword');
-        $params = [
-            "mode" => '',
-            "zuid" => $employee->zuid,
-            "password" => $adminPassword
+        // $adminPassword = config('values.adminPassword');
+        // $params = [
+        //     "mode" => '',
+        //     "zuid" => $employee->zuid,
+        //     "password" => $adminPassword
 
-        ];
-        if ($request->employee_status === '1'){
-            $params['mode'] = 'enableUser';
-            $employee->status = 1;
-            $this->updateZohoAccount($params,$employee->account_id);
-            $employee->save();
+        // ];
+        // if ($request->employee_status === '1'){
+        //     $params['mode'] = 'enableUser';
+        //     $employee->status = 1;
+        //     $this->updateZohoAccount($params,$employee->account_id);
+        //     $employee->save();
             
-        }else if($request->employee_status === '0'){
-            $params['mode']  = 'disableUser';
-            $employee->status  = 0;
-            $this->updateZohoAccount($params,$employee->account_id);    
-            $employee->save();        
-        }
+        // }else if($request->employee_status === '0'){
+        //     $params['mode']  = 'disableUser';
+        //     $employee->status  = 0;
+        //     $this->updateZohoAccount($params,$employee->account_id);    
+        //     $employee->save();        
+        // }
 
         return redirect()->back()->with('success','Employee is updated succesfully');     
         
@@ -175,33 +205,43 @@ class EmployeeController extends Controller
     public function kill($id)
     {
         $employee=Employee::withTrashed()->where('id', $id)->first();
+        $salary=Salary::withTrashed()->where('employee_id', $id)->first();
+        
         $employee->forceDelete();
-
+        $salary->forceDelete();
+        
         return redirect()->back()->with('success','Employee is deleted succesfully');     
     }
 
     public function restore($id)
     {
         $employee=Employee::withTrashed()->where('id', $id)->first();
+        $salary=Salary::withTrashed()->where('employee_id', $id)->first();
+        
         $employee->restore();
+        $salary->restore();
+        
         return redirect()->back()->with('success','Employee is Restore succesfully');     
     }
 
     public function destroy($id)
     {
         $emp = Employee::find($id);
+        $salary = Salary::where('employee_id',$id)->first();
+        $salary->delete();
         $account_id = $emp->account_id;
         $zuid = $emp->zuid;
+        $salary->delete();        
         $response = $emp->delete();
         $adminPassword = config('values.adminPassword');
         if($response){
-
+            
         $arr = [
             "zuid" => $zuid ,
             "password" => $adminPassword
         ];
 
-          $this->deleteZohoAccount($arr,$account_id);
+          //$this->deleteZohoAccount($arr,$account_id);
         }
         return redirect()->back()->with('success','Employee is trash succesfully');     
         

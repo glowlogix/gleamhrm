@@ -50,7 +50,15 @@
                 <input type="text" name="emergency_contact" value="{{$employee->emergency_contact}}" class="form-control"> @else
                 <input type="text" name="emergency_contact" placeholder="Please enter emergency contact" class="form-control"> @endif
             </div>
-
+            <div class="form-group">
+                <label for="emergency_contact_relationship">Emergency Contact Relationship</label>
+                <input type="text" value="{{$employee->emergency_contact_relationship}}" name="emergency_contact_relationship" placeholder="Please enter emergency contact relationship" class="form-control">
+             </div>
+    
+             <div class="form-group">
+                    <label for="text">Add Salary:</label>
+                    <input style="width: 250px;" type="text" value="{{$salary->basic_salary}}" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
+            </div>
             <div class="form-group">
                 <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>

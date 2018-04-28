@@ -250,6 +250,11 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
 	]);
+	Route::Get('/attendance/create',[
+		'uses' => 'AttendanceController@create', //show Attendance
+		'as' => 'attendance.create'
+	]);
+
 
 	Route::Get('/attendance/edit/{id}',[
 		'uses' => 'AttendanceController@edit',

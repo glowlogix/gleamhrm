@@ -7,6 +7,8 @@
 	<div class="panel-body">
 
 		<table class="table">
+			@if($employees->count() > 0) @foreach($employees as $employee)
+				
 			<thead>
 				<th> Firstname</th>
 				<th> Lastname</th>
@@ -15,10 +17,9 @@
 				<th>Actions</th>
 			</thead>
 			<tbody class="table-bordered table-hover table-striped">
-				@if($employees->count() > 0) @foreach($employees as $employee)
 				<tr>
-					<td>{{$employee->fname}}</td>
-					<td>{{$employee->lname}}</td>
+					<td>{{$employee->firstname}}</td>
+					<td>{{$employee->lastname}}</td>
 					<td> {{$employee->role}}</td>
 					<td>{{$employee->org_email}}</td>
 					<td>
@@ -38,11 +39,12 @@
 						</div>
 					</td>
 				</tr>
-				@endforeach @else
-				<tr> No Employee found.</tr>
-				@endif
-
+				
 			</tbody>
+			@endforeach @else
+			<tr> No Employee found.</tr>
+			@endif
+
 		</table>
 	</div>
 

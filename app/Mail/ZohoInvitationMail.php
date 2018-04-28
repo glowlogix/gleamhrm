@@ -24,7 +24,7 @@ class ZohoInvitationMail extends Mailable
     public function __construct(array $data, $getPassword)
     {
          $data['password'] =  $getPassword;
-         $this->fname = $data['fname'];
+         $this->fname = $data['firstname'];
          $this->org_email = $data['org_email'];
         $this->password = $data['password'];
          

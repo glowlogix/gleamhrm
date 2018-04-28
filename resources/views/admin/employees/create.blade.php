@@ -9,13 +9,13 @@
         <form class="form-inline" action="{{route('employee.store')}}" method="post">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
-                <label for="fname">First Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="fname" placeholder="Enter First Name" name="fname">
+                <label for="firstname">First Name:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname">
             </div>
 
             <div class="form-group col-sm-4">
-                <label for="lname">Last Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="lname" placeholder="Enter Last Name" name="lname">
+                <label for="lastname">Last Name:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname">
             </div>
 
             <div class="form-group col-sm-4">
@@ -27,6 +27,12 @@
                 <br>
                 <label for="email">Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="email" placeholder="Enter Email Address" name="email">
+            </div>
+
+            <div class="form-group col-sm-4">
+                    <br>
+                    <label for="text">Add Salary:</label>
+                    <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
             </div>
 
             <div class="form-group col-sm-4">

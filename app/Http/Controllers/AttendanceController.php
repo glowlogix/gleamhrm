@@ -108,99 +108,28 @@ class AttendanceController extends Controller
      */
     public function update(Request $request,$id)
     {
-        $attendance = Attandance::where('id',$id)->first();
-        $getcheckinTime = $request->checkindatetimepicker;
-        $parsecheckinTime= Carbon::parse($getcheckinTime);
+        dd($request);
+        // $attendance = Attandance::where('id',$id)->first();
+        // $getcheckinTime = $request->checkindatetimepicker;
+        // $parsecheckinTime= Carbon::parse($getcheckinTime);
 
-        $attendance->checkintime = $parsecheckinTime;
+        // $attendance->checkintime = $parsecheckinTime;
 
-        $getcheckoutTime = $request->checkoutdatetimepicker;
-        $parsecheckoutTime = Carbon::parse($getcheckoutTime);
+        // $getcheckoutTime = $request->checkoutdatetimepicker;
+        // $parsecheckoutTime = Carbon::parse($getcheckoutTime);
 
-        $attendance->checkouttime = $parsecheckoutTime;
+        // $attendance->checkouttime = $parsecheckoutTime;
 
-        $attendance->delay = $request->attendance_delay;
+        // $attendance->delay = $request->attendance_delay;
 
-        $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
-        $attendance->hoursLogged = $hoursLogged;
-        $attendance->hoursLogged = $hoursLogged;
-        $row = $attendance->save();
-        if($row){
-            return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
+        // $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
+        // $attendance->hoursLogged = $hoursLogged;
+        // $attendance->hoursLogged = $hoursLogged;
+        // $row = $attendance->save();
+        // if($row){
+        //     return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
             
-         }
-
-    }
-
-    public function showExport(Request $request){
-        $this->meta['title'] = 'Export Attendance';                        
-        
-        return view('admin.attendance.export',$this->metaResponse());
-    }
-    
-    public function exportAttendance(Request $request){
-        // $this->validate($request,[
-        //     'start_date' => 'required|before:end_date',
-        //     'end_date' => 'required'
-        // ]);
-    
-        // $title = ['Name','Basic Salary','Bonus','Leave Deduction','Gross Salary'];
-        // $fileName = 'Attendance.csv';
-        // $writer = WriterFactory::create(Type::CSV); 
-        // $writer->openToBrowser($fileName); 
-        // $writer->addRow($title);
-    
-        // $start_date = $request->start_date;
-        // $end_date = $request->end_date;
-        
-        // $startDate = str_replace('/', '-', $start_date);
-        // $startDate = date('Y-m-d',strtotime($startDate));
-    
-        // $endDate = str_replace('/', '-',$end_date);
-        // $endDate= date('Y-m-d',strtotime($endDate));
-    
-        // $employees = Employee::all();
-        // foreach($employees as $employee){
-        // $id = $employee->id;
-    
-        // $attendanceDate2 = DB::select(DB::raw("SELECT * FROM attandances WHERE DATE_FORMAT(checkintime, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(checkintime, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
-        // if( $attendanceDate2 ){
-        // foreach( $attendanceDate2 as $data){
-        //     $employee_id = $data->employee_id;
-        //     $salaries = Salary::where('employee_id',$employee_id)->get();
-        //     foreach($salaries as $salary){
-        //     $basic_salary = $salary->basic_salary;
-        //     $employees = Employee::where('id',$employee_id)->get();
-        //     foreach($employees as $emp){
-        //         $employee_name = $emp->fullname;
-        //         $monthly_salary = MonthlySalary::where('employee_id',$employee_id)->get();
-        //         foreach($monthly_salary as $mSalary){
-        //         $bonus = $mSalary->bonus;
-        //         $employeeWorkingDaysId  =  DB::select(DB::raw("SELECT count(*) as data FROM attandances WHERE DATE_FORMAT(checkintime, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(checkintime, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
-        //         $employeeWorkingDaysId = $employeeWorkingDaysId[0]->data;
-                
-        //         $leavesCount  =  DB::select(DB::raw("SELECT count(*) as data FROM leaves WHERE DATE_FORMAT(datefrom, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(datefrom, '%Y-%m-%d') <= '$endDate' And leave_type!='Paid Leave' And employee_id= '$id'"));
-        //         $leavesCount = $leavesCount[0]->data;
-        //     }
-        //     $perDaySalary = ($basic_salary/$employeeWorkingDaysId); // perdaySalary
-        //     $leaveDeduction =$perDaySalary * $leavesCount; //Leave Deduction
-            
-        //     $grossSalary = abs($leaveDeduction - $basic_salary); //Gross Salary
-        //     }
-        
-        // }
-    
-        // }
-        // $writer->addRow([$employee_name,$basic_salary, $bonus, $leaveDeduction, $grossSalary]); 
-        
-        // }
-        // else{
-        //     return redirect()->back()->withErrors('No Attendance Yet');     
-            
-        // }
-    
-        // }
-        // $writer->close();
+        //  }
 
     }
 
@@ -226,7 +155,7 @@ class AttendanceController extends Controller
                         new \DateTime($value->checkintime),
         
                         new \DateTime($value->checkouttime.' +1 day'),
-                        null,
+                        $value->employee_id,
                         [
                             'color' => 'green'
                         ]
@@ -243,16 +172,54 @@ class AttendanceController extends Controller
                         new \DateTime($value->datefrom),
         
                         new \DateTime($value->dateto.' +1 day'),
-                        null,
+                        $value->employee_id,
                         [
-                            'color' => 'orange',
-                            'url' => 'pass here url and any route'
+                            'color' => 'orange'
                         ]
                     );
         
                     }
                }
-               $calendar = Calendar::addEvents($events);
+               $calendar = Calendar::addEvents($events)
+               ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
+                'editable'=> true,
+                'eventClick' => 'function(event) {
+                    console.log(event);
+                    var type = event.title.split("\n")[0];
+                    var id = event.id;
+                    
+                    $("#attendance").val(type);
+                    $("#myModal").modal("toggle");
+                    // $.ajaxSetup({
+                    //     headers: {
+                    //       "X-CSRF-TOKEN": $(meta[name=csrf-token]).attr("content")
+                    //     }
+                    //   });
+                    $("#update").on("click",function(){
+                       
+                        $.ajax({
+                            method: "POST", 
+                            url: "attendance/update/"+id, 
+                            data: {
+                                "type" : type,
+                                "id" : id,
+                                "_token": "{!! csrf_token() !!}",
+                            }, 
+                            success: function(response){ 
+                                console.log(response); 
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                            }
+
+                        })
+
+                    });
+                    
+
+                }'
+            ]);
                
             }
             

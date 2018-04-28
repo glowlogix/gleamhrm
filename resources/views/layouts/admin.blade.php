@@ -146,9 +146,7 @@
                                 <li>
                                     <a href="{{route('salary.index')}}">Salary</a>
                                 </li>
-                                <li>
-                                     <a href="{{route('attendance.export.show')}}">Export</a>
-                                </li>
+
                             </ul>
                             
                         </li>

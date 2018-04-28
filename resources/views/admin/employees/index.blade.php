@@ -7,13 +7,13 @@
 		</div>
 		@if(Auth::user()->admin)
 
-		<div style="padding-left: 85%;">
+		<div style="padding-left: 85%;position:relative;top:40px">
 			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
 				<span class="glyphicon glyphicon-plus"></span> Add Employee
 			</a>
 		</div>
 		<br>
-		<div style="padding-left: 85%;">
+		<div style="padding-right: 85%">
 			<a href="{{route('employee.trashed')}}" class="btn btn-info btn-xs" align="right">
 					<span class="glyphicon glyphicon-trash"></span> Trashed Employees
 			</a>
@@ -22,6 +22,8 @@
 	</div>
 </div>
 <div class="panel-body">
+	@if(count($employees) > 0) @foreach($employees as $employee)
+		
 	<table class="table" class="col-md-8">
 		<thead>
 			<th>Name</th>
@@ -36,7 +38,6 @@
 			@endif
 		</thead>
 		<tbody class="table-bordered table-hover table-striped">
-			@if(count($employees) > 0) @foreach($employees as $employee)
 			
 			<tr>
 				<td>{{$employee->fullname}}</td>
@@ -92,12 +93,12 @@
 					@endif
 				</td>
 			</tr>
-			@endforeach @else No Employee found. @endif
 			
 			
 		
 		</tbody>
-	
+		@endforeach @else No Employee found. @endif
+		
 	</table>
 	<div class="col-md-7">
 			{{$employees->links()}}

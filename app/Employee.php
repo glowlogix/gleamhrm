@@ -12,7 +12,7 @@ class Employee extends Model
 
     protected $dates = ['deleted_at'];
      protected $fillable = [
-        'fname', 'lname',  'fullname', 'org_email','email', 'contact', 'password', 'role','inviteToZoho','inviteToSlack','inviteToAsana','status'
+        'firstname', 'lastname', 'fullname','zuid','account_id', 'org_email','email','emergency_contact','emergency_contact_relationship', 'contact', 'password', 'role','inviteToZoho','inviteToSlack','inviteToAsana','status'
     ];
 
     
