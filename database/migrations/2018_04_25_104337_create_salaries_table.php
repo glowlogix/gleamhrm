@@ -15,8 +15,9 @@ class CreateSalariesTable extends Migration
     {
         Schema::create('salaries', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('employee_id');
+            $table->unsignedInteger('employee_id');
             $table->string('basic_salary');
+            $table->softDeletes();
             $table->timestamps();
         });
     }

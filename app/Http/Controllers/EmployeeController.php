@@ -226,7 +226,7 @@ class EmployeeController extends Controller
 
     public function destroy($id)
     {
-        $emp = Employee::find($id);
+        $emp    = Employee::find($id);
         $salary = Salary::where('employee_id',$id)->first();
         $salary->delete();
         $account_id = $emp->account_id;

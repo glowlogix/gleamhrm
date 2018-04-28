@@ -81,23 +81,16 @@
                                 {{ Auth::user()->name }}
                                 <span class="caret"></span>
                             </a>
-
                             <ul class="dropdown-menu">
                                 <li>
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         Logout
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
                                 </li>
-                                <li>
-                                    <a href="{{ route('documents.upload') }}">Upload Documents</a>
-
-                                </li>
-
                             </ul>
                         </li>
                         @endguest
@@ -132,17 +125,20 @@
                         </li> --}}
 
                         <li class="list-group-item">
-                            <a href="{{route('users')}}">Users (administrator)</a>
+                            <a href="{{route('users')}}">Users</a>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('employees')}}">Employees</a>
+                            <ul>
+                                <li><a href="{{ route('documents.upload') }}">Documents</a></li>
+                            </ul>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('attendance')}}">Attendance</a>
                             <ul>
-                                {{-- <li>
+                                <li>
                                      <a href="{{route('leaves')}}">Leaves</a>
-                                </li> --}}
+                                </li>
                                 <li>
                                     <a href="{{route('salary.index')}}">Salary</a>
                                 </li>

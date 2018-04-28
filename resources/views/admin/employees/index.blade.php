@@ -2,23 +2,17 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<div>
-			<b style="text-align: center;">Employees</b>
-		</div>
-		{{-- @if(Auth::user()->admin) --}}
-
-		<div style="padding-left: 85%;position:relative;top:40px">
-			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
+		<span style="float: right;">
+			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="left">
 				<span class="glyphicon glyphicon-plus"></span> Add Employee
 			</a>
-		</div>
-		<br>
-		<div style="padding-right: 85%">
+		</span>
+		<b style="text-align: center;">Employees</b>
+		<span style="float: left;">
 			<a href="{{route('employee.trashed')}}" class="btn btn-info btn-xs" align="right">
-					<span class="glyphicon glyphicon-trash"></span> Trashed Employees
+				<span class="glyphicon glyphicon-trash"></span> Trashed Employees
 			</a>
-		</div>
-		{{-- @endif --}}
+		</span>
 	</div>
 </div>
 <div class="panel-body">
@@ -81,7 +75,7 @@
 					</form>
 				    </div>
 					<div class="col-sm-2 col-sm-offset-1">
-					<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}"><span class="glyphicon glyphicon-edit"></span></a>
+						<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}"><span class="glyphicon glyphicon-edit"></span></a>
 					</div>
 					{{-- <div class="col-sm-2 col-sm-offset-1">
 					<a class="btn btn-success btn-sm" href="{{route('attendance.show',['id'=>$employee->id])}}"> <span class="glyphicon glyphicon-calendar"></span></a>
