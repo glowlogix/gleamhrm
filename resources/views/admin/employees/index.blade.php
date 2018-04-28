@@ -5,7 +5,7 @@
 		<div>
 			<b style="text-align: center;">Employees</b>
 		</div>
-		@if(Auth::user()->admin)
+		{{-- @if(Auth::user()->admin) --}}
 
 		<div style="padding-left: 85%;position:relative;top:40px">
 			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
@@ -18,7 +18,7 @@
 					<span class="glyphicon glyphicon-trash"></span> Trashed Employees
 			</a>
 		</div>
-		@endif
+		{{-- @endif --}}
 	</div>
 </div>
 <div class="panel-body">
