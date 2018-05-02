@@ -16,7 +16,7 @@
 	</div>
 </div>
 <div class="panel-body">
-	@if(count($employees) > 0) @foreach($employees as $employee)
+	@if(count($employees) > 0) 
 		
 	<table class="table" class="col-md-8">
 		<thead>
@@ -31,6 +31,7 @@
 			<th>Manage Employees</th>
 			@endif
 		</thead>
+		@foreach($employees as $employee)
 		<tbody class="table-bordered table-hover table-striped">
 			
 			<tr>
@@ -89,11 +90,13 @@
 			</tr>
 			
 			
-		
 		</tbody>
-		@endforeach @else No Employee found. @endif
+		@endforeach
+		
 		
 	</table>
+	@else No Employee found. @endif
+	
 	<div class="col-md-7">
 			{{$employees->links()}}
 	</div>

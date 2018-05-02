@@ -31,7 +31,6 @@ class EmployeeController extends Controller
     
     public function index()
      {
-
         $this->meta['title'] = 'All Employees';                
         $data = Employee::where('role','member')->paginate(10);
         return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
@@ -81,7 +80,11 @@ class EmployeeController extends Controller
 
        }
        if($request->teams){
-        $this->addUserToTeam($request->teams,$request->org_email);        
+        $response = $this->addUserToOrganization($request->org_email); 
+        if($response){
+        $this->addUserToTeam($request->teams,$request->org_email);    
+        }
+
        }
         $user = Employee::create([
                     'firstname'     => $request->firstname,
@@ -90,9 +93,9 @@ class EmployeeController extends Controller
                     'contact'       => $request->contact,
                     'emergency_contact' => $request->emergency_contact,     
                     'emergency_contact_relationship' => $request->emergency_contact_relationship,                                                            
-                     'password'      => $params['password'],   
-                     'zuid'          => '123',//$response->original->data->zuid,
-                     'account_id'    => '434',//$response->original->data->accountId,
+                    'password'      => $params['password'],   
+                    'zuid'          => '123',//$response->original->data->zuid,
+                    'account_id'    => '434',//$response->original->data->accountId,
                     'org_email'     => $request->org_email,
                     'email'        => $request->email,
                     'status'        => 1,
@@ -226,7 +229,10 @@ class EmployeeController extends Controller
 
     public function destroy($id)
     {
-        $emp    = Employee::find($id);
+        $emp = Employee::find($id);
+        if($emp->inviteToAsana){
+            $this->removeUser($emp->org_email);            
+        }
         $salary = Salary::where('employee_id',$id)->first();
         $salary->delete();
         $account_id = $emp->account_id;
