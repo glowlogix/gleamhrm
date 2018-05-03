@@ -64,6 +64,17 @@ Route::get('/docs/list', [
 ]);
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
+	//dashboard
+	Route::get('/dashboard',[
+		'uses' => 'UsersController@dashboard',
+		'as' => 'admin.dashboard'
+	]);
+
+	Route::get('/category/create',[
+		'uses' => 'CategoriesController@create',
+		'as' => 'category.create'
+	]);
+
 	Route::get('/category/create',[
  	'uses' => 'CategoriesController@create',
  	'as' => 'category.create'

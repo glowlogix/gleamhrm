@@ -109,16 +109,18 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-
+                var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
+                var token = '<?php echo config('values.asanaToken') ?>';
+               // 0/3c4bc6661fc53c3efba83ec9f7d13824
                 $('.asana').bind('click', function () {
 
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/42654723239693/teams',
+                            url: 'https://app.asana.com/api/1.0/organizations/'+orgId+'/teams',
                             type: 'GET',
                             dataType: 'json',
                             headers: {
-                                'Authorization': 'Bearer 0/3c4bc6661fc53c3efba83ec9f7d13824'
+                                'Authorization': 'Bearer '+token
                             },
                             success: function (res) {
                                 count++;

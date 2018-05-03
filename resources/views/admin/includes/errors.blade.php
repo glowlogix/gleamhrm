@@ -1,10 +1,11 @@
 @if(count($errors)>0)
 		<ul class="list-group">
 			@foreach($errors->all() as $abc)
-			<li class="list-group-items text-danger">
-				{{$abc}}
-			</li>
+			<div class="alert alert-danger">
+					<a href="#" class="close" data-dismiss="alert">&times;</a>
+					{{$abc}}
+				</div>
 			@endforeach
 
 		</ul>
-	@endif
+@endif

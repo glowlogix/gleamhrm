@@ -21,6 +21,13 @@ class UsersController extends Controller
         return view('admin.users.index',$this->metaResponse())->with('users',User::all());
     }
 
+    public function dashboard()
+    {
+        $this->meta['title'] = 'Dashboard';                                
+        return view('admin.dashboard.index',$this->metaResponse());
+        
+    }
+
     public function create()
     {
         $this->meta['title'] = 'Add User';                                
