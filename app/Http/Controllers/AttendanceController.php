@@ -62,8 +62,8 @@ class AttendanceController extends Controller
 
          $getcheckoutTime = $request->checkoutdatetimepicker;
          $parsecheckoutTime = Carbon::parse($getcheckoutTime);
-
-         $delay = $request->delay;
+              
+         $delay = $request->delay ? $request->delay  : 0;
          $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
                   
          $attendacne = Attandance::create([
