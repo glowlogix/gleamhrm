@@ -125,7 +125,9 @@
                         <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li> --}}
-
+                        <li class="list-group-item">
+                            <a href="{{route('admin.dashboard')}}">Dashboard</a>
+                        </li>
                         <li class="list-group-item">
                             <a href="{{route('users')}}">Users</a>
                         </li>
