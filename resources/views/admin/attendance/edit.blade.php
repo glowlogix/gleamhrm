@@ -7,7 +7,6 @@
         </div>
     </div>
     <div class="panel-body">
-
         <form action="{{route('attendance.update',['id'=>$attendance->id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group">
@@ -44,8 +43,6 @@
 						
 					</div>
 			 </div>	
-
-
         </form>
         <script type="text/javascript">
             $(document).ready(function() {
@@ -64,4 +61,4 @@
         </script>	
     </div>
 
-    @stop
+@stop

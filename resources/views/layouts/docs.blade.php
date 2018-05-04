@@ -89,19 +89,19 @@
 
                         </li>
                         <li class="list-group-item">
-                                <a href="{{route('employee.attendance')}}">Attendance</a>
+                            <a href="{{route('employee.attendance')}}">Attendance</a>
                         </li>
                     </ul>
                 </div>
                 <div class="col-lg-10">
-                   
+
                     @if(Session::has('success'))
                     <div class="alert alert-success">
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
                         <strong>Success!</strong> {{Session::get('success')}}
                     </div>
                     @endif
-                    
+
                     <div class="panel panel-default">
                         <div class="panel-heading text-center">
                             <div>
@@ -119,17 +119,20 @@
 
                                 @yield('content')
 
-                                
+
                         </div>
                         </table>
 
                     </div>
                 </div>
+            </div>
+            
+        </div>
+</div>
+    
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
 
-
-                <!-- Scripts -->
-                <script src="{{ asset('js/app.js') }}"></script>
-                
 
 
 </body>

@@ -1,29 +1,25 @@
-@extends('layouts.admin')
-@section('title')
-{{ config('app.name', 'HRM') }}|{{$title}}
-@endsection
-
-@section('content')
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
 
 <div class="panel panel-default">
 	<div class="panel-heading">
 
-			<div style="padding-left: 359px"><b style="text-align: center;" >Users</b></div>
-				@if(Auth::user()->admin)
+		<div style="padding-left: 359px">
+			<b style="text-align: center;">Users</b>
+		</div>
+		@if(Auth::user()->admin)
 
-       				<div style="padding-left: 91%;">	 <a href="{{route('user.create')}}" class="btn btn-info btn-xs" align="right">
-          					<span class="glyphicon glyphicon-plus"></span> Add User 
-      					 </a>
-      				</div>	 
-      			@endif			 
- 					
- 				
+		<div style="padding-left: 91%;">
+			<a href="{{route('user.create')}}" class="btn btn-info btn-xs" align="right">
+				<span class="glyphicon glyphicon-plus"></span> Add User
+			</a>
+		</div>
+		@endif
 	</div>
 	<div class="panel-body">
 		<table class="table">
 			<thead>
 				<th> Name</th>
-				<th> Permissions  </th>
+				<th> Permissions </th>
 				@if(Auth::user()->admin)
 				<th>Activation</th>
 				@endif
@@ -31,22 +27,17 @@
 			</thead>
 			<tbody class="table-bordered table-hover table-striped">
 
-			@if($users->count() > 0)
-					@foreach($users as $user)
+				@if($users->count() > 0) @foreach($users as $user)
 				<tr>
 					<td>
-					 	{{$user->name}}	
+						{{$user->name}}
 					</td>
 					<td>
-						@if(Auth::user()->admin)
-						 	@if($user->admin)
-						 		<a href="{{ route('user.not_admin',['id' => $user->id])}}" class="btn btn-xs btn-danger">Remove Permissions</a>
-						 	@else
-						 		<a href="{{ route('user.admin',['id' => $user->id])}}" class="btn btn-xs btn-success">Make admin</a>
-						 	@endif
+						@if(Auth::user()->admin) @if($user->admin)
+						<a href="{{ route('user.not_admin',['id' => $user->id])}}" class="btn btn-xs btn-danger">Remove Permissions</a>
 						@else
-							{{$user->admin}}
-						@endif	
+						<a href="{{ route('user.admin',['id' => $user->id])}}" class="btn btn-xs btn-success">Make admin</a>
+						@endif @else {{$user->admin}} @endif
 					</td>
 					@if(Auth::user()->admin)
 					<td>
@@ -59,19 +50,16 @@
 					@endif
 					<td>
 						@if(Auth::user()->admin)
-					 	<a href="{{route('user.delete',['id'=>$user->id])}}" class="btn btn-danger">Delete</a> 
-					 	@else
-					 	delete
-					 	@endif
-					 </td>
+						<a href="{{route('user.delete',['id'=>$user->id])}}" class="btn btn-danger">Delete</a>
+						@else delete @endif
+					</td>
 				</tr>
-				
-					@endforeach
-			@else
-			 	<tr>
+
+				@endforeach @else
+				<tr>
 					<th colspan="5" class="text-center">No post found.</th>
 				</tr>
-					@endif
+				@endif
 			</tbody>
 		</table>
 	</div>

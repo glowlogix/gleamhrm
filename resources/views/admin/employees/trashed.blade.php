@@ -5,10 +5,9 @@
 		<b> Trash Employees </b>
 	</div>
 	<div class="panel-body">
-
 		<table class="table">
 			@if($employees->count() > 0) @foreach($employees as $employee)
-				
+
 			<thead>
 				<th> Firstname</th>
 				<th> Lastname</th>
@@ -39,7 +38,7 @@
 						</div>
 					</td>
 				</tr>
-				
+
 			</tbody>
 			@endforeach @else
 			<tr> No Employee found.</tr>
@@ -47,8 +46,6 @@
 
 		</table>
 	</div>
+</div>
 
-
-
-
-	@stop
+@stop

@@ -16,22 +16,23 @@
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
-    
+
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
+    />
+
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>   
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
-    
+
 </head>
 
 <body>
@@ -72,10 +73,10 @@
                         <li>
                             <a href="{{ route('login') }}">Administrator Login</a>
                         </li>
-                        {{-- <li>
+                        {{--
+                        <li>
                             <a href="{{ route('register') }}">Register</a>
-                        </li> --}}
-                        @else
+                        </li> --}} @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                 {{ Auth::user()->name }}
@@ -102,25 +103,26 @@
             <div class="row">
                 <div class="col-lg-3">
                     <ul class="list-group">
-                        {{-- <li class="list-group-item">
+                        {{--
+                        <li class="list-group-item">
                             <a href="{{route('category.create')}}">Create New category</a>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('categories')}}">Categories</a>
-                        </li> --}}
-                        {{-- <li class="list-group-item">
+                        </li> --}} {{--
+                        <li class="list-group-item">
                             <a href="{{route('job.create')}}">Create new Job</a>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('jobs')}}">Jobs</a>
-                        </li> --}}
-                        {{-- <li class="list-group-item">
+                        </li> --}} {{--
+                        <li class="list-group-item">
                             <a href="{{route('applicants')}}">Applicants</a>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('applicants.hired')}}">Hired Applicants</a>
-                        </li> --}}
-                        {{-- <li class="list-group-item">
+                        </li> --}} {{--
+                        <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li> --}}
 
@@ -137,28 +139,25 @@
                             <a href="{{route('attendance')}}">Attendance</a>
                             <ul>
                                 <li>
-                                     <a href="{{route('leaves')}}">Leaves</a>
+                                    <a href="{{route('leaves')}}">Leaves</a>
                                 </li>
                                 <li>
                                     <a href="{{route('salary.index')}}">Salary</a>
                                 </li>
 
                             </ul>
-                            
+
                         </li>
-                        
+
                     </ul>
                 </div>
                 <div class="col-lg-9">
-                     @include('admin.includes.errors') 
-                    @if(Session::has('success'))
+                    @include('admin.includes.errors') @if(Session::has('success'))
                     <div class="alert alert-success">
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
                         <strong>Success!</strong> {{Session::get('success')}}
                     </div>
-                    @endif 
-                    
-                    @yield('content')
+                    @endif @yield('content')
                 </div>
 
             </div>
@@ -168,8 +167,9 @@
     </div>
 
     <!-- Scripts -->
-    {{-- <script src="{{ asset('js/app.js') }}"></script> --}}
-    
+    {{--
+    <script src="{{ asset('js/app.js') }}"></script> --}}
+
     <script src="{{ asset('js/toastr.min.js')}}"></script>
     <script>
         @if(Session::has('success'))

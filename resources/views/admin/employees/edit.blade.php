@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content') 
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
 
 
 <div class="panel panel-default">
@@ -8,7 +8,6 @@
         </div>
     </div>
     <div class="panel-body">
-
         <form action="{{route('employee.update',['id'=>$employee->id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group">
@@ -52,20 +51,19 @@
             </div>
             <div class="form-group">
                 <label for="emergency_contact_relationship">Emergency Contact Relationship</label>
-                <input type="text" value="{{$employee->emergency_contact_relationship}}" name="emergency_contact_relationship" placeholder="Please enter emergency contact relationship" class="form-control">
-             </div>
-    
-             <div class="form-group">
-                    <label for="text">Add Salary:</label>
-                    <input style="width: 250px;" type="text" value="{{$salary->basic_salary}}" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
+                <input type="text" value="{{$employee->emergency_contact_relationship}}" name="emergency_contact_relationship" placeholder="Please enter emergency contact relationship"
+                    class="form-control">
+            </div>
+
+            <div class="form-group">
+                <label for="text">Add Salary:</label>
+                <input style="width: 250px;" type="text" value="{{$salary->basic_salary}}" class="form-control" id="salary" placeholder="Enter Salary"
+                    name="salary">
             </div>
             <div class="form-group">
                 <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>
-
-
-
         </form>
     </div>
-
-    @stop
+</div>
+ @stop

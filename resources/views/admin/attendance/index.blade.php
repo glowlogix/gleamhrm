@@ -2,7 +2,6 @@
 @section('title')
     {{ config('app.name', 'HRM') }}|{{$title}}
 @endsection
-
 @section('content')
 
     <div class="panel panel-default">
@@ -11,7 +10,6 @@
             <div><b style="text-align: center;">Create Attendance</b></div>
         </div>
         <div class="row">
-
             <div class="panel-body">
                 <form action="{{route('attendance.store')}}" method="post">
                     {{csrf_field()}}

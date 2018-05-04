@@ -94,10 +94,10 @@ class ApplicantController extends Controller
         return view('admin.applicants.singleCategoryJobs')->with('applicants',$applicants);
     }
 
-  //  public function singleApplicant($id)
-    //{
-     //   return view('admin.applicants.singleapplicant')->with('applicants',Applicant::find($id));
-    //}
+    // public function singleApplicant($id)
+    // {
+    //     return view('admin.applicants.singleapplicant')->with('applicants',Applicant::find($id));
+    // }
 
     public function destroy($id)
     {

@@ -16,8 +16,8 @@
 	</div>
 </div>
 <div class="panel-body">
-	@if(count($employees) > 0) 
-		
+	@if(count($employees) > 0)
+
 	<table class="table" class="col-md-8">
 		<thead>
 			<th>Name</th>
@@ -33,7 +33,6 @@
 		</thead>
 		@foreach($employees as $employee)
 		<tbody class="table-bordered table-hover table-striped">
-			
 			<tr>
 				<td>{{$employee->fullname}}</td>
 				<td>{{$employee->org_email}}</td>
@@ -46,64 +45,62 @@
 				<td>
 					@if($employee->inviteToZoho)
 					<span class="glyphicon glyphicon-ok">
-					@else
-					<span class="glyphicon glyphicon-remove"></span>
-					@endif
+						@else
+						<span class="glyphicon glyphicon-remove"></span>
+						@endif
 				</td>
 				<td>
 					@if($employee->inviteToSlack)
 					<span class="glyphicon glyphicon-ok">
-					@else
-					<span class="glyphicon glyphicon-remove"></span>
-					@endif				
+						@else
+						<span class="glyphicon glyphicon-remove"></span>
+						@endif
 				</td>
 				<td>
 					@if($employee->inviteToAsana)
 					<span class="glyphicon glyphicon-ok">
-					@else
-					<span class="glyphicon glyphicon-remove"></span>
-					@endif
+						@else
+						<span class="glyphicon glyphicon-remove"></span>
+						@endif
 				</td>
 				<td>
 					<div class="col-sm-2">
-								
-					@if(Auth::user()->admin)
-					<form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
-						{{ csrf_field() }}
-						<button class="btn btn-danger btn-sm">
+
+						@if(Auth::user()->admin)
+						<form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
+							{{ csrf_field() }}
+							<button class="btn btn-danger btn-sm">
 								<span class="glyphicon glyphicon-trash"></span>
-						</button>
-					</form>
-				    </div>
+							</button>
+						</form>
+					</div>
 					<div class="col-sm-2 col-sm-offset-1">
-						<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}"><span class="glyphicon glyphicon-edit"></span></a>
+						<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}">
+							<span class="glyphicon glyphicon-edit"></span>
+						</a>
 					</div>
-					{{-- <div class="col-sm-2 col-sm-offset-1">
-					<a class="btn btn-success btn-sm" href="{{route('attendance.show',['id'=>$employee->id])}}"> <span class="glyphicon glyphicon-calendar"></span></a>
+					{{--
+					<div class="col-sm-2 col-sm-offset-1">
+						<a class="btn btn-success btn-sm" href="{{route('attendance.show',['id'=>$employee->id])}}">
+							<span class="glyphicon glyphicon-calendar"></span>
+						</a>
 					</div>
-					<div class="col-sm-2 col-sm-offset-1">	
-					<a class="btn btn-success btn-sm" href="{{route('leave.show',['id'=>$employee->id])}}"><span class="glyphicon glyphicon-tasks"></span></a>
-				    </div> --}}
-				
-					@endif
+					<div class="col-sm-2 col-sm-offset-1">
+						<a class="btn btn-success btn-sm" href="{{route('leave.show',['id'=>$employee->id])}}">
+							<span class="glyphicon glyphicon-tasks"></span>
+						</a>
+					</div> --}} @endif
 				</td>
 			</tr>
-			
-			
 		</tbody>
 		@endforeach
-		
-		
+
+
 	</table>
 	@else No Employee found. @endif
-	
+
 	<div class="col-md-7">
-			{{$employees->links()}}
+		{{$employees->links()}}
 	</div>
 </div>
-
-</div>
-
-
-
 @stop

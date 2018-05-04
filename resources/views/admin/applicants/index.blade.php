@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title')  {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
+@extends('layouts.admin') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection @section('content')
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
@@ -30,8 +30,6 @@
 			<tbody class="table-bordered table-hover table-striped">
 				@if($applicants->count() > 0) @foreach($applicants as $applicant)
 				<tr>
-
-
 					<td>
 						<img src="/{{$applicant->avatar}}" alt="" width="50px" width="50px">
 					</td>
@@ -71,4 +69,4 @@
 		</table>
 	</div>
 
-	@stop
+@stop

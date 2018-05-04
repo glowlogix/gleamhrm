@@ -112,28 +112,27 @@ class AttendanceController extends Controller
      */
     public function update(Request $request,$id)
     {
-        dd($request);
-        // $attendance = Attandance::where('id',$id)->first();
-        // $getcheckinTime = $request->checkindatetimepicker;
-        // $parsecheckinTime= Carbon::parse($getcheckinTime);
+        $attendance = Attandance::where('id',$id)->first();
+        $getcheckinTime = $request->checkindatetimepicker;
+        $parsecheckinTime= Carbon::parse($getcheckinTime);
 
-        // $attendance->checkintime = $parsecheckinTime;
+        $attendance->checkintime = $parsecheckinTime;
 
-        // $getcheckoutTime = $request->checkoutdatetimepicker;
-        // $parsecheckoutTime = Carbon::parse($getcheckoutTime);
+        $getcheckoutTime = $request->checkoutdatetimepicker;
+        $parsecheckoutTime = Carbon::parse($getcheckoutTime);
 
-        // $attendance->checkouttime = $parsecheckoutTime;
+        $attendance->checkouttime = $parsecheckoutTime;
 
-        // $attendance->delay = $request->attendance_delay;
+        $attendance->delay = $request->attendance_delay;
 
-        // $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
-        // $attendance->hoursLogged = $hoursLogged;
-        // $attendance->hoursLogged = $hoursLogged;
-        // $row = $attendance->save();
-        // if($row){
-        //     return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
+        $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
+        $attendance->hoursLogged = $hoursLogged;
+        $attendance->hoursLogged = $hoursLogged;
+        $row = $attendance->save();
+        if($row){
+            return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
             
-        //  }
+         }
 
     }
 

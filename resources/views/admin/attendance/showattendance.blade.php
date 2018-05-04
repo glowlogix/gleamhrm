@@ -30,7 +30,6 @@
                         </form>
                         <br>
                         <a class="btn btn-info btn-sm" href="{{route('attendance.edit',['id'=>$attendance->id])}}">Edit</a>
-
                         @endif
                     </td>
                 </tr>
@@ -39,9 +38,5 @@
             </tbody>
         </table>
     </div>
-
 </div>
-
-
-
 @stop

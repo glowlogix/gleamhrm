@@ -26,10 +26,10 @@
 </head>
 
 <body>
-    <div id="app">            
+    <div id="app">
         @yield('content')
 
-    </div>  
+    </div>
 </body>
 
 </html>

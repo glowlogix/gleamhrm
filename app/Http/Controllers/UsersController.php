@@ -24,7 +24,7 @@ class UsersController extends Controller
         $this->meta['title'] = 'User Permitions';                        
         return view('admin.users.index',$this->metaResponse())->with('users',User::all());
     }
-
+    
     public function dashboard()
     {
         $this->meta['title'] = 'Dashboard';
@@ -138,7 +138,6 @@ class UsersController extends Controller
             'admin' => $request->admin,
             'password' => Hash::make($request->password),
             'status' => 1
-            //'password' =>$request->password
         ]);
 
         Session::flash('success', 'user added successfuly.');

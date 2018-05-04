@@ -70,7 +70,10 @@ class EmployeeController extends Controller
             "country"               => "pk"
        ];
         if($request->zoho)
-       {            
+       {         
+           
+         /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
+
         // $response = $this->createZohoAccount( $params );
         // dd($response);
         // if(!$response->original){
@@ -124,7 +127,7 @@ class EmployeeController extends Controller
         Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
         
       }
-    //policies    
+        //policies    
         Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
         //simsim
         Mail::to($request->org_email)->later($when, new SimSimMail());
@@ -170,6 +173,8 @@ class EmployeeController extends Controller
         $salary->save();
         }
         
+        /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
+
         //admin password get
         // $adminPassword = config('values.adminPassword');
         // $params = [
@@ -231,13 +236,13 @@ class EmployeeController extends Controller
     {
         $emp = Employee::find($id);
         if($emp->inviteToAsana){
-            $this->removeUser($emp->org_email);            
+            $this->removeUser($emp->org_email);        
+            $emp->inviteToAsana = 0;    
         }
         $salary = Salary::where('employee_id',$id)->first();
         $salary->delete();
         $account_id = $emp->account_id;
         $zuid = $emp->zuid;
-        $salary->delete();        
         $response = $emp->delete();
         $adminPassword = config('values.adminPassword');
         if($response){
@@ -246,6 +251,7 @@ class EmployeeController extends Controller
             "zuid" => $zuid ,
             "password" => $adminPassword
         ];
+         /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
 
           //$this->deleteZohoAccount($arr,$account_id);
         }

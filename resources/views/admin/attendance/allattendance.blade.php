@@ -28,8 +28,8 @@
                               <button type="button" id="del" class="btn btn-danger">Delete</button>
                               
                             </div>
-                          </div><!-- /.modal-content -->
-                        </div><!-- /.modal-dialog -->
+                          </div>
+                        </div>
                 </div>
 
             {!! $calendar->calendar() !!}
