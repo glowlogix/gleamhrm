@@ -53,10 +53,6 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
              
-        $this->validate($request,[
-            'checkindatetimepicker' => 'required|before:checkoutdatetimepicker',
-            'checkoutdatetimepicker' => 'required'
-        ]);
          $getcheckinTime = $request->checkindatetimepicker;
          $parsecheckinTime= Carbon::parse($getcheckinTime);
 

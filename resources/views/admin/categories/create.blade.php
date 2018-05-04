@@ -1,9 +1,5 @@
 @extends('layouts.admin')
-@section('title')
-{{ config('app.name', 'HRM') }}|{{$title}}
-@endsection
 @section('content')
-@include('admin.includes.errors')
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
 			<b>	Create new Category <b>

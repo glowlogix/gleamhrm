@@ -349,10 +349,17 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'DocumentsController@index'
 	]);
 
+	Route::get('/upload/docs/upload',[
+		'as' => 'documents.docs.upload',
+		'uses' => 'DocumentsController@createDocs'
+	]);
+
+
 	Route::post('/upload/docs',[
 		'as' => 'documents.upload',
 		'uses' => 'DocumentsController@uploadDocs'
 	]);
+
 	Route::post('/upload/status/{id}',[
 		'as' => 'documents.status',
 		'uses' => 'DocumentsController@statusChange'

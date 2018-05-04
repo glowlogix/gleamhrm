@@ -52,7 +52,6 @@ class SalariesController extends Controller
     $id = $employee->id;
 
     $attendanceDate2 = DB::select(DB::raw("SELECT * FROM attandances WHERE DATE_FORMAT(checkintime, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(checkintime, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
-    if( $attendanceDate2 ){
     foreach( $attendanceDate2 as $data){
         $employee_id = $data->employee_id;
         $salaries = Salary::where('employee_id',$employee_id)->get();
@@ -61,34 +60,28 @@ class SalariesController extends Controller
         $employees = Employee::where('id',$employee_id)->get();
         foreach($employees as $emp){
             $employee_name = $emp->fullname;
-            $monthly_salary = MonthlySalary::where('employee_id',$employee_id)->get();
-            foreach($monthly_salary as $mSalary){
-            $bonus = $mSalary->bonus;
             $employeeWorkingDaysId  =  DB::select(DB::raw("SELECT count(*) as data FROM attandances WHERE DATE_FORMAT(checkintime, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(checkintime, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
             $employeeWorkingDaysId = $employeeWorkingDaysId[0]->data;
             
             $leavesCount  =  DB::select(DB::raw("SELECT count(*) as data FROM leaves WHERE DATE_FORMAT(datefrom, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(datefrom, '%Y-%m-%d') <= '$endDate' And leave_type!='Paid Leave' And employee_id= '$id'"));
-            $leavesCount = $leavesCount[0]->data;
-        }
+            if($leavesCount){
+             $leavesCount = $leavesCount[0]->data;
+            }
+            
         $perDaySalary = ($basic_salary/$employeeWorkingDaysId); // perdaySalary
         $leaveDeduction =$perDaySalary * $leavesCount; //Leave Deduction
         
         $grossSalary = abs($leaveDeduction - $basic_salary); //Gross Salary
+        
         }
-    
-    }
-
-    }
-    $writer->addRow([$employee_name,$basic_salary, $bonus, $leaveDeduction, $grossSalary]); 
-    
-    }
-    else{
-        return redirect()->back()->withErrors('No Attendance Yet');     
         
     }
-
+    
     }
+    }
+    $writer->addRow([$employee_name,$basic_salary,0, $leaveDeduction, $grossSalary]); 
+    
     $writer->close();
         
-        }
+ }
 }

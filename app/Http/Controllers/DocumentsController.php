@@ -20,6 +20,10 @@ class DocumentsController extends Controller
         return view('admin.docs.index',['files' => $data],$this->metaResponse());
     }
 
+    public function createDocs(Request $request){
+        return view('admin.docs.upload');
+    }
+
     public function uploadDocs(Request $request){
         $this->validate($request, [
             'documents.*' => 'required|mimes:doc,docx,pdf|max:2000',
@@ -42,7 +46,7 @@ class DocumentsController extends Controller
             }
         }
         Session::flash('success', 'File is upploaded succesfully');
-        return redirect()->back();
+        return redirect()->route('documents.upload');
     }
 
     public function statusChange(Request $request,$id){

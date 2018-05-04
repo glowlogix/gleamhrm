@@ -1,27 +1,19 @@
-@extends('layouts.admin') @section('content') @section('title') {{ config('app.name', 'HRM') }}|{{$title}} @endsection
+@extends('layouts.admin') @section('content') 
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<b>Upload Documents</b>
+		<b>All Documents</b>
+		<span style="float: right;">
+			<a href="{{route('documents.docs.upload')}}" class="btn btn-info btn-xs" align="left">
+				<span class="glyphicon glyphicon-plus"></span> Add Documents
+			</a>
+		</span>
 	</div>
 	<div class="panel-body">
 		<div class="container">
 			<br>
 			<div class="row">
 				<div class="col-md-8">
-					<form action="/admin/upload/docs" method="post" enctype="multipart/form-data">
-						{{ csrf_field() }}
-						<br />
-						<label for="document_name">Enter Document Name:</label>
-						<input type="text" class="form-control" placeholder="Enter Document Name" name="document_name">
-						<br>
-						<label for="documents">Documents(can attach more than one):</label>
-
-						<input type="file" class="form-control" name="documents[]" multiple />
-
-						<br />
-						<input type="submit" class="btn btn-primary" value="Upload" />
-					</form>
 					<table class="table table-striped">
 
 						@if(count($files) > 0)

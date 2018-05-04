@@ -110,18 +110,13 @@
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Document Name</th>
-                                        <th>Document Url</th>
-                                    </tr>
-                                </thead>
+                               
 
                                 @yield('content')
 
-
+                            </table>
+                            
                         </div>
-                        </table>
 
                     </div>
                 </div>
