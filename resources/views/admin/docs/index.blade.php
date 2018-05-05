@@ -20,7 +20,6 @@
 						<thead>
 							<tr>
 								<th>Document Name</th>
-								<th style="text-align:center">Url</th>
 								<th style="padding-left:5%;">Status</th>
 							</tr>
 						</thead>
@@ -28,11 +27,7 @@
 						<tbody>
 							<tr>
 								<td>
-									<p>{{ $file->name }}</p>
-								</td>
-								<td>
-									<a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>
-									
+									<a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->name }}</a>
 								</td>
 								<td>
 									<form method="POST" action="{{route('documents.status',$file->id)}}">
