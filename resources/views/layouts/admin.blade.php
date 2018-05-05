@@ -148,7 +148,7 @@
                                     <a href="{{route('leaves')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('salary.index')}}" {{ request()->is('admin/salary/export') ? 'id=active1' : ''}}>Salary</a>
+                                    <a href="{{route('salary.show')}}" {{ request()->is('admin/salary') ? 'id=active1' : ''}}>Salary</a>
                                 </li>
 
                             </ul>

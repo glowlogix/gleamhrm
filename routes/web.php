@@ -280,7 +280,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.store'
 	]);
 
-	Route::Get('/attendance-/show/{id}',[
+	Route::Get('/attendance/show/{id}',[
 		'uses' => 'AttendanceController@index',
 		'as' => 'attendance.show'
 	]);
@@ -304,7 +304,31 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.export'
 	]);
 
-	//Salary Export
+	//Salary Show
+
+	Route::Get('/salary',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.show'
+	]);
+
+	//add Bonus
+		Route::Post('/salary/addBonus/{id}',[
+			'uses' => 'SalariesController@addBonus',
+			'as' => 'salary.bonus'
+		]);
+	//proccessed
+	
+	Route::Post('/salary/process',[
+		'uses' => 'SalariesController@processSalary',
+		'as' => 'salary.processed'
+	]);
+
+	//export
+	Route::Get('/salary/export',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.index'
+	]);
+
 	Route::Get('/salary/export',[
 		'uses' => 'SalariesController@index',
 		'as' => 'salary.index'

@@ -20,10 +20,21 @@ class SalariesController extends Controller
     
     public function index(){
 
-        $this->meta['title'] = 'Export Salary';  
-        return view('admin.salary.index',$this->metaResponse());
+        $this->meta['title'] = 'All Salaries';  
+        $employees = Employee::all();
+        foreach($employees as $employee){
+            $id = $employee->id;
+            $salary = Salary::where('employee_id',$id)->first();
+        }
+        return view('admin.salary.index',$this->metaResponse(),['employees' => $employees,'salary'=>$salary]);
 
    }
+
+   public function addBonus(Request $request,$id){
+
+   }
+
+
    public function export(Request $request){
 
         
