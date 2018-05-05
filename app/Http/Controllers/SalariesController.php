@@ -28,7 +28,7 @@ class SalariesController extends Controller
 
         
     $this->validate($request,[
-        'start_date' => 'required|before:end_date',
+        'start_date' => 'required|before_or_equal:end_date',
         'end_date' => 'required'
     ]);
 

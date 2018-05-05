@@ -125,6 +125,39 @@ class UsersController extends Controller
         return view('admin.users.create',$this->metaResponse());
     }
 
+    public function edit(Request $request,$id){
+
+        $this->meta['title'] = 'User Update';
+        $user = User::find($id);   
+        return view('admin.users.edit',$this->metaResponse())->with(['user' => $user]);
+    }
+
+    public function update(Request $request,$id){
+        
+        $user = User::find($id);  
+        $this->validate($request,[
+            'name' => 'required',
+            'email' => 'required|email'
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+        if($request->admin){
+        $user->admin = $request->admin;
+        }else{
+            $user->admin  = 0;
+        }
+        if($request->password){
+            $user->password = $request->password;
+        }
+        
+        $user->save();
+
+        Session::flash('success', 'User updated successfuly.');
+        return redirect()->route('users'); 
+    }
+        
+
     public function store(Request $request)
     {
         $this->validate($request,[
@@ -132,6 +165,7 @@ class UsersController extends Controller
             'email' => 'required|email',
             'password' => 'required'
         ]);
+        
        $user=User::create([
             'name' => $request->name,
             'email' => $request->email,
@@ -169,19 +203,7 @@ class UsersController extends Controller
         return redirect()->back();
     }
 
-    public function ActivateUser($id){
-        $user= User::find($id);
-        $user->status=1;
-        $user->save();
-        Session::flash('success', 'User is Activated Seccessfuly.');
-        return redirect()->back();
-    }
+   
 
-    public function DisableUser($id){
-        $user= User::find($id);
-        $user->status=0;
-        $user->save();
-        Session::flash('success', 'User is disabled Seccessfuly.');
-        return redirect()->back();
-    }
+ 
 }

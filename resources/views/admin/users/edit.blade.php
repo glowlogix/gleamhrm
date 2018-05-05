@@ -2,33 +2,36 @@
 
 <div class="panel panel-default">
     <div class="panel-heading text-center">
-        <b>Create new User</b>
+        <b>Update User</b>
     </div>
     <div class="panel-body">
 
-        <form action="{{route('user.store')}}" method="Post">
+        <form action="{{route('user.update',['id'=>$user->id])}}" method="Post">
             {{csrf_field()}}
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" placeholder="Enter Name here" class="form-control">
+                <input type="text" name="name" value={{$user->name}} placeholder="Enter Name here" class="form-control">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text" name="email" placeholder="Enter Name email Address" class="form-control">
+                <input type="text" name="email"  value={{$user->email}} placeholder="Enter Name email Address" class="form-control">
             </div>
             <div class="form-group">
                 <label for="admin">Admin</label>
                 <br>
-                <input type="hidden" name="admin" value="0" />
                 
+                @if($user->admin == "1")                
+                <input type="checkbox" checked name="admin" value="1" />
+                @else
                 <input type="checkbox" name="admin" value="1" />
+                @endif
             </div>
             <div class="form-group">
                 <label for="email">Password</label>
                 <input type="password" name="password" placeholder="Enter password here" class="form-control">
             </div>
             <div class="form-group">
-                <button class="btn btn-success center-block" type="submit"> Create User</button>
+                <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>
         </form>
 

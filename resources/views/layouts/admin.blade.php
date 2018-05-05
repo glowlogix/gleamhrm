@@ -129,26 +129,26 @@
                         <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li> --}}
-                        <li class="list-group-item">
+                        <li class="list-group-item" {{ request()->is('admin/dashboard') ? 'id=active1' : ''}}>
                             <a href="{{route('admin.dashboard')}}">Dashboard</a>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item" {{ request()->is('admin/users') ? 'id=active1' : ''}}>
                             <a href="{{route('users')}}">Users</a>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item" {{ request()->is('admin/upload/docs') ? 'id=active1' : ''}}>
                             <a href="{{ route('documents.upload') }}">Documents</a>
                         </li>
-                        <li class="list-group-item">
+                        <li class="list-group-item" {{ request()->is('admin/employees') ? 'id=active1' : ''}}>
                             <a href="{{route('employees')}}">Employees</a>
                         </li>
-                        <li class="list-group-item">
-                            <a href="{{route('attendance')}}">Attendance</a>
+                        <li class="list-group-item" >
+                            <a href="{{route('attendance')}}" {{ request()->is('admin/attendance') ? 'id=active1' : ''}}>Attendance</a>
                             <ul>
                                 <li>
-                                    <a href="{{route('leaves')}}">Leaves</a>
+                                    <a href="{{route('leaves')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('salary.index')}}">Salary</a>
+                                    <a href="{{route('salary.index')}}" {{ request()->is('admin/salary/export') ? 'id=active1' : ''}}>Salary</a>
                                 </li>
 
                             </ul>
@@ -176,15 +176,6 @@
     {{--
     <script src="{{ asset('js/app.js') }}"></script> --}}
 
-    <script src="{{ asset('js/toastr.min.js')}}"></script>
-    <script>
-        @if(Session::has('success'))
-        toastr.success("{{Session::get('success')}}")
-        @endif
-        @if(Session::has('info'))
-        toastr.info("{{Session::get('info')}}")
-        @endif
-    </script>
     @yield('scripts')
 
 </body>

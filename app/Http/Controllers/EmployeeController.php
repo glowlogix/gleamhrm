@@ -259,7 +259,7 @@ class EmployeeController extends Controller
         
     }
     public function EmployeeLogin(){
-        $this->meta['title'] = 'Employee Login';                                
+        $this->meta['title'] = 'Employee Login';    
         
         return view('admin.employees.login',$this->metaResponse());
     }

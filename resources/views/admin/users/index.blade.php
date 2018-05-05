@@ -1,33 +1,30 @@
 @extends('layouts.admin') @section('content')
 
 <div class="panel panel-default">
-	<div class="panel-heading">
-
-		<div style="padding-left: 359px">
-			<b style="text-align: center;">Users</b>
-		</div>
+	<div class="panel-heading text-center">
 		@if(Auth::user()->admin)
-
-		<div style="padding-left: 91%;">
-			<a href="{{route('user.create')}}" class="btn btn-info btn-xs" align="right">
+		<span style="float: right;">
+			<a href="{{route('user.create')}}" class="btn btn-info btn-xs" align="left">
 				<span class="glyphicon glyphicon-plus"></span> Add User
 			</a>
-		</div>
+		</span>
+		<b style="text-align: center;">Users</b>
 		@endif
 	</div>
 	<div class="panel-body">
+			
 		<table class="table">
-			<thead>
+			<thead  style="text-align: center;">
 				<th> Name</th>
 				<th> Permissions </th>
 				@if(Auth::user()->admin)
-				<th>Activation</th>
 				@endif
-				<th> Delete </th>
+				<th> Manage User </th>
 			</thead>
+			@if($users->count() > 0) @foreach($users as $user)
+			
 			<tbody class="table-bordered table-hover table-striped">
 
-				@if($users->count() > 0) @foreach($users as $user)
 				<tr>
 					<td>
 						{{$user->name}}
@@ -39,29 +36,34 @@
 						<a href="{{ route('user.admin',['id' => $user->id])}}" class="btn btn-xs btn-success">Make admin</a>
 						@endif @else {{$user->admin}} @endif
 					</td>
-					@if(Auth::user()->admin)
-					<td>
-						@if($user->status)
-						<a href="{{route('user.disable',['id'=>$user->id])}}" class="btn btn-xs btn-danger">Disable </a>
-						@else
-						<a href="{{route('user.activate',['id'=>$user->id])}}" class="btn btn-xs btn-success">Activate</a>
-						@endif
-					</td>
-					@endif
 					<td>
 						@if(Auth::user()->admin)
-						<a href="{{route('user.delete',['id'=>$user->id])}}" class="btn btn-danger">Delete</a>
-						@else delete @endif
+						<div class="col-md-2">
+						<form action="{{ route('user.delete' , $user->id )}}" method="post">
+							{{ csrf_field() }}
+							<button class="btn btn-danger btn-sm">
+								<span class="glyphicon glyphicon-trash"></span>
+							</button>
+						</form>
+					    </div>
+						<div class="col-md-2">
+							<a class="btn btn-info btn-sm" href="{{route('user.edit',['id'=>$user->id])}}">
+								<span class="glyphicon glyphicon-edit"></span>
+							</a>
+						</div>
+						@else Edit/delete @endif
 					</td>
 				</tr>
 
-				@endforeach @else
-				<tr>
-					<th colspan="5" class="text-center">No post found.</th>
-				</tr>
-				@endif
+				@endforeach
 			</tbody>
+			@else
+			<tr>
+				<th colspan="5" class="text-center">No User found.</th>
+			</tr>
+			@endif
 		</table>
+		
 	</div>
 </div>
 

@@ -191,7 +191,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@store',
 		'as' => 'user.store'
 	]);
-	Route::get('/user/delete/{id}',[
+	Route::post('/user/delete/{id}',[
 		'uses' => 'UsersController@delete',
 		'as' => 'user.delete'
 	]);
@@ -199,18 +199,21 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@admin',
 		'as' => 'user.admin'
 	]);
+
+	Route::Get('/user/edit/{id}',[
+		'uses' => 'UsersController@edit',
+		'as' => 'user.edit'
+	]);
+	Route::Post('/user/update/{id}',[
+		'uses' => 'UsersController@update',
+		'as' => 'user.update'
+	]);
+
 	Route::Get('/user/not_admin/{id}',[
 		'uses' => 'UsersController@Not_Admin',
 		'as' => 'user.not_admin'
 	]);
-	Route::Get('/user/Activate/{id}',[
-		'uses' => 'UsersController@ActivateUser',
-		'as' => 'user.activate'
-	]);
-	Route::Get('/user/Disable/{id}',[
-		'uses' => 'UsersController@DisableUser',
-		'as' => 'user.disable'
-	]);
+
 	Route::Get('/employees',[
 		'uses' => 'EmployeeController@index',
 		'as' => 'employees'
@@ -354,15 +357,24 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'DocumentsController@createDocs'
 	]);
 
+	Route::post('/upload/delete/{id}',[
+		'as' => 'documents.docs.delete',
+		'uses' => 'DocumentsController@deleteDocument'
+	]);
+
+	Route::get('/upload/docs/edit/{id}',[
+		'as' => 'documents.docs.edit',
+		'uses' => 'DocumentsController@editDocument'
+	]);
+
+	Route::post('/upload/docs/update/{id}',[
+		'as' => 'documents.docs.update',
+		'uses' => 'DocumentsController@updateDocument'
+	]);
 
 	Route::post('/upload/docs',[
 		'as' => 'documents.upload',
 		'uses' => 'DocumentsController@uploadDocs'
-	]);
-
-	Route::post('/upload/status/{id}',[
-		'as' => 'documents.status',
-		'uses' => 'DocumentsController@statusChange'
 	]);
 
 });

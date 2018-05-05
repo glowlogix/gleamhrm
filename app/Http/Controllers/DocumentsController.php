@@ -24,6 +24,40 @@ class DocumentsController extends Controller
         return view('admin.docs.upload');
     }
 
+    public function editDocument(Request $request,$id){
+        $document = DB::table('documents')->where('id',$id)->first();
+        return view('admin.docs.edit',['document'=>$document]);
+    }
+
+    public function updateDocument(Request $request,$id){
+
+        $this->validate($request, [
+            'documentname' => 'required',
+            'upload_status' => 'required'
+        ]);
+
+        DB::table('documents')->where('id',$id)->first();
+        $status = $request->upload_status;
+        $name = $request->documentname;
+        DB::table('documents')
+        ->where('id', $id)
+        ->update(['status' => $status,'name' => $name]);
+        
+        Session::flash('success','Document is updated succesfully');            
+        
+        return redirect()->route('documents.upload');
+
+    }
+
+    public function deleteDocument(Request $request,$id){
+        DB::table('documents')->where('id',$id)->delete();
+        
+        Session::flash('success','Document is deleted succesfully');            
+        
+        return redirect()->back();
+    }
+
+
     public function uploadDocs(Request $request){
         $this->validate($request, [
             'documents.*' => 'required|mimes:doc,docx,pdf|max:2000',
@@ -49,15 +83,4 @@ class DocumentsController extends Controller
         return redirect()->route('documents.upload');
     }
 
-    public function statusChange(Request $request,$id){
-        DB::table('documents')->where('id',$id)->first();
-        $status = $request->upload_status;
-        DB::table('documents')
-        ->where('id', $id)
-        ->update(['status' => $status]);
-        
-        Session::flash('success','Status is change succesfully');            
-        
-        return redirect()->back();
-    }
 }
