@@ -5,7 +5,7 @@
 		<b>All Documents</b>
 		<span style="float: right;">
 			<a href="{{route('documents.docs.upload')}}" class="btn btn-info btn-xs" align="left">
-				<span class="glyphicon glyphicon-plus"></span> Add Documents
+				<span class="glyphicon glyphicon-plus"></span> Add Document
 			</a>
 		</span>
 	</div>
@@ -20,6 +20,7 @@
 						<thead>
 							<tr>
 								<th>Document Name</th>
+								<th style="text-align:center">Url</th>
 								<th style="padding-left:5%;">Status</th>
 							</tr>
 						</thead>
@@ -28,6 +29,10 @@
 							<tr>
 								<td>
 									<p>{{ $file->name }}</p>
+								</td>
+								<td>
+									<a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->url }}</a>
+									
 								</td>
 								<td>
 									<form method="POST" action="{{route('documents.status',$file->id)}}">
