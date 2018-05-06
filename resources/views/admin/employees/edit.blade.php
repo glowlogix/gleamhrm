@@ -29,8 +29,13 @@
             <div class="form-group">
                 <label for="employee_status">Account Status</label>
                 <select name="employee_status" id="employee_status" class="form-control">
+                    @if($employee->status == 1)
                     <option selected value="1">Enable Account</option>
                     <option value="0">Disable Account</option>
+                    @else
+                    <option value="1">Enable Account</option>
+                    <option selected value="0">Disable Account</option>
+                    @endif
                 </select>
             </div>
             <div class="form-group">

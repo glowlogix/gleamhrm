@@ -29,7 +29,7 @@ class EmployeeController extends Controller
     use SlackTrait;
     use MetaTrait;
     
-    public function index()
+    public function index() 
      {
         $this->meta['title'] = 'All Employees';                
         $data = Employee::where('role','member')->paginate(10);
@@ -172,29 +172,27 @@ class EmployeeController extends Controller
         $salary->basic_salary = $request->salary;
         $salary->save();
         }
-        
-        /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
 
         //admin password get
-        // $adminPassword = config('values.adminPassword');
-        // $params = [
-        //     "mode" => '',
-        //     "zuid" => $employee->zuid,
-        //     "password" => $adminPassword
+        $adminPassword = config('values.adminPassword');
+        $params = [
+            "mode" => '',
+            "zuid" => $employee->zuid,
+            "password" => $adminPassword
 
-        // ];
-        // if ($request->employee_status === '1'){
-        //     $params['mode'] = 'enableUser';
-        //     $employee->status = 1;
-        //     $this->updateZohoAccount($params,$employee->account_id);
-        //     $employee->save();
+        ];
+        if ($request->employee_status === '1'){
+            $params['mode'] = 'enableUser';
+            $employee->status = 1;
+            $this->updateZohoAccount($params,$employee->account_id);
+            $employee->save();
             
-        // }else if($request->employee_status === '0'){
-        //     $params['mode']  = 'disableUser';
-        //     $employee->status  = 0;
-        //     $this->updateZohoAccount($params,$employee->account_id);    
-        //     $employee->save();        
-        // }
+        }else if($request->employee_status === '0'){
+            $params['mode']  = 'disableUser';
+            $employee->status  = 0;
+            $this->updateZohoAccount($params,$employee->account_id);    
+            $employee->save();        
+        }
 
         return redirect()->back()->with('success','Employee is updated succesfully');     
         
@@ -235,26 +233,29 @@ class EmployeeController extends Controller
     public function destroy($id)
     {
         $emp = Employee::find($id);
+        $zuid = $emp->zuid;
+        $accountId = $emp->account_id;
+        $adminPassword = config('values.adminPassword');
+
         if($emp->inviteToAsana){
             $this->removeUser($emp->org_email);        
-            $emp->inviteToAsana = 0;    
         }
+        $arr = [
+            "zuid" => $zuid ,
+            "password" => $adminPassword
+        ];
+        
+        if($emp->inviteToZoho){
+            $this->deleteZohoAccount($arr,$accountId);   
+        }
+
         $salary = Salary::where('employee_id',$id)->first();
         $salary->delete();
         $account_id = $emp->account_id;
         $zuid = $emp->zuid;
         $response = $emp->delete();
-        $adminPassword = config('values.adminPassword');
-        if($response){
             
-        $arr = [
-            "zuid" => $zuid ,
-            "password" => $adminPassword
-        ];
-         /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
-
-          //$this->deleteZohoAccount($arr,$account_id);
-        }
+    
         return redirect()->back()->with('success','Employee is trash succesfully');     
         
     }
