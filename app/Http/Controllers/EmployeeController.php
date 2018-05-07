@@ -235,6 +235,7 @@ class EmployeeController extends Controller
         $emp = Employee::find($id);
         $zuid = $emp->zuid;
         $adminPassword = config('values.adminPassword');
+        dd($adminPassword);
         
         if($emp->inviteToAsana){
             $this->removeUser($emp->org_email);       
