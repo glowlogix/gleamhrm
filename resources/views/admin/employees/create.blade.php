@@ -86,9 +86,9 @@
         </form>
         <script type="text/javascript">
             $(document).ready(function () {
+                var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
                 var token = '<?php echo config('values.asanaToken') ?>';
                 console.log(orgId);
                 console.log(token);
