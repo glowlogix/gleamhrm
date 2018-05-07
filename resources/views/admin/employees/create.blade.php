@@ -88,7 +88,7 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId = <?php echo config('values.asanaWorkspaceId'); ?>;
+                var orgId = '<?php echo config('values.asanaWorkspaceId'); ?>';
                 var token = '<?php echo config('values.asanaToken'); ?>';
              
 
