@@ -90,12 +90,14 @@
                 var count = 0;
                 var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
                 var token = '<?php echo config('values.asanaToken') ?>';
+                console.log(orgId);
+                console.log(token);
 
                 $('.asana').bind('click', function () {
 
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/' + 123 +'/teams',
+                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',
                             type: 'GET',
                             dataType: 'json',
                             headers: {
