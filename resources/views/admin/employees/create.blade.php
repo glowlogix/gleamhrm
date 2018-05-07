@@ -95,7 +95,7 @@
 
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',
+                            url: 'https://app.asana.com/api/1.0/organizations/' + 123 +'/teams',
                             type: 'GET',
                             dataType: 'json',
                             headers: {
