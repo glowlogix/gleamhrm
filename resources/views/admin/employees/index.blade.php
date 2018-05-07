@@ -97,7 +97,7 @@
 
 
 	</table>
-	@else No Employee found. @endif
+	@else No Employee found.. @endif
 
 	<div class="col-md-7">
 		{{$employees->links()}}
