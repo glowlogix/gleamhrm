@@ -88,11 +88,10 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId = '<?php echo config('values.asanaWorkspaceId'); ?>';
-                var token = '<?php echo config('values.asanaToken'); ?>';
+                var orgId = '{{config('values.asanaWorkspaceId')}}';
+                var token = '{{config('values.asanaToken')}}';
              
                 $('.asana').bind('click', function () {
-                    console.log(orgId);
                     if ($(this).is(':checked')) {
                         $.ajax({
                             url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
