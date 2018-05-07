@@ -236,17 +236,17 @@ class EmployeeController extends Controller
         $zuid = $emp->zuid;
         $adminPassword = config('values.adminPassword');
         
-        // if($emp->inviteToAsana){
-        //     $this->removeUser($emp->org_email);       
-        // }
-        $arr = [
-            "zuid" => $zuid ,
-            "password" => $adminPassword
-        ];
-        
-        if($emp->inviteToZoho){
-            $this->deleteZohoAccount($arr);   
+        if($emp->inviteToAsana){
+            $this->removeUser($emp->org_email);       
         }
+        // $arr = [
+        //     "zuid" => $zuid ,
+        //     "password" => $adminPassword
+        // ];
+        
+        // if($emp->inviteToZoho){
+        //     $this->deleteZohoAccount($arr);   
+        // }
 
         // $salary = Salary::where('employee_id',$id)->first();
         // $salary->delete();

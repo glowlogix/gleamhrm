@@ -171,9 +171,7 @@ trait ZohoTrait{
             "zuid"                  => "", 
             "password"              => ""
         ];
-        $defaultParams = array_merge( $defaultParams, $params );
-        dd($defaultParams );
-        
+        $defaultParams = array_merge( $defaultParams, $params );        
         $client = new Client([
             'headers' => [
                 'Accept'        => 'application/json',

@@ -92,9 +92,10 @@
                 var token = '<?php echo config('values.asanaToken'); ?>';
              
                 $('.asana').bind('click', function () {
+                    console.log(orgId);
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
                             type: 'GET',
                             dataType: 'json',
                             headers: {
