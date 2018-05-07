@@ -91,10 +91,7 @@
                 var orgId = '<?php echo config('values.asanaWorkspaceId'); ?>';
                 var token = '<?php echo config('values.asanaToken'); ?>';
              
-                console.log(orgId);
-
                 $('.asana').bind('click', function () {
-                    console.log(token);
                     if ($(this).is(':checked')) {
                         $.ajax({
                             url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',

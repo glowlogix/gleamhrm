@@ -244,9 +244,9 @@ class EmployeeController extends Controller
         //     "password" => $adminPassword
         // ];
         
-        // if($emp->inviteToZoho){
-        //     $this->deleteZohoAccount($arr);   
-        // }
+        if($emp->inviteToZoho){
+            $this->deleteZohoAccount($arr);   
+        }
 
         // $salary = Salary::where('employee_id',$id)->first();
         // $salary->delete();
