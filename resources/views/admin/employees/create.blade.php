@@ -88,19 +88,17 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId = '<?php echo config('
-                values.asanaWorkspaceId ') ?>';
-                var token = '<?php echo config('
-                values.asanaToken ') ?>';
+                var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
+                var token = '<?php echo config('values.asanaToken') ?>';
+
                 $('.asana').bind('click', function () {
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +
-                                '/teams',
+                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',
                             type: 'GET',
                             dataType: 'json',
                             headers: {
-                                'Authorization': 'Bearer ' + token
+                                'Authorization': 'Bearer '+token
                             },
                             success: function (res) {
                                 count++;

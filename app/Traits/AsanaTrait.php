@@ -84,7 +84,7 @@ trait AsanaTrait{
 
     protected function removeUser($email){
             $env = $this->getEnv();
-        //token and the email of the employee is get
+            //token and the email of the employee is get
             $url = 'https://app.asana.com/api/1.0/workspaces/'.$env['asanaWorkspaceId'].'/removeUser';
             
             $client = new Client(
