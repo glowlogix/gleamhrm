@@ -172,6 +172,7 @@ trait ZohoTrait{
             "password"              => ""
         ];
         $defaultParams = array_merge( $defaultParams, $params );
+        dd($defaultParams );
         
         $client = new Client([
             'headers' => [
