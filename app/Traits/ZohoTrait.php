@@ -160,7 +160,7 @@ trait ZohoTrait{
         return response()->json( $data, 200 );
     }
 
-    protected function deleteZohoAccount( $params ,$accountId){
+    protected function deleteZohoAccount( $params){
         /*
          * "zuid": 663084666,
          * "accountId": "6301374000000008002",
@@ -168,11 +168,11 @@ trait ZohoTrait{
          **/
         $env             = $this->getEnv2();
         $defaultParams   = [
-            "zuid"                  => "", #
+            "zuid"                  => "", 
             "password"              => ""
         ];
         $defaultParams = array_merge( $defaultParams, $params );
-
+        
         $client = new Client([
             'headers' => [
                 'Accept'        => 'application/json',
@@ -180,7 +180,7 @@ trait ZohoTrait{
             ]
         ]);
         try{
-            $response = $client->request('DELETE', $env['baseUrl'] . '/accounts'.'/'.$accountId, [
+            $response = $client->request('DELETE', $env['baseUrl'] . '/accounts', [
                 'query' => $defaultParams
             ]);
         } catch (RequestException $e) {

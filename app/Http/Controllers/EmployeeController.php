@@ -31,6 +31,7 @@ class EmployeeController extends Controller
     
     public function index() 
      {
+
         $this->meta['title'] = 'All Employees';                
         $data = Employee::where('role','member')->paginate(10);
         return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
@@ -234,11 +235,10 @@ class EmployeeController extends Controller
     {
         $emp = Employee::find($id);
         $zuid = $emp->zuid;
-        $accountId = $emp->account_id;
         $adminPassword = config('values.adminPassword');
-
+        
         if($emp->inviteToAsana){
-            $this->removeUser($emp->org_email);        
+            $this->removeUser($emp->org_email);       
         }
         $arr = [
             "zuid" => $zuid ,
@@ -246,13 +246,11 @@ class EmployeeController extends Controller
         ];
         
         if($emp->inviteToZoho){
-            $this->deleteZohoAccount($arr,$accountId);   
+            $this->deleteZohoAccount($arr);   
         }
 
         $salary = Salary::where('employee_id',$id)->first();
         $salary->delete();
-        $account_id = $emp->account_id;
-        $zuid = $emp->zuid;
         $response = $emp->delete();
             
     
