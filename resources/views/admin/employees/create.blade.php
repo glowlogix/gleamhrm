@@ -80,7 +80,7 @@
                 <br>
                 <button type="submit" id="sub" class="btn  btn-primary center-block">Add User</button>
                 <div class="col-md-5">
-                    <ul id="asana_teams" id="asana">
+                    <ul id="asana_teams">
                     </ul>
                 </div>
         </form>
@@ -88,17 +88,18 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                // var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
-                // var token = '<?php echo config('values.asanaToken') ?>';
+                var orgId = '<?php echo config('values.asanaWorkspaceId') ?>';
+                var token = '<?php echo config('values.asanaToken') ?>';
 
                 $('.asana').bind('click', function () {
+
                     if ($(this).is(':checked')) {
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/'+{{config('values.asanaWorkspaceId')}}+'/teams',
+                            url: 'https://app.asana.com/api/1.0/organizations/' + orgId +'/teams',
                             type: 'GET',
                             dataType: 'json',
                             headers: {
-                                'Authorization': 'Bearer '+'{{config('values.asanaToken')}}'
+                                'Authorization': 'Bearer '+token
                             },
                             success: function (res) {
                                 count++;
