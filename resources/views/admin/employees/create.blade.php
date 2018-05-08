@@ -73,7 +73,7 @@
                 <br>
                 <label>
                     <input type="hidden" name="zoho" value="0" />
-                    <input type="checkbox" name="zoho" value="1" /> Invite to Zoho
+                    <input type="checkbox" id="zoho" name="zoho" value="1" /> Invite to Zoho
                 </label>
             </div>
             <div style="margin-bottom: 19px;">
@@ -90,6 +90,12 @@
                 var count = 0;
                 var orgId = '{{config('values.asanaWorkspaceId')}}';
                 var token = '{{config('values.asanaToken')}}';
+
+                $('#zoho').bind('click', function () {
+                    if ($(this).is(':checked')) {
+                    alert("No data add in Zoho because of api problem");
+                    }
+                });
              
                 $('.asana').bind('click', function () {
                     if ($(this).is(':checked')) {
@@ -99,9 +105,6 @@
                             type: 'GET',
                             cache: false,
                             dataType: 'json',
-                            // headers: {
-                            //     'Authorization': 'Bearer '+token
-                            // },
                             beforeSend: function (xhr) {
                                 xhr.setRequestHeader('Authorization', 'Bearer '+token);
                             },

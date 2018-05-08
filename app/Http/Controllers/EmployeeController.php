@@ -79,7 +79,6 @@ class EmployeeController extends Controller
         // if(!$response->original){
         //     echo "Data not added in Zoho";
         // }
-        echo "No Data Added in Zoho because of api problem";
 
        }
        if($request->teams){
@@ -103,7 +102,7 @@ class EmployeeController extends Controller
                     'email'        => $request->email,
                     'status'        => 1,
                     'role'          => 'member',
-                    'inviteToZoho'  => $request->zoho,
+                    'inviteToZoho'  => 0,
                     'inviteToSlack' => $request->slack,
                     'inviteToAsana' => $request->asana
         ]);
