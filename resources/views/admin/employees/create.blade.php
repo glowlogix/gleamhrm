@@ -93,42 +93,42 @@
                 console.log(orgId);
                 console.log(token);
              
-                $('.asana').bind('click', function () {
-                    if ($(this).is(':checked')) {
+                // $('.asana').bind('click', function () {
+                //     if ($(this).is(':checked')) {
                       
-                        $.ajax({
-                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
-                            type: 'GET',
-                            cache: false,
-                            dataType: 'json',
-                            beforeSend: function (xhr) {
-                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
-                             },
-                            // headers: {
-                            //     'Authorization': 'Bearer '+token
-                            // },
-                            success: function (res) {
-                                count++;
-                                if (count == 1) {
-                                    teams.append("<h3 class='head'>Teams in Asana</h3>");
-                                    res.data.forEach(function (item, index) {
-                                        teams.append("<li class='teams'>" + item.name +
-                                            " <input name='teams[]' value='" +
-                                            item.id + "' type='checkbox'></li>"
-                                        );
+                //         $.ajax({
+                //             url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
+                //             type: 'GET',
+                //             cache: false,
+                //             dataType: 'json',
+                //             beforeSend: function (xhr) {
+                //                 xhr.setRequestHeader('Authorization', 'Bearer '+token);
+                //              },
+                //             // headers: {
+                //             //     'Authorization': 'Bearer '+token
+                //             // },
+                //             success: function (res) {
+                //                 count++;
+                //                 if (count == 1) {
+                //                     teams.append("<h3 class='head'>Teams in Asana</h3>");
+                //                     res.data.forEach(function (item, index) {
+                //                         teams.append("<li class='teams'>" + item.name +
+                //                             " <input name='teams[]' value='" +
+                //                             item.id + "' type='checkbox'></li>"
+                //                         );
 
-                                    });
+                //                     });
 
-                                }
-                                teams.show();
+                //                 }
+                //                 teams.show();
 
-                            }
+                //             }
 
-                        })
-                    } else {
-                        teams.hide();
-                    }
-                });
+                //         })
+                //     } else {
+                //         teams.hide();
+                //     }
+                // });
 
             });
         </script>
