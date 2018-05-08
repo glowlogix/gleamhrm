@@ -32,7 +32,7 @@ class EmployeeController extends Controller
     public function index() 
      {
         $this->meta['title'] = 'All Employees';                
-        $data = Employee::paginate(10);
+        $data = Employee::where('org_email','!=','noreply@glowlogix.com')->paginate(10);
         return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
     }
 
