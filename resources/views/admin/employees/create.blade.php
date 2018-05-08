@@ -84,7 +84,7 @@
                     </ul>
                 </div>
             </div>
-            <input type="hidden" id="orgId" value='<?php echo config('values.asanaWorkspaceId');?>' />
+            <input type="hidden" id="orgId" value='123' />
             <input type="hidden" id="Token" value='<?php echo config('values.asanaToken');?>'/>
         </form>
         <script type="text/javascript">
