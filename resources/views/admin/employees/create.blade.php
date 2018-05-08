@@ -94,8 +94,9 @@
                     if ($(this).is(':checked')) {
                         var orgId = '{{config('values.asanaWorkspaceId')}}';
                         var token = '{{config('values.asanaToken')}}';
+                        var url = "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams";
                         $.ajax({
-                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
+                            url: url,
                             type: 'GET',
                             dataType: 'json',
                             headers: {
