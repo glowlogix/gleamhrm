@@ -238,18 +238,18 @@ class EmployeeController extends Controller
         if($emp->inviteToAsana){
             $this->removeUser($emp->org_email);       
         }
-        // $arr = [
-        //     "zuid" => $zuid ,
-        //     "password" => $adminPassword
-        // ];
+        $arr = [
+            "zuid" => $zuid ,
+            "password" => $adminPassword
+        ];
         
-        // if($emp->inviteToZoho){
-        //     $this->deleteZohoAccount($arr);   
-        // }
+        if($emp->inviteToZoho){
+            $this->deleteZohoAccount($arr);   
+        }
 
-        // $salary = Salary::where('employee_id',$id)->first();
-        // $salary->delete();
-        // $response = $emp->delete();
+        $salary = Salary::where('employee_id',$id)->first();
+        $salary->delete();
+        $response = $emp->delete();
             
     
         return redirect()->back()->with('success','Employee is trash succesfully');     
