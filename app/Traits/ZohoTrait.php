@@ -179,7 +179,7 @@ trait ZohoTrait{
             ]
         ]);
         try{
-            $response = $client->request('DELETE', $env['baseUrl'] . '/accounts', [
+            $response = $client->request('DELETE', $env['baseUrl'].'/accounts', [
                 'query' => $defaultParams
             ]);
         } catch (\Exception $e) {
