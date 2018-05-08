@@ -149,9 +149,22 @@ class AttendanceController extends Controller
         
                   foreach ($attendance as $key => $value) {
 
+                    $delays = '';
+                    $color = '';
+                    if($value->employee_id){
+                        $color = 'green';
+                    }
+
+                    if($value->delay){
+                        $color = '#70AFDC';
+                        $delays = $value->delay." delay";
+                    }else{
+                        $delays ="";
+                    }
+
                     $events[] = Calendar::event(
         
-                        "present"."\n".$employee->fullname,
+                        "present"."\n".$employee->fullname."\n".$delays,
         
                         true,
                         new \DateTime($value->checkintime),
@@ -159,13 +172,25 @@ class AttendanceController extends Controller
                         new \DateTime($value->checkouttime.' +1 day'),
                         $value->employee_id,
                         [
-                            'color' => 'green'
+                            'color' =>  $color
                         ]
                     );
         
                   }
                   foreach ($leave as $key => $value) {
-                    
+                      $color = '';
+                    if($value->leave_type == "Short Leave"){
+                        $color = '#C24BFF';
+                    }
+                    if($value->leave_type === "Full Leave"){
+                        $color = 'red';                        
+                    }
+                    if($value->leave_type === "Half Leave"){
+                        $color = '#57BB8A';                        
+                    }
+                    if($value->leave_type == "Paid Leave"){
+                        $color = '#ADFF41'; 
+                    }
                     $events[] = Calendar::event(
     
                         $value->leave_type."\n".$employee->fullname,
@@ -176,7 +201,7 @@ class AttendanceController extends Controller
                         new \DateTime($value->dateto.' +1 day'),
                         $value->employee_id,
                         [
-                            'color' => 'orange'
+                            'color' => $color
                         ]
                     );
         

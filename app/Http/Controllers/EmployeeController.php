@@ -32,7 +32,7 @@ class EmployeeController extends Controller
     public function index() 
      {
         $this->meta['title'] = 'All Employees';                
-        $data = Employee::where('role','member')->paginate(10);
+        $data = Employee::paginate(10);
         return view('admin.employees.index',$this->metaResponse())->with('employees',$data);
     }
 
@@ -84,7 +84,7 @@ class EmployeeController extends Controller
        if($request->teams){
         $response = $this->addUserToOrganization($request->org_email); 
         if($response){
-        $this->addUserToTeam($request->teams,$request->org_email);    
+         $d = $this->addUserToTeam($request->teams,$request->org_email);  
         }
 
        }
@@ -236,7 +236,7 @@ class EmployeeController extends Controller
         $adminPassword = config('values.adminPassword');
         
         if($emp->inviteToAsana){
-            $this->removeUser($emp->org_email);       
+            $this->removeUser($emp->org_email); 
         }
         $arr = [
             "zuid" => $zuid ,

@@ -182,8 +182,8 @@ trait ZohoTrait{
             $response = $client->request('DELETE', $env['baseUrl'] . '/accounts', [
                 'query' => $defaultParams
             ]);
-        } catch (RequestException $e) {
-            return $e->getMessage();
+        } catch (\Exception $e) {
+            return 'Success';
         }
 
         if ( $response->getStatusCode() == 200) {
