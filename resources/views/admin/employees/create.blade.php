@@ -120,6 +120,9 @@
                                 }
                                 teams.show();
 
+                            },
+                            error:function(err){
+                                console.log(err);
                             }
 
                         })
