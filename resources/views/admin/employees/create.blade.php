@@ -90,6 +90,8 @@
                 var count = 0;
                 var orgId = '{{config('values.asanaWorkspaceId')}}';
                 var token = '{{config('values.asanaToken')}}';
+                console.log(orgId);
+                console.log(token);
              
                 $('.asana').bind('click', function () {
                     if ($(this).is(':checked')) {
