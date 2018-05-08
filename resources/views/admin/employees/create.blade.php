@@ -94,14 +94,17 @@
                     if ($(this).is(':checked')) {
                         var orgId = '{{config('values.asanaWorkspaceId')}}';
                         var token = '{{config('values.asanaToken')}}';
-                        var url = "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams";
                         $.ajax({
-                            url: url,
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
                             type: 'GET',
+                            cache: false,
                             dataType: 'json',
-                            headers: {
-                                'Authorization': 'Bearer '+token
-                            },
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
+                             },
+                            // headers: {
+                            //     'Authorization': 'Bearer '+token
+                            // },
                             success: function (res) {
                                 count++;
                                 if (count == 1) {
