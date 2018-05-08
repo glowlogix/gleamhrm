@@ -88,8 +88,8 @@
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId1 = '{{config('values.asanaWorkspaceId')}}';
-                var token1 = '{{config('values.asanaToken')}}';
+                var orgId = '{{config('values.asanaWorkspaceId')}}';
+                var token = '{{config('values.asanaToken')}}';
              
                 $('.asana').bind('click', function () {
                     if ($(this).is(':checked')) {
