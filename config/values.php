@@ -6,6 +6,6 @@ return [
     'zohoToken' => env('zohoToken'),
     'zohoOrgId' => env('zohoOrgId'),
     'adminPassword' => env('adminPassword'),
-    'asanaToken1' => env('asanaToken1'),
-    'asanaWorkspaceId1' => env('asanaWorkspaceId1')
+    'asanaToken' => env('asanaToken'),
+    'asanaWorkspaceId' => env('asanaWorkspaceId')
 ];

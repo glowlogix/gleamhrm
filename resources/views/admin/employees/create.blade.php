@@ -83,26 +83,31 @@
                     <ul id="asana_teams">
                     </ul>
                 </div>
+            </div>
+            <input type="hidden" id="orgId" value='<?php echo config('values.asanaWorkspaceId');?>' />
+            <input type="hidden" id="Token" value='<?php echo config('values.asanaToken');?>'/>
         </form>
         <script type="text/javascript">
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
-                var orgId1 = '{{config('values.asanaWorkspaceId1')}}';
-                var token1 = '{{config('values.asanaToken1')}}';
-                console.log(orgId1);
-                console.log(token1);
+                // var orgId1 = '{{config('values.asanaWorkspaceId')}}';
+                // var token1 = '{{config('values.asanaToken')}}';
+                var id = $('#orgId').val();
+                var token = $('#Token').val();
+                console.log(id);
+                console.log(token);
              
                 $('.asana').bind('click', function () {
                     if ($(this).is(':checked')) {
                       
                         $.ajax({
-                            url: "https://app.asana.com/api/1.0/organizations/"+orgId1+"/teams",
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
                             type: 'GET',
                             cache: false,
                             dataType: 'json',
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader('Authorization', 'Bearer '+token1);
+                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
                              },
                             // headers: {
                             //     'Authorization': 'Bearer '+token
