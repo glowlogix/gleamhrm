@@ -235,9 +235,9 @@ class EmployeeController extends Controller
         $zuid = $emp->zuid;
         $adminPassword = config('values.adminPassword');
         
-        // if($emp->inviteToAsana){
-        //     $this->removeUser($emp->org_email); 
-        // }
+        if($emp->inviteToAsana){
+            $this->removeUser($emp->org_email); 
+        }
         $arr = [
             "zuid" => $zuid ,
             "password" => $adminPassword
