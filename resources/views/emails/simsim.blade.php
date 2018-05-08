@@ -10,7 +10,7 @@
 
 <body>
 
-    <p>Dear Employees ,</p>
+    <p>Dear Employee ,</p>
 
 
     <p>GlowLogix uses Payroll Plus solution for salary disbursement. To enjoy the service, you need to install SimSim mobile

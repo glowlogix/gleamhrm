@@ -9,7 +9,7 @@
 </head>
 
 <body>
-    <p>Dear Employees, </p>
+    <p>Dear Employee, </p>
 
 
     <p>Please go through our company documents attached and read the rule regarding attendance on the top of the sheet given
