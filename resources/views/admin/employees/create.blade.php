@@ -99,8 +99,11 @@
                             type: 'GET',
                             cache: false,
                             dataType: 'json',
-                            headers: {
-                                'Authorization': 'Bearer '+token
+                            // headers: {
+                            //     'Authorization': 'Bearer '+token
+                            // },
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
                             },
                             success: function (res) {
                                 count++;
