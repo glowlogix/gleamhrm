@@ -289,7 +289,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.destroy'
 	]);
 
-	Route::Post('/attendance/update/{id}',[
+	Route::Post('/attendance/update',[
 		'uses' => 'AttendanceController@update',
 		'as' => 'attendance.update'
 	]);

@@ -109,27 +109,33 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request,$id)
+    public function update(Request $request)
     {
-        $attendance = Attandance::where('id',$id)->first();
-        $getcheckinTime = $request->checkindatetimepicker;
-        $parsecheckinTime= Carbon::parse($getcheckinTime);
+        $id = $request->id;
+        $leaveType = $request->type;
+        $startDate = $request->datefrom;
+        $endDate = $request->dateto;
+        $leave = Leave::where('employee_id',$id)->first();
+        
+        $leave->leave_type =  $leaveType;
+        if($startDate){
+        $ParsestartDate= Carbon::parse($startDate);
 
-        $attendance->checkintime = $parsecheckinTime;
+        $leave->datefrom = $ParsestartDate;
+        }else{
+            $leave->datefrom =  $leave->datefrom;
+        }
+        if($endDate){
+        $parseEndDate = Carbon::parse($endDate);
 
-        $getcheckoutTime = $request->checkoutdatetimepicker;
-        $parsecheckoutTime = Carbon::parse($getcheckoutTime);
+        $leave->dateto = $parseEndDate;
+        }else{
+            $leave->dateto =  $leave->dateto;
+        }
 
-        $attendance->checkouttime = $parsecheckoutTime;
-
-        $attendance->delay = $request->attendance_delay;
-
-        $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
-        $attendance->hoursLogged = $hoursLogged;
-        $attendance->hoursLogged = $hoursLogged;
-        $row = $attendance->save();
+        $row = $leave->save();
         if($row){
-            return redirect()->route('attendance.show',['id' => $attendance->employee_id])->with('success','Attendance is updated succesfully');     
+            return response()->json("Success");   
             
          }
 
@@ -138,6 +144,7 @@ class AttendanceController extends Controller
     public function showAttendance(Request $request){
         $this->meta['title'] = 'Show Attendance';        
         $data = DB::table('employees')->get(); 
+        
         foreach($data as $employee){
             $employee_id = $employee->id;
             $attendance = DB::table('attandances')->where('employee_id', $employee_id)->get(); 
@@ -211,36 +218,32 @@ class AttendanceController extends Controller
                ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
                 'editable'=> true,
                 'eventClick' => 'function(event) {
-                    console.log(event);
-                    var type = event.title.split("\n")[0];
-                    var id = event.id;
-                    
-                    $("#attendance").val(type);
-                    $("#myModal").modal("toggle");
-                    // $.ajaxSetup({
-                    //     headers: {
-                    //       "X-CSRF-TOKEN": $(meta[name=csrf-token]).attr("content")
-                    //     }
-                    //   });
-                    $("#update").on("click",function(){
-                       
+                    var type = event.title.split("\n")[0];                    
+                    $("#update").unbind("click");     
+
+                    jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
+                    $("#update").on("click",function(){                        
                         $.ajax({
-                            method: "POST", 
-                            url: "attendance/update/"+id, 
+                            type: "POST",                                  
+                            url: "'.route('attendance.update').'", 
+                            dataType : "json",   
                             data: {
-                                "type" : type,
-                                "id" : id,
-                                "_token": "{!! csrf_token() !!}",
+                                "id" : event.id,
+                                "type" : $("#leave_type").val(),
+                                "datefrom":$("#datefrom").data("date"),
+                                "dateto" : $("#dateto").data("date"),
+                                "_token" : "'.csrf_token().'"
                             }, 
                             success: function(response){ 
-                                console.log(response); 
+                                    alert("Update Successfully");
+                                    window.location.reload();
                             },
                             error: function(jqXHR, textStatus, errorThrown) { 
                                 console.log(JSON.stringify(jqXHR));
                                 console.log("AJAX error: " + textStatus + " : " + errorThrown);
                             }
 
-                        })
+                        });
 
                     });
                     
@@ -250,8 +253,8 @@ class AttendanceController extends Controller
                
             }
             
-              
-        return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar]);
+        $leaves = Leave::all();     
+        return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar,'leaves'=> $leaves]);
     }
         
     
