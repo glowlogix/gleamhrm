@@ -315,9 +315,10 @@ class AttendanceController extends Controller
             $attendance->delete();
         }else{
             $leave = Leave::where('employee_id',$id)->first();
+            return $leave;
             $leave->delete();
         }
-        return response()->json('success');   
+        //return response()->json('success');   
         
         
         
