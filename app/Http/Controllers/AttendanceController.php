@@ -310,9 +310,10 @@ class AttendanceController extends Controller
     {
         $id = $request->id;
         $leaveType = $request->type;
+        return $request;
         if($leaveType == "present"){
-        $attendance = Attandance::where('employee_id',$id)->first();
-        $attendance->delete();
+            $attendance = Attandance::where('employee_id',$id)->first();
+            $attendance->delete();
         }else{
             $leave = Leave::where('employee_id',$id)->first();
             $leave->delete();
