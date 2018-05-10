@@ -220,10 +220,11 @@ class AttendanceController extends Controller
                ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
                 'editable'=> true,
                 'eventClick' => 'function(event) {
-                    var type = event.title.split("\n")[0];                    
+                    var type = event.title.split("\n")[0];       
                     $("#update").unbind("click");     
                     $("#del").unbind("click"); 
-                    console.log(event);
+                    $("#leave_type").val(type);
+
                     jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
                     $("#update").on("click",function(){                        
                         $.ajax({
@@ -315,10 +316,9 @@ class AttendanceController extends Controller
             $attendance->delete();
         }else{
             $leave = Leave::where('employee_id',$id)->first();
-            return $leave;
             $leave->delete();
         }
-        //return response()->json('success');   
+        return response()->json('success');   
         
         
         

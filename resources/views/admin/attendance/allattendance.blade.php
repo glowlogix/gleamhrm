@@ -89,7 +89,7 @@
 
                 $(function () {
                     $('#datefrom').datetimepicker({
-
+                        date: $('#datefrom').val()
                     });
                     $('#dateto').datetimepicker({});
 
