@@ -284,7 +284,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@index',
 		'as' => 'attendance.show'
 	]);
-	Route::Post('/attendance/delete/{id}',[
+	Route::Post('/attendance/delete',[
 		'uses' => 'AttendanceController@destroy',
 		'as' => 'attendance.destroy'
 	]);

@@ -112,32 +112,34 @@ class AttendanceController extends Controller
     public function update(Request $request)
     {
         $id = $request->id;
-        $leaveType = $request->type;
         $startDate = $request->datefrom;
         $endDate = $request->dateto;
+
         $leave = Leave::where('employee_id',$id)->first();
+        if($request->type== "present"){
+            return response()->json('present');               
+        }
+        else{            
+        $leave->leave_type = $request->type;
         
-        $leave->leave_type =  $leaveType;
         if($startDate){
         $ParsestartDate= Carbon::parse($startDate);
 
         $leave->datefrom = $ParsestartDate;
-        }else{
-            $leave->datefrom =  $leave->datefrom;
         }
         if($endDate){
         $parseEndDate = Carbon::parse($endDate);
 
         $leave->dateto = $parseEndDate;
-        }else{
-            $leave->dateto =  $leave->dateto;
         }
 
         $row = $leave->save();
         if($row){
-            return response()->json("Success");   
+            return response()->json('success');   
             
          }
+
+        }
 
     }
 
@@ -220,7 +222,8 @@ class AttendanceController extends Controller
                 'eventClick' => 'function(event) {
                     var type = event.title.split("\n")[0];                    
                     $("#update").unbind("click");     
-
+                    $("#del").unbind("click"); 
+                    console.log(event);
                     jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
                     $("#update").on("click",function(){                        
                         $.ajax({
@@ -235,8 +238,13 @@ class AttendanceController extends Controller
                                 "_token" : "'.csrf_token().'"
                             }, 
                             success: function(response){ 
+                                
+                                if(response == "success"){
                                     alert("Update Successfully");
                                     window.location.reload();
+                                }else if(response == "present"){
+                                    alert("Already Present not changeable");
+                                }
                             },
                             error: function(jqXHR, textStatus, errorThrown) { 
                                 console.log(JSON.stringify(jqXHR));
@@ -246,15 +254,46 @@ class AttendanceController extends Controller
                         });
 
                     });
-                    
+
+                    $("#del").on("click",function(){    
+                        var r = confirm("Are you sure you want to delete?");                  
+                        if (r == true) {
+                         $.ajax({
+                            type: "POST",                                  
+                            url: "'.route('attendance.destroy').'", 
+                            dataType : "json",   
+                            data: {
+                                "id" : event.id,
+                                "type" : $("#leave_type").val(),
+                                "_token" : "'.csrf_token().'"
+                            }, 
+                            success: function(response){ 
+                                if(response == "success"){
+                                    alert("Delete Successfully");
+                                    window.location.reload();
+                                }
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                            }
+
+                        });
+
+                        } else {
+                            jQuery("#myModal").modal("toggle");                            
+                            
+                        }
+
+                    });
 
                 }'
             ]);
                
             }
             
-        $leaves = Leave::all();     
-        return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar,'leaves'=> $leaves]);
+        return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar]);
     }
         
     
@@ -267,11 +306,19 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function destroy($id)
+    public function destroy(Request $request)
     {
-        $attendance = Attandance::where('id',$id)->first();
+        $id = $request->id;
+        $leaveType = $request->type;
+        if($leaveType == "present"){
+        $attendance = Attandance::where('employee_id',$id)->first();
         $attendance->delete();
-        return redirect()->back()->with('success','Attendance is deleted succesfully');     
+        }else{
+            $leave = Leave::where('employee_id',$id)->first();
+            $leave->delete();
+        }
+        return response()->json('success');   
+        
         
         
     }

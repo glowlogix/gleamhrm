@@ -24,9 +24,10 @@
                         <div class="row">
                             <div class="col-md-7">
 
-                                <label for="leave_type">Choose Leave Type</label>
+                                <label for="leave_type">Choose Type</label>
                                 <select class="form-control" name="leave_type" id="leave_type">
-                                        <option selected value="Full Leave">Full Leave</option>
+                                        <option selected value="present">Present</option>                                        
+                                        <option value="Full Leave">Full Leave</option>
                                         <option value="Half Leave">Half Leave</option>
                                         <option value="Short Leave">Short Leave</option>								
                                         <option value="Paid Leave">Paid Leave</option>
@@ -37,7 +38,7 @@
                                 <div class="col-md-7">
                                     <label for="datefrom">StartDate</label>
                                     <div class='input-group date' id='datefrom' name="datefrom">
-                                        <input type='text' id='datefrom' class="form-control kl" name="datefrom" />
+                                        <input type='text' id='datefrom' class="form-control" name="datefrom" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar" id="cl1"></span>
                                         </span>
