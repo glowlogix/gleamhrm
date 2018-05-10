@@ -70,7 +70,8 @@ class AttendanceController extends Controller
              'delay' => $delay,
              'checkintime' => $parsecheckinTime,
              'checkouttime' => $parsecheckoutTime,
-             'hourslogged' => $hoursLogged
+             'hourslogged' => $hoursLogged,
+             'status' => 'present'
          ]);
          if($attendacne){
             return redirect()->back()->with('success','Attendance is created succesfully');     
@@ -115,11 +116,19 @@ class AttendanceController extends Controller
         $startDate = $request->datefrom;
         $endDate = $request->dateto;
 
+            $attendance = Attandance::where('employee_id',$id)->first();
+            if($attendance){
+                
+            $attendance->status = $request->type;
+            $row = $attendance->save();
+            if($row){
+                return response()->json('success');   
+                
+             }
+            
+        }else{
         $leave = Leave::where('employee_id',$id)->first();
-        if($request->type== "present"){
-            return response()->json('present');               
-        }
-        else{            
+      
         $leave->leave_type = $request->type;
         
         if($startDate){
@@ -140,8 +149,8 @@ class AttendanceController extends Controller
          }
 
         }
-
     }
+
 
     public function showAttendance(Request $request){
         $this->meta['title'] = 'Show Attendance';        
@@ -160,7 +169,19 @@ class AttendanceController extends Controller
 
                     $delays = '';
                     $color = '';
-                    if($value->employee_id){
+                    if($value->status == "Short Leave"){
+                        $color = '#C24BFF';
+                    }
+                    if($value->status === "Full Leave"){
+                        $color = 'red';                        
+                    }
+                    if($value->status === "Half Leave"){
+                        $color = '#57BB8A';                        
+                    }
+                    if($value->status == "Paid Leave"){
+                        $color = '#ADFF41'; 
+                    }
+                    if($value->status == "present"){
                         $color = 'green';
                     }
 
@@ -173,7 +194,7 @@ class AttendanceController extends Controller
 
                     $events[] = Calendar::event(
         
-                        "present"."\n".$employee->fullname."\n".$delays,
+                        $value->status."\n".$employee->fullname."\n".$delays,
         
                         true,
                         new \DateTime($value->checkintime),
