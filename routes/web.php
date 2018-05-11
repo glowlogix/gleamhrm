@@ -270,6 +270,12 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.create'
 	]);
 
+	//Attendance and leave check for ajax for shown in update form
+	Route::Get('/attendance/getbyAjax',[
+		'uses' => 'AttendanceController@getbyAjax',
+		'as' => 'attendance.showByAjax'
+	]);
+
 
 	Route::Get('/attendance/edit/{id}',[
 		'uses' => 'AttendanceController@edit',

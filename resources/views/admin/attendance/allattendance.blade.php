@@ -37,7 +37,7 @@
                             <div class="form-group">
                                 <div class="col-md-7">
                                     <label for="datefrom">StartDate</label>
-                                    <div class='input-group date' id='datefrom' name="datefrom">
+                                    <div class='input-group date' id='datefrompicker' name="datefrompicker">
                                         <input type='text' id='datefrom' class="form-control" name="datefrom" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar" id="cl1"></span>
@@ -45,11 +45,11 @@
                                     </div>
                                 </div>
                             </div>
-
+                            <p id="hello"></p>
                             <div class="form-group">
                                 <div class="col-md-7">
                                     <label for="dateto">EndDate</label>
-                                    <div class='input-group date' id='dateto' name="dateto">
+                                    <div class='input-group date' id='datetopicker' name="datetopicker">
                                         <input type='text' id='dateto' class="form-control" name="dateto" />
                                         <span class="input-group-addon">
                                             <span class="glyphicon glyphicon-calendar"></span>
@@ -70,6 +70,9 @@
                                 </div>
 
                             </div>
+                            <input type="hidden" id="currentStartTime">
+                            <input type="hidden" id="currentEndTime">
+                            
                         </div>
                     </div>
                     
@@ -89,7 +92,6 @@
 
                 $(function () {
                     $('#datefrom').datetimepicker({
-                        date: $('#datefrom').val()
                     });
                     $('#dateto').datetimepicker({});
 

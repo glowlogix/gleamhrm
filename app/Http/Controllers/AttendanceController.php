@@ -30,7 +30,6 @@ class AttendanceController extends Controller
      
     }
 
-
     /**
      * Show the form for creating a new resource.
      *
@@ -111,44 +110,88 @@ class AttendanceController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request)
-    {
-        $id = $request->id;
-        $startDate = $request->datefrom;
-        $endDate = $request->dateto;
+        {
 
-            $attendance = Attandance::where('employee_id',$id)->first();
-            if($attendance){
-                
-            $attendance->status = $request->type;
-            $row = $attendance->save();
-            if($row){
-                return response()->json('success');   
-                
-             }
+            if($request->currentStartDate){
+                $currentStartDate = str_replace('/', '-',  $request->currentStartDate);
+                $currentStartDate = date('Y-m-d H:i:s',strtotime( $currentStartDate));  
+            }
+
+            if($request->currentEndDate){
+                $currentEndDate = str_replace('/', '-', $request->currentEndDate);
+                $currentEndDate = date('Y-m-d H:i:s',strtotime( $currentEndDate));  
+            }
+
+            if($request->datefrom){
+                $start_date = $request->datefrom;
+                $startDate = str_replace('/', '-', $start_date);
+                $startDate = date('Y-m-d H:i:s',strtotime($startDate));
+            }
             
+            if($request->dateto){
+               
+            $end_date = $request->dateto;
+            $startDate = str_replace('/', '-',  $end_date);
+            $startDate = date('Y-m-d H:i:s',strtotime($startDate));
+            }
+            
+            $id = $request->id;
+
+            if($request->type == "present"){
+            $attendances =  DB::update(DB::raw("Update attandances set checkintime = '$startDate', checkouttime = '$endDate' where employee_id= '$id' And checkintime ='$currentStartDate'"));
+            return $request;
+            // foreach($attendances as $attendance){
+            //     $attendance->status =  $request->type;
+            //         $row = $attendance->save();
+            //         if($row){
+                         
+                        
+            //         }
+            // }
+            
+           
+        }
+        // else{
+        //    $leaves =  DB::select(DB::raw("SELECT * FROM leaves WHERE DATE_FORMAT(datefrom, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(dateto, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
+        //    foreach($leaves as $leave){
+            
+        //     $leave->leave_type = $request->type;
+
+        //     $leave->datefrom =  $startDate;
+    
+        //     $leave->dateto =   $endDate;
+
+        //     $row = $leave->save();
+        //     if($row){
+        //         return response()->json('success');   
+                
+        //     }
+
+        // }
+    //}
+
+    }
+
+
+    public function getbyAjax(Request $request){
+        $employeeID = $request->id;
+        if($request->type == "present"){
+        $attendance = Attandance::where('employee_id',$employeeID)->first();
+        $checkintime =  $attendance->checkintime;
+        $attendance->checkintime = date('Y/m/d g:i A',strtotime($checkintime));
+        $checkouttime =  $attendance->checkouttime;
+        $attendance->checkouttime = date('Y/m/d g:i A',strtotime($checkouttime));
+        return response()->json([$attendance,'successAttendance']);   
         }else{
-        $leave = Leave::where('employee_id',$id)->first();
-      
-        $leave->leave_type = $request->type;
+            $leave = Leave::where('employee_id',$employeeID)->first();
+            $dateFrom =  $leave->datefrom;
+            $leave->datefrom = date('Y/m/d g:i A',strtotime($dateFrom));
+            $dateTo =  $leave->dateto;
+            $leave->dateto = date('Y/m/d g:i A',strtotime($dateTo));
+            return response()->json($leave);  
+        }
         
-        if($startDate){
-        $ParsestartDate= Carbon::parse($startDate);
-
-        $leave->datefrom = $ParsestartDate;
-        }
-        if($endDate){
-        $parseEndDate = Carbon::parse($endDate);
-
-        $leave->dateto = $parseEndDate;
-        }
-
-        $row = $leave->save();
-        if($row){
-            return response()->json('success');   
-            
-         }
-
-        }
+        
     }
 
 
@@ -244,7 +287,39 @@ class AttendanceController extends Controller
                     var type = event.title.split("\n")[0];       
                     $("#update").unbind("click");     
                     $("#del").unbind("click"); 
-                    $("#leave_type").val(type);
+                    var type = $("#leave_type").val(type);
+                    if(type){
+
+                        $.ajax({
+                            type: "GET",                                  
+                            url: "'.route('attendance.showByAjax').'", 
+                            dataType : "json",   
+                            data: {
+                                "id" : event.id,
+                                "type" : type.val()
+                            }, 
+                            success: function(response){    
+                                if(response[1]=="successAttendance"){                    
+                                var checkin = $("#datefrom").val(response[0].checkintime);
+                                var checkout = $("#dateto").val(response[0].checkouttime);
+                                $("#currentStartTime").val(checkin.val());
+                                $("#currentEndTime").val(checkout.val());
+
+                                }else{
+                                    var checkin = $("#datefrom").val(response.datefrom);
+                                    var checkout = $("#dateto").val(response.dateto);
+                                    $("#currentStartTime").val(checkin.val());
+                                    $("#currentEndTime").val(checkout.val());
+                                }
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                            }
+
+                        });
+
+                    }
 
                     jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
                     $("#update").on("click",function(){                        
@@ -257,10 +332,12 @@ class AttendanceController extends Controller
                                 "type" : $("#leave_type").val(),
                                 "datefrom":$("#datefrom").data("date"),
                                 "dateto" : $("#dateto").data("date"),
+                                "currentStartDate" :  $("#currentStartTime").val(),
+                                "currentEndDate" :  $("#currentEndTime").val(),                                
                                 "_token" : "'.csrf_token().'"
                             }, 
                             success: function(response){ 
-                                
+                                console.log(response);
                                 if(response == "success"){
                                     alert("Update Successfully");
                                     window.location.reload();
