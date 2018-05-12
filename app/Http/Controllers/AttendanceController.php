@@ -111,85 +111,82 @@ class AttendanceController extends Controller
      */
     public function update(Request $request)
         {
-
-            if($request->currentStartDate){
-                $currentStartDate = str_replace('/', '-',  $request->currentStartDate);
-                $currentStartDate = date('Y-m-d H:i:s',strtotime( $currentStartDate));  
+            $validator =\Validator::make($request->all(),[
+                'datefrom' => 'required|before_or_equal:dateto',
+                'dateto' => 'required'
+            ]);  
+            if ($validator->fails())
+            {
+                return response()->json(['errors'=>$validator->errors()->all()]);
             }
 
-            if($request->currentEndDate){
-                $currentEndDate = str_replace('/', '-', $request->currentEndDate);
-                $currentEndDate = date('Y-m-d H:i:s',strtotime( $currentEndDate));  
+            if($request->currentStatus == "present" && $request->type == "Full Leave"){
+                return response()->json('already-present');                
             }
+            $currentStartDate = str_replace('/', '-',  $request->currentStartDate);
+            $currentStartDate = date('Y-m-d H:i:s',strtotime( $currentStartDate));  
+
+            $currentEndDate = str_replace('/', '-', $request->currentEndDate);
+            $currentEndDate = date('Y-m-d H:i:s',strtotime( $currentEndDate));  
 
             if($request->datefrom){
                 $start_date = $request->datefrom;
-                $startDate = str_replace('/', '-', $start_date);
-                $startDate = date('Y-m-d H:i:s',strtotime($startDate));
+                $parseStart_date= Carbon::parse($start_date);                                
             }
             
             if($request->dateto){
                
-            $end_date = $request->dateto;
-            $startDate = str_replace('/', '-',  $end_date);
-            $startDate = date('Y-m-d H:i:s',strtotime($startDate));
+                $end_date = $request->dateto;
+                $parseEnd_date= Carbon::parse($end_date);                                
+                
             }
             
             $id = $request->id;
+            $status = $request->type;
 
-            if($request->type == "present"){
-            $attendances =  DB::update(DB::raw("Update attandances set checkintime = '$startDate', checkouttime = '$endDate' where employee_id= '$id' And checkintime ='$currentStartDate'"));
-            return $request;
-            // foreach($attendances as $attendance){
-            //     $attendance->status =  $request->type;
-            //         $row = $attendance->save();
-            //         if($row){
-                         
-                        
-            //         }
-            // }
-            
-           
-        }
-        // else{
-        //    $leaves =  DB::select(DB::raw("SELECT * FROM leaves WHERE DATE_FORMAT(datefrom, '%Y-%m-%d') >= '$startDate' AND  DATE_FORMAT(dateto, '%Y-%m-%d') <= '$endDate' And employee_id= '$id'"));
-        //    foreach($leaves as $leave){
-            
-        //     $leave->leave_type = $request->type;
-
-        //     $leave->datefrom =  $startDate;
-    
-        //     $leave->dateto =   $endDate;
-
-        //     $row = $leave->save();
-        //     if($row){
-        //         return response()->json('success');   
-                
-        //     }
-
-        // }
-    //}
-
+            $row =  DB::update(DB::raw("Update attandances set checkintime = '$parseStart_date', checkouttime = '$parseEnd_date',status = '$status' where employee_id= '$id' And checkintime ='$currentStartDate'"));
+            if($row == 1){
+                return response()->json('success');
+            }else{
+                $row =  DB::update(DB::raw("Update leaves set datefrom = '$parseStart_date', dateto = '$parseEnd_date' , leave_type = '$status' where employee_id= '$id' And datefrom ='$currentStartDate'"));
+                if($row == 1){
+                    return response()->json('success');
+                    
+                }
+            }
+       
     }
 
 
     public function getbyAjax(Request $request){
-        $employeeID = $request->id;
-        if($request->type == "present"){
-        $attendance = Attandance::where('employee_id',$employeeID)->first();
-        $checkintime =  $attendance->checkintime;
-        $attendance->checkintime = date('Y/m/d g:i A',strtotime($checkintime));
-        $checkouttime =  $attendance->checkouttime;
-        $attendance->checkouttime = date('Y/m/d g:i A',strtotime($checkouttime));
-        return response()->json([$attendance,'successAttendance']);   
-        }else{
-            $leave = Leave::where('employee_id',$employeeID)->first();
-            $dateFrom =  $leave->datefrom;
-            $leave->datefrom = date('Y/m/d g:i A',strtotime($dateFrom));
-            $dateTo =  $leave->dateto;
-            $leave->dateto = date('Y/m/d g:i A',strtotime($dateTo));
-            return response()->json($leave);  
-        }
+
+            $date = Carbon::parse($request->date);
+  
+            $employeeID = $request->id;
+            $attendance = Attandance::where([
+                'employee_id' => $employeeID,
+                'checkintime' => $date
+            
+            ])->first();
+            if($attendance){
+                $checkintime =  $attendance->checkintime;
+                $attendance->checkintime = date('Y/m/d g:i A',strtotime($checkintime));
+                $checkouttime =  $attendance->checkouttime;
+                $attendance->checkouttime = date('Y/m/d g:i A',strtotime($checkouttime));
+                return response()->json([$attendance,'successAttendance']);   
+            }else{
+                $leave = Leave::where([
+                    'employee_id'=>$employeeID,
+                    'datefrom'=> $date
+                    
+                ])->first();
+                $dateFrom =  $leave->datefrom;
+                $leave->datefrom = date('Y/m/d g:i A',strtotime($dateFrom));
+                $dateTo =  $leave->dateto;
+                $leave->dateto = date('Y/m/d g:i A',strtotime($dateTo));
+                return response()->json($leave);  
+            }
+        
         
         
     }
@@ -288,15 +285,17 @@ class AttendanceController extends Controller
                     $("#update").unbind("click");     
                     $("#del").unbind("click"); 
                     var type = $("#leave_type").val(type);
+                    jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
+                    
                     if(type){
-
                         $.ajax({
                             type: "GET",                                  
                             url: "'.route('attendance.showByAjax').'", 
                             dataType : "json",   
                             data: {
                                 "id" : event.id,
-                                "type" : type.val()
+                                "type" : type.val(),
+                                 "date" : event.start._i
                             }, 
                             success: function(response){    
                                 if(response[1]=="successAttendance"){                    
@@ -304,12 +303,15 @@ class AttendanceController extends Controller
                                 var checkout = $("#dateto").val(response[0].checkouttime);
                                 $("#currentStartTime").val(checkin.val());
                                 $("#currentEndTime").val(checkout.val());
+                                $("#currentStatus").val(response[0].status);
 
                                 }else{
                                     var checkin = $("#datefrom").val(response.datefrom);
                                     var checkout = $("#dateto").val(response.dateto);
                                     $("#currentStartTime").val(checkin.val());
                                     $("#currentEndTime").val(checkout.val());
+                                    $("#currentStatus").val(response.status);
+                                    
                                 }
                             },
                             error: function(jqXHR, textStatus, errorThrown) { 
@@ -321,8 +323,8 @@ class AttendanceController extends Controller
 
                     }
 
-                    jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-                    $("#update").on("click",function(){                        
+                    $("#update").on("click",function(){
+                        
                         $.ajax({
                             type: "POST",                                  
                             url: "'.route('attendance.update').'", 
@@ -330,19 +332,23 @@ class AttendanceController extends Controller
                             data: {
                                 "id" : event.id,
                                 "type" : $("#leave_type").val(),
-                                "datefrom":$("#datefrom").data("date"),
-                                "dateto" : $("#dateto").data("date"),
+                                "datefrom":$("#datefrom").val(),
+                                "dateto" : $("#dateto").val(),
                                 "currentStartDate" :  $("#currentStartTime").val(),
-                                "currentEndDate" :  $("#currentEndTime").val(),                                
+                                "currentEndDate" :  $("#currentEndTime").val(),  
+                                "currentStatus" : $("#currentStatus").val(),
+                                
                                 "_token" : "'.csrf_token().'"
                             }, 
                             success: function(response){ 
-                                console.log(response);
+                                if(response.errors){
+                                    alert(response.errors[0]);                                    
+                                }
                                 if(response == "success"){
                                     alert("Update Successfully");
                                     window.location.reload();
-                                }else if(response == "present"){
-                                    alert("Already Present not changeable");
+                                }else if(response == "already-present"){
+                                    alert("Already Present First Remove that employee to make Full Leave");                                    
                                 }
                             },
                             error: function(jqXHR, textStatus, errorThrown) { 
@@ -364,6 +370,7 @@ class AttendanceController extends Controller
                             data: {
                                 "id" : event.id,
                                 "type" : $("#leave_type").val(),
+                                "date" : event.start._i,
                                 "_token" : "'.csrf_token().'"
                             }, 
                             success: function(response){ 
@@ -407,16 +414,24 @@ class AttendanceController extends Controller
      */
     public function destroy(Request $request)
     {
-        $id = $request->id;
-        $leaveType = $request->type;
-        if($leaveType == "present"){
-            $attendance = Attandance::where('employee_id',$id)->first();
-            $attendance->delete();
-        }else{
-            $leave = Leave::where('employee_id',$id)->first();
-            $leave->delete();
-        }
-        return response()->json('success');   
+            $id = $request->id;
+            $leaveType = $request->type;
+            $date = Carbon::parse($request->date);
+            $attendance = Attandance::where([
+                'employee_id'=>$id,
+                'checkintime' => $date
+            ])->first();
+            if($attendance){
+              $attendance->delete();
+            }else{
+                $leave = Leave::where([
+                    'employee_id'=>$id,
+                    'datefrom' => $date
+                    
+                ])->first();
+                $leave->delete();
+            }
+            return response()->json('success');   
         
         
         

@@ -72,6 +72,8 @@
                             </div>
                             <input type="hidden" id="currentStartTime">
                             <input type="hidden" id="currentEndTime">
+                            <input type="hidden" id="currentStatus">
+                            
                             
                         </div>
                     </div>
@@ -91,9 +93,9 @@
             $(document).ready(function () {
 
                 $(function () {
-                    $('#datefrom').datetimepicker({
+                    $('#datefrompicker').datetimepicker({
                     });
-                    $('#dateto').datetimepicker({});
+                    $('#datetopicker').datetimepicker({});
 
                 });
             });
