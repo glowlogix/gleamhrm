@@ -225,17 +225,18 @@ class AttendanceController extends Controller
                         $color = 'green';
                     }
 
-                    if($value->delay){
+                    if($value->delay && $value->status=="present"){
                         $color = '#70AFDC';
                         $delays = $value->delay." delay";
                     }else{
                         $delays ="";
                     }
-
+                    $time = date("g:i A",strtotime($value->checkintime));
+                    
                     $events[] = Calendar::event(
         
-                        $value->status."\n".$employee->fullname."\n".$delays,
-        
+                        $value->status."\n".$employee->fullname."\n".$delays."\n".$time ,
+                        
                         true,
                         new \DateTime($value->checkintime),
         
