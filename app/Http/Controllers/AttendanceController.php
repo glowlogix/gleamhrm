@@ -263,7 +263,7 @@ class AttendanceController extends Controller
                     }
                     $events[] = Calendar::event(
     
-                        $value->leave_type."\n".$employee->fullname,
+                        $value->leave_type."\n".$employee->fullname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
         
                         true,
                         new \DateTime($value->datefrom),
