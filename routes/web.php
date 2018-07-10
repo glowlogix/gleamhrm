@@ -285,6 +285,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@store',
 		'as' => 'attendance.store'
 	]);
+	
 
 	Route::Get('/attendance/show/{id}',[
 		'uses' => 'AttendanceController@index',

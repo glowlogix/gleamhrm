@@ -17,7 +17,6 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
 use DB;
 use Calendar;
-
 class AttendanceController extends Controller
 {
     use MetaTrait;
@@ -52,23 +51,29 @@ class AttendanceController extends Controller
     public function store(Request $request)
     {
         $this->validate($request,[
-            'checkindatetimepicker' => 'required|before_or_equal:checkoutdatetimepicker',
-            'checkoutdatetimepicker' => 'required'
+            'timepick' => 'required',
+            'datepick' => 'required'
+            
         ]);  
-         $getcheckinTime = $request->checkindatetimepicker;
+        $getdate= $request->datepick;
+        $getcheckinTime = $request->timepick;
+        $getcheckoutTime = $request->timepick;
+        $combinecheckintime = null;
+        $combinecheckouttime = null;
+        if(isset($_POST['Checkbox']))
+        {
+         $combinecheckintime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckinTime"));
          $parsecheckinTime= Carbon::parse($getcheckinTime);
-
-         $getcheckoutTime = $request->checkoutdatetimepicker;
-         $parsecheckoutTime = Carbon::parse($getcheckoutTime);
-              
+         $parsecheckoutTime= Carbon::parse(null);
+         
          $delay = $request->delay ? $request->delay  : 0;
-         $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime); 
+         $hoursLogged = 0; 
                   
          $attendacne = Attandance::create([
              'employee_id' => $request->employee_id,
              'delay' => $delay,
-             'checkintime' => $parsecheckinTime,
-             'checkouttime' => $parsecheckoutTime,
+             'checkintime' => $combinecheckintime,
+             'checkouttime' => $combinecheckouttime,
              'hourslogged' => $hoursLogged,
              'status' => 'present'
          ]);
@@ -76,6 +81,29 @@ class AttendanceController extends Controller
             return redirect()->back()->with('success','Attendance is created succesfully');     
             
          }
+        }
+        else
+        {
+            $id = $request->employee_id;
+            $time= DB::table('attandances')->where(['employee_id'=>$id,'checkouttime'=>NULL])->pluck('checkintime');
+          
+            $combinecheckouttime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckoutTime"));
+            $checkintimeparse = $time[0];
+            $parsecheckoutTime= Carbon::parse($combinecheckouttime);
+            $parsecheckinTime= Carbon::parse($checkintimeparse);         
+            $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime);           
+            $row =  DB::update(DB::raw("Update attandances set  hourslogged='$hoursLogged' , checkouttime = '$combinecheckouttime' where employee_id= '$id' AND checkintime='$parsecheckinTime' "));
+            if($row == 1)
+            {
+                 return redirect()->back()->with('success','Attendance is created succesfully');
+            }
+          
+          
+        }
+         
+       
+        
+         
                
     }
 
@@ -140,11 +168,13 @@ class AttendanceController extends Controller
                 $parseEnd_date= Carbon::parse($end_date);                                
                 
             }
-            
+            $parsecheckinTime= Carbon::parse($currentStartDate);
+            $parsecheckoutTime= Carbon::parse($currentEndDate);            
+            $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime);
             $id = $request->id;
             $status = $request->type;
 
-            $row =  DB::update(DB::raw("Update attandances set checkintime = '$parseStart_date', checkouttime = '$parseEnd_date',status = '$status' where employee_id= '$id' And checkintime ='$currentStartDate'"));
+            $row =  DB::update(DB::raw("Update attandances set checkintime = '$parseStart_date', hourslogged='$hoursLogged' , checkouttime = '$parseEnd_date',status = '$status' where employee_id= '$id' And checkintime ='$currentStartDate'"));
             if($row == 1){
                 return response()->json('success');
             }else{
@@ -232,10 +262,11 @@ class AttendanceController extends Controller
                         $delays ="";
                     }
                     $time = date("g:i A",strtotime($value->checkintime));
+                   // $time2= date("g:i A",strtotime($value->checkouttime));
                     
                     $events[] = Calendar::event(
         
-                        $value->status."\n".$employee->fullname."\n".$delays."\n".$time ,
+                        $value->status."\n".$employee->fullname."\n".$delays."\n".$time."\n". $value->hourslogged." hrs",
                         
                         true,
                         new \DateTime($value->checkintime),

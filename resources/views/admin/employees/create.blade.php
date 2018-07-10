@@ -93,7 +93,7 @@
 
                 $('#zoho').bind('click', function () {
                     if ($(this).is(':checked')) {
-                    alert("No data add in Zoho because of api problem");
+                    
                     }
                 });
              

@@ -75,11 +75,10 @@ class EmployeeController extends Controller
            
          /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
 
-        // $response = $this->createZohoAccount( $params );
-        // dd($response);
-        // if(!$response->original){
-        //     echo "Data not added in Zoho";
-        // }
+        $response = $this->createZohoAccount( $params );
+        if(!$response->original){
+            echo "Data not added in Zoho";
+        }
 
        }
        if($request->teams){
