@@ -96,13 +96,13 @@ class EmployeeController extends Controller
                     'emergency_contact' => $request->emergency_contact,     
                     'emergency_contact_relationship' => $request->emergency_contact_relationship,                                                            
                     'password'      => $params['password'],   
-                    'zuid'          => '123',//$response->original->data->zuid,
-                    'account_id'    => '434',//$response->original->data->accountId,
+                    'zuid'          => $response->original->data->zuid,
+                    'account_id'    => $response->original->data->accountId,
                     'org_email'     => $request->org_email,
                     'email'        => $request->email,
                     'status'        => 1,
                     'role'          => 'member',
-                    'inviteToZoho'  => 0,
+                    'inviteToZoho'  => $request->zoho,
                     'inviteToSlack' => $request->slack,
                     'inviteToAsana' => $request->asana
         ]);

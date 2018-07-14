@@ -119,12 +119,10 @@
                             <input style="width: 250px;" type="password" name="password" placeholder="Enter Your New Password" value="{{$d->password}}"
                                 class="form-control">
                         </div>
-                        <div class="form-group col-sm-5" style="margin-top: 20px;padding-left: 80px;">
-                            <button class="btn btn-success center-block" type="submit"> Update</button>
-
-                        </div>
-                        <div class="form-group col-sm-3" style="margin-top: 20px;">
-                            <button type="reset" class="btn btn-success center-block"> Cancel</button>
+                        
+                        <div class="form-group col-md-6" style="margin-top: 20px;">
+                            <button class="btn btn-success " type="submit"> Update</button>
+                            <button type="reset" class="btn btn-success "> Cancel</button>
                         </div>
                     </form>
                 </div>

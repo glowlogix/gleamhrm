@@ -66,7 +66,7 @@
                     name="salary">
             </div>
             <div class="form-group">
-                <button class="btn btn-success center-block" type="submit"> Update</button>
+                <button class="btn btn-success " type="submit"> Update</button>
             </div>
         </form>
     </div>

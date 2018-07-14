@@ -10,7 +10,7 @@
 			<form action="{{route('leaves.store')}}" method="post">
 			   {{csrf_field()}}
 			  <div class="form-group">
-				<div class="col-md-7">
+				<div class="col-md-6">
 					<label for="name">Name:</label>
 					<select class="form-control" name="employee_id">
 					 @foreach($employees as $employee)
@@ -21,7 +21,7 @@
 				</div>
 			  </div>
 			  <div class="form-group">
-					<div class="col-md-7">
+					<div class="col-md-6">
 						<label for="leave_type">Leave Type</label>
 						<select class="form-control" name="leave_type">
 								<option selected value="Full Leave">Full Leave</option>
@@ -32,8 +32,8 @@
 						</select>
 					</div>
 			  </div>
-			  <div class="form-group">
-					<div class="col-md-7">
+			  <div class="form-group" >
+					<div class="col-md-6" style="padding-top:15px;">
 						<label for="datefrom">FromDate</label>
 						<div class='input-group date' id='datefrom' name="datefrom">
 							<input type='text' class="form-control" name="datefrom"/>
@@ -44,8 +44,8 @@
 					</div>
 			  </div>
 					
-              <div class="form-group">
-					<div class="col-md-7">
+              <div class="form-group" >
+					<div class="col-md-6" style="padding-top:15px;">
 						<label for="dateto">ToDate</label>
 						<div class='input-group date' id='dateto' name="dateto">
 							<input type='text' class="form-control" name="dateto"/>
@@ -57,13 +57,13 @@
 			  </div>
 					
 			  <div class="form-group">
-					<div class="col-md-7">
+					<div class="col-md-6">
 						<label for="reason">Reason</label>
 						<input type="text" class="form-control" name="reason">
 					</div>
 			  </div>
 			  <div class="form-group">
-					<div class="col-md-7">
+					<div class="col-md-6">
 						<label for="checkouttime">Status</label>
 						<select name="status" class="form-control">
                             <option value="Pending">Pending</option>
@@ -73,8 +73,8 @@
 					</div>
 			  </div>
 			  <div class="form-group">
-					<div class="col-md-5">
-						<button class="btn btn-success" type="submit"> Create</button>
+					<div class="col-md-8" style="padding-top:23px;">
+						<button class="btn btn-success" type="submit" style="margin-left: 360px;"> Create</button>
 						
 					</div>
 			 </div>	

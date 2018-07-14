@@ -26,11 +26,11 @@
 
                                 <label for="leave_type">Choose Type</label>
                                 <select class="form-control" name="leave_type" id="leave_type">
-                                        <option selected value="present">Present</option>                                        
-                                        <option value="Full Leave">Full Leave</option>
-                                        <option value="Half Leave">Half Leave</option>
-                                        <option value="Short Leave">Short Leave</option>								
-                                        <option value="Paid Leave">Paid Leave</option>
+                                    <option selected value="present">Present</option>                                        
+                                    <option value="Full Leave">Full Leave</option>
+                                    <option value="Half Leave">Half Leave</option>
+                                    <option value="Short Leave">Short Leave</option>								
+                                    <option value="Paid Leave">Paid Leave</option>
                                         
                                 </select>
                             </div>
@@ -95,7 +95,8 @@
                 $(function () {
                     $('#datefrompicker').datetimepicker({
                     });
-                    $('#datetopicker').datetimepicker({});
+                    $('#datetopicker').datetimepicker({
+                    });
 
                 });
             });

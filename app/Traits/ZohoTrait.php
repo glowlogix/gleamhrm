@@ -167,22 +167,25 @@ trait ZohoTrait{
          * we need to save those values so we can use that later to remove accounts.
          **/
         $env             = $this->getEnv2();
+        
         $defaultParams   = [
-            "zuid"                  => "", 
-            "password"              => ""
+            "zuid"   => "", 
+            "password"  => ""
         ];
-        $defaultParams = array_merge( $defaultParams, $params );        
+        $defaultParams = array_merge( $defaultParams, $params ); 
+              
         $client = new Client([
             'headers' => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Zoho-authtoken ' . $env['authToken']
             ]
         ]);
+        
         try{
             $response = $client->request('DELETE', $env['baseUrl'].'/accounts', [
                 //query past
                 'json' => $defaultParams
-            ]);
+            ]);        
         } catch (\Exception $e) {
             return 'Success';
         }

@@ -164,6 +164,12 @@
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
                         <strong>Success!</strong> {{Session::get('success')}}
                     </div>
+                    @endif
+                    @if(Session::has('error'))
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
                     @endif @yield('content')
                 </div>
 

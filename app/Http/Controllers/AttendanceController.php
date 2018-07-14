@@ -53,7 +53,6 @@ class AttendanceController extends Controller
         $this->validate($request,[
             'timepick' => 'required',
             'datepick' => 'required'
-            
         ]);  
         $getdate= $request->datepick;
         $getcheckinTime = $request->timepick;
@@ -82,29 +81,34 @@ class AttendanceController extends Controller
             
          }
         }
-        else
+        else if(isset($_POST['Checkbox2']))
         {
             $id = $request->employee_id;
             $time= DB::table('attandances')->where(['employee_id'=>$id,'checkouttime'=>NULL])->pluck('checkintime');
-          
-            $combinecheckouttime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckoutTime"));
-            $checkintimeparse = $time[0];
-            $parsecheckoutTime= Carbon::parse($combinecheckouttime);
-            $parsecheckinTime= Carbon::parse($checkintimeparse);         
-            $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime);           
-            $row =  DB::update(DB::raw("Update attandances set  hourslogged='$hoursLogged' , checkouttime = '$combinecheckouttime' where employee_id= '$id' AND checkintime='$parsecheckinTime' "));
-            if($row == 1)
+            if(count($time)<=0)
             {
-                 return redirect()->back()->with('success','Attendance is created succesfully');
+                return redirect()->back()->with('error','No record found to update');
             }
-          
-          
-        }
-         
-       
-        
-         
+            else
+            {
+                $combinecheckouttime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckoutTime"));
+                $checkintimeparse = $time[0];
+                $parsecheckoutTime= Carbon::parse($combinecheckouttime);
+                $parsecheckinTime= Carbon::parse($checkintimeparse);         
+                $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime);           
+                $row =  DB::update(DB::raw("Update attandances set  hourslogged='$hoursLogged' , checkouttime = '$combinecheckouttime' where employee_id= '$id' AND checkintime='$parsecheckinTime' "));
+                if($row == 1)
+                {
+                    return redirect()->back()->with('success','Attendance is created succesfully');
+                }
                
+            }
+        }
+        else
+        {
+            return redirect()->back()->with('error','Checkin Time or Checkout Time field is required');
+        }
+                       
     }
 
     /**

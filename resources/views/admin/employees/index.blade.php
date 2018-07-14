@@ -1,4 +1,6 @@
-@extends('layouts.admin')  @section('content')
+@extends('layouts.admin')
+
+@section('content')
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
