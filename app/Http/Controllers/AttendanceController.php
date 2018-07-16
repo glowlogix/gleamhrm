@@ -30,12 +30,18 @@ class AttendanceController extends Controller
     }
     public function sheet()
     {
-        // $employee = DB::table("attandances")
-        // ->join('employees', 'attandances.employee_id', '=', 'employees.id')  
-        // ->select('attandances.*', 'employees.firstname')
-        // ->get();
-        $employee= Employee::all();
-        return view('admin.attendance.sheet')->with('employee', $employee);
+        $employees= Employee::all();
+        // $atts='';
+        // foreach( $employees as  $employee)
+        // {
+        //     $eployee_ID = $employee->id;
+        //     $atts=DB::table('attandances')->select('checkintime')->where('employee_id', $eployee_ID)->get(); 
+        //     // $date = Carbon::parse($atts);
+        //     // $dates= $date->format('d/m/y');
+        //     dd($dates);
+        // }
+        
+        return view('admin.attendance.sheet')->with('employees', $employees);
 
     }
 
