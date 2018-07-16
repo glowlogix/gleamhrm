@@ -28,6 +28,16 @@ class AttendanceController extends Controller
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
      
     }
+    public function sheet()
+    {
+        // $employee = DB::table("attandances")
+        // ->join('employees', 'attandances.employee_id', '=', 'employees.id')  
+        // ->select('attandances.*', 'employees.firstname')
+        // ->get();
+        $employee= Employee::all();
+        return view('admin.attendance.sheet')->with('employee', $employee);
+
+    }
 
     /**
      * Show the form for creating a new resource.
@@ -270,7 +280,7 @@ class AttendanceController extends Controller
                     
                     $events[] = Calendar::event(
         
-                        $value->status."\n".$employee->fullname."\n".$delays."\n".$time."\n". $value->hourslogged." hrs",
+                        $value->status."\n".$employee->fullname."\n".$time."\n". $value->hourslogged." hrs"."\n",
                         
                         true,
                         new \DateTime($value->checkintime),

@@ -71,6 +71,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'admin.dashboard'
 	]);
 
+
 	Route::get('/category/create',[
 		'uses' => 'CategoriesController@create',
 		'as' => 'category.create'
@@ -264,6 +265,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Get('/attendance',[
 		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
+	]);
+	Route::Get('/attendance/sheet',[
+		'uses' => 'AttendanceController@sheet', //show Attendance sheet
+		'as' => 'attendance.sheet'
 	]);
 	Route::Get('/attendance/create',[
 		'uses' => 'AttendanceController@create', //show Attendance
