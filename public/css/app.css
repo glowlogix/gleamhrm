@@ -737,8 +737,119 @@ input[type=checkbox] + label {
   }
 
   
-
+  .lable-month .table-attendance table { 
+    width: 750px; 
+    border-collapse: collapse; 
+    margin:50px auto;
+    }
   
+  /* Zebra striping */
+   .table-attendance  tr:nth-of-type(odd) { 
+    background: #eee; 
+    }
+  
+    .table-attendance  th { 
+    background: #3498db; 
+    color: white; 
+    font-weight: bold; 
+    }
+  
+    /* .label-name .table-attendance  td, th { 
+    padding: 0px; 
+    border: 1px solid #ccc; 
+    text-align: left; 
+    font-size: 18px;
+    } */
+    
+  
+  /* 
+  Max width before this PARTICULAR table gets nasty
+  This query will take effect for any screen smaller than 760px
+  and also iPads specifically.
+  */
+  @media 
+  only screen and (max-width: 760px),
+  (min-device-width: 768px) and (max-device-width: 1024px)  {
+  
+    table { 
+	  	width: 100%; 
+	}
+
+	/* Force table to not be like tables anymore */
+	table, thead, tbody, th, td, tr { 
+		display: block; 
+	}
+	
+	/* Hide table headers (but not display: none;, for accessibility) */
+	thead tr { 
+		position: absolute;
+		top: -9999px;
+		left: -9999px;
+	}
+	
+	tr { border: 1px solid #ccc; }
+	
+	td { 
+		/* Behave  like a "row" */
+		border: none;
+		border-bottom: 1px solid #eee; 
+		position: relative;
+		padding-left: 50%; 
+	}
+
+	td:before { 
+		/* Now like a table header */
+		position: absolute;
+		/* Top/left values mimic padding */
+		top: 6px;
+		left: 6px;
+		width: 45%; 
+		padding-right: 10px; 
+		white-space: nowrap;
+		/* Label the data */
+		content: attr(data-column);
+
+		color: #000;
+		font-weight: bold;
+	}
+
+  }
+  
+.select-month
+{
+  float:right;
+}
+.lable-month
+{
+  font-size: 200%;
+  font-weight: bold;
+}
+select.soflow {
+  -webkit-appearance: button;
+  -webkit-border-radius: 2px;
+  -webkit-box-shadow: 0px 1px 3px rgba(0, 0, 0, 0.1);
+  -webkit-padding-end: 20px;
+  -webkit-padding-start: 2px;
+  -webkit-user-select: none;
+  background-image: url(http://i62.tinypic.com/15xvbd5.png), -webkit-linear-gradient(#FAFAFA, #F4F4F4 40%, #E5E5E5);
+  background-position: 97% center;
+  background-repeat: no-repeat;
+  border: 1px solid #AAA;
+  color: #555;
+  font-size: inherit;
+  margin: 20px;
+  overflow: hidden;
+  padding: 5px 10px;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  width: 130px;
+}
+.center-text{
+  text-align: center;
+}
+
+
+
 
 
 

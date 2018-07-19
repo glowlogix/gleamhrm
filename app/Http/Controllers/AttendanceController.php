@@ -17,6 +17,7 @@ use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
 use DB;
 use Calendar;
+use DateTime;
 class AttendanceController extends Controller
 {
     use MetaTrait;
@@ -28,20 +29,14 @@ class AttendanceController extends Controller
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
      
     }
-    public function sheet()
+    public function sheet($id)
     {
+        $datee= explode('_',$id);
+        $date=$datee[1];
+        if($date=="1"){$name="January";}elseif($date=="2"){$name="February";}elseif($date=="3"){$name="March";}elseif($date=="4"){$name="April";}elseif($date=="5"){$name="May";}elseif($date=="6"){$name="June";}elseif($date=="7"){$name="July";}
+        elseif($date=="8"){$name="August";}elseif($date=="9"){$name="September";}elseif($date=="10"){$name="October";}elseif($date=="11"){$name="November";}else{$name="December";}
         $employees= Employee::all();
-        // $atts='';
-        // foreach( $employees as  $employee)
-        // {
-        //     $eployee_ID = $employee->id;
-        //     $atts=DB::table('attandances')->select('checkintime')->where('employee_id', $eployee_ID)->get(); 
-        //     // $date = Carbon::parse($atts);
-        //     // $dates= $date->format('d/m/y');
-        //     dd($dates);
-        // }
-        
-        return view('admin.attendance.sheet')->with('employees', $employees);
+        return view('admin.attendance.sheet')->with(['employees'=> $employees, 'date'=>$date, 'name'=>$name]);
 
     }
 

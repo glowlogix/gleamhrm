@@ -20,8 +20,8 @@
 <div class="panel-body">
 	@if(count($employees) > 0)
 
-	<table class="table" class="col-md-8">
-		<thead>
+	<table class="table" class="col-md-8" >
+		<thead style="font-size:12px; text-align:center;">
 			<th>Name</th>
 			<th>Email</th>
 			<th>Contact </th>

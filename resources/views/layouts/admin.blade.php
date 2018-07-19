@@ -151,6 +151,13 @@
                                 <li>
                                     <a href="{{route('salary.show')}}" {{ request()->is('admin/salary') ? 'id=active1' : ''}}>Salary</a>
                                 </li>
+                                <?php
+                                $month = date('m');
+                                $monthee= "2018_".$month;
+                                ?>
+                                <li>
+                                    <a href="{{route('attendance.sheet',['id'=>$monthee])}}" {{ request()->is('admin/sheet') ? 'id=active1' : ''}}>Sheet</a>
+                                </li>
 
                             </ul>
 

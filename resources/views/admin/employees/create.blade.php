@@ -73,7 +73,7 @@
                 <br>
                 <label>
                     <input type="hidden" name="zoho" value="0" />
-                    <input type="checkbox" name="zoho" value="1" /> Invite to Zoho
+                    <input type="checkbox" name="zoho" id="zoho" value="1" /> Invite to Zoho
                 </label>
             </div>
             <div style="margin-bottom: 19px;">
@@ -93,7 +93,8 @@
 
                 $('#zoho').bind('click', function () {
                     if ($(this).is(':checked')) {
-                    
+                        alert("No data added in zoho, because of API problem.")
+                        this.checked= null;
                     }
                 });
              

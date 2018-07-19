@@ -61,7 +61,8 @@ class EmployeeController extends Controller
         $when = now()->addMinutes(1);
         $l=8;
         $password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
-        
+        $zuid = 1234;
+        $accountId = 1234;
        $params = [
             'emailAddress'          =>$request->org_email,
             "primaryEmailAddress"   => $request->org_email,
@@ -75,10 +76,10 @@ class EmployeeController extends Controller
            
          /*--- This code is Comment Because Zoho Add Employee not Work  ----*/
 
-        $response = $this->createZohoAccount( $params );
-        if(!$response->original){
-            echo "Data not added in Zoho";
-        }
+        // $response = $this->createZohoAccount( $params );
+        // if(!$response->original){
+        //     echo "Data not added in Zoho";
+        // }
 
        }
        if($request->teams){
@@ -96,8 +97,8 @@ class EmployeeController extends Controller
                     'emergency_contact' => $request->emergency_contact,     
                     'emergency_contact_relationship' => $request->emergency_contact_relationship,                                                            
                     'password'      => $params['password'],   
-                    'zuid'          => $response->original->data->zuid,
-                    'account_id'    => $response->original->data->accountId,
+                    'zuid'          => $zuid,
+                    'account_id'    => $accountId,
                     'org_email'     => $request->org_email,
                     'email'        => $request->email,
                     'status'        => 1,
