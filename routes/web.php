@@ -426,7 +426,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	Route::get('/findjob','ApplicantController@findjob');
 
-	Route::get('sendmail', 'SendMailController@sendMail');
+	//Route::get('sendmail', 'SendMailController@sendMail');
 
 	//Route::get('/ajax-job',function(){
 	//		$cat_id = Input::get('cat_id');
