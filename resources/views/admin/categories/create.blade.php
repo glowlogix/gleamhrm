@@ -1,10 +1,5 @@
 @extends('layouts.admin')
-@section('title')
-HRM|{{$title}}
-@endsection
 @section('content')
-@include('admin.includes.errors')
-	
 	<div class="panel panel-default">
 		<div class="panel-heading text-center">
 			<b>	Create new Category <b>
@@ -23,5 +18,4 @@ HRM|{{$title}}
 			</form>
 		</div>
 	</div>
-
 @stop

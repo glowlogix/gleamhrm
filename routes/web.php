@@ -22,6 +22,7 @@ Auth::routes();
 Route::any('/register', function() {
 	abort(403);
 });
+
 Route::get('/home', 'HomeController@index')->name('home');
 //Employee Login
 Route::get('/employee/login', [
@@ -38,6 +39,13 @@ Route::get('/employee/profile', [
 	'as' => 'employee.profile',
 	'uses' => 'EmployeeController@EmployeeProfile'
 ]);
+
+//attendance Employee
+Route::get('/employee/attendance', [
+	'as' => 'employee.attendance',
+	'uses' => 'EmployeeController@showAttendance'
+]);
+
 Route::post('/employee/profile/{id}', [
 	'as' => 'employee.profile.update',
 	'uses' => 'EmployeeController@UpdateEmployeeProfile'
@@ -56,6 +64,18 @@ Route::get('/docs/list', [
 	'uses' => 'EmployeeController@showDocs'
 ]);
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
+
+	//dashboard
+	Route::get('/dashboard',[
+		'uses' => 'UsersController@dashboard',
+		'as' => 'admin.dashboard'
+	]);
+
+
+	Route::get('/category/create',[
+		'uses' => 'CategoriesController@create',
+		'as' => 'category.create'
+	]);
 
 	Route::get('/category/create',[
  	'uses' => 'CategoriesController@create',
@@ -172,7 +192,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@store',
 		'as' => 'user.store'
 	]);
-	Route::get('/user/delete/{id}',[
+	Route::post('/user/delete/{id}',[
 		'uses' => 'UsersController@delete',
 		'as' => 'user.delete'
 	]);
@@ -180,18 +200,21 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@admin',
 		'as' => 'user.admin'
 	]);
+
+	Route::Get('/user/edit/{id}',[
+		'uses' => 'UsersController@edit',
+		'as' => 'user.edit'
+	]);
+	Route::Post('/user/update/{id}',[
+		'uses' => 'UsersController@update',
+		'as' => 'user.update'
+	]);
+
 	Route::Get('/user/not_admin/{id}',[
 		'uses' => 'UsersController@Not_Admin',
 		'as' => 'user.not_admin'
 	]);
-	Route::Get('/user/Activate/{id}',[
-		'uses' => 'UsersController@ActivateUser',
-		'as' => 'user.activate'
-	]);
-	Route::Get('/user/Disable/{id}',[
-		'uses' => 'UsersController@DisableUser',
-		'as' => 'user.disable'
-	]);
+
 	Route::Get('/employees',[
 		'uses' => 'EmployeeController@index',
 		'as' => 'employees'
@@ -240,8 +263,123 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//attendance
 	Route::Get('/attendance',[
-		'uses' => 'AttendanceController@index',
+		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
+	]);
+	Route::Get('/attendance/sheet/{id}',[
+		'uses' => 'AttendanceController@sheet', //show Attendance sheet
+		'as' => 'attendance.sheet'
+	]);
+	Route::Get('/attendance/create',[
+		'uses' => 'AttendanceController@create', //show Attendance
+		'as' => 'attendance.create'
+	]);
+
+	//Attendance and leave check for ajax for shown in update form
+	Route::Get('/attendance/getbyAjax',[
+		'uses' => 'AttendanceController@getbyAjax',
+		'as' => 'attendance.showByAjax'
+	]);
+
+
+	Route::Get('/attendance/edit/{id}',[
+		'uses' => 'AttendanceController@edit',
+		'as' => 'attendance.edit'
+	]);
+	Route::Post('/attendance/store',[
+		'uses' => 'AttendanceController@store',
+		'as' => 'attendance.store'
+	]);
+	
+
+	Route::Get('/attendance/show/{id}',[
+		'uses' => 'AttendanceController@index',
+		'as' => 'attendance.show'
+	]);
+	Route::Post('/attendance/delete',[
+		'uses' => 'AttendanceController@destroy',
+		'as' => 'attendance.destroy'
+	]);
+
+	Route::Post('/attendance/update',[
+		'uses' => 'AttendanceController@update',
+		'as' => 'attendance.update'
+	]);
+
+	Route::GET('/attendance/export',[
+		'uses' => 'AttendanceController@showExport',
+		'as' => 'attendance.export.show'
+	]);
+
+	Route::Post('/attendance/export',[
+		'uses' => 'AttendanceController@exportAttendance',
+		'as' => 'attendance.export'
+	]);
+
+	//Salary Show
+
+	Route::Get('/salary',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.show'
+	]);
+
+	//add Bonus
+		Route::Post('/salary/addBonus/{id}',[
+			'uses' => 'SalariesController@addBonus',
+			'as' => 'salary.bonus'
+		]);
+	//proccessed
+	
+	Route::Post('/salary/process',[
+		'uses' => 'SalariesController@processSalary',
+		'as' => 'salary.processed'
+	]);
+
+	//export
+	Route::Get('/salary/export',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.index'
+	]);
+
+	Route::Get('/salary/export',[
+		'uses' => 'SalariesController@index',
+		'as' => 'salary.index'
+	]);
+
+	Route::Post('/salary/export',[
+		'uses' => 'SalariesController@export',
+		'as' => 'salary.export'
+	]);
+
+	//Leaves
+	Route::Get('/leave',[
+		'uses' => 'LeaveController@create',
+		'as' => 'leaves'
+	]);
+
+	Route::Post('/leave/store',[
+		'uses' => 'LeaveController@store',
+		'as' => 'leaves.store'
+	]);
+
+	Route::Get('/leave/show/{id}',[
+		'uses' => 'LeaveController@index',
+		'as' => 'leave.show'
+	]);
+
+    Route::Get('/leave/edit/{id}',[
+		'uses' => 'LeaveController@edit',
+		'as' => 'leave.edit'
+	]);
+
+	Route::Post('/leave/update/{id}',[
+		'uses' => 'LeaveController@update',
+		'as' => 'leave.update'
+	]);
+
+	Route::Post('/leave/delete/{id}',[
+		'uses' => 'LeaveController@destroy',
+		'as' => 'leave.destroy'
 	]);
 
 	//upload Docs
@@ -250,13 +388,29 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'DocumentsController@index'
 	]);
 
+	Route::get('/upload/docs/upload',[
+		'as' => 'documents.docs.upload',
+		'uses' => 'DocumentsController@createDocs'
+	]);
+
+	Route::post('/upload/delete/{id}',[
+		'as' => 'documents.docs.delete',
+		'uses' => 'DocumentsController@deleteDocument'
+	]);
+
+	Route::get('/upload/docs/edit/{id}',[
+		'as' => 'documents.docs.edit',
+		'uses' => 'DocumentsController@editDocument'
+	]);
+
+	Route::post('/upload/docs/update/{id}',[
+		'as' => 'documents.docs.update',
+		'uses' => 'DocumentsController@updateDocument'
+	]);
+
 	Route::post('/upload/docs',[
 		'as' => 'documents.upload',
 		'uses' => 'DocumentsController@uploadDocs'
-	]);
-	Route::post('/upload/status/{id}',[
-		'as' => 'documents.status',
-		'uses' => 'DocumentsController@statusChange'
 	]);
 
 });
@@ -272,7 +426,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	Route::get('/findjob','ApplicantController@findjob');
 
-	Route::get('sendmail', 'SendMailController@sendMail');
+	//Route::get('sendmail', 'SendMailController@sendMail');
 
 	//Route::get('/ajax-job',function(){
 	//		$cat_id = Input::get('cat_id');

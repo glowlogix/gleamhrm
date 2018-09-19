@@ -11,17 +11,32 @@ use Auth;
 use Mail;
 use App\Mail\Reminder;
 use App\Http\Requests;
+use App\Traits\MetaTrait;
+
 class ApplicantController extends Controller
 {
+    use MetaTrait;
+    
+
     public function index()
     {
+        $this->meta['title'] = 'Applicants';
         $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        return view('admin.applicants.index',['title' => 'Applicants'])->with('applicants',$applicants);
+        return view('admin.applicants.index',$this->metaResponse())->with('applicants',$applicants);
     }
+
+    /**
+     * @return $this
+     */
     public function create()
     {
     	return view('applicant.create')->with('categories',Category::all())->with('jobs',Job::all());
     }
+
+    /**
+     * @param $id
+     * @return $this
+     */
     public function singleApplicant($id)
     {
         $applicant=Applicant::find($id);
@@ -70,7 +85,6 @@ class ApplicantController extends Controller
        /* Mail::to($request->email)->send(new Reminder);*/
         Session::flash('success','application is submitted succesfully');
         return redirect()->back();
-
     }
 
     public function single_Cat_Job($id)
@@ -80,10 +94,10 @@ class ApplicantController extends Controller
         return view('admin.applicants.singleCategoryJobs')->with('applicants',$applicants);
     }
 
-  //  public function singleApplicant($id)
-    //{
-     //   return view('admin.applicants.singleapplicant')->with('applicants',Applicant::find($id));
-    //}
+    // public function singleApplicant($id)
+    // {
+    //     return view('admin.applicants.singleapplicant')->with('applicants',Applicant::find($id));
+    // }
 
     public function destroy($id)
     {
@@ -95,9 +109,9 @@ class ApplicantController extends Controller
 
     public function trashed()
     {
+        $this->meta['title'] = 'Trash Applicants';        
         $applicants=Applicant::onlyTrashed()->get();
-        return view('admin.applicants.trashed',['title' => 'Trash Applicants'])->with('applicants', $applicants);
-
+        return view('admin.applicants.trashed',$this->metaResponse())->with('applicants', $applicants);
     }
 
     public function kill($id)
@@ -116,6 +130,7 @@ class ApplicantController extends Controller
         Session::flash('success','Seccessfuly Restored the applicant');
         return redirect()->back();
     }
+
     public function hire($id)
     {
         $applicant=Applicant::find($id);
@@ -134,8 +149,10 @@ class ApplicantController extends Controller
 
     public function hiredApplicants()
         {
+
+            $this->meta['title'] = 'Hired Applicants';                    
             $applicants = Applicant::where('recruited', 1)->take(10)->get();
-            return view('admin.applicants.hiredApplicants',['title' => 'Hired Applicants'])->with('applicants',$applicants);
+            return view('admin.applicants.hiredApplicants',$this->metaResponse())->with('applicants',$applicants);
         }
 
 

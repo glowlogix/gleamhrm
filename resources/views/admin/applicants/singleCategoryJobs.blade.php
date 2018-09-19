@@ -17,8 +17,6 @@
 			<tbody class="table-bordered table-hover table-striped">
 				@if($applicants->count() > 0) @foreach($applicants as $applicant)
 				<tr>
-
-
 					<td>
 						<img src="/{{$applicant->avatar}}" alt="" width="50px" width="50px">
 					</td>
@@ -39,4 +37,4 @@
 	</div>
 </div>
 
-	@stop
+@stop

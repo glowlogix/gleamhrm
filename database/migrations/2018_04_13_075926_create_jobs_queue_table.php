@@ -13,7 +13,7 @@ class CreateJobsQueueTable extends Migration
      */
     public function up()
     {
-        Schema::create('jobs_queue', function (Blueprint $table) {
+        Schema::create('jobs_queues', function (Blueprint $table) {
             $table->bigIncrements('id');
             $table->string('queue')->index();
             $table->longText('payload');
@@ -31,6 +31,6 @@ class CreateJobsQueueTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('jobs_queue');
+        Schema::dropIfExists('jobs_queues');
     }
 }

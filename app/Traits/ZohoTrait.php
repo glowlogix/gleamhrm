@@ -89,7 +89,7 @@ trait ZohoTrait{
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          * */
-        $env  = $this->getEnv2();
+         $env  = $this->getEnv2();
 
         $defaultParams   = [
             "role"                  => "member",
@@ -169,31 +169,34 @@ trait ZohoTrait{
         return response()->json( $data, 200 );
     }
 
-    protected function deleteZohoAccount( $params ,$accountId){
+    protected function deleteZohoAccount( $params){
         /*
          * "zuid": 663084666,
          * "accountId": "6301374000000008002",
          * we need to save those values so we can use that later to remove accounts.
          **/
         $env             = $this->getEnv2();
+        
         $defaultParams   = [
-            "zuid"                  => "", #
-            "password"              => ""
+            "zuid"   => "", 
+            "password"  => ""
         ];
-        $defaultParams = array_merge( $defaultParams, $params );
-
+        $defaultParams = array_merge( $defaultParams, $params ); 
+              
         $client = new Client([
             'headers' => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Zoho-authtoken ' . $env['authToken']
             ]
         ]);
+        
         try{
-            $response = $client->request('DELETE', $env['baseUrl'] . '/accounts'.'/'.$accountId, [
-                'query' => $defaultParams
-            ]);
-        } catch (RequestException $e) {
-            return $e->getMessage();
+            $response = $client->request('DELETE', $env['baseUrl'].'/accounts', [
+                //query past
+                'json' => $defaultParams
+            ]);        
+        } catch (\Exception $e) {
+            return 'Success';
         }
 
         if ( $response->getStatusCode() == 200) {

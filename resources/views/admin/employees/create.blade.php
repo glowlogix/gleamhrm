@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content')
+@extends('layouts.admin') @section('content')
 
 @if (Session::has('error'))
 <div class="alert alert-warning" align="left">
@@ -12,45 +12,59 @@
         <b>Create new employee</b>
     </div>
     <div class="panel-body">
-
         <form class="form-inline" action="{{route('employee.store')}}" method="post">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
+<<<<<<< HEAD
                 <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" required>
+=======
+                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname">
+>>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
             </div>
-
             <div class="form-group col-sm-4">
                 <label for="lastname">Last Name:</label>
+<<<<<<< HEAD
                 <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" required>
+=======
+                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname">
+>>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
             </div>
-
             <div class="form-group col-sm-4">
                 <label for="fullname">Full Name:</label>
                 <input style="width: 250px;" type="text" class="form-control" id="fullname" placeholder="Enter Full Name" name="fullname" required>
             </div>
-
             <div class="form-group col-sm-4">
                 <br>
                 <label for="email">Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="email" placeholder="Enter Email Address" name="email" required>
             </div>
-
             <div class="form-group col-sm-4">
                 <br>
-
+                <label for="text">Salary:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
                 <label for="contact">Contact#:</label>
                 <input style="width: 250px;" type="Number" class="form-control" id="contact" placeholder="Enter Contact Number" name="contact" required>
             </div>
-
             <div class="form-group col-sm-4">
                 <br>
-
                 <label for="emergency_contact">Emergency Contact#:</label>
                 <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number"
+<<<<<<< HEAD
                     name="emergency_contact" required>
+=======
+                    name="emergency_contact">
             </div>
-
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="emergency_contact">Emergency Contact Relationship:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="emergency_contact_relationship" placeholder="Enter Emergency Contact Relationship"
+                    name="emergency_contact_relationship">
+>>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
+            </div>
             <div class="form-group col-sm-4">
                 <br>
                 <label for="org_email">Org Email:</label>
@@ -67,7 +81,6 @@
                     <input type="checkbox" class="asana" name="asana" value="1" /> Invite to Asana
                 </label>
             </div>
-
             <div class="form-group  col-sm-4" style="padding-left: 80px;">
                 <br>
                 <label>
@@ -75,44 +88,45 @@
                     <input type="checkbox" name="slack" value="1" /> Invite to Slack
                 </label>
             </div>
-
             <div class="form-group  col-sm-4" style="margin-bottom: 20px;padding-left: 80px;">
                 <br>
                 <label>
                     <input type="hidden" name="zoho" value="0" />
-                    <input type="checkbox" name="zoho" value="1" /> Invite to Zoho
+                    <input type="checkbox" name="zoho" id="zoho" value="1" /> Invite to Zoho
                 </label>
             </div>
-
             <div style="margin-bottom: 19px;">
                 <br>
-
                 <button type="submit" id="sub" class="btn  btn-primary center-block">Add User</button>
                 <div class="col-md-5">
                     <ul id="asana_teams">
-
                     </ul>
                 </div>
         </form>
-
-
-        </div>
-        <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
         <script type="text/javascript">
             $(document).ready(function () {
                 var teams = $('#asana_teams');
                 var count = 0;
+                var orgId = '{{config('values.asanaWorkspaceId')}}';
+                var token = '{{config('values.asanaToken')}}';
 
-                $('.asana').bind('click', function () {
-
+                $('#zoho').bind('click', function () {
                     if ($(this).is(':checked')) {
+                        alert("No data added in zoho, because of API problem.")
+                        this.checked= null;
+                    }
+                });
+             
+                $('.asana').bind('click', function () {
+                    if ($(this).is(':checked')) {
+                      
                         $.ajax({
-                            url: 'https://app.asana.com/api/1.0/organizations/42654723239693/teams',
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
                             type: 'GET',
+                            cache: false,
                             dataType: 'json',
-                            headers: {
-                                'Authorization': 'Bearer 0/dc119c4c062c28f1fbd1e740b20ecd9b'
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
                             },
                             success: function (res) {
                                 count++;
@@ -129,6 +143,9 @@
                                 }
                                 teams.show();
 
+                            },
+                            error:function(err){
+                                console.log(err);
                             }
 
                         })
@@ -139,5 +156,7 @@
 
             });
         </script>
+    </div>
+</div>
 
-        @stop
+@stop

@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateEmployeeAttendance extends Migration
+class CreateDocumentsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,9 +13,11 @@ class CreateEmployeeAttendance extends Migration
      */
     public function up()
     {
-        Schema::create('categories', function (Blueprint $table) {
+        Schema::create('documents', function (Blueprint $table) {
             $table->increments('id');
             $table->string('name');
+            $table->string('url');
+            $table->boolean('status')->default(1);
             $table->timestamps();
         });
     }
@@ -27,7 +29,6 @@ class CreateEmployeeAttendance extends Migration
      */
     public function down()
     {
-      Schema::dropIfExists('categories');
-
+        chema::dropIfExists('documents');
     }
 }

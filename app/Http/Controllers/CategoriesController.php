@@ -5,13 +5,21 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Category;
 use Session;
+use App\Traits\MetaTrait;
+
 class CategoriesController extends Controller
 {
+    use MetaTrait;
+    
     public function index(){
-    	return view('admin.categories.index',['title' => 'Categories'])->with('categories',Category::all());
+
+        $this->meta['title'] = 'Categories';        
+    	return view('admin.categories.index',$this->metaResponse())->with('categories',Category::all());
     }
     public function create(){
-    	return view('admin.categories.create',['title' => 'Create Category']);
+
+        $this->meta['title'] = 'Create Category';                
+    	return view('admin.categories.create',$this->metaResponse());
     }
 
     public function store(Request $request){
@@ -25,8 +33,10 @@ class CategoriesController extends Controller
     }
     public function edit($id)
     {
+
+        $this->meta['title'] = 'Update Category';                        
         $category=Category::find($id);
-        return view('admin.categories.edit',['title' => 'Update Category'])->with('category',$category);
+        return view('admin.categories.edit',$this->metaResponse())->with('category',$category);
         
     }
     public function update($id, Request $request)

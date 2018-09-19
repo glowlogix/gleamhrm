@@ -9,10 +9,12 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>HRM|{{ $title}}</title>
+    <title>{{ config('app.name', 'HRM') }}|{{ $title}}</title>
 
     <!-- Styles -->
-   @yield('styles')
+    <link href="{{ asset('css/data.css') }}" rel="stylesheet">
+    <link href="{{ asset('css/app.css') }}" rel="stylesheet">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
 
 </head>
 
@@ -86,13 +88,20 @@
                             <a href="{{route('documents.list')}}">Document links</a>
 
                         </li>
-
+                        <li class="list-group-item">
+                            <a href="{{route('employee.attendance')}}">Attendance</a>
+                        </li>
                     </ul>
                 </div>
                 <div class="col-lg-10">
-                   
-                    @yield('messages2')
-                    
+
+                    @if(Session::has('success'))
+                    <div class="alert alert-success">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                    @endif
+
                     <div class="panel panel-default">
                         <div class="panel-heading text-center">
                             <div>
@@ -101,39 +110,24 @@
                         </div>
                         <div class="panel-body">
                             <table class="table table-striped">
-                                <thead>
-                                    <tr>
-                                        <th>Document Name</th>
-                                        <th>Document Url</th>
-                                    </tr>
-                                </thead>
+                               
 
-                                @if(count($files) > 0) @foreach($files as $file)
+                                @yield('content')
 
-                                <tbody>
-                                    <tr>
-                                        <td>
-                                            <p>{{ $file->originalname }}</p>
-                                        </td>
-                                        <td>
-                                           <a target="_blank" href="{{asset('storage/public/'.$file->filename)}}">{{ $file->filename }}</a>  
-                                        </td>
-                                    </tr>
-                                </tbody>
-                                @endforeach @else
-                                <p class="text-center">No Documnets Found</p>
-                                @endif
+                            </table>
+                            
                         </div>
-                        </table>
 
                     </div>
                 </div>
+            </div>
+            
+        </div>
+</div>
+    
+    <!-- Scripts -->
+    <script src="{{ asset('js/app.js') }}"></script>
 
-
-                <!-- Scripts -->
-                @yield('scripts')
-                
-                @yield('messages')
 
 
 </body>

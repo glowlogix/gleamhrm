@@ -9,7 +9,11 @@
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>@yield('title')</title>
+    <title>
+        @if(!empty($title))
+        {{ config('app.name', 'HRM') }}|{{$title}}
+        @endif
+    </title>
 
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -49,12 +53,12 @@
                             <a href="{{ route('employee.login') }}">Employee Login</a>
                         </li>
                         <li>
-                            <a href="{{ route('login') }}">Login</a>
+                            <a href="{{ route('login') }}">Administrator Login</a>
                         </li>
+                        {{--
                         <li>
                             <a class="reg" href="{{ route('register') }}">Register</a>
-                        </li>
-                        @else
+                        </li> --}} @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                 {{ Auth::user()->name }}

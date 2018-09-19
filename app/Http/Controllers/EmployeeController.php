@@ -41,7 +41,7 @@ class EmployeeController extends Controller
 
 	public function store(Request $request)
 	{
-//also do js validation
+		//also do js validation
 		$this->validate($request,[
 			'firstname' => 'required',
 			'lastname' => 'required',
@@ -51,7 +51,7 @@ class EmployeeController extends Controller
 			'org_email' => 'required|email',
 		]);
 
-//token get from values.php in config folder 
+		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
 		$when = now()->addMinutes(1);
 		$l=8;
@@ -268,5 +268,54 @@ class EmployeeController extends Controller
 		$data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
 		$data2 = DB::table('uploads')->where('status','=',1)->get();
 		return view('admin.employees.showDocs',['data' => $data,'files' => $data2,'title' => 'All Documents']);
+	}
+
+	public function showAttendance(Request $request){
+		$this->meta['title'] = 'Show Attendance';        
+		$data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();  
+		$attendance = DB::table('attandances')->where('employee_id', $request->session()->get('emp_auth'))->get(); 
+		$leave = DB::table('leaves')->where('employee_id', $request->session()->get('emp_auth'))->get(); 
+		$events = [];
+
+		if($data->count()){
+
+			foreach ($attendance as $key => $value) {
+
+				$events[] = Calendar::event(
+
+					"present",
+
+					true,
+					new \DateTime($value->checkintime),
+
+					new \DateTime($value->checkouttime.' +1 day'),
+					null,
+					[
+						'color' => 'green'
+					]
+				);
+
+			}
+			foreach ($leave as $key => $value) {
+
+				$events[] = Calendar::event(
+
+					$value->leave_type,
+
+					true,
+					new \DateTime($value->datefrom),
+
+					new \DateTime($value->dateto.' +1 day'),
+					null,
+					[
+						'color' => 'orange'
+					]
+				);
+
+			}
+		}
+
+		$calendar = Calendar::addEvents($events);
+		return view('admin.employees.showAttendance',$this->metaResponse(),['data' => $data,'calendar' => $calendar]);
 	}
 }

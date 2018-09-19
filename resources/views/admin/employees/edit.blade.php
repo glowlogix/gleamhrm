@@ -1,4 +1,4 @@
-@extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content') @include('admin.includes.errors')
+@extends('layouts.admin')  @section('content')
 
 
 <div class="panel panel-default">
@@ -8,7 +8,6 @@
         </div>
     </div>
     <div class="panel-body">
-
         <form action="{{route('employee.update',['id'=>$employee->id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group">
@@ -30,8 +29,13 @@
             <div class="form-group">
                 <label for="employee_status">Account Status</label>
                 <select name="employee_status" id="employee_status" class="form-control">
+                    @if($employee->status == 1)
                     <option selected value="1">Enable Account</option>
                     <option value="0">Disable Account</option>
+                    @else
+                    <option value="1">Enable Account</option>
+                    <option selected value="0">Disable Account</option>
+                    @endif
                 </select>
             </div>
             <div class="form-group">
@@ -50,14 +54,21 @@
                 <input type="text" name="emergency_contact" value="{{$employee->emergency_contact}}" class="form-control"> @else
                 <input type="text" name="emergency_contact" placeholder="Please enter emergency contact" class="form-control"> @endif
             </div>
-
             <div class="form-group">
-                <button class="btn btn-success center-block" type="submit"> Update</button>
+                <label for="emergency_contact_relationship">Emergency Contact Relationship</label>
+                <input type="text" value="{{$employee->emergency_contact_relationship}}" name="emergency_contact_relationship" placeholder="Please enter emergency contact relationship"
+                    class="form-control">
             </div>
 
-
-
+            <div class="form-group">
+                <label for="text">Add Salary:</label>
+                <input style="width: 250px;" type="text" value="{{$salary->basic_salary}}" class="form-control" id="salary" placeholder="Enter Salary"
+                    name="salary">
+            </div>
+            <div class="form-group">
+                <button class="btn btn-success " type="submit"> Update</button>
+            </div>
         </form>
     </div>
-
-    @stop
+</div>
+ @stop
