@@ -16,14 +16,9 @@
 					<form action="/admin/upload/docs" method="post" enctype="multipart/form-data">
 
 						{{ csrf_field() }}
-						<br />
-						<label fro="application_name">Enter Document Name:</label>
-						<input type="text" class="form-control" placeholder="Enter Document Name" name="application_name">
-						<br>
 						<label for="docs">Documents(can attach more than one):</label>
-						
+						<br />
 						<input type="file" class="form-control" name="docs[]" multiple />
-
 						<br />
 						<input type="submit" class="btn btn-primary" value="Upload" />
 					</form>
@@ -34,15 +29,15 @@
 						@if(count($files) > 0)
 						<thead>
 							<tr>
-								<th>Document Name</th>
-								<th style="padding-left:5%;">Status</th>
+								<th>FileName</th>
+								<th>Status</th>
 							</tr>
 						</thead>
 						@foreach($files as $file)
 						<tbody>
 							<tr>
 								<td>
-									<p>{{ $file->originalname }}</p>
+									<a target="_blank" href="{{asset('storage/public/'.$file->filename)}}">{{ $file->filename }}</a>
 								</td>
 								<td>
 									<form method="POST" action="{{route('documents.status',$file->id)}}">
@@ -58,8 +53,10 @@
 												@endif
 											</select>
 										</div>
-										<button type="submit" class="btn btn-xs btn-primary">Change Status</buttton>
-											
+
+										<div class="col-md-4">
+											<button type="submit" class="btn btn-xs btn-primary">Change Status</buttton>
+										</div>
 									</form>
 
 								</td>

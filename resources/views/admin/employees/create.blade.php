@@ -1,5 +1,12 @@
 @extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content')
 
+@if (Session::has('error'))
+<div class="alert alert-warning" align="left">
+    <a href="#" class="close" data-dismiss="alert">&times;</a>
+    <strong>!</strong> {{Session::get('error')}}
+</div>
+@endif
+
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b>Create new employee</b>
@@ -9,31 +16,31 @@
         <form class="form-inline" action="{{route('employee.store')}}" method="post">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
-                <label for="fname">First Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="fname" placeholder="Enter First Name" name="fname">
+                <label for="firstname">First Name:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" required>
             </div>
 
             <div class="form-group col-sm-4">
-                <label for="lname">Last Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="lname" placeholder="Enter Last Name" name="lname">
+                <label for="lastname">Last Name:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" required>
             </div>
 
             <div class="form-group col-sm-4">
                 <label for="fullname">Full Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="fullname" placeholder="Enter Full Name" name="fullname">
+                <input style="width: 250px;" type="text" class="form-control" id="fullname" placeholder="Enter Full Name" name="fullname" required>
             </div>
 
             <div class="form-group col-sm-4">
                 <br>
                 <label for="email">Email Address:</label>
-                <input style="width: 250px;" type="email" class="form-control" id="email" placeholder="Enter Email Address" name="email">
+                <input style="width: 250px;" type="email" class="form-control" id="email" placeholder="Enter Email Address" name="email" required>
             </div>
 
             <div class="form-group col-sm-4">
                 <br>
 
                 <label for="contact">Contact#:</label>
-                <input style="width: 250px;" type="Number" class="form-control" id="contact" placeholder="Enter Contact Number" name="contact">
+                <input style="width: 250px;" type="Number" class="form-control" id="contact" placeholder="Enter Contact Number" name="contact" required>
             </div>
 
             <div class="form-group col-sm-4">
@@ -41,13 +48,13 @@
 
                 <label for="emergency_contact">Emergency Contact#:</label>
                 <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number"
-                    name="contact">
+                    name="emergency_contact" required>
             </div>
 
             <div class="form-group col-sm-4">
                 <br>
-                <label for="password">Org Email:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="org_email" placeholder="Enter Organization Email" name="org_email">
+                <label for="org_email">Org Email:</label>
+                <input style="width: 250px;" type="email" class="form-control" id="org_email" placeholder="Enter Organization Email" name="org_email" required>
                 <br>
             </div>
             <br>

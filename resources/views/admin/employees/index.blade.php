@@ -55,7 +55,8 @@
 					@if(Auth::user()->admin)
 					<form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
 						{{ csrf_field() }}
-						<button class="btn btn-danger btn-sm">Delete</button>
+						<button class="btn btn-default" data-href="/delete.php?id=54" data-toggle="modal" data-target="#confirm-delete">Delete record #54</button>
+
 					</form>
 					<br>
 					<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}">Edit</a>
@@ -70,8 +71,9 @@
 </div>
 
 </div>
+
+@push('scripts')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-
-
-
+<script src="{{ asset('js/bootstrap.js')}}"></script>
+@endpush
 @stop

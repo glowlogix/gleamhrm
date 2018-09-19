@@ -1,17 +1,22 @@
 <?php
 namespace App\Traits;
+
 use GuzzleHttp\Client as Client;
 use GuzzleHttp\Psr7\Request;
+use GuzzleHttp\Exception\ClientException;
+// use GuzzleHttp\Exception\BadResponseException;
+use GuzzleHttp\Exception\ServerException;
+// use App\Traits\Session;
 
 trait ZohoTrait{
 
     protected function getEnv2()
     {
         return [
-            'authToken'        => config('values.zohoToken'),
-            'baseUrl'          => 'https://mail.zoho.com/api/organization/'.config('values.zohoOrgId'),
-            'getZohoBaseUrl' => 'http://mail.zoho.com/api/organization/',
-            'ZohoOrgId' => config('values.zohoOrgId')
+            'authToken'         => config('values.zohoToken'),
+            'baseUrl'           => 'https://mail.zoho.com/api/organization/'.config('values.zohoOrgId'),
+            'getZohoBaseUrl'    => 'http://mail.zoho.com/api/organization/',
+            'ZohoOrgId'         => config('values.zohoOrgId')
         ];
     }
     
@@ -23,25 +28,24 @@ trait ZohoTrait{
                'headers' => [
                    'Accept'        => 'application/json',
                    'Authorization' => 'Zoho-authtoken ' . $env['authToken']
-               ]
-           ]);
-           try{
-               $response = $client->request('GET',$url);
-               $data = json_decode($response->getBody());
-           } catch (RequestException $e) {
-               return $e->getMessage();
-           }
-            if ( $response->getStatusCode() == 200) {
-                $data = json_decode( $response->getBody());
-                $data = $data->data->usersCount; //USers count in org
-                
-            }else{
-                $data = json_decode( $response->getBody());
-            }
-            return response()->json( $data, 200 );
-           
-    }
+                ]
+            ]
+        );
+        try{
+           $response = $client->request('GET',$url);
+           $data = json_decode($response->getBody());
+        } catch (RequestException $e) {
+           return $e->getMessage();
+        }
 
+        if ( $response->getStatusCode() == 200) {
+            $data = json_decode( $response->getBody());
+            $data = $data->data->usersCount; //USers count in org
+        } else {
+            $data = json_decode( $response->getBody());
+        }
+        return response()->json( $data, 200 );    
+    }
 
     protected function getZohoAccount(){
         $limit = $this->countUsersInOrg();
@@ -53,24 +57,24 @@ trait ZohoTrait{
                    'Accept'        => 'application/json',
                    'Authorization' => 'Zoho-authtoken ' . $env['authToken']
                ]
+           ]
+        );
+        try{
+            $response = $client->request('GET',$url,[
+               'query' => [
+                   'limit' => $limit->original
+               ]
            ]);
-           try{
-               $response = $client->request('GET',$url,[
-                   'query' => [
-                       'limit' => $limit->original
-                   ]
-               ]);
-           } catch (RequestException $e) {
-               return $e->getMessage();
-           }                
-            if ( $response->getStatusCode() == 200) {
-                $data = json_decode( $response->getBody()->getContents());
-            }else{
-                $data = json_decode( $response->getBody()->getContents() );
-            }
-            return response()->json( $data, 200 );
-           
-   
+        } catch (RequestException $e) {
+           return $e->getMessage();
+        }  
+
+        if ( $response->getStatusCode() == 200) {
+            $data = json_decode( $response->getBody()->getContents());
+        }else{
+            $data = json_decode( $response->getBody()->getContents() );
+        }
+        return response()->json( $data, 200 );
     }
 
     /**
@@ -100,7 +104,7 @@ trait ZohoTrait{
         ];
         $defaultParams = array_merge( $defaultParams, $params );
         $client = new Client(
-         [
+            [
             'headers' => [
                 'Accept'        => 'application/json',
                 'Authorization' => 'Zoho-authtoken ' . $env['authToken']
@@ -110,21 +114,26 @@ trait ZohoTrait{
             $response = $client->request('POST', $env['baseUrl'] . '/accounts', [
                 'json' => $defaultParams
             ]);
-        } catch (RequestException $e) {
-            return $e->getMessage();
+        } catch (ClientException $e) {
+            if ($e->hasResponse()) {
+                $msg = json_decode($e->getResponse()->getBody()->getContents())->data->moreInfo;
+            }
+        } catch (ServerException $e) {
+            $msg = 'Server Error';
         }
 
-        if ( $response->getStatusCode() == 200) {
+        if (isset($response) && $response->getStatusCode() == 200) {
             $data = json_decode( $response->getBody()->getContents());
-            
-        }else{
-            $data = json_decode( $response->getBody()->getContents() );
+        }
+        else{
+            $data = '';
+            session()->flash('error', $msg);
+            // dd( $response);
         }
         return response()->json( $data, 200 );
     }
 
     protected function updateZohoAccount( $params , $acc_id){
-       
         /*
          * "zuid": 663084666,
          * "accountId": "6301374000000008002",
@@ -154,7 +163,7 @@ trait ZohoTrait{
 
         if ( $response->getStatusCode() == 200) {
             $data = json_decode( $response->getBody() );
-        }else{
+        } else {
             $data = json_decode( $response->getBody() );
         }
         return response()->json( $data, 200 );

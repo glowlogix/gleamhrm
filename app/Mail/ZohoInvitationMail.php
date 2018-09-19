@@ -23,12 +23,11 @@ class ZohoInvitationMail extends Mailable
      */
     public function __construct(array $data, $getPassword)
     {
-         $data['password'] =  $getPassword;
-         $this->fname = $data['fname'];
-         $this->org_email = $data['org_email'];
-        $this->password = $data['password'];
-         
-    }
+       $data['password'] =  $getPassword;
+       $this->fname = $data['fname'];
+       $this->org_email = $data['org_email'];
+       $this->password = $data['password'];
+   }
 
     /**
      * Build the message.
@@ -38,6 +37,6 @@ class ZohoInvitationMail extends Mailable
     public function build()
     {
         return $this->subject('Zoho Invitation')
-                ->view('emails.zohomail',['name'=>$this->fname,'org_email'=>$this->org_email,'password'=>$this->password]);
+        ->view('emails.zohomail',['name'=>$this->fname,'org_email'=>$this->org_email,'password'=>$this->password]);
     }
 }

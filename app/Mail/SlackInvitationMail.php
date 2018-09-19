@@ -20,8 +20,7 @@ class SlackInvitationMail extends Mailable
      */
     public function __construct(array $data )
     {
-        $this->name = $data['fname'];
-
+        $this->name = $data['firstname'];
     }
 
     /**

@@ -15,8 +15,7 @@ class Uploads extends Migration
     {
         Schema::create('uploads', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('filename');
-            $table->string('originalname');
+            $table->string('filename',255);
             $table->integer('status')->default(1);
         });
     }

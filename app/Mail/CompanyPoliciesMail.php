@@ -6,6 +6,7 @@ use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
+use App\Document;
 
 class CompanyPoliciesMail extends Mailable
 {
@@ -28,22 +29,15 @@ class CompanyPoliciesMail extends Mailable
      */
     public function build()
     {
-    
-        $attachments = [
-        public_path('\uploads\files\Termination and Resignation Policy 2.docx.pdf') => [
-            'as' => 'Termination and Resignation Policy 2.pdf',
-            'mime' => 'application/pdf',
-        ],
-    
-        public_path('\uploads\files\Code_of_Conduct.pdf') => [
-            'as' => 'Code_of_Conduct.pdf',
-            'mime' => 'application/pdf',
-        ]
-    ];
-
+        $attachments = Document::all();
         $email = $this->view('emails.policies');
-        foreach($attachments as $filePath => $fileParameters){
-            $email->attach($filePath, $fileParameters);
+        foreach($attachments as $attachment){
+            $filepath = public_path('uploads/files/'.$attachment->name);
+            $fileParameters = [
+                'as' => $attachment->name,
+                'mime' => 'application/pdf',
+            ];
+            $email->attach($filepath, $fileParameters);
         }
         return $email;
     }
