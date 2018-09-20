@@ -46,9 +46,9 @@ class EmployeeController extends Controller
 			'firstname' => 'required',
 			'lastname' => 'required',
 			'fullname' => 'required',
-			'email' => 'required|email',
-			'contact' => 'required',
-			'org_email' => 'required|email',
+			'email' => 'required|email|unique:employees',
+			'contact' => 'required|unique:employees',
+			'org_email' => 'required|email|unique:employees',
 		]);
 
 		//token get from values.php in config folder 
@@ -106,7 +106,6 @@ class EmployeeController extends Controller
 			Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
 		}
 
-		//to do by kosar
 		//policies
 		Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
 
@@ -128,41 +127,76 @@ class EmployeeController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		// $this->validate($request,[
-		//     'firstname' => 'required',
-		//     'lastname' => 'required',
-		//     'org_email' => 'required|email'
-		// ]);
+		$adminPassword = config('values.adminPassword');
+		if($request->password != $adminPassword) 
+			return redirect()->back()->with('error','Wrong admin password entered');
+		
+		$this->validate($request,[
+			'firstname' => 'required',
+			'lastname' => 'required',
+			'fullname' => 'required',
+			// 'email' => 'required|email|unique:employees',
+			'contact' => 'required',
+			'org_email' => 'required|email|unique:employees,org_email,'.$id,
+		]);
 
 		$employee 					= Employee::find($id);
+
 		$employee->firstname 		= $request->firstname;
 		$employee->lastname 		= $request->lastname;
 		$employee->role 			= $request->employee_id;
 		$employee->org_email 		= $request->org_email;
 		$employee->contact 			= $request->contact;
 		$employee->emergency_contact= $request->emergency_contact;
-
+		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
+		$employee->inviteToAsana 			= $request->asana;
+		$employee->inviteToSlack 			= $request->slack;
+		$employee->inviteToZoho 			= $request->zoho;
 
 		//admin password get from model confirmation box.
-		$adminPassword = config('values.adminPassword');
 		$params = [
 			"mode" => '',
 			"zuid" => $employee->zuid,
 			"password" => $adminPassword
-
 		];
+
 		if ($request->employee_status === '1'){
 			$params['mode'] = 'enableUser';
 			$employee->status = 1;
 			$this->updateZohoAccount($params,$employee->account_id);
-			$employee->save();
 
-		}else if($request->employee_status === '0'){
+		}
+		else if($request->employee_status === '0'){
 			$params['mode']  = 'disableUser';
 			$employee->status  = 0;
 			$this->updateZohoAccount($params,$employee->account_id);    
-			$employee->save();        
 		}
+
+		if($request->zoho){
+			$response = $this->updateZohoAccount( $params );
+
+			if($response->original){
+				// $this->addUserToTeam($request->teams,$request->org_email);
+
+				// $employee->zuid = $response->original->data->zuid;
+				// $employee->account_id = $response->original->data->accountId;
+				// $employee->save();
+
+				if($employee){
+					Mail::to($request->email)->later($when,new ZohoInvitationMail($request->input(),$params['password']));            
+				}
+			}
+		}
+
+		//check if slack is checked for invitation
+		/*if($request->slack){
+			//call the  slack trait method in app/Traits folder
+			$this->updateSlackInvitation($request->org_email,$token);
+			//slack mail
+			Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
+		}*/
+
+		$employee->save();        
 
 		return redirect()->back()->with('success','Employee is updated succesfully');     
 	}
@@ -187,16 +221,22 @@ class EmployeeController extends Controller
 	{
 		$employee=Employee::withTrashed()->where('id', $id)->first();
 		$employee->restore();
-		return redirect()->back()->with('success','Employee is Restore succesfully');     
 	}
 
-	public function destroy($id)
+	public function destroy(Request $request, $id)
 	{
+		$this->validate($request,[
+			'password' => 'required'
+		]);
+		$adminPassword = config('values.adminPassword');
+
+		if($request->password == $adminPassword) 
+			return redirect()->back()->with('error','Wrong admin password entered');
+		
 		$emp = Employee::find($id);
 		$account_id = $emp->account_id;
 		$zuid = $emp->zuid;
 		$response = $emp->delete();
-		$adminPassword = config('values.adminPassword');
 		if($response){
 			$arr = [
 				"zuid" => $zuid ,
@@ -205,8 +245,7 @@ class EmployeeController extends Controller
 
 			$this->deleteZohoAccount($arr,$account_id);
 		}
-		return redirect()->back()->with('success','Employee is trash succesfully');     
-
+		return redirect()->back()->with('success','Employee is trash succesfully');
 	}
 
 	public function EmployeeLogin(){

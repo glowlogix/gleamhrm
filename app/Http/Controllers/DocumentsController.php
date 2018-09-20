@@ -20,7 +20,7 @@ class DocumentsController extends Controller
         return view('admin.docs.index',['files' => $data],$this->metaResponse());
     }
 
-    public function uploadDocs(Request $request){
+    public function uploadDocs1(Request $request){
         $this->validate($request, [
             'docs.*'=>'required|mimes:doc,docx,pdf|max:2000',
             'application_name' => 'required'

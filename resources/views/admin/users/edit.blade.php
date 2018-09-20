@@ -28,14 +28,16 @@
             </div>
             <div class="form-group">
                 <label for="email">Password</label>
-                <input type="password" name="password" placeholder="Enter password here" class="form-control">
+                <input type="password" name="password" placeholder="Enter password here" class="form-control" required>
+            </div>
+            <div class="form-group">
+                <label for="confirm_password">Confirm Password</label>
+                <input type="password" name="confirm_password" placeholder="Enter confirm password here" class="form-control" required>
             </div>
             <div class="form-group">
                 <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>
         </form>
-
-
 
     </div>
 </div>

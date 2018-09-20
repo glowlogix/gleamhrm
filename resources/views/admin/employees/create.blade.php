@@ -16,19 +16,11 @@
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
-<<<<<<< HEAD
                 <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" required>
-=======
-                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname">
->>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
             </div>
             <div class="form-group col-sm-4">
                 <label for="lastname">Last Name:</label>
-<<<<<<< HEAD
                 <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" required>
-=======
-                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname">
->>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
             </div>
             <div class="form-group col-sm-4">
                 <label for="fullname">Full Name:</label>
@@ -53,17 +45,13 @@
                 <br>
                 <label for="emergency_contact">Emergency Contact#:</label>
                 <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number"
-<<<<<<< HEAD
                     name="emergency_contact" required>
-=======
-                    name="emergency_contact">
             </div>
             <div class="form-group col-sm-4">
                 <br>
                 <label for="emergency_contact">Emergency Contact Relationship:</label>
                 <input style="width: 250px;" type="text" class="form-control" id="emergency_contact_relationship" placeholder="Enter Emergency Contact Relationship"
                     name="emergency_contact_relationship">
->>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
             </div>
             <div class="form-group col-sm-4">
                 <br>

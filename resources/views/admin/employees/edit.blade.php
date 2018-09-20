@@ -19,6 +19,10 @@
                 <input type="text" name="lastname" value="{{$employee->lastname}}" class="form-control">
             </div>
             <div class="form-group">
+                <label for="lastname">Fullname</label>
+                <input type="text" name="fullname" value="{{$employee->fullname}}" class="form-control">
+            </div>
+            <div class="form-group">
                 <label for="employee">Select Role</label>
                 <select name="employee_id" id="employee" class="form-control">
                     <option selected value="{{$employee->role}}">member</option>
@@ -60,13 +64,61 @@
                     class="form-control">
             </div>
 
-            <div class="form-group">
-                <label for="text">Add Salary:</label>
-                <input style="width: 250px;" type="text" value="{{$salary->basic_salary}}" class="form-control" id="salary" placeholder="Enter Salary"
-                    name="salary">
+            <div class="form-group  col-sm-4" style="padding-left: 80px;">
+                <br>
+                <label>
+                    <input type="hidden" name="asana" value="0" />
+                    @if($employee->inviteToAsana == "1")
+                    <input type="checkbox" class="asana" name="asana" value="1" checked /> Invite to Asana
+                    @else
+                    <input type="checkbox" class="asana" name="asana" value="1" /> Invite to Asana
+                    @endif
+                </label>
             </div>
+            <div class="form-group  col-sm-4" style="padding-left: 80px;">
+                <br>
+                <label>
+                    <input type="hidden" name="slack" value="0" />
+                    @if($employee->inviteToSlack == "1")
+                    <input type="checkbox" name="slack" value="1" checked/>
+                    @else
+                    <input type="checkbox" name="slack" value="1"/>
+                    @endif
+                    Invite to Slack
+                </label>
+            </div>
+            <div class="form-group  col-sm-4" style="margin-bottom: 20px;padding-left: 80px;">
+                <br>
+                <label>
+                    <input type="hidden" name="zoho" value="0" />
+                    @if($employee->inviteToZoho == "1")
+                    <input type="checkbox" name="zoho" id="zoho" value="1" checked="" /> Invite to Zoho
+                    @else
+                    <input type="checkbox" name="zoho" id="zoho" value="1" /> Invite to Zoho
+                    @endif
+                </label>
+            </div>
+    
             <div class="form-group">
-                <button class="btn btn-success " type="submit"> Update</button>
+                <a href="{{route('employees')}}" class="btn btn-success" align="right">Back</a>
+                <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm">Update</button>
+            </div>
+
+            <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            Are you sure you want to update Employee : {{ $employee->firstname }}?
+                        </div>
+                        <div class="modal-body">
+                            <input type="password" class="form-control" placeholder="Admin Password" name="password" required>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                            <button class="btn btn-success " type="submit"> Update</button>
+                        </div>
+                    </div>
+                </div>
             </div>
         </form>
     </div>

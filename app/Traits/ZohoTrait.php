@@ -158,13 +158,21 @@ trait ZohoTrait{
                 'json' => $defaultParams
             ]);
         } catch (RequestException $e) {
-            return $e->getMessage();
+            $msg = $e->getMessage();
+        }
+        catch (ClientException $e) {
+            if ($e->hasResponse()) {
+                $msg = 'Invalid Input';
+            }
+        } catch (ServerException $e) {
+            $msg = 'Server Error';
         }
 
-        if ( $response->getStatusCode() == 200) {
+        if (isset($response) && $response->getStatusCode() == 200) {
             $data = json_decode( $response->getBody() );
         } else {
-            $data = json_decode( $response->getBody() );
+            $data = '';
+            session()->flash('error', $msg);
         }
         return response()->json( $data, 200 );
     }
