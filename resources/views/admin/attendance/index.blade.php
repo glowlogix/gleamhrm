@@ -15,89 +15,180 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <label for="name">Name:</label>
+                                @if(isset($employee->id))
+                                    {{$employee->fullname}}
+                                    <input type="hidden" name="employee_id" value="{{$employee->id}}">
+                                @else
                                 <select class="form-control nameselect2" name="employee_id">
-                                    @foreach($employees as $employee)
-                                        <option value={{$employee->id}}>{{$employee->fullname}}</option>
+                                    <option value="0">Select Employee</option>
+                                    @foreach($employee as $emp)
+                                    <option value="{{$emp->id}}">{{$emp->fullname}}</option>
                                     @endforeach
                                 </select>
+                                @endif
                             </div>
                             <div class="col-md-3">
-                                <label for="datepick">Select Date</label></br>
-                                <input type="date" name="datepick" id="datepick" class="datepickstyle">
+                                <label for="date">Select Date</label></br>
+                                <input type="date" name="date" id="date" class="datepickstyle" value="{{$current_date}}">
                             </div>
-                            <div class="col-md-3">
-                                <div class="form-group" style:"display:relative{ float:left; }, .clearBoth { clear:both; }" >
-                                    <label for="delay">Delay</label>
-                                    <input type="number" placeholder="0" class="form-control" name="delay">
-                                </div>
-                             </div>
                         </div>
                     </div>
-                    
                     <div class="col-md-6">
-                        <input type="checkbox" id="Checkbox" class="chk" name="Checkbox">
-                        <label for="Checkbox" style="margin-top: 14px;">
-                            <span class="label-name">CheckIn Time</span>
-                            <div class="checkmark">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><g><path d="M50,91C27.393,91,9,72.607,9,50S27.393,9,50,9s41,18.393,41,41S72.607,91,50,91z M50,16   c-18.748,0-34,15.252-34,34c0,18.748,15.252,34,34,34c18.748,0,34-15.252,34-34C84,31.252,68.748,16,50,16z"/></g><path d="M66.141,39.393c-1.367-1.366-3.582-1.366-4.949,0L47.403,53.182l-6.594-6.594  c-1.367-1.366-3.583-1.366-4.95,0c-1.367,1.367-1.367,3.583,0,4.95l9.066,9.066c0.001,0.001,0.001,0.002,0.002,0.003  c0.684,0.684,1.58,1.025,2.475,1.025l0,0c0,0,0,0,0,0c0.896,0,1.792-0.342,2.475-1.025c0.002-0.002,0.003-0.004,0.004-0.005  l16.258-16.258C67.508,42.976,67.508,40.76,66.141,39.393z"/></svg>
-                            </div>
-                        </label>
-                    
-                        <input type="checkbox" id="Checkbox2" class="chk"  name="Checkbox2">
-                        <label for="Checkbox2">
-                            <span class="label-name">CheckOut Time</span>
-                            <div class="checkmark">
-                            <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" x="0px" y="0px" viewBox="0 0 100 125" enable-background="new 0 0 100 100" xml:space="preserve"><g><path d="M50,91C27.393,91,9,72.607,9,50S27.393,9,50,9s41,18.393,41,41S72.607,91,50,91z M50,16   c-18.748,0-34,15.252-34,34c0,18.748,15.252,34,34,34c18.748,0,34-15.252,34-34C84,31.252,68.748,16,50,16z"/></g><path d="M66.141,39.393c-1.367-1.366-3.582-1.366-4.949,0L47.403,53.182l-6.594-6.594  c-1.367-1.366-3.583-1.366-4.95,0c-1.367,1.367-1.367,3.583,0,4.95l9.066,9.066c0.001,0.001,0.001,0.002,0.002,0.003  c0.684,0.684,1.58,1.025,2.475,1.025l0,0c0,0,0,0,0,0c0.896,0,1.792-0.342,2.475-1.025c0.002-0.002,0.003-0.004,0.004-0.005  l16.258-16.258C67.508,42.976,67.508,40.76,66.141,39.393z"/></svg>
-                            </div>
-                        </label>
-                        
+                        <label for="in_out">Check</label>
+                        <select class="form-control" name="in_out">
+                            <option value="in" @if($selected_in_out == "in") selected @endif >Time In</option>
+                            <option value="out" @if($selected_in_out == "out") selected @endif>Time Out</option>
+                        </select>
                     </div>
-                       
-                    
-                    <div class="container-fluid">
-                        <div class="col-md-6">
-                            <div class="form-group"  >
-                                <label>Time</label>
-                                <div class="input-group time" id="timepicker">
-                                <input class="form-control" id="timepick" name="timepick"/>
-                                <span class="input-group-addon" id="timepicker1">
-                                    <i class="fa fa-clock-o" style="font-size:16px"></i>
-                                </span>
-                            </div>
+                    <div class="col-md-6">
+                        <label for="time">Time at</label>
+                        <div class="input-group time timepicker">
+                            <input class="form-control time tp" name="time" value="{{$current_time}}" />
+                            <span class="input-group-addon timepicker1">
+                                <i class="fa fa-clock-o" style="font-size:16px"></i>
+                            </span>
                         </div>
-                    </div>     
-                    <div class="col-md-2"  >
-                        <div class="form-group" style="padding-top: 12px;">
+                    </div>
+                    
+                    <div class="container-fluid" id="delay">
+                        <label for="name">Delay:</label>
+                        <div></div>
+                    </div>
+                    
+                    <div class="container-fluid" id="totalhours">
+                        <label for="name">Total hours @if(isset($attendance_summary->total_time)){{$attendance_summary->total_time / 60}}@endif</label>
+                        <div></div>
+                    </div>
+
+                    <div class="col-md-2">
+                        <div class="form-group">
                             <button class="btn btn-success create-btn" id="add-btn"  type="submit" > Create</button>
                         </div>
                     </div>
-                
+                </form>
+            </div>
+        </div>
+        <div class="row">
+            <div class="panel-body">
+                <table class="table">
+                    <thead>
+                        <th>Check Time</th>
+                        <th>At Time</th>
+                    </thead>
+                    <tbody class="table-bordered table-hover table-striped">
+                        @if($attendance->count() > 0) @foreach($attendance as $att)
+                        <tr>
+                            <td>
+                                {{$att->in_out}}
+                            </td>
+                            <td>
+                                {{ Carbon\Carbon::parse($att->time)->format('h:i a') }}
+                            </td>
+                            <td>
+                                <button class="btn btn-default" data-toggle="modal" data-target="#edit{{ $att->id }}">Edit</button>
+
+                                <div class="modal fade" id="edit{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <form action="{{ route('attendance.update' , ['id'=>$att->id] )}}" method="post">
+                                                {{ csrf_field() }}
+                                                <div class="modal-header">
+                                                    Edit
+                                                </div>
+                                                <div class="modal-body">
+                                                    <label for="in_out">Check</label>
+                                                    <select class="form-control" name="in_out">
+                                                        <option value="in" @if($att->in_out == "in") selected @endif >Time In</option>
+                                                        <option value="out" @if($att->in_out == "out") selected @endif>Time Out</option>
+                                                    </select>
+
+                                                    <label for="time">Time at</label>
+                                                    <div class="input-group time timepicker">
+                                                        <input class="form-control time tp" name="time" value="{{Carbon\Carbon::parse($att->time)->format('h:i a')}}" />
+                                                        <span class="input-group-addon timepicker1">
+                                                            <i class="fa fa-clock-o" style="font-size:16px"></i>
+                                                        </span>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                    <button  type="submit" class="btn btn-success btn-ok">Update</button>
+                                                </div>
+                                            </form>
+                                        </div>
+                                    </div>
+                                </div>
+
+                                <!-- <button class="btn btn-default" data-toggle="modal" data-target="#confirm-delete{{ $att->id }}">Delete</button> -->
+                                <div class="modal fade" id="confirm-delete{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ route('attendance.destroy' , $att->id )}}" method="post">
+                                            {{ csrf_field() }}
+                                            <div class="modal-header">
+                                                Are you sure you want to delete this record
+                                            </div>
+                                            <div class="modal-body">
+                                                <input type="password" class="form-control" placeholder="Admin Password" name="password" required>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+
+                            </td>
+                        </tr>
+                        @endforeach @else
+                        <tr>
+                            <td>
+                                Time Not Added yet
+                            </td>
+                        </tr>
+                        @endif
+                    </tbody>
+                </table>
             </div>
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                
-                $('.create-btn').click(function () {
-                   
-                });
-                $('#timepicker1').click(function(){
-                    $("#timepicker").datetimepicker({
+                // $('#totalhours').hide();
+                $('#delay').hide();
+  
+                $('input.tp').datetimepicker({
                     format: "LT",
                     icons: {
-                    up: "fa fa-chevron-up",
-                    down: "fa fa-chevron-down"
+                        up: "fa fa-chevron-up",
+                        down: "fa fa-chevron-down"
                     }
                 });
 
+                $('.timepicker1').click(function(){
+                    $(this).parent().datetimepicker({
+                        format: "LT",
+                        icons: {
+                            up: "fa fa-chevron-up",
+                            down: "fa fa-chevron-down"
+                        }
+                    });
                 });
             });
            
             $(document).ready(function(){
-                $('.nameselect2').select2();
-     
-                $('input.chk').on('change', function() {
-                $('input.chk').not(this).prop('checked', false);  
-                });               
+                // $('.nameselect2').select2();
+                $(".nameselect2").select2().on('change.select2', function(e){
+                    var url = '{{route('attendance.create', ['id'=> $emp_id])}}/';
+                    var url = url.replace("/0", "");
+                    var url = url + $(this).val();
+
+                    if (url) { 
+                        window.location = url; 
+                    }
+                    return false;
+                });
             });
             
         </script>

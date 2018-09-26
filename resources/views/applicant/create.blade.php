@@ -5,20 +5,40 @@
     type="text/css" />
 <link rel="stylesheet" href="" type="text/css">
 <div class="body-content">
+	 @if(Session::has('success'))
+	    <div class="alert alert-success">
+	        <a href="#" class="close" data-dismiss="alert">&times;</a>
+	        <strong>Success!</strong> {{Session::get('success')}}
+	    </div>
+    @endif
+
+    @if (Session::has('error'))
+	<div class="alert alert-warning" align="left">
+	    <a href="#" class="close" data-dismiss="alert">&times;</a>
+	    <strong>!</strong> {{Session::get('error')}}
+	</div>
+	@endif
+	
 	<div class="module">
 		<h1> Apply for Job </h1>
 		<form class="form" action="{{route('applicant.store')}}" method="post" enctype="multipart/form-data" autocomplete="off">
 			{{csrf_field()}}
-			<label for="category">Select Category</label>
-			<select name="category" id="category_id" type="select" class="category form-control">
-				@foreach($categories as $categori)
-				<option value="{{$categori->id}}">{{$categori->name}}</option>
+			
+			<div class="form-group">
+			<label for="job_id">Select job</label>
+			<select name="job_id" id="job_id" type="select" class="job_id form-control">
+				@foreach($jobs as $j)
+				<option value="{{$j->id}}">{{$j->title}}</option>
 				@endforeach
 			</select>
-			<label for="job">Select job</label>
-			<select name="job" id="job" class="job form-control">
-				<option>Please choose Category First</option>
+			</div>
+			<div class="form-group">
+				<label for="name">Location</label>
+				<select name="city" id="city" type="select" class="city form-control">
+				<option value="Gujrat">Gujrat</option>
+				<option value="Islamabad">Islamabad</option>
 			</select>
+			</div>
 			<div class="form-group">
 				<label for="name">Name</label>
 				<input type="text" name="name" placeholder="Enter name here" class="form-control">
@@ -38,10 +58,6 @@
 			<div class="cv">
 				<label for="cv">Resume</label>
 				<input type="file" name="cv" required/>
-			</div>
-			<div class="form-group">
-				<label for="city">City</label>
-				<input type="text" name="city" placeholder="Enter city here" class="form-control">
 			</div>
 			<div class="form-group  ">
 				<label for="job_status">Job status</label>

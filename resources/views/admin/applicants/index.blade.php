@@ -35,8 +35,8 @@
 					</td>
 					<td>{{$applicant->name}}</td>
 					<td>{{$applicant->city}}</td>
-					<td> {{$applicant->job_status}}</td>
-					<td>applicant job tilte goes here.</td>
+					<td>{{$applicant->job_status}}</td>
+					<td>{{$applicant->job_id}}</td>
 					<td>
 						<a href="/{{$applicant->cv}}">
 							<img src="/uploads/applicants/cv/cv_icon.jpg" alt="" height="50px" width="50px">

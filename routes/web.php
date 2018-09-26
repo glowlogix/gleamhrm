@@ -72,38 +72,38 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 
-	Route::get('/category/create',[
-		'uses' => 'CategoriesController@create',
-		'as' => 'category.create'
+	Route::get('/job_position/create',[
+		'uses' => 'JobPositionsController@create',
+		'as' => 'job_position.create'
 	]);
 
-	Route::get('/category/create',[
- 	'uses' => 'CategoriesController@create',
- 	'as' => 'category.create'
+	Route::get('/job_position/create',[
+ 	'uses' => 'JobPositionsController@create',
+ 	'as' => 'job_position.create'
  	]);
 
-	Route::Post('/category/store',[
-		'uses' => 'CategoriesController@store',
-		'as' => 'category.store'
+	Route::Post('/job_position/store',[
+		'uses' => 'JobPositionsController@store',
+		'as' => 'job_position.store'
 	]);
 
-	Route::GET('/categories',[
-		'uses' => 'CategoriesController@index',
-		'as' => 'categories'
+	Route::GET('/job_positions',[
+		'uses' => 'JobPositionsController@index',
+		'as' => 'job_positions'
 	]);
 
-	Route::get('/category/edit/{id}',[
-		'uses' => 'CategoriesController@edit',
-		'as' => 'category.edit'
+	Route::get('/job_position/edit/{id}',[
+		'uses' => 'JobPositionsController@edit',
+		'as' => 'job_position.edit'
 	]);
-	Route::Post('/category/update/{id}',[
-		'uses' => 'CategoriesController@update',
-		'as' => 'category.update'
+	Route::Post('/job_position/update/{id}',[
+		'uses' => 'JobPositionsController@update',
+		'as' => 'job_position.update'
 	]);
 
-	Route::get('/category/delete/{id}',[
-		'uses' => 'CategoriesController@delete',
-		'as' => 'category.delete'
+	Route::get('/job_position/delete/{id}',[
+		'uses' => 'JobPositionsController@delete',
+		'as' => 'job_position.delete'
 	]);
 
 	Route::get('/job',[
@@ -137,6 +137,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'singleCategoryJobs'
 	]);
 
+	Route::Get('/applicant/create',[
+		'uses' =>'ApplicantController@create',
+		'as' => 'applicant.create'
+	]);
 	Route::Get('/applicant/index',[
 		'uses' =>'ApplicantController@index',
 		'as' => 'applicants'
@@ -266,11 +270,18 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
 	]);
+	//attendance
+	Route::Get('/attendance/timeline',[
+		'uses' => 'AttendanceController@showTimeline', //show Attendance
+		'as' => 'attendance'
+	]);
+
 	Route::Get('/attendance/sheet/{id}',[
 		'uses' => 'AttendanceController@sheet', //show Attendance sheet
 		'as' => 'attendance.sheet'
 	]);
-	Route::Get('/attendance/create',[
+	
+	Route::Get('/attendance/create/{id}',[
 		'uses' => 'AttendanceController@create', //show Attendance
 		'as' => 'attendance.create'
 	]);
@@ -430,7 +441,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//Route::get('/ajax-job',function(){
 	//		$cat_id = Input::get('cat_id');
-	//	$jobs = Jobs::where('category_id', '=',$cat_id)->get();
+	//	$jobs = Jobs::where('job_position_id', '=',$cat_id)->get();
 	//	return Response::json($jobs);
 	// });
 	

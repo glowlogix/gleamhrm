@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\MetaTrait;
-use App\Attandance;
+use App\Attendance;
+use App\AttendanceSummary;
 use App\Employee;
 use Carbon\Carbon;
 use App\Leave;
@@ -18,6 +19,8 @@ use Box\Spout\Common\Type;
 use DB;
 use Calendar;
 use DateTime;
+
+
 class AttendanceController extends Controller
 {
     use MetaTrait;
@@ -45,12 +48,67 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function selectEmployee()
     {
         $this->meta['title'] = 'Create Attendance';    
         $employees = Employee::all(); 
         
-        return view('admin.attendance.index',$this->metaResponse(),['employees' => $employees]);
+        $mytime = Carbon::now();
+        $curret_date = $mytime->toDateString();
+        
+        // $attendance = Attendance::where('id',$id)->first();
+        // $selected_in_out = 'in';
+
+        /*$attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->get();
+        
+        $arr = array();
+        foreach ($attendance as $row) {
+            $arr[$row->in_out][] = Carbon::parse($row->time);
+        }*/
+
+        return view('admin.attendance.index',$this->metaResponse(),['employees' => $employees, 'curret_date' => $curret_date]);
+    }
+
+
+/**
+     * Show the form for creating a new resource.
+     *
+     * @return \Illuminate\Http\Response
+     */
+    public function create($emp_id)
+    {
+        $this->meta['title'] = 'Create Attendance';    
+        if($emp_id == 0){
+            $employee = Employee::all(); 
+        }
+        else{
+            $employee = Employee::find($emp_id);
+        }
+        
+        $mytime = Carbon::now();
+        $current_date = $mytime->toDateString();
+        $current_time = $mytime->toTimeString();
+
+        $attendance = Attendance::where(['date' => $current_date, 'employee_id' => $emp_id])->orderBy('id', 'desc')->first();
+
+        $attendance_summary = AttendanceSummary::where(['date' => $current_date, 'employee_id' => $emp_id])->first();
+
+        $selected_in_out = 'in';
+        if (isset($attendance->in_out) && $attendance->in_out == 'in') {
+            $selected_in_out = 'out';
+        }
+
+        $attendance = Attendance::where(['date' => $current_date, 'employee_id' => $emp_id])->get();
+        
+        return view('admin.attendance.index',$this->metaResponse(),[
+            'employee'      => $employee, 
+            'attendance'    => $attendance, 
+            'attendance_summary'    => $attendance_summary, 
+            'current_date'   => $current_date, 
+            'current_time'   => $current_time, 
+            'selected_in_out'   => $selected_in_out, 
+            'emp_id'        => $emp_id,
+        ]);
     }
 
     /**
@@ -61,65 +119,72 @@ class AttendanceController extends Controller
      */
     public function store(Request $request)
     {
+        // dd($request);
         $this->validate($request,[
-            'timepick' => 'required',
-            'datepick' => 'required'
-        ]);  
-        $getdate= $request->datepick;
-        $getcheckinTime = $request->timepick;
-        $getcheckoutTime = $request->timepick;
-        $combinecheckintime = null;
-        $combinecheckouttime = null;
-        if(isset($_POST['Checkbox']))
-        {
-         $combinecheckintime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckinTime"));
-         $parsecheckinTime= Carbon::parse($getcheckinTime);
-         $parsecheckoutTime= Carbon::parse(null);
-         
-         $delay = $request->delay ? $request->delay  : 0;
-         $hoursLogged = 0; 
-                  
-         $attendacne = Attandance::create([
-             'employee_id' => $request->employee_id,
-             'delay' => $delay,
-             'checkintime' => $combinecheckintime,
-             'checkouttime' => $combinecheckouttime,
-             'hourslogged' => $hoursLogged,
-             'status' => 'present'
-         ]);
-         if($attendacne){
-            return redirect()->back()->with('success','Attendance is created succesfully');     
-            
-         }
+            'employee_id' => 'required',
+            'time' => 'required',
+            'date' => 'required',
+        ]);
+
+        $time = Carbon::parse($request->time);                           
+        
+        $attendance = Attendance::create([
+            'employee_id' => $request->employee_id,
+            'date' => $request->date,
+            'in_out' => $request->in_out,
+            'time' => $time->toTimeString(),
+        ]);
+
+        $this->storeAttendaceSummary($request);
+
+        if($attendance){
+            return redirect()->back()->with('success','Attendance is created succesfully');
         }
-        else if(isset($_POST['Checkbox2']))
-        {
-            $id = $request->employee_id;
-            $time= DB::table('attandances')->where(['employee_id'=>$id,'checkouttime'=>NULL])->pluck('checkintime');
-            if(count($time)<=0)
-            {
-                return redirect()->back()->with('error','No record found to update');
+        else{
+            return redirect()->back()->with('error','Error while add attendance');
+        }
+    }
+
+    public function storeAttendaceSummary(Request $request)
+    {
+        $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->get();
+        
+        $arr = array();
+        foreach ($attendance as $i => $row) {
+            $arr[$row->in_out][] = Carbon::parse($row->time);
+        }
+
+        if (isset($arr['out']) && count($arr['in']) == count($arr['out'])) {
+            $first_time_in = $arr['in'][0];
+            $last_time_out = end($arr['out']);
+
+            $totaltime = 0;
+            foreach ($arr['in'] as $key => $value) {
+                $totaltime += $value->diffInMinutes($arr['out'][$key]);
             }
-            else
-            {
-                $combinecheckouttime = date('Y-m-d H:i:s', strtotime("$getdate $getcheckoutTime"));
-                $checkintimeparse = $time[0];
-                $parsecheckoutTime= Carbon::parse($combinecheckouttime);
-                $parsecheckinTime= Carbon::parse($checkintimeparse);         
-                $hoursLogged = $parsecheckinTime->diffInHours($parsecheckoutTime);           
-                $row =  DB::update(DB::raw("Update attandances set  hourslogged='$hoursLogged' , checkouttime = '$combinecheckouttime' where employee_id= '$id' AND checkintime='$parsecheckinTime' "));
-                if($row == 1)
-                {
-                    return redirect()->back()->with('success','Attendance is created succesfully');
-                }
-               
+
+            $attendance_summary = AttendanceSummary::where([
+                'employee_id' => $request->employee_id,
+                'date' => $request->date,
+            ])->first();
+
+            if (isset($attendance_summary->id) != '') {
+                $attendance_summary->first_time_in = $first_time_in;
+                $attendance_summary->last_time_out = $last_time_out;
+                $attendance_summary->total_time = $totaltime;
+                $attendance_summary->save();
+            }
+            else{
+                $attendance_summary = AttendanceSummary::create([
+                    'employee_id' => $request->employee_id,
+                    'first_time_in' => $first_time_in,
+                    'last_time_out' => $last_time_out,
+                    'total_time' => $totaltime,
+                    'date' => $request->date,
+                ]);
             }
         }
-        else
-        {
-            return redirect()->back()->with('error','Checkin Time or Checkout Time field is required');
-        }
-                       
+        
     }
 
     /**
@@ -152,7 +217,7 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request)
+    public function updateSummary(Request $request)
         {
             $validator =\Validator::make($request->all(),[
                 'datefrom' => 'required|before_or_equal:dateto',
@@ -202,6 +267,33 @@ class AttendanceController extends Controller
        
     }
 
+    /**
+     * Update the specified resource in storage.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Leave  $leave
+     * @return \Illuminate\Http\Response
+     */
+    public function update(Request $request){
+
+        $attendance = Attendance::where([
+            'id' => $request->query('id'),
+        ])->first();
+
+        $request->employee_id = $attendance->employee_id;
+        $request->employee_id = $attendance->date;
+
+        if (isset($attendance->id) != '') {
+            $attendance->in_out = $request->in_out;
+            $attendance->time = Carbon::parse($request->time);;
+            $attendance->save();
+        }
+
+        $this->storeAttendaceSummary($request);
+        
+        return redirect()->back()->with('success','Attendance is updated succesfully');
+    }
+
 
     public function getbyAjax(Request $request){
 
@@ -232,26 +324,27 @@ class AttendanceController extends Controller
                 return response()->json($leave);  
             }
         
-        
-        
     }
 
 
     public function showAttendance(Request $request){
+
         $this->meta['title'] = 'Show Attendance';        
         $data = DB::table('employees')->get(); 
         
         foreach($data as $employee){
             $employee_id = $employee->id;
-            $attendance = DB::table('attandances')->where('employee_id', $employee_id)->get(); 
+            // $attendance = DB::table('attandances')->where('employee_id', $employee_id)->get(); 
+            $attendance_summaries = DB::table('attendance_summaries')->where('employee_id', $employee_id)->get();
+            // dd($attendance);
             $leave = DB::table('leaves')->where('employee_id', $employee_id)->get(); 
-  
-             $events = [];
+            $events = [];
         
-               if($data->count()){
+            if($data->count()){
         
-                  foreach ($attendance as $key => $value) {
-
+                foreach ($attendance_summaries as $key => $value) {
+                    // $row = DB::table('attendances')->where('employee_id', $employee_id)->first();
+                    // $timein = $row->time;
                     $delays = '';
                     $color = '';
                     if($value->status == "Short Leave"){
@@ -270,188 +363,229 @@ class AttendanceController extends Controller
                         $color = 'green';
                     }
 
-                    if($value->delay && $value->status=="present"){
+                    if($value->is_delay && $value->status=="present"){
                         $color = '#70AFDC';
-                        $delays = $value->delay." delay";
+                        $delays = $value->is_delay." delay";
                     }else{
                         $delays ="";
                     }
-                    $time = date("g:i A",strtotime($value->checkintime));
-                   // $time2= date("g:i A",strtotime($value->checkouttime));
+                    $time = date("g:i A",strtotime($value->first_time_in));
+                    // $time2= date("g:i A",strtotime($value->checkouttime));
                     
                     $events[] = Calendar::event(
         
-                        $value->status."\n".$employee->fullname."\n".$time."\n". $value->hourslogged." hrs"."\n",
-                        
+                        // $value->status."\n".$employee->fullname."\n".$time."\n". $value->hourslogged." hrs"."\n",
+                        $value->status."\n".$employee->fullname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
                         true,
-                        new \DateTime($value->checkintime),
-        
-                        new \DateTime($value->checkouttime.' +1 day'),
+                        new \DateTime($value->date),
+                        // new \DateTime($value->date .' '. $value->first_time_in),
+                        new \DateTime($value->date.' +1 day'),
+                        // new \DateTime($value->date .' '. $value->last_time_out.' +1 day'),
                         $value->employee_id,
                         [
                             'color' =>  $color
                         ]
                     );
-        
-                  }
+                }
+
                   foreach ($leave as $key => $value) {
                       $color = '';
-                    if($value->leave_type == "Short Leave"){
-                        $color = '#C24BFF';
-                    }
-                    if($value->leave_type === "Full Leave"){
-                        $color = 'red';                        
-                    }
-                    if($value->leave_type === "Half Leave"){
-                        $color = '#57BB8A';                        
-                    }
-                    if($value->leave_type == "Paid Leave"){
-                        $color = '#ADFF41'; 
-                    }
-                    $events[] = Calendar::event(
-    
-                        $value->leave_type."\n".$employee->fullname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                        if($value->leave_type == "Short Leave"){
+                            $color = '#C24BFF';
+                        }
+                        if($value->leave_type === "Full Leave"){
+                            $color = 'red';                        
+                        }
+                        if($value->leave_type === "Half Leave"){
+                            $color = '#57BB8A';                        
+                        }
+                        if($value->leave_type == "Paid Leave"){
+                            $color = '#ADFF41'; 
+                        }
+                        $events[] = Calendar::event(
         
-                        true,
-                        new \DateTime($value->datefrom),
-        
-                        new \DateTime($value->dateto.' +1 day'),
-                        $value->employee_id,
-                        [
-                            'color' => $color
-                        ]
-                    );
-        
+                            $value->leave_type."\n".$employee->fullname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+            
+                            true,
+                            new \DateTime($value->datefrom),
+            
+                            new \DateTime($value->dateto.' +1 day'),
+                            $value->employee_id,
+                            [
+                                'color' => $color
+                            ]
+                        );
                     }
                }
-               $calendar = Calendar::addEvents($events)
-               ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
-                'editable'=> true,
-                'eventClick' => 'function(event) {
-                    var type = event.title.split("\n")[0];       
-                    $("#update").unbind("click");     
-                    $("#del").unbind("click"); 
-                    var type = $("#leave_type").val(type);
-                    jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-                    
-                    if(type){
-                        $.ajax({
-                            type: "GET",                                  
-                            url: "'.route('attendance.showByAjax').'", 
-                            dataType : "json",   
-                            data: {
-                                "id" : event.id,
-                                "type" : type.val(),
-                                 "date" : event.start._i
-                            }, 
-                            success: function(response){    
-                                if(response[1]=="successAttendance"){                    
-                                var checkin = $("#datefrom").val(response[0].checkintime);
-                                var checkout = $("#dateto").val(response[0].checkouttime);
-                                $("#currentStartTime").val(checkin.val());
-                                $("#currentEndTime").val(checkout.val());
-                                $("#currentStatus").val(response[0].status);
 
-                                }else{
-                                    var checkin = $("#datefrom").val(response.datefrom);
-                                    var checkout = $("#dateto").val(response.dateto);
+               $calendar = Calendar::addEvents($events)->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
+                    'editable'=> true,
+                    'eventClick' => 'function(event) {
+                        var type = event.title.split("\n")[0];       
+                        $("#update").unbind("click");     
+                        $("#del").unbind("click"); 
+                        var type = $("#leave_type").val(type);
+                        jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
+                        
+                        if(type){
+                            $.ajax({
+                                type: "GET",                                  
+                                url: "'.route('attendance.showByAjax').'", 
+                                dataType : "json",   
+                                data: {
+                                    "id" : event.id,
+                                    "type" : type.val(),
+                                     "date" : event.start._i
+                                }, 
+                                success: function(response){    
+                                    if(response[1]=="successAttendance"){                    
+                                    var checkin = $("#datefrom").val(response[0].checkintime);
+                                    var checkout = $("#dateto").val(response[0].checkouttime);
                                     $("#currentStartTime").val(checkin.val());
                                     $("#currentEndTime").val(checkout.val());
-                                    $("#currentStatus").val(response.status);
-                                    
-                                }
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) { 
-                                console.log(JSON.stringify(jqXHR));
-                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                            }
+                                    $("#currentStatus").val(response[0].status);
 
-                        });
-
-                    }
-
-                    $("#update").on("click",function(){
-                        
-                        $.ajax({
-                            type: "POST",                                  
-                            url: "'.route('attendance.update').'", 
-                            dataType : "json",   
-                            data: {
-                                "id" : event.id,
-                                "type" : $("#leave_type").val(),
-                                "datefrom":$("#datefrom").val(),
-                                "dateto" : $("#dateto").val(),
-                                "currentStartDate" :  $("#currentStartTime").val(),
-                                "currentEndDate" :  $("#currentEndTime").val(),  
-                                "currentStatus" : $("#currentStatus").val(),
-                                
-                                "_token" : "'.csrf_token().'"
-                            }, 
-                            success: function(response){ 
-                                if(response.errors){
-                                    alert(response.errors[0]);                                    
-                                }
-                                if(response == "success"){
-                                    alert("Update Successfully");
-                                    window.location.reload();
-                                }else if(response == "already-present"){
-                                    alert("Already Present First Remove that employee to make Full Leave");                                    
-                                }
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) { 
-                                console.log(JSON.stringify(jqXHR));
-                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                            }
-
-                        });
-
-                    });
-
-                    $("#del").on("click",function(){    
-                        var r = confirm("Are you sure you want to delete?");                  
-                        if (r == true) {
-                         $.ajax({
-                            type: "POST",                                  
-                            url: "'.route('attendance.destroy').'", 
-                            dataType : "json",   
-                            data: {
-                                "id" : event.id,
-                                "type" : $("#leave_type").val(),
-                                "date" : event.start._i,
-                                "_token" : "'.csrf_token().'"
-                            }, 
-                            success: function(response){ 
-                                if(response == "success"){
-                                    alert("Delete Successfully");
-                                    window.location.reload();
+                                    }else{
+                                        var checkin = $("#datefrom").val(response.datefrom);
+                                        var checkout = $("#dateto").val(response.dateto);
+                                        $("#currentStartTime").val(checkin.val());
+                                        $("#currentEndTime").val(checkout.val());
+                                        $("#currentStatus").val(response.status);
+                                        
+                                    }
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) { 
+                                    console.log(JSON.stringify(jqXHR));
+                                    console.log("AJAX error: " + textStatus + " : " + errorThrown);
                                 }
 
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) { 
-                                console.log(JSON.stringify(jqXHR));
-                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                            }
+                            });
 
-                        });
-
-                        } else {
-                            jQuery("#myModal").modal("toggle");                            
-                            
                         }
 
-                    });
+                        $("#update").on("click",function(){
+                            
+                            $.ajax({
+                                type: "POST",                                  
+                                url: "'.route('attendance.update').'", 
+                                dataType : "json",   
+                                data: {
+                                    "id" : event.id,
+                                    "type" : $("#leave_type").val(),
+                                    "datefrom":$("#datefrom").val(),
+                                    "dateto" : $("#dateto").val(),
+                                    "currentStartDate" :  $("#currentStartTime").val(),
+                                    "currentEndDate" :  $("#currentEndTime").val(),  
+                                    "currentStatus" : $("#currentStatus").val(),
+                                    
+                                    "_token" : "'.csrf_token().'"
+                                }, 
+                                success: function(response){ 
+                                    if(response.errors){
+                                        alert(response.errors[0]);                                    
+                                    }
+                                    if(response == "success"){
+                                        alert("Update Successfully");
+                                        window.location.reload();
+                                    }else if(response == "already-present"){
+                                        alert("Already Present First Remove that employee to make Full Leave");                                    
+                                    }
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) { 
+                                    console.log(JSON.stringify(jqXHR));
+                                    console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                                }
 
-                }'
-            ]);
-               
-            }
+                            });
+
+                        });
+
+                        $("#del").on("click",function(){    
+                            var r = confirm("Are you sure you want to delete?");                  
+                            if (r == true) {
+                             $.ajax({
+                                type: "POST",                                  
+                                url: "'.route('attendance.destroy').'", 
+                                dataType : "json",   
+                                data: {
+                                    "id" : event.id,
+                                    "type" : $("#leave_type").val(),
+                                    "date" : event.start._i,
+                                    "_token" : "'.csrf_token().'"
+                                }, 
+                                success: function(response){ 
+                                    if(response == "success"){
+                                        alert("Delete Successfully");
+                                        window.location.reload();
+                                    }
+
+                                },
+                                error: function(jqXHR, textStatus, errorThrown) { 
+                                    console.log(JSON.stringify(jqXHR));
+                                    console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                                }
+
+                            });
+
+                            } else {
+                                jQuery("#myModal").modal("toggle");                            
+                                
+                            }
+
+                        });
+
+                    }'
+                ]);
+        }
             
         return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar]);
     }
-        
-    
-    
 
+    public function showTimeline(){
+        $this->meta['title'] = 'Show Attendance';        
+        
+        $employees = Employee::all()->toJson();
+        $attendance_summaries = AttendanceSummary::all();
+        $events = array();
+        foreach ($attendance_summaries as $key => $value) {
+            $delays = '';
+            $color = '';
+            if($value->status == "Short Leave"){
+                $color = '#C24BFF';
+            }
+            if($value->status === "Full Leave"){
+                $color = 'red';                        
+            }
+            if($value->status === "Half Leave"){
+                $color = '#57BB8A';                        
+            }
+            if($value->status == "Paid Leave"){
+                $color = '#ADFF41'; 
+            }
+            if($value->status == "present"){
+                $color = 'green';
+            }
+
+            if($value->is_delay && $value->status=="present"){
+                $color = '#70AFDC';
+                $delays = $value->is_delay." delay";
+            }else{
+                $delays ="";
+            }
+            $time = date("g:i A",strtotime($value->first_time_in));
+                // $time2= date("g:i A",strtotime($value->checkouttime));
+
+            $events[] = [
+                "resourceId" => $value->employee_id,
+                "title" => $value->status."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                "start" => $value->date .' '. $value->first_time_in,
+                "end" => $value->date .' '.$value->first_time_in,
+            ];
+        }
+        $events = json_encode($events);
+
+        return view('admin.attendance.timeline',$this->metaResponse(), ['employees' => $employees, 'events' => $events]);
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -461,27 +595,24 @@ class AttendanceController extends Controller
      */
     public function destroy(Request $request)
     {
-            $id = $request->id;
-            $leaveType = $request->type;
-            $date = Carbon::parse($request->date);
-            $attendance = Attandance::where([
+        $id = $request->id;
+        $leaveType = $request->type;
+        $date = Carbon::parse($request->date);
+        $attendance = Attandance::where([
+            'employee_id'=>$id,
+            'checkintime' => $date
+        ])->first();
+        if($attendance){
+          $attendance->delete();
+        }else{
+            $leave = Leave::where([
                 'employee_id'=>$id,
-                'checkintime' => $date
+                'datefrom' => $date
+                
             ])->first();
-            if($attendance){
-              $attendance->delete();
-            }else{
-                $leave = Leave::where([
-                    'employee_id'=>$id,
-                    'datefrom' => $date
-                    
-                ])->first();
-                $leave->delete();
-            }
-            return response()->json('success');   
-        
-        
-        
+            $leave->delete();
+        }
+        return response()->json('success');
     }
 
 }

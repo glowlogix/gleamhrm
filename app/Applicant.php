@@ -9,16 +9,17 @@ class Applicant extends Model
 {
 	use SoftDeletes;
     protected $fillable=[
-		'name','fname','avatar','city','cv','job_status','job_id','category_id','recruited','email'
+		'name','fname','avatar','city','cv','job_status','job_id','job_position_id','recruited','email'
 	];
     protected $dates = ['deleted_at'];
+    
     public function job()
     {
     	$this->belongsTo('App\Job');
     }
 
-    public function category()
+    public function job_position()
     {
-    	$this->hasOne('App\Category');
+    	$this->hasOne('App\JobPosition');
     }
 }

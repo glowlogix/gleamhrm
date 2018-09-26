@@ -9,24 +9,16 @@
 		<form action="{{route('job.update',['id'=>$job->id])}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="form-group">
-				<label for="category">Select Category</label>
-				<select name="category_id" id="category" class="form-control">
-					@foreach($categories as $categori)
-					<option value="{{$categori->id}}">{{$categori->name}}</option>
-					@endforeach
-				</select>
-			</div>
-			<div class="form-group">
 				<label for="title">Title</label>
 				<input type="text" name="title" value="{{$job->title}}" class="form-control">
 			</div>
 			<div class="form-group">
-				<label for="featured" value="{{$job->featured}}">Featured Image</label>
-				<input type="file" name="featured" class="form-control">
+				<label for="featured">City</label>
+				<input type="text" name="city" class="form-control" value="{{$job->city}}">
 			</div>
 			<div class="form-group">
 				<label for="description">Description</label>
-				<textarea name="description" id="summernote" cols="5" rows="5" class="form-control">{{$job->description}}</textarea>
+				<textarea name="description" id="" cols="5" rows="5" class="form-control">{{$job->description}}</textarea>
 			</div>
 
 			<div class="form-group">

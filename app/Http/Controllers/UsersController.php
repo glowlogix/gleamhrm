@@ -128,7 +128,7 @@ class UsersController extends Controller
     public function edit(Request $request,$id){
 
         $this->meta['title'] = 'User Update';
-        $user = User::find($id);   
+        $user = User::find($id);
         return view('admin.users.edit',$this->metaResponse())->with(['user' => $user]);
     }
 
@@ -137,18 +137,20 @@ class UsersController extends Controller
         $user = User::find($id);  
         $this->validate($request,[
             'name' => 'required',
-            'email' => 'required|email'
+            'email' => 'required|email',
+            'password' => 'required|confirmed',
         ]);
-
+        
         $user->name = $request->name;
         $user->email = $request->email;
         if($request->admin){
-        $user->admin = $request->admin;
-        }else{
+            $user->admin = $request->admin;
+        }
+        else{
             $user->admin  = 0;
         }
         if($request->password){
-            $user->password = $request->password;
+            $user->password = Hash::make($request->password);
         }
         
         $user->save();

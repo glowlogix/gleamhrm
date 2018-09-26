@@ -9,20 +9,12 @@
 		<form action="{{route('job.store')}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="form-group">
-				<label for="category">Select Category</label>
-				<select name="category_id" id="category" class="form-control">
-					@foreach($categories as $categori)
-					<option value="{{$categori->id}}">{{$categori->name}}</option>
-					@endforeach
-				</select>
-			</div>
-			<div class="form-group">
 				<label for="title">Title</label>
 				<input type="text" name="title" placeholder="Enter title here" class="form-control">
 			</div>
 			<div class="form-group">
-				<label for="featured">Featured Image</label>
-				<input type="file" name="featured" class="form-control">
+				<label for="featured">City</label>
+				<input type="text" name="city" class="form-control" placeholder="Enter city here" >
 			</div>
 			<div class="form-group">
 				<label for="description">Description</label>

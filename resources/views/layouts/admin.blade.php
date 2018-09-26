@@ -19,7 +19,7 @@
     <link href="{{asset('css/data.css') }}" rel="stylesheet">
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />
+    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />--}}
 
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
@@ -27,6 +27,7 @@
     />
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
+    
 
     <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
@@ -35,7 +36,22 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>
+    
+    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>--}}
+
+
+    <!-- full calendar -->
+
+    <link href='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.css' rel='stylesheet' />
+    <link href='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+
+    <link href='https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.css' rel='stylesheet' />
+
+   <script src='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.js'></script>
+    <script src='https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.js'></script>
+
+    <!-- full calendar -->
+
     <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
     <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 </head>
@@ -108,19 +124,15 @@
             <div class="row">
                 <div class="col-lg-3">
                     <ul class="list-group">
-                        {{--
-                        <li class="list-group-item">
-                            <a href="{{route('category.create')}}">Create New category</a>
+                        <li class="list-group-item" {{ request()->is('admin/dashboard') ? 'id=active1' : ''}}>
+                            <a href="{{route('admin.dashboard')}}">Dashboard</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="{{route('categories')}}">Categories</a>
-                        </li> --}} {{--
-                        <li class="list-group-item">
-                            <a href="{{route('job.create')}}">Create new Job</a>
+                            <a href="{{route('applicants')}}">Applicants</a>
                         </li>
                         <li class="list-group-item">
                             <a href="{{route('jobs')}}">Jobs</a>
-                        </li> --}} {{--
+                        </li> {{--
                         <li class="list-group-item">
                             <a href="{{route('applicants')}}">Applicants</a>
                         </li>
@@ -130,9 +142,6 @@
                         <li class="list-group-item">
                             <a href="{{route('applicant.trashed')}}">Trashed</a>
                         </li> --}}
-                        <li class="list-group-item" {{ request()->is('admin/dashboard') ? 'id=active1' : ''}}>
-                            <a href="{{route('admin.dashboard')}}">Dashboard</a>
-                        </li>
                         <li class="list-group-item" {{ request()->is('admin/users') ? 'id=active1' : ''}}>
                             <a href="{{route('users')}}">Users</a>
                         </li>

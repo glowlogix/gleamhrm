@@ -7,10 +7,10 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
 	protected $fillable=[
-		'title','description','category_id','featured'
+		'title','description','city'
 	];
-    public function category(){
-    	return $this->belongsTo('App\Category');
+    public function job_position(){
+    	return $this->belongsTo('App\JobPosition');
     }
 
     public function applicant(){

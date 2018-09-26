@@ -4,7 +4,7 @@
     <div class="panel-heading text-center">
         <b style="text-align: center;">All Attendance</b>
         <span style="float: right;">
-            <a href="{{route('attendance.create')}}" class="btn btn-info btn-xs" align="right">
+            <a href="{{route('attendance.create',['id'=>0])}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon glyphicon-plus"></span> Add Attendance
             </a>
         </span>

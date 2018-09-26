@@ -7,12 +7,12 @@
 	<div class="panel-body">
 		<table class="table">
 			<thead>
-				<th> Image</th>
-				<th> Name</th>
-				<th> City</th>
-				<th> Job Status </th>
+				<th>Image</th>
+				<th>Name</th>
+				<th>City</th>
+				<th>Job Status </th>
 				<th>Apllied for</th>
-				<th> CV </th>
+				<th>CV </th>
 				<th>Actions</th>
 			</thead>
 			<tbody class="table-bordered table-hover table-striped">
@@ -23,8 +23,8 @@
 					</td>
 					<td>{{$applicant->name}}</td>
 					<td>{{$applicant->city}}</td>
-					<td> {{$applicant->job_status}}</td>
-					<td>applicant job tilte goes here.</td>
+					<td>{{$applicant->job_status}}</td>
+					<td>applicant job title goes here.</td>
 					<td>
 						<a href="/{{$applicant->cv}}">
 							<img src="/uploads/applicants/cv/cv_icon.jpg" alt="" height="50px" width="50px">

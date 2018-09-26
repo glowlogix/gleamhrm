@@ -4,7 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Applicant;
-use App\Category;
+use App\JobPosition;
 use App\Job;
 use Session;
 use Auth;
@@ -22,6 +22,7 @@ class ApplicantController extends Controller
     {
         $this->meta['title'] = 'Applicants';
         $applicants = Applicant::where('recruited', 0)->take(10)->get();
+        
         return view('admin.applicants.index',$this->metaResponse())->with('applicants',$applicants);
     }
 
@@ -30,7 +31,7 @@ class ApplicantController extends Controller
      */
     public function create()
     {
-    	return view('applicant.create')->with('categories',Category::all())->with('jobs',Job::all());
+        return view('applicant.create')->with('jobs',Job::all());
     }
 
     /**
@@ -51,14 +52,16 @@ class ApplicantController extends Controller
 
     public function store(Request $request)
     {
+        // dd($request);
     	$this->validate($request,[
     		'name' => 'required',
     		'fname' => 'required',
     		'avatar' => 'required|image',
     		'city' => 'required',
-    		'cv' => 'required|mimes:doc,docx,pdf',
+    		'cv' => 'required|mimes:doc,docx,pdf,txt',
     		'job_status' => 'required'
     	]);
+
         $avatar = $request->avatar;
         $avatar_new_name = time().$avatar->getClientOriginalName();
         $avatar->move('uploads/applicants/image', $avatar_new_name);
@@ -68,8 +71,6 @@ class ApplicantController extends Controller
         $cv->move('uploads/applicants/cv', $cv_new_name);
 
     	$applicant= Applicant::create([
-
-
     		'name' => $request->name,
     		'fname' => $request->fname,
             'email' =>$request->email,
@@ -77,12 +78,12 @@ class ApplicantController extends Controller
     		'cv' => 'uploads/applicants/cv/' . $cv_new_name,
     		'city' =>$request->city,
     		'job_status' => $request->job_status,
-            'job_id' => $request->job,
-            'category_id'=>$request->category,
+            'job_id' => $request->job_id,
+            // 'job_position_id'=>$request->job_position_id,
             'recruited' => 0
     	]);
                   
-       /* Mail::to($request->email)->send(new Reminder);*/
+        /*Mail::to($request->email)->send(new Reminder);*/
         Session::flash('success','application is submitted succesfully');
         return redirect()->back();
     }

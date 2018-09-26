@@ -7,17 +7,17 @@
     <div class="panel-body">
 
         <form action="{{route('user.update',['id'=>$user->id])}}" method="Post">
-            {{csrf_field()}}
+            {{csrf_field()}}        
             <div class="form-group">
                 <label for="name">Name</label>
-                <input type="text" name="name" value={{$user->name}} placeholder="Enter Name here" class="form-control">
+                <input type="text" name="name" value="{{$user->name}}" placeholder="Enter Name here" class="form-control">
             </div>
             <div class="form-group">
                 <label for="email">Email</label>
-                <input type="text" name="email"  value={{$user->email}} placeholder="Enter Name email Address" class="form-control">
+                <input type="text" name="email"  value="{{$user->email}}" placeholder="Enter Name email Address" class="form-control">
             </div>
             <div class="form-group">
-                <label for="admin">Admin</label>
+                <label for="admin">is Admin</label>
                 <br>
                 
                 @if($user->admin == "1")                
@@ -31,8 +31,8 @@
                 <input type="password" name="password" placeholder="Enter password here" class="form-control" required>
             </div>
             <div class="form-group">
-                <label for="confirm_password">Confirm Password</label>
-                <input type="password" name="confirm_password" placeholder="Enter confirm password here" class="form-control" required>
+                <label for="password_confirmation">Confirm Password</label>
+                <input type="password" name="password_confirmation" placeholder="Enter confirm password here" class="form-control" required>
             </div>
             <div class="form-group">
                 <button class="btn btn-success center-block" type="submit"> Update</button>

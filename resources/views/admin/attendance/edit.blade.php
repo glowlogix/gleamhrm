@@ -39,8 +39,7 @@
 		      </div>
               <div class="form-group">
 					<div class="col-md-5">
-						<button class="btn btn-success" type="submit"> Update</button>
-						
+						<button class="btn btn-success" type="submit"> Update</button>						
 					</div>
 			 </div>	
         </form>
