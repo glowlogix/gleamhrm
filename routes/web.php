@@ -273,15 +273,17 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	//attendance
 	Route::Get('/attendance/timeline',[
 		'uses' => 'AttendanceController@showTimeline', //show Attendance
-		'as' => 'attendance'
+		'as' => 'timeline'
 	]);
 
+	// Route::Resource('attendance','AttendanceController');
+	
 	Route::Get('/attendance/sheet/{id}',[
 		'uses' => 'AttendanceController@sheet', //show Attendance sheet
 		'as' => 'attendance.sheet'
 	]);
 	
-	Route::Get('/attendance/create/{id}',[
+	Route::Get('/attendance/create/{id?}/{date?}/',[
 		'uses' => 'AttendanceController@create', //show Attendance
 		'as' => 'attendance.create'
 	]);
@@ -310,6 +312,11 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Post('/attendance/delete',[
 		'uses' => 'AttendanceController@destroy',
 		'as' => 'attendance.destroy'
+	]);
+	
+	Route::Post('/attendance/deletechecktime',[
+		'uses' => 'AttendanceController@deleteChecktime',
+		'as' => 'attendance.deletechecktime'
 	]);
 
 	Route::Post('/attendance/update',[

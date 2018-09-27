@@ -155,10 +155,13 @@
                             <a href="{{route('attendance')}}" {{ request()->is('admin/attendance') ? 'id=active1' : ''}}>Attendance</a>
                             <ul>
                                 <li>
+                                    <a href="{{route('timeline')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Timeline</a>
+                                </li>
+                                <li>
                                     <a href="{{route('leaves')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
                                 </li>
                                 <li>
-                                    <a href="{{route('salary.show')}}" {{ request()->is('admin/salary') ? 'id=active1' : ''}}>Salary</a>
+                                    <a href="{{route('salary.show')}}" {{ request()->is('admin/salary') ? 'id=active1' : '' }} >Salary</a>
                                 </li>
                                 <?php
                                 $month = date('m');

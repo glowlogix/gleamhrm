@@ -29,16 +29,19 @@
                         </div>
                     </div>
                     <div class="col-md-6">
-                        <label for="in_out">Check</label>
-                        <select class="form-control" name="in_out">
-                            <option value="in" @if($selected_in_out == "in") selected @endif >Time In</option>
-                            <option value="out" @if($selected_in_out == "out") selected @endif>Time Out</option>
-                        </select>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="time">Time at</label>
+                        <label for="time_in">Time In</label>
                         <div class="input-group time timepicker">
-                            <input class="form-control time tp" name="time" value="{{$current_time}}" />
+                            <input class="form-control time tp" name="time_in" value="{{$current_time}}" />
+                            <span class="input-group-addon timepicker1">
+                                <i class="fa fa-clock-o" style="font-size:16px"></i>
+                            </span>
+                        </div>
+                    </div>
+
+                    <div class="col-md-6">
+                        <label for="time_out">Time Out</label>
+                        <div class="input-group time timepicker">
+                            <input class="form-control time tp" name="time_out" value="{{$current_time}}" />
                             <span class="input-group-addon timepicker1">
                                 <i class="fa fa-clock-o" style="font-size:16px"></i>
                             </span>
@@ -58,7 +61,7 @@
 
                         <label for="name">Total Checks</label>
                         <div>
-                            @if($attendances->count()) {{$attendances->count() / 2}} @endif
+                            @if($attendances->count()) {{$attendances->count()}} @endif
                         </div>
                     </div>
 
@@ -74,17 +77,19 @@
             <div class="panel-body">
                 <table class="table">
                     <thead>
-                        <th>Check Time</th>
-                        <th>At Time</th>
+                        <th>Time In</th>
+                        <th>Time Out</th>
                     </thead>
                     <tbody class="table-bordered table-hover table-striped">
                         @if($attendances->count() > 0) @foreach($attendances as $att)
                         <tr>
                             <td>
-                                {{$att->in_out}}
+                                {{ Carbon\Carbon::parse($att->time_in)->format('h:i a') }}
                             </td>
                             <td>
-                                {{ Carbon\Carbon::parse($att->time)->format('h:i a') }}
+                                @if ($att->time_out != '')
+                                {{ Carbon\Carbon::parse($att->time_out)->format('h:i a') }}
+                                @endif
                             </td>
                             <td>
                                 <button class="btn btn-default" data-toggle="modal" data-target="#edit{{ $att->id }}">Edit</button>
@@ -105,15 +110,17 @@
                                                     
                                                     <br>
 
-                                                    <label for="in_out">Check</label>
-                                                    <select class="form-control" name="in_out">
-                                                        <option value="in" @if($att->in_out == "in") selected @endif >Time In</option>
-                                                        <option value="out" @if($att->in_out == "out") selected @endif>Time Out</option>
-                                                    </select>
+                                                    <label for="time">Time In</label>
+                                                    <div class="input-group time_in timepicker">
+                                                        <input class="form-control time_in tp" name="time_in" value="{{Carbon\Carbon::parse($att->time_in)->format('h:i a')}}" />
+                                                        <span class="input-group-addon timepicker1">
+                                                            <i class="fa fa-clock-o" style="font-size:16px"></i>
+                                                        </span>
+                                                    </div>
 
-                                                    <label for="time">Time at</label>
-                                                    <div class="input-group time timepicker">
-                                                        <input class="form-control time tp" name="time" value="{{Carbon\Carbon::parse($att->time)->format('h:i a')}}" />
+                                                    <label for="time">Time Out</label>
+                                                    <div class="input-group time_out timepicker">
+                                                        <input class="form-control time_out tp" name="time_out" value="{{Carbon\Carbon::parse($att->time_out)->format('h:i a')}}" />
                                                         <span class="input-group-addon timepicker1">
                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                         </span>
@@ -176,7 +183,7 @@
 
                 $('#date').on('change', function (e) { 
                     console.log(e);
-                    var url = '{{route('attendance')}}/create/{{$emp_id}}?date=' + $(this).val();
+                    var url = '{{route('attendance')}}/create/{{$emp_id}}/' + $(this).val();
                     if (url) { 
                         window.location = url; 
                     }
@@ -198,7 +205,7 @@
             $(document).ready(function(){
                 $(".nameselect2").select2().on('change.select2', function(e){
 
-                    var url = '{{route('attendance')}}/create/' + $(this).val() + '?date={{$current_date}}';
+                    var url = '{{route('attendance')}}/create/' + $(this).val() + '/{{$current_date}}';
 
                     if (url) { 
                         window.location = url; 

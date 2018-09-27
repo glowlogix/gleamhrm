@@ -16,8 +16,8 @@ class CreateAttendancesTable extends Migration
         Schema::create('attendances', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('employee_id');
-            $table->string('in_out');
-            $table->time('time');
+            $table->time('time_in');
+            $table->time('time_out');
             $table->date('date');
             $table->string('status')->default('present');
             $table->timestamps();

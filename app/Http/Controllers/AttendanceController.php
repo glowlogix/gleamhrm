@@ -43,71 +43,47 @@ class AttendanceController extends Controller
 
     }
 
-    /**
-     * Show the form for creating a new resource.
-     *
-     * @return \Illuminate\Http\Response
-     */
-    public function selectEmployee()
-    {
-        $this->meta['title'] = 'Create Attendance';    
-        $employees = Employee::all(); 
-        
-        $mytime = Carbon::now();
-        $curret_date = $mytime->toDateString();
-        
-        // $attendance = Attendance::where('id',$id)->first();
-        // $selected_in_out = 'in';
-
-        /*$attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->get();
-        
-        $arr = array();
-        foreach ($attendance as $row) {
-            $arr[$row->in_out][] = Carbon::parse($row->time);
-        }*/
-
-        return view('admin.attendance.index',$this->metaResponse(),['employees' => $employees, 'curret_date' => $curret_date]);
-    }
-
 
 /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($emp_id)
+    public function create($emp_id='', $date= '')
     {
         $this->meta['title'] = 'Create Attendance';    
-        if($emp_id == 0){
-            $employee = Employee::all(); 
+        $employees = Employee::all(); 
+
+        if ($date == '') {
+            $datetime = Carbon::now();
         }
         else{
-            $employee = Employee::find($emp_id);
+            $datetime = Carbon::parse($date);
         }
         
-        $mytime = Carbon::now();
-        $current_date = $mytime->toDateString();
-        $current_time = $mytime->toTimeString();
+        $date = $datetime->toDateString();
+        
+        $datetime = Carbon::now();
+        $current_time = $datetime->toTimeString();
 
-        $attendance = Attendance::where(['date' => $current_date, 'employee_id' => $emp_id])->orderBy('id', 'desc')->first();
-
-        $attendance_summary = AttendanceSummary::where(['date' => $current_date, 'employee_id' => $emp_id])->first();
-
-        $selected_in_out = 'in';
-        if (isset($attendance->in_out) && $attendance->in_out == 'in') {
+        $selected_in_out = '';
+        $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->first();
+        /*dd($attendance);
+        if (isset($attendance->time_out) && empty($attendance->time_out)) {
             $selected_in_out = 'out';
-        }
+        }*/
 
-        $attendance = Attendance::where(['date' => $current_date, 'employee_id' => $emp_id])->get();
+        $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
+        $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
         
-        return view('admin.attendance.index',$this->metaResponse(),[
-            'employee'      => $employee, 
-            'attendance'    => $attendance, 
-            'attendance_summary'    => $attendance_summary, 
-            'current_date'   => $current_date, 
-            'current_time'   => $current_time, 
+        return view('admin.attendance.create',$this->metaResponse(),[
+            'employees'         => $employees, 
+            'attendances'       => $attendances, 
+            'attendance_summary'=> $attendance_summary, 
+            'current_date'      => $date, 
+            'current_time'      => $current_time, 
             'selected_in_out'   => $selected_in_out, 
-            'emp_id'        => $emp_id,
+            'emp_id'            => $emp_id,
         ]);
     }
 
@@ -122,18 +98,26 @@ class AttendanceController extends Controller
         // dd($request);
         $this->validate($request,[
             'employee_id' => 'required',
-            'time' => 'required',
+            'time_in' => 'required',
             'date' => 'required',
         ]);
 
         $time = Carbon::parse($request->time);                           
         
-        $attendance = Attendance::create([
+        $key = 'time_in';
+        if ($request->in_out == 'out') {
+            $key = 'time_out';
+        }
+        $attendance = [
             'employee_id' => $request->employee_id,
             'date' => $request->date,
-            'in_out' => $request->in_out,
             'time' => $time->toTimeString(),
-        ]);
+            'time_in' => !empty($request->time_in) ? Carbon::parse($request->time_in) : '',
+        ];
+        if (!empty($request->time_out)) {
+            $attendance['time_out'] = Carbon::parse($request->time_out);
+        }
+        $attendance = Attendance::create($attendance);
 
         $this->storeAttendaceSummary($request);
 
@@ -147,42 +131,36 @@ class AttendanceController extends Controller
 
     public function storeAttendaceSummary(Request $request)
     {
-        $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->get();
-        
-        $arr = array();
+        $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->orderBy('time_in', 'asc')->get();
+        $first_time_in = $attendance->first()->time_in;
+        $last_time_out = $attendance->last()->time_out;
+
+        $totaltime = 0;
         foreach ($attendance as $i => $row) {
-            $arr[$row->in_out][] = Carbon::parse($row->time);
+            $in = Carbon::parse($row->time_in);
+            $out = Carbon::parse($row->time_out);
+            $totaltime += $out->diffInMinutes($in);
         }
 
-        if (isset($arr['out']) && count($arr['in']) == count($arr['out'])) {
-            $first_time_in = $arr['in'][0];
-            $last_time_out = end($arr['out']);
+        $attendance_summary = AttendanceSummary::where([
+            'employee_id' => $request->employee_id,
+            'date' => $request->date,
+        ])->first();
 
-            $totaltime = 0;
-            foreach ($arr['in'] as $key => $value) {
-                $totaltime += $value->diffInMinutes($arr['out'][$key]);
-            }
-
-            $attendance_summary = AttendanceSummary::where([
+        if (isset($attendance_summary->id) != '') {
+            $attendance_summary->first_time_in = $first_time_in;
+            $attendance_summary->last_time_out = $last_time_out;
+            $attendance_summary->total_time = $totaltime;
+            $attendance_summary->save();
+        }
+        else{
+            $attendance_summary = AttendanceSummary::create([
                 'employee_id' => $request->employee_id,
+                'first_time_in' => $first_time_in,
+                'last_time_out' => $last_time_out,
+                'total_time' => $totaltime,
                 'date' => $request->date,
-            ])->first();
-
-            if (isset($attendance_summary->id) != '') {
-                $attendance_summary->first_time_in = $first_time_in;
-                $attendance_summary->last_time_out = $last_time_out;
-                $attendance_summary->total_time = $totaltime;
-                $attendance_summary->save();
-            }
-            else{
-                $attendance_summary = AttendanceSummary::create([
-                    'employee_id' => $request->employee_id,
-                    'first_time_in' => $first_time_in,
-                    'last_time_out' => $last_time_out,
-                    'total_time' => $totaltime,
-                    'date' => $request->date,
-                ]);
-            }
+            ]);
         }
         
     }
@@ -217,8 +195,7 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function updateSummary(Request $request)
-        {
+    public function updateSummary(Request $request){
             $validator =\Validator::make($request->all(),[
                 'datefrom' => 'required|before_or_equal:dateto',
                 'dateto' => 'required'
@@ -264,7 +241,6 @@ class AttendanceController extends Controller
                     
                 }
             }
-       
     }
 
     /**
@@ -274,6 +250,7 @@ class AttendanceController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
+
     public function update(Request $request){
 
         $attendance = Attendance::where([
@@ -281,11 +258,12 @@ class AttendanceController extends Controller
         ])->first();
 
         $request->employee_id = $attendance->employee_id;
-        $request->employee_id = $attendance->date;
+        $request->date = $attendance->date;
 
         if (isset($attendance->id) != '') {
-            $attendance->in_out = $request->in_out;
-            $attendance->time = Carbon::parse($request->time);;
+            $attendance->date = $request->date;
+            $attendance->time_in = Carbon::parse($request->time_in);
+            $attendance->time_out = Carbon::parse($request->time_out);
             $attendance->save();
         }
 
@@ -298,7 +276,7 @@ class AttendanceController extends Controller
     public function getbyAjax(Request $request){
 
             $date = Carbon::parse($request->date);
-  
+
             $employeeID = $request->id;
             $attendance = Attandance::where([
                 'employee_id' => $employeeID,
@@ -585,6 +563,20 @@ class AttendanceController extends Controller
         $events = json_encode($events);
 
         return view('admin.attendance.timeline',$this->metaResponse(), ['employees' => $employees, 'events' => $events]);
+    }
+
+    public function deleteChecktime(Request $request)
+    {
+        $id = $request->id;
+
+        $attendance = Attendance::where([
+            'id'=>$id
+        ])->first();
+        if($attendance){
+          $attendance->delete();
+        }
+    
+        return redirect()->back()->with('success','Attendance is deleted succesfully');
     }
 
     /**
