@@ -16,8 +16,8 @@ class CreateAttendanceSummariesTable extends Migration
         Schema::create('attendance_summaries', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('employee_id');
-            $table->time('first_time_in');
-            $table->time('last_time_out');
+            $table->time('first_time_in')->nullable();
+            $table->time('last_time_out')->nullable();
             $table->integer('total_time');
             $table->date('date');
             $table->string('status')->default('present');

@@ -42,13 +42,13 @@
 
     <!-- full calendar -->
 
-    <link href='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.css' rel='stylesheet' />
-    <link href='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.print.css' rel='stylesheet' media='print' />
+    <link href="{{asset('plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
+    <link href="{{asset('plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
+ 
+    <link href="{{asset('plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet' />
 
-    <link href='https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.css' rel='stylesheet' />
-
-   <script src='https://fullcalendar.io/releases/fullcalendar/3.9.0/fullcalendar.min.js'></script>
-    <script src='https://fullcalendar.io/releases/fullcalendar-scheduler/1.9.4/scheduler.min.js'></script>
+    <script src="{{asset('plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
+    <script src="{{asset('plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 
     <!-- full calendar -->
 
