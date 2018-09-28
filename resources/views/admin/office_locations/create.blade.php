@@ -16,10 +16,7 @@
 			<div class="form-group">
 				<label for="name">Name</label>
 				<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
-			</div>
-			<div class="form-group">
-				<label for="status">Status</label>
-				<input type="text" name="status" class="form-control" placeholder="Enter Status here" value="{{old('status')}}">
+				<input type="hidden" name="status" value="{{old('status')}}">
 			</div>
 			<div class="form-group">
 				<label for="timing_start">Timing Start</label>
@@ -38,7 +35,7 @@
 				<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number')}}">
 			</div>	
 			<div class="form-group">
-				<button class="btn btn-success center-block" type="submit"> Create Job</button>
+				<button class="btn btn-success center-block" type="submit"> Create</button>
 			</div>
 			
 		</form>
