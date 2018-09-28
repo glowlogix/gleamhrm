@@ -16,7 +16,7 @@
 			<div class="form-group">
 				<label for="name">Name</label>
 				<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
-				<input type="hidden" name="status" value="{{old('status')}}">
+				<input type="hidden" name="status" value="1">
 			</div>
 			<div class="form-group">
 				<label for="timing_start">Timing Start</label>
