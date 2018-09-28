@@ -46,7 +46,7 @@ class OfficeLocationController extends Controller
     {
         $this->validate($request,[
             'name' => 'required',
-            'status' => 'required',
+            // 'status' => 'required',
             'timing_start' => 'required',
             'timing_off' => 'required',
             'address' => 'required',
@@ -55,7 +55,7 @@ class OfficeLocationController extends Controller
         
         $office_location = OfficeLocation::create([
             'name' => $request->name,
-            'status' => $request->status,
+            // 'status' => $request->status,
             'timing_start' => $request->timing_start,
             'timing_off' => $request->timing_off,
             'address' => $request->address,
