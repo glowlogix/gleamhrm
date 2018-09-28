@@ -2,24 +2,19 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<div>
-			<b style="text-align: center;">Employees</b>
-		</div>
+		<b style="text-align: center;">Employees</b>
 		@if(Auth::user()->admin)
 
-		<div style="padding-left: 85%;">
+		<span style="float: left;">
 			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
 				<span class="glyphicon glyphicon-plus"></span> Add Employee
 			</a>
-		</div>
-		<br>
-		<div style="padding-left: 85%;">
+        </span>
+        <span style="float: right;">
 			<a href="{{route('employee.trashed')}}" class="btn btn-info btn-xs" align="right">
-				<span class="glyphicon glyphicon-plus">
-
-				</span>Trashed Employees
+				<span class="glyphicon glyphicon-plus"></span>Trashed Employees
 			</a>
-		</div>
+        </span>
 		@endif
 	</div>
 </div>
@@ -40,17 +35,13 @@
 		<tbody class="table-bordered table-hover table-striped">
 			@if(count($employees) > 0) @foreach($employees as $employee)
 			<tr>
-				<td>{{$employee->fullname}}</td>
-				<td>{{$employee->org_email}}</td>
-				@if($employee->contact)
-				<td>{{$employee->contact}}</td>
-				@else
-				<td>###</td>
-				@endif
+				<td>{{$employee->firstname}} {{$employee->lastname}}</td>
+				<td>{{$employee->official_email}}</td>
+				<td>{{$employee->contact_no}}</td>
 				<td>{{$employee->role}}</td>
-				<td>{{$employee->inviteToZoho}}</td>
-				<td>{{$employee->inviteToSlack}}</td>
-				<td>{{$employee->inviteToAsana}}</td>
+				<td>{{($employee->invite_to_zoho == 1) ? 'yes' : 'no'}}</td>
+				<td>{{($employee->invite_to_slack == 1) ? 'yes' : 'no'}}</td>
+				<td>{{($employee->invite_to_asana == 1) ? 'yes' : 'no'}}</td>
 				<td>
 					@if(Auth::user()->admin)
 					<button class="btn btn-default" data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}">Delete</button>

@@ -3,7 +3,7 @@
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b style="text-align: center;">All Attendance</b>
-        <span style="float: right;">
+        <span style="float: left;">
             <a href="{{route('attendance.create')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon glyphicon-plus"></span> Add Attendance
             </a>
@@ -88,19 +88,145 @@
         </div>
     </div>
     {!! $calendar->calendar() !!} {!! $calendar->script() !!}
-    
-        <script type="text/javascript">
-            $(document).ready(function () {
+    <div id="calendar"></div>
 
-                $(function () {
-                    $('#datefrompicker').datetimepicker({
+<!--     <script type="text/javascript">
+    $(document).ready(function(){
+        $('#calendar').fullCalendar({
+            "header":{
+                "left":"prev,next today",
+                "center":"title",
+                "right":"month,agendaWeek,agendaDay"
+            },
+            "eventLimit":true,
+            "editable":1,
+            "eventClick":function(event) {
+                var type = event.title.split("\n")[0];       
+                $("#update").unbind("click");     
+                $("#del").unbind("click"); 
+                var type = $("#leave_type").val(type);
+                jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
+                
+                if(type){
+                    $.ajax({
+                        type: "GET",                                  
+                        url: "http://localhost/hrm/public/admin/attendance/getbyAjax", 
+                        dataType : "json",   
+                        data: {
+                            "id" : event.id,
+                            "type" : type.val(),
+                             "date" : event.start._i
+                        }, 
+                        success: function(response){    
+                            if(response[1]=="successAttendance"){                    
+                            var checkin = $("#datefrom").val(response[0].checkintime);
+                            var checkout = $("#dateto").val(response[0].checkouttime);
+                            $("#currentStartTime").val(checkin.val());
+                            $("#currentEndTime").val(checkout.val());
+                            $("#currentStatus").val(response[0].status);
+
+                            }else{
+                                var checkin = $("#datefrom").val(response.datefrom);
+                                var checkout = $("#dateto").val(response.dateto);
+                                $("#currentStartTime").val(checkin.val());
+                                $("#currentEndTime").val(checkout.val());
+                                $("#currentStatus").val(response.status);
+                                
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                        }
+
                     });
-                    $('#datetopicker').datetimepicker({
+                }
+
+                $("#update").on("click",function(){
+                    $.ajax({
+                        type: "POST",                                  
+                        url: "http://localhost/hrm/public/admin/attendance/update", 
+                        dataType : "json",   
+                        data: {
+                            "id" : event.id,
+                            "type" : $("#leave_type").val(),
+                            "datefrom":$("#datefrom").val(),
+                            "dateto" : $("#dateto").val(),
+                            "currentStartDate" :  $("#currentStartTime").val(),
+                            "currentEndDate" :  $("#currentEndTime").val(),  
+                            "currentStatus" : $("#currentStatus").val(),
+                            
+                            "_token" : "iGiRZ8fq2AETFYQ1RxsFqHeS7r6vGNwkk3Az71MG"
+                        }, 
+                        success: function(response){ 
+                            if(response.errors){
+                                alert(response.errors[0]);                                    
+                            }
+                            if(response == "success"){
+                                alert("Update Successfully");
+                                window.location.reload();
+                            }else if(response == "already-present"){
+                                alert("Already Present First Remove that employee to make Full Leave");                                    
+                            }
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                        }
                     });
 
                 });
+
+                $("#del").on("click",function(){
+                    var r = confirm("Are you sure you want to delete?");                  
+                    if (r == true) {
+                        $.ajax({
+                            type: "POST",                                  
+                            url: "http://localhost/hrm/public/admin/attendance/delete", 
+                            dataType : "json",   
+                            data: {
+                                "id" : event.id,
+                                "type" : $("#leave_type").val(),
+                                "date" : event.start._i,
+                                "_token" : "iGiRZ8fq2AETFYQ1RxsFqHeS7r6vGNwkk3Az71MG"
+                            }, 
+                            success: function(response){ 
+                                if(response == "success"){
+                                    alert("Delete Successfully");
+                                    window.location.reload();
+                                }
+
+                            },
+                            error: function(jqXHR, textStatus, errorThrown) { 
+                                console.log(JSON.stringify(jqXHR));
+                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                            }
+
+                        });
+
+                    } else {
+                        jQuery("#myModal").modal("toggle");                            
+                        
+                    }
+                });
+
+            },
+            "events":[]
+        });
+    });
+    </script> -->
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $(function () {
+                $('#datefrompicker').datetimepicker({
+                });
+                $('#datetopicker').datetimepicker({
+                });
+
             });
-        </script>
+        });
+    </script>
 
 </div>
 @stop

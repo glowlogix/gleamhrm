@@ -5,7 +5,12 @@
     <div class="panel panel-default">
 
         <div class="panel-heading text-center">
-            <div><b style="text-align: center;">Create Attendance</b></div>
+            <b style="text-align: center;">Create Attendance</b>
+            <span style="float: right;">
+            <a href="{{route('attendance')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon"></span> Back
+            </a>
+        </span>
         </div>
         <div class="row">
             <div class="panel-body">
@@ -18,7 +23,7 @@
                                 <select class="form-control nameselect2" name="employee_id">
                                     <option value="0">Select Employee</option>
                                     @foreach($employees as $emp)
-                                    <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->fullname}}</option>
+                                    <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
                                     @endforeach
                                 </select>
                             </div>

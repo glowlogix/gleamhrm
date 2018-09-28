@@ -19,8 +19,6 @@
     <link href="{{asset('css/data.css') }}" rel="stylesheet">
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
-    {{--<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.css" />--}}
-
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
@@ -36,9 +34,6 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
-    
-    {{--<script src="https://cdnjs.cloudflare.com/ajax/libs/fullcalendar/3.4.0/fullcalendar.min.js"></script>--}}
-
 
     <!-- full calendar -->
 
@@ -131,17 +126,11 @@
                             <a href="{{route('applicants')}}">Applicants</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="{{route('jobs')}}">Jobs</a>
-                        </li> {{--
-                        <li class="list-group-item">
-                            <a href="{{route('applicants')}}">Applicants</a>
+                            <a href="{{route('offices')}}">Offices</a>
                         </li>
                         <li class="list-group-item">
-                            <a href="{{route('applicants.hired')}}">Hired Applicants</a>
-                        </li> --}} {{--
-                        <li class="list-group-item">
-                            <a href="{{route('applicant.trashed')}}">Trashed</a>
-                        </li> --}}
+                            <a href="{{route('jobs')}}">Jobs</a>
+                        </li>
                         <li class="list-group-item" {{ request()->is('admin/users') ? 'id=active1' : ''}}>
                             <a href="{{route('users')}}">Users</a>
                         </li>

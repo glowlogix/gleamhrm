@@ -10,89 +10,140 @@
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b>Create new employee</b>
+        <span style="float: right;">
+            <a href="{{route('employees')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon"></span> Back
+            </a>
+        </span>
     </div>
     <div class="panel-body">
         <form class="form-inline" action="{{route('employee.store')}}" method="post">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" required>
+                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" value="{{ old('firstname') }}" required>
             </div>
             <div class="form-group col-sm-4">
                 <label for="lastname">Last Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" required>
+                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" value="{{ old('lastname') }}" required>
             </div>
             <div class="form-group col-sm-4">
-                <label for="fullname">Full Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="fullname" placeholder="Enter Full Name" name="fullname" required>
+                <label for="personal_email">Personal Email Address:</label>
+                <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{ old('personal_email') }}" required>
             </div>
             <div class="form-group col-sm-4">
                 <br>
-                <label for="email">Email Address:</label>
-                <input style="width: 250px;" type="email" class="form-control" id="email" placeholder="Enter Email Address" name="email" required>
+                <label for="official_email">Official Email Address:</label>
+                <input style="width: 250px;" type="email" class="form-control" id="official_email" placeholder="Enter Email Address" name="official_email" value="{{ old('official_email') }}" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="role">Role:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="role" placeholder="Enter Role" name="role" value="{{ old('role') }}" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="type">Type:</label>
+                <select style="width: 250px;" class="form-control" name="type">
+                    <option value="remote" @if(old("type") == "remote") selected @endif>Work Remotely</option>
+                    <option value="office" @if(old('type') == "office") selected @endif>Work from Office</option>
+                </select>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="office_location_id">Office Location:</label>
+                <select style="width: 250px;" class="form-control" name="office_location_id">
+                    @foreach($office_locations as $office_location)
+                    <option value="{{$office_location->id}}" @if(old("office_location_id") == "remote") selected @endif>{{$office_location->name}} ({{$office_location->address}})</option>
+                    @endforeach
+                </select>
             </div>
             <div class="form-group col-sm-4">
                 <br>
                 <label for="text">Salary:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
+                <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary" value="{{ old('salary') }}" >
             </div>
             <div class="form-group col-sm-4">
                 <br>
-                <label for="contact">Contact#:</label>
-                <input style="width: 250px;" type="Number" class="form-control" id="contact" placeholder="Enter Contact Number" name="contact" required>
+                <label for="contact_no">Contact#:</label>
+                <input style="width: 250px;" type="Number" class="form-control" id="contact_no" placeholder="Enter Contact Number" name="contact_no" value="{{ old('contact_no') }}" required>
             </div>
             <div class="form-group col-sm-4">
                 <br>
                 <label for="emergency_contact">Emergency Contact#:</label>
-                <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number"
-                    name="emergency_contact" required>
+                <input style="width: 250px;" type="Number" class="form-control" id="emergency_contact" placeholder="Enter Emergency Contact Number" name="emergency_contact" value="{{ old('emergency_contact') }}" required>
             </div>
             <div class="form-group col-sm-4">
                 <br>
-                <label for="emergency_contact">Emergency Contact Relationship:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="emergency_contact_relationship" placeholder="Enter Emergency Contact Relationship"
-                    name="emergency_contact_relationship">
+                <label for="emergency_contact_rel">Emergency Contact Relationship:</label>
+                <select style="width: 250px;" class="form-control" name="emergency_contact_relationship">
+                    <option value="father" @if(old("emergency_contact_relationship") == "father") selected @endif>Father</option>
+                    <option value="brother" @if(old('emergency_contact_relationship') == "brother") selected @endif>Brother</option>
+                    <option value="mother" @if(old('emergency_contact_relationship') == "mother") selected @endif>Mother</option>
+                </select>
             </div>
             <div class="form-group col-sm-4">
                 <br>
-                <label for="org_email">Org Email:</label>
-                <input style="width: 250px;" type="email" class="form-control" id="org_email" placeholder="Enter Organization Email" name="org_email" required>
-                <br>
+                <label for="cnic">CNIC:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="cnic" placeholder="Enter Emergency Contact Relationship" name="cnic" value="{{ old('cnic') }}" required>
             </div>
-            <br>
-            <br>
-            <br>
-            <div class="form-group  col-sm-4" style="padding-left: 80px;">
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="date_of_birth">Date of Birth:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="date_of_birth" placeholder="1988-12-23" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="current_address">Current Address:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="current_address" placeholder="Enter Current Address" name="current_address" value="{{ old('current_address') }}" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="permanent_address">Permanent Address:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="permanent_address" placeholder="Enter Permanent Address" name="permanent_address" value="{{ old('permanent_address') }}" required>
+            </div>
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="city">City:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="city" placeholder="Enter City" name="city" value="{{ old('city') }}" required>
+            </div>
+
+            <div class="row">
+            <div class="form-group  col-sm-4">
                 <br>
                 <label>
-                    <input type="hidden" name="asana" value="0" />
-                    <input type="checkbox" class="asana" name="asana" value="1" /> Invite to Asana
+                    <input type="hidden" name="invite_to_asana" value="0" />
+                    <input type="checkbox" class="asana" name="invite_to_asana" value="1" /> Invite to Asana
                 </label>
             </div>
-            <div class="form-group  col-sm-4" style="padding-left: 80px;">
+            <div class="form-group  col-sm-4">
                 <br>
                 <label>
-                    <input type="hidden" name="slack" value="0" />
-                    <input type="checkbox" name="slack" value="1" /> Invite to Slack
+                    <input type="hidden" name="invite_to_slack" value="0" />
+                    <input type="checkbox" name="invite_to_slack" value="1" /> Invite to Slack
                 </label>
             </div>
-            <div class="form-group  col-sm-4" style="margin-bottom: 20px;padding-left: 80px;">
+            <div class="form-group  col-sm-4">
                 <br>
                 <label>
-                    <input type="hidden" name="zoho" value="0" />
-                    <input type="checkbox" name="zoho" id="zoho" value="1" /> Invite to Zoho
+                    <input type="hidden" name="invite_to_zoho" value="0" />
+                    <input type="checkbox" name="invite_to_zoho" id="invite_to_zoho" value="1" /> Invite to Zoho
                 </label>
             </div>
+
             <div style="margin-bottom: 19px;">
                 <br>
-                <button type="submit" id="sub" class="btn  btn-primary center-block">Add User</button>
+                <button type="submit" id="sub" class="btn  btn-primary center-block">Add Employee</button>
                 <div class="col-md-5">
                     <ul id="asana_teams">
                     </ul>
                 </div>
+            </div>
         </form>
         <script type="text/javascript">
+
             $(document).ready(function () {
+
                 var teams = $('#asana_teams');
                 var count = 0;
                 var orgId = '{{config('values.asanaWorkspaceId')}}';
@@ -142,6 +193,7 @@
                     }
                 });
 
+                $(".nameselect2").select2();
             });
         </script>
     </div>

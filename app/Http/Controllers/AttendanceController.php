@@ -8,6 +8,7 @@ use App\Traits\MetaTrait;
 use App\Attendance;
 use App\AttendanceSummary;
 use App\Employee;
+use App\OfficeLocation;
 use Carbon\Carbon;
 use App\Leave;
 use Session;
@@ -72,8 +73,8 @@ class AttendanceController extends Controller
         if (isset($attendance->time_out) && empty($attendance->time_out)) {
             $selected_in_out = 'out';
         }*/
-
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
+        
         $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
         
         return view('admin.attendance.create',$this->metaResponse(),[
@@ -147,10 +148,22 @@ class AttendanceController extends Controller
             'date' => $request->date,
         ])->first();
 
+        $employee = Employee::find($request->employee_id);
+        $office_location = OfficeLocation::find($employee->office_location_id);
+        $in = Carbon::parse($office_location->timing_start);
+        $out = Carbon::parse($first_time_in);
+        $delay = $out->diffInMinutes($in);
+        
+        $is_delay = 'no';
+        if ($delay > 30) {
+            $is_delay = 'yes';
+        }
+
         if (isset($attendance_summary->id) != '') {
             $attendance_summary->first_time_in = $first_time_in;
             $attendance_summary->last_time_out = $last_time_out;
             $attendance_summary->total_time = $totaltime;
+            $attendance_summary->is_delay = $is_delay;
             $attendance_summary->save();
         }
         else{
@@ -352,8 +365,7 @@ class AttendanceController extends Controller
                     
                     $events[] = Calendar::event(
         
-                        // $value->status."\n".$employee->fullname."\n".$time."\n". $value->hourslogged." hrs"."\n",
-                        $value->status."\n".$employee->fullname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                        $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
                         true,
                         new \DateTime($value->date),
                         // new \DateTime($value->date .' '. $value->first_time_in),
@@ -382,7 +394,7 @@ class AttendanceController extends Controller
                         }
                         $events[] = Calendar::event(
         
-                            $value->leave_type."\n".$employee->fullname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                            $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
             
                             true,
                             new \DateTime($value->datefrom),

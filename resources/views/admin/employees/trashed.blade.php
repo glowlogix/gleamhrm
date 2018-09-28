@@ -3,6 +3,11 @@
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
 		<b> Trash Employees </b>
+		<span style="float: right;">
+            <a href="{{route('employees')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon"></span> Back
+            </a>
+        </span>
 	</div>
 	<div class="panel-body">
 		<table class="table">

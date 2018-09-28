@@ -70,40 +70,35 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'UsersController@dashboard',
 		'as' => 'admin.dashboard'
 	]);
-
-
-	Route::get('/job_position/create',[
-		'uses' => 'JobPositionsController@create',
-		'as' => 'job_position.create'
+	
+	Route::get('/offices',[
+		'uses' => 'OfficeLocationController@index',
+		'as' => 'offices'
 	]);
 
-	Route::get('/job_position/create',[
- 	'uses' => 'JobPositionsController@create',
- 	'as' => 'job_position.create'
- 	]);
-
-	Route::Post('/job_position/store',[
-		'uses' => 'JobPositionsController@store',
-		'as' => 'job_position.store'
+	Route::get('/offices/create',[
+		'uses' => 'OfficeLocationController@create',
+		'as' => 'office_location.create'
+	]);
+	
+	Route::Post('/offices/store',[
+		'uses' => 'OfficeLocationController@store',
+		'as' => 'office_location.store'
 	]);
 
-	Route::GET('/job_positions',[
-		'uses' => 'JobPositionsController@index',
-		'as' => 'job_positions'
+	Route::get('/office/edit/{id}',[
+		'uses' => 'OfficeLocationController@edit',
+		'as' => 'office_location.edit'
 	]);
 
-	Route::get('/job_position/edit/{id}',[
-		'uses' => 'JobPositionsController@edit',
-		'as' => 'job_position.edit'
-	]);
-	Route::Post('/job_position/update/{id}',[
-		'uses' => 'JobPositionsController@update',
-		'as' => 'job_position.update'
+	Route::Post('/office/update/{id}',[
+		'uses' => 'OfficeLocationController@update',
+		'as' => 'office_location.update'
 	]);
 
-	Route::get('/job_position/delete/{id}',[
-		'uses' => 'JobPositionsController@delete',
-		'as' => 'job_position.delete'
+	Route::Get('/office/delete/{id}',[
+		'uses'=> 'OfficeLocationController@destroy',
+		'as'=> 'office_location.delete' 
 	]);
 
 	Route::get('/job',[

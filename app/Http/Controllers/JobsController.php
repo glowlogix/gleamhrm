@@ -22,7 +22,7 @@ class JobsController extends Controller
 
     public function create(){
         $this->meta['title'] = 'Create Job';                                                                
-    	return view('admin.jobs.create',$this->metaResponse())->with('job_positions', JobPosition::all());
+    	return view('admin.jobs.create',$this->metaResponse());
     }
 
     public function store(Request $request)
@@ -46,7 +46,7 @@ class JobsController extends Controller
     {
         $this->meta['title'] = 'Update Job';                                                                        
         $job=Job::find($id);
-        return view('admin.jobs.edit',$this->metaResponse())->with('job',$job)->with('job_positions', JobPosition::all());
+        return view('admin.jobs.edit',$this->metaResponse())->with('job',$job);
 
     }
     public function update($id , Request $request)

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Employee;
 use App\Document;
+use App\OfficeLocation;
 use Session;
 use App\Traits\AsanaTrait;
 use App\Traits\SlackTrait;
@@ -35,58 +36,65 @@ class EmployeeController extends Controller
 
 	public function create()
 	{
-		return view('admin.employees.create',['title' => 'Add Employee']);
+		return view('admin.employees.create',['title' => 'Add Employee'])->with('office_locations',OfficeLocation::all());
 	}
 
 
 	public function store(Request $request)
 	{
+		// dd($request);
 		//also do js validation
 		$this->validate($request,[
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'fullname' => 'required',
-			'email' => 'required|email|unique:employees',
-			'contact' => 'required|unique:employees',
-			'org_email' => 'required|email|unique:employees',
+			'official_email' => 'required|email|unique:employees',
+			'personal_email' => 'required|email|unique:employees',
+			'contact_no' => 'required|unique:employees',
 		]);
-
+		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
 		$when = now()->addMinutes(1);
 		$l=8;
 		$password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
+		
+		$employee = Employee::create([
+			'firstname'     	=> $request->firstname,
+			'lastname'      	=> $request->lastname,
+			'contact_no'       	=> $request->contact_no,
+			'emergency_contact' => $request->emergency_contact,
+			'emergency_contact_relationship' => $request->emergency_contact_relationship,
+			'password'      	=> $password,   
+			'official_email'    => $request->official_email,
+			'personal_email'    => $request->personal_email,
+			'status'        	=> 1,
+			'role'          	=> $request->role,
+            'type' 				=> $request->type,
+            'cnic' 				=> $request->cnic,
+            'date_of_birth' 	=> $request->date_of_birth,
+            'current_address' 	=> $request->current_address,
+            'permanent_address' => $request->permanent_address,
+            'city' 				=> $request->city,
+            'office_location_id' => $request->office_location_id,  
+			'invite_to_zoho'  	=> $request->invite_to_zoho,
+			'invite_to_slack' 	=> $request->invite_to_slack,
+			'invite_to_asana' 	=> $request->invite_to_asana,
+		]);
 
 		$params = [
-			'emailAddress'          => $request->org_email,
-			"primaryEmailAddress"   => $request->org_email,
-			"displayName"           => $request->fullname,
+			'emailAddress'          => $request->official_email,
+			"primaryEmailAddress"   => $request->official_email,
+			"displayName"           => $request->firstname. ' ' .$request->lastname,
 			"password"              => $password,
 			"userExist"             => false,
 			"country"               => "pk"
 		];
 
-		$employee = Employee::create([
-			'firstname'     => $request->firstname,
-			'lastname'      => $request->lastname,
-			'fullname'      => $request->fullname,
-			'contact'       => $request->contact,
-			'emergency_contact' => $request->emergency_contact,
-			'password'      => $params['password'],   
-			'org_email'     => $request->org_email,
-			'email'         => $request->email,
-			'status'        => 1,
-			'role'          => 'member',
-			'inviteToZoho'  => $request->zoho,
-			'inviteToSlack' => $request->slack,
-			'inviteToAsana' => $request->asana
-		]);
-
 		if($request->zoho){
 			$response = $this->createZohoAccount( $params );
 
 			if($response->original){
-				$this->addUserToTeam($request->teams,$request->org_email);
+				$this->addUserToTeam($request->teams,$request->official_email);
 
 				$employee->zuid = $response->original->data->zuid;
 				$employee->account_id = $response->original->data->accountId;
@@ -101,16 +109,16 @@ class EmployeeController extends Controller
 		//check if slack is checked for invitation
 		if($request->slack){
 			//call the  slack trait method in app/Traits folder
-			$this->createSlackInvitation($request->org_email,$token);
+			$this->createSlackInvitation($request->official_email,$token);
 			//slack mail
-			Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
+			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}
 
 		//policies
-		Mail::to($request->org_email)->later($when, new CompanyPoliciesMail());
+		Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
 
 		//simsim
-		Mail::to($request->org_email)->later($when, new SimSimMail());
+		Mail::to($request->official_email)->later($when, new SimSimMail());
 
 		return redirect()->back()->with('success','Employee is updated succesfully');      
 	} 
@@ -122,7 +130,7 @@ class EmployeeController extends Controller
 			abort(404);
 		}
 
-		return view('admin.employees.edit',['title' => 'Update Employee'])->with('employee',$employee);
+		return view('admin.employees.edit',['title' => 'Update Employee'])->with('employee',$employee)->with('office_locations',OfficeLocation::all());
 	}
 
 	public function update(Request $request, $id)
@@ -134,25 +142,32 @@ class EmployeeController extends Controller
 		$this->validate($request,[
 			'firstname' => 'required',
 			'lastname' => 'required',
-			'fullname' => 'required',
-			// 'email' => 'required|email|unique:employees',
-			'contact' => 'required',
-			'org_email' => 'required|email|unique:employees,org_email,'.$id,
+			'official_email' => 'required|email|unique:employees,official_email,'.$id,
+			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
+			'contact_no' 	 => 'required|unique:employees,contact_no,'.$id,
 		]);
 
 		$employee 					= Employee::find($id);
 
 		$employee->firstname 		= $request->firstname;
 		$employee->lastname 		= $request->lastname;
-		$employee->role 			= $request->employee_id;
-		$employee->org_email 		= $request->org_email;
-		$employee->contact 			= $request->contact;
+		$employee->contact_no 		= $request->contact_no;
 		$employee->emergency_contact= $request->emergency_contact;
 		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
-		$employee->inviteToAsana 			= $request->asana;
-		$employee->inviteToSlack 			= $request->slack;
-		$employee->inviteToZoho 			= $request->zoho;
-
+		$employee->official_email 	= $request->official_email;
+		$employee->personal_email 	= $request->personal_email;
+		$employee->role 			= $request->role;
+		$employee->type 			= $request->type;
+		$employee->office_location_id= $request->office_location_id;
+		$employee->cnic 			= $request->cnic;
+		$employee->date_of_birth 	= $request->date_of_birth;
+		$employee->current_address 	= $request->current_address;
+		$employee->permanent_address= $request->permanent_address;
+		$employee->city 			= $request->city;
+		$employee->invite_to_zoho 	= $request->invite_to_zoho;
+		$employee->invite_to_slack 	= $request->invite_to_slack;
+		$employee->invite_to_asana 	= $request->invite_to_asana;
+		// dd($employee);
 		//admin password get from model confirmation box.
 		$params = [
 			"mode" => '',
@@ -176,7 +191,7 @@ class EmployeeController extends Controller
 			$response = $this->updateZohoAccount( $params );
 
 			if($response->original){
-				// $this->addUserToTeam($request->teams,$request->org_email);
+				// $this->addUserToTeam($request->teams,$request->official_email);
 
 				// $employee->zuid = $response->original->data->zuid;
 				// $employee->account_id = $response->original->data->accountId;
@@ -191,9 +206,9 @@ class EmployeeController extends Controller
 		//check if slack is checked for invitation
 		/*if($request->slack){
 			//call the  slack trait method in app/Traits folder
-			$this->updateSlackInvitation($request->org_email,$token);
+			$this->updateSlackInvitation($request->official_email,$token);
 			//slack mail
-			Mail::to($request->org_email)->later($when, new SlackInvitationMail($request->input()));
+			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
 		$employee->save();        
@@ -259,7 +274,7 @@ class EmployeeController extends Controller
 		]);
 		$email = $request->email;
 		$password = $request->password;
-		$row = DB::table('employees')->where(['org_email' => $email , 'password' => $password , 'role' => 'member'])
+		$row = DB::table('employees')->where(['official_email' => $email , 'password' => $password , 'role' => 'member'])
 		->get();
 
 		if(count($row)>0){
