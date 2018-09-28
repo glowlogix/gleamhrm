@@ -29,6 +29,6 @@ class CreateDocumentsTable extends Migration
      */
     public function down()
     {
-        chema::dropIfExists('documents');
+        Schema::dropIfExists('documents');
     }
 }
