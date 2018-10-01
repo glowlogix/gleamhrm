@@ -20,13 +20,13 @@ class SalariesController extends Controller
     
     public function index(){
 
-        $this->meta['title'] = 'All Salaries';  
+        $this->meta['title'] = 'All Salaries';
         $employees = Employee::all();
         foreach($employees as $employee){
             $id = $employee->id;
-            $salary = Salary::where('employee_id',$id)->first();
+            $salaries[$employee->id] = Salary::where('employee_id',$employee->id)->first();
         }
-        return view('admin.salary.index',$this->metaResponse(),['employees' => $employees,'salary'=>$salary]);
+        return view('admin.salary.index',$this->metaResponse(),['employees' => $employees,'salaries'=>$salaries]);
 
     }
 

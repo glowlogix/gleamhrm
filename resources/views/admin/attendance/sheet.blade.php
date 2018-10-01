@@ -97,7 +97,7 @@
             $m =(int)$date;?>
             @foreach($employees as $employee)
               <?php  $status = "";
-                $attendances =  DB::table('attandances')->select('status', 'checkintime')->where('employee_id',$employee->id) ->orderBy('checkintime', 'DESC')->get();
+                $attendances =  DB::table('attendance_summaries')->select('status', 'first_time_in', 'date')->where('employee_id',$employee->id) ->orderBy('first_time_in', 'DESC')->get();
                 $leaves =  DB::table('leaves')->select('leave_type', 'datefrom')->where('employee_id',$employee->id) ->orderBy('datefrom', 'DESC')->get();
                
                 ?>
@@ -108,10 +108,14 @@
                     for($int = 1 ; $int <=31 ; $int++){
                         // $status = ""; 
                         foreach($attendances as $attendance){
-                           
-                          $val = explode('-',$attendance->checkintime);
-                          $date = explode(' ',$val[2]);
-                          if($date[0] == $int && $val[1]==$m){
+
+                          $date = $attendance->date;
+                          $month = explode('-',$date);
+                          $month = $month[1];
+
+                          $val = explode('-',$attendance->first_time_in);
+
+                          if($date == $int && $month==$m){
                                 $status = $attendance->status;
                                 if($status == "present")
                                 $status="P";
@@ -160,13 +164,13 @@
         </tbody>
 	</table>
     <script>
-        $(document).ready(function () {
+    $(document).ready(function () {
         jQuery('#attend-month').change(function() {
             var val = $(this).val();
             window.location.assign(val);
          });
-        });
-        </script>
+    });
+    </script>
     
 </div>
 @stop

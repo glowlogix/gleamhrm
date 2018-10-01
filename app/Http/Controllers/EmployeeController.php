@@ -19,6 +19,7 @@ use App\Mail\CompanyPoliciesMail;
 use App\Mail\SimSimMail;
 use DB;
 use Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 
 class EmployeeController extends Controller
@@ -243,10 +244,13 @@ class EmployeeController extends Controller
 		$this->validate($request,[
 			'password' => 'required'
 		]);
-		$adminPassword = config('values.adminPassword');
 
-		if($request->password == $adminPassword) 
+		$adminPassword = Auth::user()->password;
+		
+		// dd(Hash::check($request->password, $adminPassword));
+		if(!Hash::check($request->password, $adminPassword)){
 			return redirect()->back()->with('error','Wrong admin password entered');
+		}
 		
 		$emp = Employee::find($id);
 		$account_id = $emp->account_id;

@@ -283,6 +283,11 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.create'
 	]);
 
+	Route::Get('/attendance/createByAjax/{id?}/{date?}/',[
+		'uses' => 'AttendanceController@createByAjax', //show Attendance
+		'as' => 'attendance.createByAjax'
+	]);
+
 	//Attendance and leave check for ajax for shown in update form
 	Route::Get('/attendance/getbyAjax',[
 		'uses' => 'AttendanceController@getbyAjax',

@@ -39,7 +39,10 @@
             <div class="form-group col-sm-4">
                 <br>
                 <label for="role">Role:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="role" placeholder="Enter Role" name="role" value="{{ old('role') }}" required>
+                <select style="width: 250px;" class="form-control" name="role">
+                    <option value="member" @if(old("role") == "member") selected @endif>Member</option>
+                    <option value="senior_developer" @if(old("role") == "senior_developer") selected @endif>Senior Developer</option>
+                </select>
             </div>
             <div class="form-group col-sm-4">
                 <br>
@@ -194,6 +197,11 @@
                 });
 
                 $(".nameselect2").select2();
+                $(function () {
+                    $('#date_of_birth').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                    });
+                });
             });
         </script>
     </div>

@@ -18,6 +18,7 @@
     $(document).ready(function () {
         $('#calendar').fullCalendar({
             defaultView: 'timelineMonth',
+            weekends: 'Boolean, default: true',
             header: {
                 left: 'today prev,next',
                 center: 'title',
@@ -25,15 +26,22 @@
             },
             resourceLabelText: 'Employees',
             resourceColumns: [
-            {
-                labelText: 'Employee',
-                field: 'fullname'
-            },
+                {
+                    labelText: 'Employee',
+                    field: 'firstname',
+                    // title: 'firstname',
+                    // title: 'firstname',
+                },
             ],
             resources: {!! $employees !!},
             events: {!! $events !!}
         });
     });
+
 </script>
+<style type="text/css">
+.fc-fri { color:blue; }
+.fc-sat { color:red;  }
+</style>
 </div>
 @stop

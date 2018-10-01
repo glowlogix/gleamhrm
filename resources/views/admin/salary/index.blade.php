@@ -96,11 +96,12 @@
 
 					<tr>
 						<td>
-								{{$employee->firstname}}
+							{{$employee->firstname}}
 						</td>
 						<td>
-								{{$salary->basic_salary}}
-								
+							@if(isset($salaries[$employee->id]))
+							{{$salaries[$employee->id]->basic_salary}}
+							@endif
 						</td>
 						<td>
 							<div class="col-sm-2">
