@@ -59,14 +59,10 @@
                                 <div class="modal-footer">
                                     <div class="form-group">
                                         <div class="col-md-7" style="position:relative;top:10px">
-
                                             <button type="submit" id="update" data-dismiss="modal" class="btn btn-primary">Update</button>
-
                                             <button type="submit" id="del" class="btn btn-danger">Delete</button>
-
                                         </div>
                                     </div>
-
                                 </div>
                                 <input type="hidden" id="currentStartTime">
                                 <input type="hidden" id="currentEndTime">
@@ -79,12 +75,12 @@
 
         </div>
     </div>
-    {!! $calendar->calendar() !!} {!! $calendar->script() !!}
-    <div id="calendar"></div>
+    
+    <div id="calendar"> </div>
 
-<!--     <script type="text/javascript">
+    <script type="text/javascript">
     $(document).ready(function(){
-        $('#calendar').fullCalendar({
+         $('#calendar').fullCalendar({
             "header":{
                 "left":"prev,next today",
                 "center":"title",
@@ -92,52 +88,21 @@
             },
             "eventLimit":true,
             "editable":1,
-            "eventClick":function(event) {
-                var type = event.title.split("\n")[0];       
+            "eventClick":function(event, jsEvent, view) {
+                var type = event.title.split("\n")[0];
+                var dt = event.start;
+                // console.log(dt);
                 $("#update").unbind("click");     
                 $("#del").unbind("click"); 
                 var type = $("#leave_type").val(type);
                 jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-                
-                if(type){
-                    $.ajax({
-                        type: "GET",                                  
-                        url: "http://localhost/hrm/public/admin/attendance/getbyAjax", 
-                        dataType : "json",   
-                        data: {
-                            "id" : event.id,
-                            "type" : type.val(),
-                             "date" : event.start._i
-                        }, 
-                        success: function(response){    
-                            if(response[1]=="successAttendance"){                    
-                            var checkin = $("#datefrom").val(response[0].checkintime);
-                            var checkout = $("#dateto").val(response[0].checkouttime);
-                            $("#currentStartTime").val(checkin.val());
-                            $("#currentEndTime").val(checkout.val());
-                            $("#currentStatus").val(response[0].status);
 
-                            }else{
-                                var checkin = $("#datefrom").val(response.datefrom);
-                                var checkout = $("#dateto").val(response.dateto);
-                                $("#currentStartTime").val(checkin.val());
-                                $("#currentEndTime").val(checkout.val());
-                                $("#currentStatus").val(response.status);
-                                
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            console.log(JSON.stringify(jqXHR));
-                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                        }
-
-                    });
-                }
+                $("div.modal-body").load("{{route('attendance.createByAjax')}}/"+event.resourceId + "/" + event.date);
 
                 $("#update").on("click",function(){
                     $.ajax({
                         type: "POST",                                  
-                        url: "http://localhost/hrm/public/admin/attendance/update", 
+                        url: "{{route('attendance.update')}", //here
                         dataType : "json",   
                         data: {
                             "id" : event.id,
@@ -147,8 +112,7 @@
                             "currentStartDate" :  $("#currentStartTime").val(),
                             "currentEndDate" :  $("#currentEndTime").val(),  
                             "currentStatus" : $("#currentStatus").val(),
-                            
-                            "_token" : "iGiRZ8fq2AETFYQ1RxsFqHeS7r6vGNwkk3Az71MG"
+                            "_token" : "Ixa1LgqvcOO6OOYuFLsiR83JxoExiG6xCtiN0lAt"
                         }, 
                         success: function(response){ 
                             if(response.errors){
@@ -158,7 +122,7 @@
                                 alert("Update Successfully");
                                 window.location.reload();
                             }else if(response == "already-present"){
-                                alert("Already Present First Remove that employee to make Full Leave");                                    
+                                alert("Already Present First Remove that employee to make Full Leave");
                             }
                         },
                         error: function(jqXHR, textStatus, errorThrown) { 
@@ -169,44 +133,45 @@
 
                 });
 
-                $("#del").on("click",function(){
+                $("#del").on("click",function(){    
                     var r = confirm("Are you sure you want to delete?");                  
                     if (r == true) {
-                        $.ajax({
-                            type: "POST",                                  
-                            url: "http://localhost/hrm/public/admin/attendance/delete", 
-                            dataType : "json",   
-                            data: {
-                                "id" : event.id,
-                                "type" : $("#leave_type").val(),
-                                "date" : event.start._i,
-                                "_token" : "iGiRZ8fq2AETFYQ1RxsFqHeS7r6vGNwkk3Az71MG"
-                            }, 
-                            success: function(response){ 
-                                if(response == "success"){
-                                    alert("Delete Successfully");
-                                    window.location.reload();
-                                }
-
-                            },
-                            error: function(jqXHR, textStatus, errorThrown) { 
-                                console.log(JSON.stringify(jqXHR));
-                                console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                     $.ajax({
+                        type: "POST",                                  
+                        url: "http://localhost/hrm/public/admin/attendance/delete", 
+                        dataType : "json",   
+                        data: {
+                            "id" : event.id,
+                            "type" : $("#leave_type").val(),
+                            "date" : event.start._i,
+                            "_token" : "Ixa1LgqvcOO6OOYuFLsiR83JxoExiG6xCtiN0lAt"
+                        }, 
+                        success: function(response){ 
+                            if(response == "success"){
+                                alert("Delete Successfully");
+                                window.location.reload();
                             }
 
-                        });
+                        },
+                        error: function(jqXHR, textStatus, errorThrown) { 
+                            console.log(JSON.stringify(jqXHR));
+                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
+                        }
+
+                    });
 
                     } else {
                         jQuery("#myModal").modal("toggle");                            
                         
                     }
-                });
 
+                });
             },
-            "events":[]
+            "events": {!! $events !!}
         });
     });
-    </script> -->
+
+    </script>
 
     <script type="text/javascript">
         $(document).ready(function () {

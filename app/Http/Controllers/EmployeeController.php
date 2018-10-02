@@ -121,7 +121,7 @@ class EmployeeController extends Controller
 		//simsim
 		Mail::to($request->official_email)->later($when, new SimSimMail());
 
-		return redirect()->back()->with('success','Employee is updated succesfully');      
+		return redirect()->route('employees')->with('success','Employee is created succesfully');      
 	} 
 
 	public function edit($id)
@@ -136,10 +136,12 @@ class EmployeeController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		$adminPassword = config('values.adminPassword');
-		if($request->password != $adminPassword) 
-			return redirect()->back()->with('error','Wrong admin password entered');
+		$adminPassword = Auth::user()->password;
 		
+		if(!Hash::check($request->password, $adminPassword)){
+			return redirect()->back()->with('error','Wrong admin password entered');
+		}
+
 		$this->validate($request,[
 			'firstname' => 'required',
 			'lastname' => 'required',
@@ -214,7 +216,7 @@ class EmployeeController extends Controller
 
 		$employee->save();        
 
-		return redirect()->back()->with('success','Employee is updated succesfully');     
+		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
 	}
 
 	public function trashed()
@@ -247,7 +249,6 @@ class EmployeeController extends Controller
 
 		$adminPassword = Auth::user()->password;
 		
-		// dd(Hash::check($request->password, $adminPassword));
 		if(!Hash::check($request->password, $adminPassword)){
 			return redirect()->back()->with('error','Wrong admin password entered');
 		}
@@ -314,7 +315,7 @@ class EmployeeController extends Controller
 
 		$employee->save();
 
-		return redirect()->back()->with('success','Employee is updated succesfully');      
+		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
 	}
 
 	public function EmployeeLogout(Request $request){

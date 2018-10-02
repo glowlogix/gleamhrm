@@ -19,16 +19,29 @@
 			</div>
 			<div class="form-group">
 				<label for="status">Status</label>
-				<input type="text" name="status" class="form-control" placeholder="Enter Status here" value="{{$office_location->status}}">
-			</div>
+				<select class="form-control nameselect2" name="status" id="status">
+                    <option value="1"@if($office_location->status == 1) selected @endif>Active</option>
+                    <option value="2"@if($office_location->status == 2) selected @endif>Inactive</option>
+                </select>
+            </div>
 			<div class="form-group">
 				<label for="timing_start">Timing Start</label>
-				<input type="text" name="timing_start" class="form-control" placeholder="Enter Timing Start here" value="{{Carbon\Carbon::parse($office_location->timing_start)->format('h:i a')}}">
-			</div>
-			<div class="form-group">
+                <div class="input-group timepicker">
+                    <input class="form-control" name="timing_start" placeholder="Enter Timing Start here"  id="timing_start" value="{{Carbon\Carbon::parse($office_location->timing_start)->format('h:i A')}}" />
+                    <span class="input-group-addon timepicker1">
+                        <i class="fa fa-clock-o" style="font-size:16px"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
 				<label for="timing_off">Timing Off</label>
-				<input type="text" name="timing_off" class="form-control" placeholder="Enter Timing Off here" value="{{Carbon\Carbon::parse($office_location->timing_off)->format('h:i a')}}">
-			</div>
+                <div class="input-group timepicker">
+                    <input class="form-control" name="timing_off" placeholder="Enter Timing Off here"  id="timing_off" value="{{Carbon\Carbon::parse($office_location->timing_off)->format('h:i A')}}" />
+                    <span class="input-group-addon timepicker1">
+                        <i class="fa fa-clock-o" style="font-size:16px"></i>
+                    </span>
+                </div>
+            </div>
 			<div class="form-group">
 				<label for="address">Address</label>
 				<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{$office_location->address}}">
@@ -44,4 +57,31 @@
 		</form>
 	</div>
 </div>
+<script type="text/javascript">
+$(document).ready(function () {
+    $(function () {
+	    /*$('.timepicker1').click(function(){
+	        $(this).parent().datetimepicker({
+	            format: "LT",
+	            icons: {
+	                up: "fa fa-chevron-up",
+	                down: "fa fa-chevron-down"
+	            }
+	        }).datetimepicker('show');
+	    });*/
+		
+		$("div.timepicker").on("click", function () {
+		        $(this).datetimepicker({
+		            format: "LT",
+		            icons: {
+		                up: "fa fa-chevron-up",
+		                down: "fa fa-chevron-down"
+		            }
+		        });
+		        console.log("O.K.");
+		});
+
+    });
+});
+</script>
 @stop

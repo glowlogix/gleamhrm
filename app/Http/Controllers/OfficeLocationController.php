@@ -128,8 +128,11 @@ class OfficeLocationController extends Controller
      * @param  \App\OfficeLocation  $officeLocation
      * @return \Illuminate\Http\Response
      */
-    public function destroy(OfficeLocation $officeLocation)
+    public function destroy($id)
     {
-        //
+        $office_location=OfficeLocation::find($id);
+        $office_location->delete();
+        Session::flash('success','OfficeLocation deleted successfuly.');
+        return redirect()->back();
     }
 }

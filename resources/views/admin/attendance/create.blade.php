@@ -27,22 +27,22 @@
                                     @endforeach
                                 </select>
                             </div>
-                            <div class="col-md-3">
+                            <div class="col-md-6">
                                 <label for="date">Select Date</label></br>
-                                <div class='input-group date' id='datefrom' name="datefrom">
-                                    <input type="date" name="date" id="date" value="{{$current_date}}">
-                                    <!-- <span class="input-group-addon">
+                                <div class="input-group date1">
+                                    <input class="form-control" name="date" value="{{$current_date}}" />
+                                    <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
-                                    </span> -->
+                                    </span>
                                 </div>
                             </div>
                         </div>
                     </div>
                     <div class="col-md-6">
                         <label for="time_in">Time In</label>
-                        <div class="input-group time timepicker">
-                            <input class="form-control time tp" name="time_in" value="{{$current_time}}" />
-                            <span class="input-group-addon timepicker1">
+                        <div class="input-group timepicker">
+                            <input class="form-control" name="time_in" value="{{$current_time}}" />
+                            <span class="input-group-addon">
                                 <i class="fa fa-clock-o" style="font-size:16px"></i>
                             </span>
                         </div>
@@ -50,9 +50,9 @@
 
                     <div class="col-md-6">
                         <label for="time_out">Time Out</label>
-                        <div class="input-group time timepicker">
-                            <input class="form-control time tp" name="time_out" value="{{$current_time}}" />
-                            <span class="input-group-addon timepicker1">
+                        <div class="input-group timepicker">
+                            <input class="form-control" name="time_out" value="{{$current_time}}" />
+                            <span class="input-group-addon">
                                 <i class="fa fa-clock-o" style="font-size:16px"></i>
                             </span>
                         </div>
@@ -114,10 +114,15 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     
-                                                    <label for="date">Date</label>
-                                                    <br>
-                                                    <input type="date" name="date" id="date" class="datepickstyle" value="{{$current_date}}">
-                                                    
+                                                    <div>
+                                                        <label for="date">Select Date</label></br>
+                                                        <div class="input-group date">
+                                                            <input class="form-control" name="date" value="{{$att->date}}" />
+                                                            <span class="input-group-addon">
+                                                                <span class="glyphicon glyphicon-calendar"></span>
+                                                            </span>
+                                                        </div>
+                                                    </div>
                                                     <br>
 
                                                     <label for="time">Time In</label>
@@ -180,59 +185,33 @@
         </div>
         <script type="text/javascript">
             $(document).ready(function () {
-                // $('#totalhours').hide();
                 $('#delay').hide();
-  
-                /*$('input.tp').datetimepicker({
-                    format: "LT",
-                    icons: {
-                        up: "fa fa-chevron-up",
-                        down: "fa fa-chevron-down"
-                    }
-                });*/
 
-                $('#date').on('change', function (e) { 
-                    console.log(e);
-                    var url = '{{route('attendance')}}/create/{{$emp_id}}/' + $(this).val();
-                    if (url) { 
+                $('.date').datetimepicker({
+                    format: "YYYY-MM-DD"
+                });
+                
+                $('.date1').datetimepicker({
+                    format: "YYYY-MM-DD"
+                }).on("dp.change", function(e) {
+                    @if($emp_id)
+                    var url = '{{route('attendance')}}/create/{{$emp_id}}/' + $('.date1 input').val();
+                    @else
+                    var url = '{{route('attendance')}}/create/0/' + $('.date1 input').val();
+                    @endif
+                    if (url) {
                         window.location = url; 
                     }
                     return false;
-                  });
-
-                /*$(".timepicker1").on("click", "input", function(){
-                    if($("select.select_operator").val() == '>'){
-                        console.log("O.K.");
-                        $(this).datepicker().datepicker("show");
-                    }
-                    else {
-                        console.log("NOT O.K.");
-                    }
-                });*/
-
-                $('.timepicker1').click(function(){
-                    $(this).parent().datetimepicker({
-                        format: "LT",
-                        icons: {
-                            up: "fa fa-chevron-up",
-                            down: "fa fa-chevron-down"
-                        }
-                    });
                 });
 
-                /*$(function () {
-                    $('#datefrom').datetimepicker({
-                        format: 'L'
-                    });
-        
-                });*/
-            });
-           
-            $(document).ready(function(){
+                $('.timepicker').datetimepicker({
+                    format: "LT"
+                });
+
                 $(".nameselect2").select2().on('change.select2', function(e){
-
                     var url = '{{route('attendance')}}/create/' + $(this).val() + '/{{$current_date}}';
-
+                    
                     if (url) { 
                         window.location = url; 
                     }

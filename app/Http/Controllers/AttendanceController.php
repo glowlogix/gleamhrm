@@ -106,7 +106,7 @@ class AttendanceController extends Controller
         else{
             $datetime = Carbon::parse($date);
         }
-        
+
         $date = $datetime->toDateString();
         
         $datetime = Carbon::now();
@@ -121,8 +121,10 @@ class AttendanceController extends Controller
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
         
         $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
+        // dd($attendance);
         
-        return view('admin.attendance.createByAjax',$this->metaResponse(),[
+        return view('admin.attendance.createByAjax')
+        ->with([
             'employees'         => $employees, 
             'attendances'       => $attendances, 
             'attendance_summary'=> $attendance_summary, 
@@ -217,6 +219,7 @@ class AttendanceController extends Controller
             $attendance_summary->first_time_in = $first_time_in;
             $attendance_summary->last_time_out = $last_time_out;
             $attendance_summary->total_time = $totaltime;
+            $attendance_summary->date = $request->date;
             $attendance_summary->is_delay = $is_delay;
             $attendance_summary->save();
         }
@@ -329,12 +332,12 @@ class AttendanceController extends Controller
         ])->first();
 
         $request->employee_id = $attendance->employee_id;
-        $request->date = $attendance->date;
 
         if (isset($attendance->id) != '') {
-            $attendance->date = $request->date;
+            $attendance->date = Carbon::parse($request->date);
             $attendance->time_in = Carbon::parse($request->time_in);
             $attendance->time_out = Carbon::parse($request->time_out);
+            // dd($attendance);
             $attendance->save();
         }
 
@@ -414,59 +417,55 @@ class AttendanceController extends Controller
                     if($value->is_delay && $value->status=="present"){
                         $color = '#70AFDC';
                         $delays = $value->is_delay." delay";
-                    }else{
+                    }
+                    else{
                         $delays ="";
                     }
                     $time = date("g:i A",strtotime($value->first_time_in));
                     // $time2= date("g:i A",strtotime($value->checkouttime));
                     
+                    $events[] = [
+                        "resourceId" => $value->employee_id,
+                        "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                        "date" => $value->date,
+                        "start" => $value->date .' '. $value->first_time_in,
+                        "end" => $value->date .' '.$value->first_time_in,
+                    ];
+                }
+
+                foreach ($leave as $key => $value) {
+                  $color = '';
+                    if($value->leave_type == "Short Leave"){
+                        $color = '#C24BFF';
+                    }
+                    if($value->leave_type === "Full Leave"){
+                        $color = 'red';                        
+                    }
+                    if($value->leave_type === "Half Leave"){
+                        $color = '#57BB8A';                        
+                    }
+                    if($value->leave_type == "Paid Leave"){
+                        $color = '#ADFF41'; 
+                    }
                     $events[] = Calendar::event(
+    
+                        $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
         
-                        $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
                         true,
-                        new \DateTime($value->date),
-                        // new \DateTime($value->date .' '. $value->first_time_in),
-                        new \DateTime($value->date.' +1 day'),
-                        // new \DateTime($value->date .' '. $value->last_time_out.' +1 day'),
+                        new \DateTime($value->datefrom),
+        
+                        new \DateTime($value->dateto.' +1 day'),
                         $value->employee_id,
                         [
-                            'color' =>  $color
+                            'color' => $color
                         ]
                     );
                 }
-
-                  foreach ($leave as $key => $value) {
-                      $color = '';
-                        if($value->leave_type == "Short Leave"){
-                            $color = '#C24BFF';
-                        }
-                        if($value->leave_type === "Full Leave"){
-                            $color = 'red';                        
-                        }
-                        if($value->leave_type === "Half Leave"){
-                            $color = '#57BB8A';                        
-                        }
-                        if($value->leave_type == "Paid Leave"){
-                            $color = '#ADFF41'; 
-                        }
-                        $events[] = Calendar::event(
-        
-                            $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
-            
-                            true,
-                            new \DateTime($value->datefrom),
-            
-                            new \DateTime($value->dateto.' +1 day'),
-                            $value->employee_id,
-                            [
-                                'color' => $color
-                            ]
-                        );
-                    }
-               }
+            }
         }
 
-       $calendar = Calendar::addEvents($events)->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
+        // dd($events);
+        /*$calendar = Calendar::addEvents($events)->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
             'editable'=> true,
             'eventClick'=> 'function(event, jsEvent, view) {
                 var type = event.title.split("\n")[0];
@@ -476,7 +475,7 @@ class AttendanceController extends Controller
                 $("#del").unbind("click"); 
                 var type = $("#leave_type").val(type);
                 jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-                $("div.modal-body").load("'.route('attendance.createByAjax').'/dt");
+                // $("div.modal-body").load("'.route('attendance.createByAjax').'/");
 
                 $("#update").on("click",function(){
                     $.ajax({
@@ -549,9 +548,12 @@ class AttendanceController extends Controller
                 });
 
             }'
-        ]);
+        ]);*/
             
-        return view('admin.attendance.allattendance',$this->metaResponse(),['calendar' => $calendar]);
+        return view('admin.attendance.allattendance',$this->metaResponse(),[
+            // 'calendar' => $calendar,
+            'events' => json_encode($events),
+        ]);
     }
 
     public function showTimeline(){

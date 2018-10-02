@@ -11,7 +11,7 @@
         </span>
     </div>
     <div class="panel-body">
-        <form action="{{route('employee.update',['id'=>$employee->id])}}" method="post">
+        <form id="employee_form" action="{{route('employee.update',['id'=>$employee->id])}}" method="post">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
@@ -144,11 +144,11 @@
                             Are you sure you want to update Employee : {{ $employee->firstname }}?
                         </div>
                         <div class="modal-body">
-                            <input type="password" class="form-control" placeholder="Admin Password" name="password" required>
+                            <input type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="password" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-success " type="submit"> Update</button>
+                            <button class="btn btn-success" type="submit"> Update</button>
                         </div>
                     </div>
                 </div>
@@ -163,6 +163,21 @@
                         format: 'YYYY-MM-DD',
                     });
                 });
+                
+                var pass_flag = false;
+
+                $("#confirm_pass").on("change",function(){
+                    pass_flag = true;
+                });
+
+                // console.log(pass_flag); here
+                $("#employee_form").submit(function(event){
+                    if (!pass_flag){
+                        $('#confirm').modal('show');
+                        event.preventDefault();
+                    }
+                });
+
             });
         </script>
     </div>

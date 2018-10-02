@@ -17,15 +17,25 @@
 				<label for="name">Name</label>
 				<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
 				<input type="hidden" name="status" value="1">
-			</div>
+			</div>			
 			<div class="form-group">
 				<label for="timing_start">Timing Start</label>
-				<input type="text" name="timing_start" class="form-control" placeholder="Enter Timing Start here" value="{{old('timing_start')}}">
-			</div>
-			<div class="form-group">
+                <div class="input-group timepicker">
+                    <input class="form-control" name="timing_start" placeholder="Enter Timing Start here"  id="timing_start" value="{{old('timing_start')}}" />
+                    <span class="input-group-addon timepicker1">
+                        <i class="fa fa-clock-o" style="font-size:16px"></i>
+                    </span>
+                </div>
+            </div>
+            <div class="form-group">
 				<label for="timing_off">Timing Off</label>
-				<input type="text" name="timing_off" class="form-control" placeholder="Enter Timing Off here" value="{{old('timing_off')}}">
-			</div>
+                <div class="input-group timepicker">
+                    <input class="form-control" name="timing_off" placeholder="Enter Timing Off here"  id="timing_off" value="{{old('timing_off')}}" />
+                    <span class="input-group-addon timepicker1">
+                        <i class="fa fa-clock-o" style="font-size:16px"></i>
+                    </span>
+                </div>
+            </div>
 			<div class="form-group">
 				<label for="address">Address</label>
 				<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address')}}">
@@ -37,8 +47,35 @@
 			<div class="form-group">
 				<button class="btn btn-success center-block" type="submit"> Create</button>
 			</div>
-			
 		</form>
 	</div>
+
 </div>
+<script type="text/javascript">
+$(document).ready(function () {
+    $(function () {
+	    /*$('.timepicker1').click(function(){
+	        $(this).parent().datetimepicker({
+	            format: "LT",
+	            icons: {
+	                up: "fa fa-chevron-up",
+	                down: "fa fa-chevron-down"
+	            }
+	        }).datetimepicker('show');
+	    });*/
+		
+		$("div.timepicker").on("click", function () {
+		        $(this).datetimepicker({
+		            format: "LT",
+		            icons: {
+		                up: "fa fa-chevron-up",
+		                down: "fa fa-chevron-down"
+		            }
+		        });
+		        console.log("O.K.");
+		});
+
+    });
+});
+</script>
 @stop
