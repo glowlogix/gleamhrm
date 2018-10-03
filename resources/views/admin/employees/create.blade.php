@@ -50,8 +50,8 @@
                 <br>
                 <label for="type">Type:</label>
                 <select style="width: 250px;" class="form-control" name="type">
-                    <option value="remote" @if(old("type") == "remote") selected @endif>Work Remotely</option>
                     <option value="office" @if(old('type') == "office") selected @endif>Work from Office</option>
+                    <option value="remote" @if(old("type") == "remote") selected @endif>Work Remotely</option>
                 </select>
             </div>
             <div class="form-group col-sm-4">
