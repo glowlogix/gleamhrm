@@ -201,9 +201,9 @@
                     format: "YYYY-MM-DD"
                 }).on("dp.change", function(e) {
                     @if($emp_id)
-                    var url = '{{route('attendance')}}/create/{{$emp_id}}/' + $('.date1 input').val();
+                    var url = '{{route('attendance.create')}}/{{$emp_id}}/' + $('.date1 input').val();
                     @else
-                    var url = '{{route('attendance')}}/create/0/' + $('.date1 input').val();
+                    var url = '{{route('attendance.create')}}/0/' + $('.date1 input').val();
                     @endif
                     if (url) {
                         window.location = url; 
@@ -216,7 +216,7 @@
                 });
 
                 $(".nameselect2").select2().on('change.select2', function(e){
-                    var url = '{{route('attendance')}}/create/' + $(this).val() + '/{{$current_date}}';
+                    var url = '{{route('attendance.create')}}/' + $(this).val() + '/{{$current_date}}';
                     
                     if (url) { 
                         window.location = url; 
