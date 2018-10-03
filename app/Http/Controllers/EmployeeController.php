@@ -28,16 +28,37 @@ class EmployeeController extends Controller
 	use ZohoTrait;
 	use SlackTrait;
 
+	public $roles = [
+		"project_coordinator" 			=> "Project Coordinator",
+		"web_developer" 				=> "Web Developer",
+		"junior_web_developer" 			=> "Junior Web Developer",
+		"front_end_developer" 			=> "Front-end Developer",
+		"account_sales_executive" 		=> "Account Sales Executive",
+		"sales_officer" 				=> "Sales Officer",
+		"digital_marketing_executive" 	=> "Digital Marketing Executive",
+		"content_writer" 				=> "Content Writer",
+		"digital_marketer" 				=> "Digital Marketer",
+		"web_designer_lead" 			=> "Web Designer Lead",
+		"junior_web_designer" 			=> "Junior Web Designer",
+		"hr_manager" 					=> "HR Manager",
+		"hr_officer" 					=> "HR Officer",
+		"admin" 						=> "Admin",
+	];
+
 	public function index()
 	{
-		$data = Employee::where('role','member')->get();
-		return view('admin.employees.index',['title' => 'All Employees'])->with('employees',$data);
+		$data = Employee::get();
+		return view('admin.employees.index',['title' => 'All Employees'])
+		->with('employees',$data)
+		->with('roles',$this->roles);
 	}
 
 
 	public function create()
 	{
-		return view('admin.employees.create',['title' => 'Add Employee'])->with('office_locations',OfficeLocation::all());
+		return view('admin.employees.create',['title' => 'Add Employee'])
+		->with('office_locations',OfficeLocation::all())
+		->with('roles', $this->roles);
 	}
 
 
@@ -131,7 +152,10 @@ class EmployeeController extends Controller
 			abort(404);
 		}
 
-		return view('admin.employees.edit',['title' => 'Update Employee'])->with('employee',$employee)->with('office_locations',OfficeLocation::all());
+		return view('admin.employees.edit',['title' => 'Update Employee'])
+		->with('employee',$employee)
+		->with('office_locations',OfficeLocation::all())
+		->with('roles', $this->roles);
 	}
 
 	public function update(Request $request, $id)

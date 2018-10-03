@@ -38,10 +38,12 @@
             </div>
             <div class="form-group col-sm-4">
                 <br>
-                <label for="role">Role:</label>
+                <label for="role">Designation:</label>
+
                 <select style="width: 250px;" class="form-control" name="role">
-                    <option value="member" @if(old("role") == "member") selected @endif>Member</option>
-                    <option value="senior_developer" @if(old("role") == "senior_developer") selected @endif>Senior Developer</option>
+                @foreach($roles as $k => $role)
+                    <option value="{{$k}}" @if(old("role") == "$k") selected @endif>{{$role}}</option>
+                @endforeach
                 </select>
             </div>
             <div class="form-group col-sm-4">

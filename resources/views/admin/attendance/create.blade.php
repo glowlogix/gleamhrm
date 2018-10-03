@@ -6,10 +6,16 @@
 
         <div class="panel-heading text-center">
             <b style="text-align: center;">Create Attendance</b>
+            <span style="float: left;">
+                <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
+                    <span class="glyphicon glyphicon-plus"></span> Add Leave
+                </a>
+            </span>
             <span style="float: right;">
-            <a href="{{route('attendance')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon"></span> Back
-            </a>
+                <a href="{{route('attendance')}}" class="btn btn-info btn-xs" align="right">
+                    <span class="glyphicon"></span> Back
+                </a>
+            </span>
         </span>
         </div>
         <div class="row">
@@ -158,7 +164,7 @@
                                             {{ csrf_field() }}
                                             <div class="modal-header">
                                                 Are you sure you want to delete this <strong>
-                                                check {{ $att->in_out }} on {{Carbon\Carbon::parse($att->date .' '.$att->time)->format('Y-m-d h:i a')}} ? 
+                                                check {{ $att->in_out }} on {{Carbon\Carbon::parse($att->date .' '.$att->time_in)->format('Y-m-d h:i a')}} ? 
                                                 </strong>
                                             </div>
                                             <div class="modal-footer">

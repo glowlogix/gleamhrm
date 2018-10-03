@@ -34,8 +34,9 @@
                 <br>
                 <label for="role">Role:</label>
                 <select style="width: 250px;" class="form-control" name="role">
-                    <option value="member" @if($employee->role == "member") selected @endif>Member</option>
-                    <option value="senior_developer" @if($employee->role == "senior_developer") selected @endif>Senior Developer</option>
+                    @foreach($roles as $k => $role)
+                        <option value="{{$k}}" @if($employee->role == $k) selected @endif>{{$role}}</option>
+                    @endforeach
                 </select>
             </div>
             <div class="form-group col-sm-4">

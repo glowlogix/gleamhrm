@@ -42,7 +42,6 @@ class AttendanceController extends Controller
         
         $employees= Employee::all();
         return view('admin.attendance.sheet')->with(['employees'=> $employees, 'date'=>$date, 'name'=>$name]);
-
     }
 
 
@@ -70,29 +69,20 @@ class AttendanceController extends Controller
 
         $selected_in_out = '';
         $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->first();
-        /*dd($attendance);
-        if (isset($attendance->time_out) && empty($attendance->time_out)) {
-            $selected_in_out = 'out';
-        }*/
+        
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
         
         $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
         
-        /*if($request->ajax()) {
-         return view('admin.attendance.create', compact('create','catalogue_sections'))
-         ->renderSections()['content'];
-        }
-        else*/{
-            return view('admin.attendance.create',$this->metaResponse(),[
-                'employees'         => $employees, 
-                'attendances'       => $attendances, 
-                'attendance_summary'=> $attendance_summary, 
-                'current_date'      => $date, 
-                'current_time'      => $current_time, 
-                'selected_in_out'   => $selected_in_out, 
-                'emp_id'            => $emp_id,
-            ]);
-        }
+        return view('admin.attendance.create',$this->metaResponse(),[
+            'employees'         => $employees, 
+            'attendances'       => $attendances, 
+            'attendance_summary'=> $attendance_summary, 
+            'current_date'      => $date, 
+            'current_time'      => $current_time, 
+            'selected_in_out'   => $selected_in_out, 
+            'emp_id'            => $emp_id,
+        ]);
     }
 
     public function createByAjax($emp_id='', $date= '')
@@ -378,94 +368,101 @@ class AttendanceController extends Controller
     }
 
 
-    public function showAttendance(Request $request){
+    public function showAttendance(Request $request, $id=1){
 
         $this->meta['title'] = 'Show Attendance';        
-        $data = DB::table('employees')->get(); 
+        $data = Employee::get(); 
         
         $events = [];
         foreach($data as $employee){
             $employee_id = $employee->id;
-            // $attendance = DB::table('attandances')->where('employee_id', $employee_id)->get(); 
-            $attendance_summaries = DB::table('attendance_summaries')->where('employee_id', $employee_id)->get();
-            // dd($attendance);
-            $leave = DB::table('leaves')->where('employee_id', $employee_id)->get(); 
-        
-            if($data->count()){
-        
-                foreach ($attendance_summaries as $key => $value) {
-                    // $row = DB::table('attendances')->where('employee_id', $employee_id)->first();
-                    // $timein = $row->time;
-                    $delays = '';
-                    $color = '';
-                    if($value->status == "Short Leave"){
-                        $color = '#C24BFF';
-                    }
-                    if($value->status === "Full Leave"){
-                        $color = 'red';                        
-                    }
-                    if($value->status === "Half Leave"){
-                        $color = '#57BB8A';                        
-                    }
-                    if($value->status == "Paid Leave"){
-                        $color = '#ADFF41'; 
-                    }
-                    if($value->status == "present"){
-                        $color = 'green';
-                    }
+            $now = Carbon::now();
+            $now->year;
 
-                    if($value->is_delay && $value->status=="present"){
-                        $color = '#70AFDC';
-                        $delays = $value->is_delay." delay";
-                    }
-                    else{
-                        $delays ="";
-                    }
-                    $time = date("g:i A",strtotime($value->first_time_in));
-                    // $time2= date("g:i A",strtotime($value->checkouttime));
-                    
-                    $events[] = [
-                        "resourceId" => $value->employee_id,
-                        "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
-                        "date" => $value->date,
-                        "start" => $value->date .' '. $value->first_time_in,
-                        "end" => $value->date .' '.$value->first_time_in,
-                    ];
+            $dob = Carbon::parse($employee->date_of_birth);
+            $date_of_birth = $now->format('Y') .'-' . $dob->format('m').'-'.$dob->format('d');
+            
+            $events[] = [
+                "resourceId" => $employee->id,
+                "title" => "Birthday of \n".$employee->firstname.' '. $employee->lastname,
+                "date" => $date_of_birth,
+                "start" => $date_of_birth,
+                "end" => $date_of_birth,
+                "color"=> 'pink',
+            ];
+
+            $attendance_summaries = AttendanceSummary::where('employee_id', $employee_id)->get();
+ 
+            foreach ($attendance_summaries as $key => $value) {
+                $delays = '';
+                $color = '';
+                if($value->status == "Short Leave"){
+                    $color = '#C24BFF';
+                }
+                if($value->status === "Full Leave"){
+                    $color = 'red';                        
+                }
+                if($value->status === "Half Leave"){
+                    $color = '#57BB8A';                        
+                }
+                if($value->status == "Paid Leave"){
+                    $color = '#ADFF41'; 
+                }
+                if($value->status == "present"){
+                    $color = 'green';
                 }
 
-                foreach ($leave as $key => $value) {
-                  $color = '';
-                    if($value->leave_type == "Short Leave"){
-                        $color = '#C24BFF';
-                    }
-                    if($value->leave_type === "Full Leave"){
-                        $color = 'red';                        
-                    }
-                    if($value->leave_type === "Half Leave"){
-                        $color = '#57BB8A';                        
-                    }
-                    if($value->leave_type == "Paid Leave"){
-                        $color = '#ADFF41'; 
-                    }
-                    $events[] = Calendar::event(
-    
-                        $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
-        
-                        true,
-                        new \DateTime($value->datefrom),
-        
-                        new \DateTime($value->dateto.' +1 day'),
-                        $value->employee_id,
-                        [
-                            'color' => $color
-                        ]
-                    );
+                if($value->is_delay && $value->status=="present"){
+                    $color = '#70AFDC';
+                    $delays = $value->is_delay." delay";
                 }
+                else{
+                    $delays ="";
+                }
+                $time = date("g:i A",strtotime($value->first_time_in));
+                // $time2= date("g:i A",strtotime($value->checkouttime));
+                
+                $events[] = [
+                    "resourceId" => $value->employee_id,
+                    "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                    "date" => $value->date,
+                    "start" => $value->date .' '. $value->first_time_in,
+                    "end" => $value->date .' '.$value->first_time_in,
+                    "color" => 'blue',
+                ];
+            }
+
+            $leave = Leave::where('employee_id', $employee_id)->get(); 
+            
+            foreach ($leave as $key => $value) {
+              $color = '';
+                if($value->leave_type == "Short Leave"){
+                    $color = '#C24BFF';
+                }
+                if($value->leave_type === "Full Leave"){
+                    $color = 'red';                        
+                }
+                if($value->leave_type === "Half Leave"){
+                    $color = '#57BB8A';                        
+                }
+                if($value->leave_type == "Paid Leave"){
+                    $color = '#ADFF41'; 
+                }
+
+                $events[] = [
+                    "resourceId" => $value->employee_id,
+                    "title" => $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                    "date" => $value->datefrom,
+                    "start" => $value->datefrom,
+                    "end" => $value->dateTo,
+                    'color' => $color,
+                ];
             }
         }
 
         // dd($events);
-        /*$calendar = Calendar::addEvents($events)->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
+        /*$calendar = Calendar::addEvents($events)
+        ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
             'editable'=> true,
             'eventClick'=> 'function(event, jsEvent, view) {
                 var type = event.title.split("\n")[0];
@@ -552,19 +549,16 @@ class AttendanceController extends Controller
             
         return view('admin.attendance.allattendance',$this->metaResponse(),[
             // 'calendar' => $calendar,
+            'office_location_id' => $id,
             'events' => json_encode($events),
         ]);
     }
 
-    public function showTimeline(){
+    public function showTimeline($id=1){
         $this->meta['title'] = 'Show Attendance';        
         
         $employees = Employee::all()->toJson();
-        // $employees = Employee::all()->toJson();
-        // $employees = Employee::select("employees.*", DB::raw("CONCAT(users.first_name,' ',users.last_name) as full_name"))->toJson();
-        // pluck('key')->all() 
-        // $employees = Employee::pluck('CONCAT(`firstname`," ",`lastname`)','id');
-
+        
         $attendance_summaries = AttendanceSummary::all();
         $events = array();
         foreach ($attendance_summaries as $key => $value) {
@@ -592,19 +586,51 @@ class AttendanceController extends Controller
             }else{
                 $delays ="";
             }
-            $time = date("g:i A",strtotime($value->first_time_in));
-                // $time2= date("g:i A",strtotime($value->checkouttime));
-
+            $time = Carbon::parse($value->first_time_in);
+            
             $events[] = [
                 "resourceId" => $value->employee_id,
                 "title" => $value->status."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                "date" => $value->date,
                 "start" => $value->date .' '. $value->first_time_in,
-                "end" => $value->date .' '.$value->first_time_in,
+                "end" => $value->date .' '.$value->last_time_out,
+                "color" => $color,
             ];
         }
+
+        $leave = Leave::all();
+        foreach ($leave as $key => $value) {
+          $color = '';
+            if($value->leave_type == "Short Leave"){
+                $color = '#C24BFF';
+            }
+            if($value->leave_type === "Full Leave"){
+                $color = 'red';                        
+            }
+            if($value->leave_type === "Half Leave"){
+                $color = '#57BB8A';                        
+            }
+            if($value->leave_type == "Paid Leave"){
+                $color = '#ADFF41'; 
+            }
+
+            $events[] = [
+                "resourceId" => $value->employee_id,
+                "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                "date" => $value->datefrom,
+                "start" => $value->datefrom,
+                "end" => $value->dateTo,
+                "color" => $color,
+            ];
+        }
+
         $events = json_encode($events);
-        // dd($employees);
-        return view('admin.attendance.timeline',$this->metaResponse(), ['employees' => $employees, 'events' => $events]);
+        
+        return view('admin.attendance.timeline',$this->metaResponse(), [
+            'employees' => $employees, 
+            'office_location_id' => $id,
+            'events' => $events
+        ]);
     }
 
     public function deleteChecktime(Request $request)
@@ -612,12 +638,28 @@ class AttendanceController extends Controller
         $id = $request->id;
 
         $attendance = Attendance::where([
-            'id'=>$id
+            'id'=>$id,
         ])->first();
+
         if($attendance){
-          $attendance->delete();
+            
+            $attendanceCount = Attendance::where([
+                'employee_id'=>$attendance->employee_id,
+                'date'=>$attendance->date,
+            ])->count();
+
+            if ($attendanceCount == 1) {
+                $attendance_summary = AttendanceSummary::where([
+                    'employee_id' => $attendance->employee_id,
+                    'date' => $attendance->date,
+                ])->first();
+
+                $attendance_summary->delete();
+            }
+
+            $attendance->delete();
         }
-    
+        
         return redirect()->back()->with('success','Attendance is deleted succesfully');
     }
 

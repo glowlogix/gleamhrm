@@ -8,8 +8,19 @@
                 <span class="glyphicon glyphicon-plus"></span> Add Attendance
             </a>
         </span>
+        <span style="float: right;">
+            <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon glyphicon-plus"></span> Add Leave
+            </a>
+        </span>
     </div>
     <div class="panel-body">
+        <span style="float: right;">
+            <select class="form-control" id="selectOffice">
+                <option value="1" @if($office_location_id == 1) selected @endif>GlowLogix Islamabad</option>
+                <option value="2" @if($office_location_id == 2) selected @endif>GlowLogix Gujrat</option>
+            </select>
+        </span>
         <div id="calender">
             <div class="modal fade" id="myModal" tabindex="-1" role="dialog">
                 <div class="modal-dialog" role="document">
@@ -80,7 +91,7 @@
 
     <script type="text/javascript">
     $(document).ready(function(){
-         $('#calendar').fullCalendar({
+        $('#calendar').fullCalendar({
             "header":{
                 "left":"prev,next today",
                 "center":"title",
@@ -89,101 +100,44 @@
             "eventLimit":true,
             "editable":1,
             "eventClick":function(event, jsEvent, view) {
-                var type = event.title.split("\n")[0];
-                var dt = event.start;
-                // console.log(dt);
-                $("#update").unbind("click");     
-                $("#del").unbind("click"); 
-                var type = $("#leave_type").val(type);
-                jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-
-                $("div.modal-body").load("{{route('attendance.createByAjax')}}/"+event.resourceId + "/" + event.date);
-
-                $("#update").on("click",function(){
-                    $.ajax({
-                        type: "POST",                                  
-                        url: "{{route('attendance.update')}", //here
-                        dataType : "json",   
-                        data: {
-                            "id" : event.id,
-                            "type" : $("#leave_type").val(),
-                            "datefrom":$("#datefrom").val(),
-                            "dateto" : $("#dateto").val(),
-                            "currentStartDate" :  $("#currentStartTime").val(),
-                            "currentEndDate" :  $("#currentEndTime").val(),  
-                            "currentStatus" : $("#currentStatus").val(),
-                            "_token" : "Ixa1LgqvcOO6OOYuFLsiR83JxoExiG6xCtiN0lAt"
-                        }, 
-                        success: function(response){ 
-                            if(response.errors){
-                                alert(response.errors[0]);                                    
-                            }
-                            if(response == "success"){
-                                alert("Update Successfully");
-                                window.location.reload();
-                            }else if(response == "already-present"){
-                                alert("Already Present First Remove that employee to make Full Leave");
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            console.log(JSON.stringify(jqXHR));
-                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                        }
-                    });
-
-                });
-
-                $("#del").on("click",function(){    
-                    var r = confirm("Are you sure you want to delete?");                  
-                    if (r == true) {
-                     $.ajax({
-                        type: "POST",                                  
-                        url: "http://localhost/hrm/public/admin/attendance/delete", 
-                        dataType : "json",   
-                        data: {
-                            "id" : event.id,
-                            "type" : $("#leave_type").val(),
-                            "date" : event.start._i,
-                            "_token" : "Ixa1LgqvcOO6OOYuFLsiR83JxoExiG6xCtiN0lAt"
-                        }, 
-                        success: function(response){ 
-                            if(response == "success"){
-                                alert("Delete Successfully");
-                                window.location.reload();
-                            }
-
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            console.log(JSON.stringify(jqXHR));
-                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                        }
-
-                    });
-
-                    } else {
-                        jQuery("#myModal").modal("toggle");                            
-                        
-                    }
-
-                });
+                if (event.title.search('Birthday') != -1) {
+                    // window.location = "{{route('employees')}}/"+event.resourceId + "/" + event.date;
+                    // console.log('found');
+                }
+                if (event.title.search('present') != -1) {
+                    window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
+                }
+                if (event.title.search('Leave') != -1) {
+                    window.location = "{{route('leaves')}}/show/"+event.resourceId;
+                }
             },
             "events": {!! $events !!}
         });
+
+        $("#selectOffice").change(function(e){
+            var url = "{{route('attendance')}}/" + $(this).val();
+            
+            if (url) {
+                window.location = url; 
+            }
+            return false;
+        });
+
+        $(function () {
+            $('#datefrompicker').datetimepicker({
+            });
+            $('#datetopicker').datetimepicker({
+            });
+
+        });
     });
 
-    </script>
-
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $(function () {
-                $('#datefrompicker').datetimepicker({
-                });
-                $('#datetopicker').datetimepicker({
-                });
-
-            });
-        });
-    </script>
-
+</script>
+<style type="text/css">
+@if($office_location_id == 1)
+    .fc-sat { background-color:lightgrey;}
+@endif
+    .fc-sun { background-color:lightgrey;}
+</style>
 </div>
 @stop

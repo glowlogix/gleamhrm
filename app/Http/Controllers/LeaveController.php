@@ -21,7 +21,7 @@ class LeaveController extends Controller
     public function index($id)
     {
         $this->meta['title'] = 'Show Leaves';  
-        $leaves = Leave::where('employee_id',$id)->get();
+        $leaves = Leave::where('employee_id', $id)->get();
         
         return view('admin.leaves.showleaves',$this->metaResponse(),['leaves' => $leaves]);
     }

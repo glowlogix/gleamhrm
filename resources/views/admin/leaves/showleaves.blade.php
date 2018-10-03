@@ -26,16 +26,13 @@
                     <td>{{$leave->dateto}}</td>
                     <td>{{$leave->reason}}</td>
                     <td>{{$leave->status}}</td>
-                    
                     <td>
                         @if(Auth::user()->admin)
                         <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
-                        <br>
                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
-
                         @endif
                     </td>
                 </tr>

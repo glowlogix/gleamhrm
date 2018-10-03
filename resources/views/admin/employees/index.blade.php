@@ -38,7 +38,7 @@
 				<td>{{$employee->firstname}} {{$employee->lastname}}</td>
 				<td>{{$employee->official_email}}</td>
 				<td>{{$employee->contact_no}}</td>
-				<td>{{$employee->role}}</td>
+				<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
 				<td>{{($employee->invite_to_zoho == 1) ? 'yes' : 'no'}}</td>
 				<td>{{($employee->invite_to_slack == 1) ? 'yes' : 'no'}}</td>
 				<td>{{($employee->invite_to_asana == 1) ? 'yes' : 'no'}}</td>

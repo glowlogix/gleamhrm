@@ -261,12 +261,12 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	//attendance
-	Route::Get('/attendance',[
+	Route::Get('/attendance/show/{id?}',[
 		'uses' => 'AttendanceController@showAttendance', //show Attendance
 		'as' => 'attendance'
 	]);
 	//attendance
-	Route::Get('/attendance/timeline',[
+	Route::Get('/attendance/timeline/{id?}',[
 		'uses' => 'AttendanceController@showTimeline', //show Attendance
 		'as' => 'timeline'
 	]);
