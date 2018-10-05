@@ -1,14 +1,12 @@
 @extends('layouts.admin')  @section('content')
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<div>
-			<b style="text-align: center;">Offices Location</b>
-		</div>
-		<div style="padding-left: 85%;">
+		<b style="text-align: center;">Offices Location</b>
+			<span style="float: right;">
 			<a href="{{route('office_location.create')}}" class="btn btn-info btn-xs" align="right">
 				<span class="glyphicon glyphicon-plus"></span> Add Office Location
 			</a>
-		</div>
+        </span>
 	</div>
 </div>
 <div class="panel panel-default">

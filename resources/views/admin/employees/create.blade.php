@@ -71,7 +71,7 @@
             <div class="form-group col-sm-4">
                 <br>
                 <label for="contact_no">Contact#:</label>
-                <input style="width: 250px;" type="Number" class="form-control" id="contact_no" placeholder="Enter Contact Number" name="contact_no" value="{{ old('contact_no') }}" required>
+                <input style="width: 250px;" type="Number" class="form-control" id="contact_no" placeholder="Enter Contact Number" name="contact_no" value="{{ old('contact_no') }}" pattern="[0-9]{11}" required>
             </div>
             <div class="form-group col-sm-4">
                 <br>
@@ -90,7 +90,7 @@
             <div class="form-group col-sm-4">
                 <br>
                 <label for="cnic">CNIC:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="cnic" placeholder="Enter Emergency Contact Relationship" name="cnic" value="{{ old('cnic') }}" required>
+                <input style="width: 250px;" type="text" class="form-control" id="cnic" placeholder="Enter Emergency Contact Relationship" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{13}">
             </div>
             <div class="form-group col-sm-4">
                 <br>

@@ -45,7 +45,10 @@
 				<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number')}}">
 			</div>	
 			<div class="form-group">
-				<button class="btn btn-success center-block" type="submit"> Create</button>
+				<a href="{{route('offices')}}" class="btn btn-default">
+	                 Cancel
+	            </a>
+	            <button class="btn btn-success center-block" style="display: inline; float: left; margin-right: 5px;" type="submit"> Create</button>
 			</div>
 		</form>
 	</div>
@@ -78,4 +81,5 @@ $(document).ready(function () {
     });
 });
 </script>
+
 @stop

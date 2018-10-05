@@ -49,31 +49,21 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
-
-		// Create a stream
-		$opts = [
-		    "http" => [
-		        "method" => "GET",
-		        "header" => "Accept-language: en\r\n" .
-		            "Cookie: foo=bar\r\n"
-		    ]
-		];
-
-		$context = stream_context_create($opts);
-
-		// Open the file using the HTTP headers set above
-		$file = file_get_contents('http://www.example.com/', false, $context);
-
-
-		$data = Employee::get();
+		$data = Employee::with('officeLocation')->get();
 		return view('admin.employees.index',['title' => 'All Employees'])
-		->with('employees',$data)
+		->with('employees', $data)	
 		->with('roles',$this->roles);
 	}
 
 
 	public function create()
 	{
+		/*Mail::send('emails.welcome', [], function ($m) {
+            $m->from('kosar@glowlogix.com', 'test Application');
+
+            $m->to('kosar@glowlogix.com', 'larallllll')->subject('Your test Reminder!');
+        });*/
+ 
 		return view('admin.employees.create',['title' => 'Add Employee'])
 		->with('office_locations',OfficeLocation::all())
 		->with('roles', $this->roles);
@@ -88,7 +78,8 @@ class EmployeeController extends Controller
 			'lastname' => 'required',
 			'official_email' => 'required|email|unique:employees',
 			'personal_email' => 'required|email|unique:employees',
-			'contact_no' => 'required|unique:employees',
+			'contact_no' => 'required|unique:employees|size:11',
+			// 'cnic' => 'size:13',
 		]);
 
 		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
@@ -198,7 +189,8 @@ class EmployeeController extends Controller
 			'lastname' => 'required',
 			'official_email' => 'required|email|unique:employees,official_email,'.$id,
 			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
-			'contact_no' 	 => 'required|unique:employees,contact_no,'.$id,
+			'contact_no' 	 => 'required|size:11|unique:employees,contact_no,'.$id,
+			// 'cnic' => 'size:13',
 		]);
 
 		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {

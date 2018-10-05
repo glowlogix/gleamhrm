@@ -51,7 +51,10 @@
 				<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{$office_location->phone_number}}">
 			</div>	
 			<div class="form-group">
-				<button class="btn btn-success center-block" type="submit"> Update</button>
+				<a href="{{route('offices')}}" class="btn btn-default">
+	                 Cancel
+	            </a>
+				<button class="btn btn-success center-block left" style="display: inline; float: left; margin-right: 5px;" type="submit"> Update</button>
 			</div>
 			
 		</form>
@@ -60,25 +63,15 @@
 <script type="text/javascript">
 $(document).ready(function () {
     $(function () {
-	    /*$('.timepicker1').click(function(){
-	        $(this).parent().datetimepicker({
+		$("div.timepicker").on("click", function () {
+	        $(this).datetimepicker({
 	            format: "LT",
 	            icons: {
 	                up: "fa fa-chevron-up",
 	                down: "fa fa-chevron-down"
 	            }
-	        }).datetimepicker('show');
-	    });*/
-		
-		$("div.timepicker").on("click", function () {
-		        $(this).datetimepicker({
-		            format: "LT",
-		            icons: {
-		                up: "fa fa-chevron-up",
-		                down: "fa fa-chevron-down"
-		            }
-		        });
-		        console.log("O.K.");
+	        });
+	        console.log("O.K.");
 		});
 
     });

@@ -122,14 +122,20 @@
                         <li class="list-group-item" {{ request()->is('admin/dashboard') ? 'id=active1' : ''}}>
                             <a href="{{route('admin.dashboard')}}">Dashboard</a>
                         </li>
-                        <li class="list-group-item">
-                            <a href="{{route('applicants')}}">Applicants</a>
+                        <li class="list-group-item" >
+                            <a href="#">Hiring</a>
+                            <ul>
+                                <li>
+                                    <a href="{{route('applicants')}}">Applicants</a>
+                                </li>
+                                <li>
+                                    <a href="{{route('jobs')}}">Jobs</a>
+                                </li>
+                            </ul>
                         </li>
+                        
                         <li class="list-group-item">
                             <a href="{{route('offices')}}">Offices</a>
-                        </li>
-                        <li class="list-group-item">
-                            <a href="{{route('jobs')}}">Jobs</a>
                         </li>
                         <li class="list-group-item" {{ request()->is('admin/users') ? 'id=active1' : ''}}>
                             <a href="{{route('users')}}">Users</a>

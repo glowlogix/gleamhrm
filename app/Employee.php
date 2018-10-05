@@ -22,4 +22,8 @@ class Employee extends Model
 	    return "{$this->firstname} {$this->lastname}";
 	}
 
+    public function officeLocation(){
+        return $this->belongsTo('App\OfficeLocation');
+    }
+
 }

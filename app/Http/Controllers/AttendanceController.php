@@ -432,10 +432,10 @@ class AttendanceController extends Controller
                     }
                     $time = date("g:i A",strtotime($value->first_time_in));
                     // $time2= date("g:i A",strtotime($value->checkouttime));
-                    
+                    $total_time = number_format(($value->total_time / 60), 2, '.', ''); 
                     $events[] = [
                         "resourceId" => $value->employee_id,
-                        "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                        "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". $total_time." hrs"."\n",
                         "date" => $value->date,
                         "start" => $value->date .' '. $value->first_time_in,
                         "end" => $value->date .' '.$value->first_time_in,
@@ -465,13 +465,12 @@ class AttendanceController extends Controller
                         "title" => $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
                         "date" => $value->datefrom,
                         "start" => $value->datefrom,
-                        "end" => $value->dateTo,
+                        "end" => $value->dateto,
                         'color' => $color,
                     ];
                 }
             }
         }
-        
         $office_locations = OfficeLocation::all();
         
         return view('admin.attendance.allattendance',$this->metaResponse(),[
@@ -519,10 +518,11 @@ class AttendanceController extends Controller
                 $delays ="";
             }
             $time = Carbon::parse($value->first_time_in);
-            
+            $total_time = number_format(($value->total_time / 60), 2, '.', ''); 
+    
             $events[] = [
                 "resourceId" => $value->employee_id,
-                "title" => $value->status."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                "title" => $value->status."\n".$time."\n". $total_time." hrs"."\n",
                 "date" => $value->date,
                 "start" => $value->date .' '. $value->first_time_in,
                 "end" => $value->date .' '.$value->last_time_out,

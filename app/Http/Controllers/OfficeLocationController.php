@@ -48,7 +48,7 @@ class OfficeLocationController extends Controller
             'name' => 'required',
             // 'status' => 'required',
             'timing_start' => 'required',
-            'timing_off' => 'required',
+            'timing_off' => 'required|after:timing_start',
             'address' => 'required',
             'phone_number' => 'required',
         ]);
@@ -56,14 +56,14 @@ class OfficeLocationController extends Controller
         $office_location = OfficeLocation::create([
             'name' => $request->name,
             // 'status' => $request->status,
-            'timing_start' => $request->timing_start,
-            'timing_off' => $request->timing_off,
+            'timing_start' => Carbon::parse($request->timing_start),
+            'timing_off' => Carbon::parse($request->timing_off),
             'address' => $request->address,
             'phone_number' => $request->phone_number,
         ]);
 
         Session::flash('success','OfficeLocation is created succesfully');
-        return redirect()->back();
+        return redirect()->route('offices');
     }
 
     /**
@@ -103,7 +103,7 @@ class OfficeLocationController extends Controller
             'name' => 'required',
             'status' => 'required',
             'timing_start' => 'required',
-            'timing_off' => 'required',
+            'timing_off' => 'required|after:timing_start',
             'address' => 'required',
             'phone_number' => 'required',
         ]);
@@ -119,7 +119,7 @@ class OfficeLocationController extends Controller
         $office_location->save();
 
         Session::flash('success','Office location is updated succesfully');
-        return redirect()->back();
+        return redirect()->route('offices');
     }
 
     /**

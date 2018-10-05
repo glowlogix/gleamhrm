@@ -25,9 +25,7 @@
 			<th>Email</th>
 			<th>Contact </th>
 			<th>Role</th>
-			<th>Invited to zoho</th>
-			<th>invited to slack </th>
-			<th>invited to asana </th>
+			<th>Office</th>
 			@if(Auth::user()->admin)
 			<th>Manage Employees</th>
 			@endif
@@ -39,9 +37,7 @@
 				<td>{{$employee->official_email}}</td>
 				<td>{{$employee->contact_no}}</td>
 				<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
-				<td>{{($employee->invite_to_zoho == 1) ? 'yes' : 'no'}}</td>
-				<td>{{($employee->invite_to_slack == 1) ? 'yes' : 'no'}}</td>
-				<td>{{($employee->invite_to_asana == 1) ? 'yes' : 'no'}}</td>
+				<td>{{$employee->officeLocation->name}}</td>
 				<td>
 					@if(Auth::user()->admin)
 					<button class="btn btn-default" data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}">Delete</button>
@@ -71,11 +67,18 @@
                 						<br>
 					                    <label>
 					                        <input type="hidden" name="invite_to_zoho" value="0" />
-					                       	<input type="checkbox" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}}/> Delete from Zoho
+					                       	<input type="checkbox" id="zoho_{{$employee->id}}" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}}/> Delete from Zoho?
 					                    </label>
-					                    <div>
-					                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
-					                    </div>
+
+					                    @if($employee->invite_to_zoho == 1) 
+						                    <div id="div_zoho_{{$employee->id}}" style="">
+						                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
+						                    </div>
+					                    @else
+					                    	<div id="div_zoho_{{$employee->id}}" style="display: none;">
+						                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
+						                    </div>
+					                    @endif
                 						<br>								
 						            </div>
 						            <div class="modal-footer">
@@ -99,8 +102,19 @@
 
 </div>
 
+
 @push('scripts')
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{{ asset('js/bootstrap.js')}}"></script>
+<script type="text/javascript">	
+	$("input.zoho").click(function (event) {
+        if ($(this).is(":checked")) {
+            $("#div_" + event.target.id).show();
+        } else {
+            $("#div_" + event.target.id).hide();
+        }
+    });
+
+</script>
 @endpush
 @stop

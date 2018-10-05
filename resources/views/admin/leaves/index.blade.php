@@ -32,7 +32,7 @@
 				<div class="col-md-6">
 					<label for="leave_type">Leave Type</label>
 					<select class="form-control" name="leave_type">
-						<option @if(old('leave_type') == 'unpaid_leave')selected @endif value="unpaid_leave">Full Leave(Unpaid)</option>
+						<option @if(old('leave_type') == 'unpaid_leave')selected @endif value="unpaid_leave">Unpaid Leave</option>
 						<option @if(old('leave_type') == 'half_leave')selected @endif value="half_leave">Half Leave</option>
 						<option @if(old('leave_type') == 'short_leave')selected @endif value="short_leave">Short Leave</option>								
 						<option @if(old('leave_type') == 'paid_leave')selected @endif value="paid_leave">Paid Leave</option>
