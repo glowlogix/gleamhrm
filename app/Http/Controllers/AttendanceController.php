@@ -137,6 +137,7 @@ class AttendanceController extends Controller
         $this->validate($request,[
             'employee_id' => 'required',
             'time_in' => 'required',
+            'time_out' => 'required|after:time_in',
             'date' => 'required',
         ]);
 
@@ -195,16 +196,15 @@ class AttendanceController extends Controller
         }
         
         $office_location = OfficeLocation::find($employee->office_location_id);
-        $in = Carbon::parse($office_location->timing_start);
-        $out = Carbon::parse($first_time_in);
-        $delay = $out->diffInMinutes($in);
-        // dump($delay);
+        $ofc_in = Carbon::parse($office_location->timing_start);
+        $emp_in = Carbon::parse($first_time_in);
+        $delay = $emp_in->diffInMinutes($ofc_in);
      
         $is_delay = 'no';
-        if ($delay > 30) {
+        if ($emp_in->gt($ofc_in) && $delay > 30) {
             $is_delay = 'yes';
         }
-        // dump($is_delay);
+
         if (isset($attendance_summary->id)) {
             $attendance_summary->first_time_in = $first_time_in;
             $attendance_summary->last_time_out = $last_time_out;
@@ -226,7 +226,6 @@ class AttendanceController extends Controller
             $attendance_summary = AttendanceSummary::create($arr);
         }
         // exit;
-        
     }
 
     /**
@@ -316,7 +315,12 @@ class AttendanceController extends Controller
      */
 
     public function update(Request $request){
-
+        $this->validate($request,[
+            'time_in' => 'required',
+            'time_out' => 'required|after:time_in',
+            'date' => 'required',
+        ]);
+        
         $attendance = Attendance::where([
             'id' => $request->query('id'),
         ])->first();
@@ -368,196 +372,124 @@ class AttendanceController extends Controller
     }
 
 
-    public function showAttendance(Request $request, $id=1){
+    public function showAttendance(Request $request, $id=0){
 
-        $this->meta['title'] = 'Show Attendance';        
-        $data = Employee::get(); 
-        
+        $this->meta['title'] = 'Show Attendance';
+
+        if ($id == 0) {
+            $data = Employee::get();
+        }
+        else{
+            $data = Employee::where(['office_location_id' => $id])->get();
+        }
         $events = [];
-        foreach($data as $employee){
-            $employee_id = $employee->id;
-            $now = Carbon::now();
-            $now->year;
+        
+        if ($data->count() > 0) {
+            foreach($data as $employee){
+                $employee_id = $employee->id;
+                $now = Carbon::now();
+                $now->year;
 
-            $dob = Carbon::parse($employee->date_of_birth);
-            $date_of_birth = $now->format('Y') .'-' . $dob->format('m').'-'.$dob->format('d');
-            
-            $events[] = [
-                "resourceId" => $employee->id,
-                "title" => "Birthday of \n".$employee->firstname.' '. $employee->lastname,
-                "date" => $date_of_birth,
-                "start" => $date_of_birth,
-                "end" => $date_of_birth,
-                "color"=> 'pink',
-            ];
-
-            $attendance_summaries = AttendanceSummary::where('employee_id', $employee_id)->get();
- 
-            foreach ($attendance_summaries as $key => $value) {
-                $delays = '';
-                $color = '';
-                if($value->status == "Short Leave"){
-                    $color = '#C24BFF';
-                }
-                if($value->status === "Full Leave"){
-                    $color = 'red';                        
-                }
-                if($value->status === "Half Leave"){
-                    $color = '#57BB8A';                        
-                }
-                if($value->status == "Paid Leave"){
-                    $color = '#ADFF41'; 
-                }
-                if($value->status == "present"){
-                    $color = 'green';
-                }
-
-                if($value->is_delay && $value->status=="present"){
-                    $color = '#70AFDC';
-                    $delays = $value->is_delay." delay";
-                }
-                else{
-                    $delays ="";
-                }
-                $time = date("g:i A",strtotime($value->first_time_in));
-                // $time2= date("g:i A",strtotime($value->checkouttime));
+                $dob = Carbon::parse($employee->date_of_birth);
+                $date_of_birth = $now->format('Y') .'-' . $dob->format('m').'-'.$dob->format('d');
                 
                 $events[] = [
-                    "resourceId" => $value->employee_id,
-                    "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
-                    "date" => $value->date,
-                    "start" => $value->date .' '. $value->first_time_in,
-                    "end" => $value->date .' '.$value->first_time_in,
-                    "color" => 'blue',
+                    "resourceId" => $employee->id,
+                    "title" => "Birthday of \n".$employee->firstname.' '. $employee->lastname,
+                    "date" => $date_of_birth,
+                    "start" => $date_of_birth,
+                    "end" => $date_of_birth,
+                    "color"=> 'pink',
                 ];
-            }
 
-            $leave = Leave::where('employee_id', $employee_id)->get(); 
-            
-            foreach ($leave as $key => $value) {
-              $color = '';
-                if($value->leave_type == "Short Leave"){
-                    $color = '#C24BFF';
-                }
-                if($value->leave_type === "Full Leave"){
-                    $color = 'red';                        
-                }
-                if($value->leave_type === "Half Leave"){
-                    $color = '#57BB8A';                        
-                }
-                if($value->leave_type == "Paid Leave"){
-                    $color = '#ADFF41'; 
-                }
-
-                $events[] = [
-                    "resourceId" => $value->employee_id,
-                    "title" => $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
-                    "date" => $value->datefrom,
-                    "start" => $value->datefrom,
-                    "end" => $value->dateTo,
-                    'color' => $color,
-                ];
-            }
-        }
-
-        // dd($events);
-        /*$calendar = Calendar::addEvents($events)
-        ->setCallbacks([ //set fullcalendar callback options (will not be JSON encoded)
-            'editable'=> true,
-            'eventClick'=> 'function(event, jsEvent, view) {
-                var type = event.title.split("\n")[0];
-                var dt = event.start;
-                console.log(dt);
-                $("#update").unbind("click");     
-                $("#del").unbind("click"); 
-                var type = $("#leave_type").val(type);
-                jQuery("#myModal").modal({backdrop: "static", keyboard: false}, "show");
-                // $("div.modal-body").load("'.route('attendance.createByAjax').'/");
-
-                $("#update").on("click",function(){
-                    $.ajax({
-                        type: "POST",                                  
-                        url: "'.route('attendance.update').'", //here
-                        dataType : "json",   
-                        data: {
-                            "id" : event.id,
-                            "type" : $("#leave_type").val(),
-                            "datefrom":$("#datefrom").val(),
-                            "dateto" : $("#dateto").val(),
-                            "currentStartDate" :  $("#currentStartTime").val(),
-                            "currentEndDate" :  $("#currentEndTime").val(),  
-                            "currentStatus" : $("#currentStatus").val(),
-                            
-                            "_token" : "'.csrf_token().'"
-                        }, 
-                        success: function(response){ 
-                            if(response.errors){
-                                alert(response.errors[0]);                                    
-                            }
-                            if(response == "success"){
-                                alert("Update Successfully");
-                                window.location.reload();
-                            }else if(response == "already-present"){
-                                alert("Already Present First Remove that employee to make Full Leave");                                    
-                            }
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            console.log(JSON.stringify(jqXHR));
-                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                        }
-
-                    });
-
-                });
-
-                $("#del").on("click",function(){    
-                    var r = confirm("Are you sure you want to delete?");                  
-                    if (r == true) {
-                     $.ajax({
-                        type: "POST",                                  
-                        url: "'.route('attendance.destroy').'", 
-                        dataType : "json",   
-                        data: {
-                            "id" : event.id,
-                            "type" : $("#leave_type").val(),
-                            "date" : event.start._i,
-                            "_token" : "'.csrf_token().'"
-                        }, 
-                        success: function(response){ 
-                            if(response == "success"){
-                                alert("Delete Successfully");
-                                window.location.reload();
-                            }
-
-                        },
-                        error: function(jqXHR, textStatus, errorThrown) { 
-                            console.log(JSON.stringify(jqXHR));
-                            console.log("AJAX error: " + textStatus + " : " + errorThrown);
-                        }
-
-                    });
-
-                    } else {
-                        jQuery("#myModal").modal("toggle");                            
-                        
+                $attendance_summaries = AttendanceSummary::where('employee_id', $employee_id)->get();
+     
+                foreach ($attendance_summaries as $key => $value) {
+                    $delays = '';
+                    $color = '';
+                    if($value->status == "Short Leave"){
+                        $color = '#C24BFF';
+                    }
+                    if($value->status === "Full Leave"){
+                        $color = 'red';                        
+                    }
+                    if($value->status === "Half Leave"){
+                        $color = '#57BB8A';                        
+                    }
+                    if($value->status == "Paid Leave"){
+                        $color = '#ADFF41'; 
+                    }
+                    if($value->status == "present"){
+                        $color = 'green';
                     }
 
-                });
+                    if($value->is_delay && $value->status=="present"){
+                        $color = '#70AFDC';
+                        $delays = $value->is_delay." delay";
+                    }
+                    else{
+                        $delays ="";
+                    }
+                    $time = date("g:i A",strtotime($value->first_time_in));
+                    // $time2= date("g:i A",strtotime($value->checkouttime));
+                    
+                    $events[] = [
+                        "resourceId" => $value->employee_id,
+                        "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". ($value->total_time / 60)." hrs"."\n",
+                        "date" => $value->date,
+                        "start" => $value->date .' '. $value->first_time_in,
+                        "end" => $value->date .' '.$value->first_time_in,
+                        "color" => 'blue',
+                    ];
+                }
 
-            }'
-        ]);*/
-            
+                $leave = Leave::where('employee_id', $employee_id)->get(); 
+                
+                foreach ($leave as $key => $value) {
+                  $color = '';
+                    if($value->leave_type == "Short Leave"){
+                        $color = '#C24BFF';
+                    }
+                    if($value->leave_type === "Full Leave"){
+                        $color = 'red';                        
+                    }
+                    if($value->leave_type === "Half Leave"){
+                        $color = '#57BB8A';                        
+                    }
+                    if($value->leave_type == "Paid Leave"){
+                        $color = '#ADFF41'; 
+                    }
+
+                    $events[] = [
+                        "resourceId" => $value->employee_id,
+                        "title" => $value->leave_type."\n".$employee->firstname.' '. $employee->lastname."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                        "date" => $value->datefrom,
+                        "start" => $value->datefrom,
+                        "end" => $value->dateTo,
+                        'color' => $color,
+                    ];
+                }
+            }
+        }
+        
+        $office_locations = OfficeLocation::all();
+        
         return view('admin.attendance.allattendance',$this->metaResponse(),[
-            // 'calendar' => $calendar,
             'office_location_id' => $id,
+            'office_locations' => $office_locations,
             'events' => json_encode($events),
         ]);
     }
 
-    public function showTimeline($id=1){
-        $this->meta['title'] = 'Show Attendance';        
+    public function showTimeline($id=0){
+        $this->meta['title'] = 'Show Attendance';
         
-        $employees = Employee::all()->toJson();
+        if ($id == 0) {
+            $employees = Employee::all()->toJson();
+        }
+        else{
+            $employees = Employee::where(['office_location_id' => $id])->get()->toJson();
+        }
         
         $attendance_summaries = AttendanceSummary::all();
         $events = array();
@@ -625,10 +557,12 @@ class AttendanceController extends Controller
         }
 
         $events = json_encode($events);
+        $office_locations = OfficeLocation::all();
         
         return view('admin.attendance.timeline',$this->metaResponse(), [
-            'employees' => $employees, 
+            'employees' => $employees,
             'office_location_id' => $id,
+            'office_locations' => $office_locations,
             'events' => $events
         ]);
     }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Leave;
 use App\Employee;
+use App\AttendanceSummary;
 use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
 use Carbon\Carbon;
@@ -46,6 +47,12 @@ class LeaveController extends Controller
      */
     public function store(Request $request)
     {
+        $this->validate($request,[
+            'employee_id' => 'required',
+            'datefrom' => 'required',
+            'dateto' => 'required|after_or_equal:datefrom',
+        ]);
+
         $employee_id = $request->employee_id;
         $leave_type = $request->leave_type;
         $dateFrom = $request->datefrom;
@@ -53,7 +60,20 @@ class LeaveController extends Controller
 
         $dateTo = $request->dateto;
         $dateToTime = Carbon::parse($dateTo);
+        
+        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+            ->whereDate('date', '>=', $dateFromTime->toDateString())
+            ->whereDate('date', '<=', $dateToTime->toDateString())
+            ->get();
 
+        if($attendance_summaries->count() > 0){
+            $msg = '';
+            foreach ($attendance_summaries as $key => $attendance_summary) {
+                $msg .= ' '. $attendance_summary->date;
+            }
+            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+        }
+        
         $reason = $request->reason;
         $status = $request->status;
 
@@ -107,27 +127,43 @@ class LeaveController extends Controller
      */
     public function update(Request $request, $id)
     {
-      $leave = Leave::where('employee_id',$id)->first();
+        $this->validate($request,[
+            'datefrom' => 'required',
+            'dateto' => 'required|after_or_equal:datefrom',
+        ]);
+        $leave = Leave::where('employee_id',$id)->first();
 
-      $dateFrom = $request->datefrom;
-      $dateFromTime = Carbon::parse($dateFrom);
+        $dateFrom = $request->datefrom;
+        $dateFromTime = Carbon::parse($dateFrom);
 
-      $leave->datefrom = $dateFromTime;
+        $leave->datefrom = $dateFromTime;
 
-      $dateTo = $request->dateto;
-      $dateToTime = Carbon::parse($dateTo);
+        $dateTo = $request->dateto;
+        $dateToTime = Carbon::parse($dateTo);
+        
+        $attendance_summaries = AttendanceSummary::where(['employee_id' => $id])
+            ->whereDate('date', '>=', $dateFromTime->toDateString())
+            ->whereDate('date', '<=', $dateToTime->toDateString())
+            ->get();
 
-      $leave->dateto = $dateToTime;
+        if($attendance_summaries->count() > 0){
+            $msg = '';
+            foreach ($attendance_summaries as $key => $attendance_summary) {
+                $msg .= ' '. $attendance_summary->date;
+            }
+            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+        }
 
-      $leave->leave_type = $request->leave_type;
+        $leave->dateto = $dateToTime;
 
-      $leave->reason = $request->reason;
-      $leave->status = $request->status;
-      $row = $leave->save();
-      if($row){
-          return redirect()->back()->with('success','Leave is updated succesfully');     
-          
-       }
+        $leave->leave_type = $request->leave_type;
+
+        $leave->reason = $request->reason;
+        $leave->status = $request->status;
+        $row = $leave->save();
+        if($row){
+            return redirect()->back()->with('success','Leave is updated succesfully');
+        }
     }
 
     /**

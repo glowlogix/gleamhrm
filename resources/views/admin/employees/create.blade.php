@@ -95,9 +95,8 @@
             <div class="form-group col-sm-4">
                 <br>
                 <label for="date_of_birth">Date of Birth:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="date_of_birth" placeholder="1988-12-23" name="date_of_birth" value="{{ old('date_of_birth') }}" required>
-            </div>
-            <div class="form-group col-sm-4">
+                <input style="width: 250px;" type="text" class="form-control" id="date_of_birth" placeholder="1988-12-23" name="date_of_birth" value="{{Carbon\Carbon::now()->subYears(20)->format('Y-m-d') }}" required>
+            </div>            <div class="form-group col-sm-4">
                 <br>
                 <label for="current_address">Current Address:</label>
                 <input style="width: 250px;" type="text" class="form-control" id="current_address" placeholder="Enter Current Address" name="current_address" value="{{ old('current_address') }}" required>
@@ -170,7 +169,7 @@
                             cache: false,
                             dataType: 'json',
                             beforeSend: function (xhr) {
-                                xhr.setRequestHeader('Authorization', 'Bearer '+token);
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
                             },
                             success: function (res) {
                                 count++;
@@ -204,6 +203,7 @@
                         format: 'YYYY-MM-DD',
                     });
                 });
+                
             });
         </script>
     </div>

@@ -4,8 +4,8 @@ namespace App\Traits;
 use GuzzleHttp\Client as Client;
 use GuzzleHttp\Psr7\Request;
 use GuzzleHttp\Exception\ClientException;
-// use GuzzleHttp\Exception\BadResponseException;
 use GuzzleHttp\Exception\ServerException;
+// use GuzzleHttp\Exception\BadResponseException;
 // use App\Traits\Session;
 
 trait ZohoTrait{

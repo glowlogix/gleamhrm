@@ -14,23 +14,10 @@
 
                     <label for="leave_type">Leave Type</label>
                     <select class="form-control" name="leave_type">
-                        @if($leave->leave_type == "Full Leave")
-
-                        <option selected value="Full Leave">Full Leave</option>
-                        <option value="Half Leave">Half Leave</option>
-                        <option value="Paid Leave">Paid Leave</option>
-
-                        @elseif($leave->leave_type == "Half Leave")
-
-                        <option value="Full Leave">Full Leave</option>
-                        <option selected value="Half Leave">Half Leave</option>
-                        <option value="Paid Leave">Paid Leave</option>
-                        @else
-
-                        <option value="Full Leave">Full Leave</option>
-                        <option value="Half Leave">Half Leave</option>
-                        <option selected value="Paid Leave">Paid Leave</option>
-                        @endif
+                        <option @if($leave->leave_type == 'unpaid_leave')selected @endif value="unpaid_leave">Full Leave(Unpaid)</option>
+                        <option @if($leave->leave_type == 'half_leave')selected @endif value="half_leave">Half Leave</option>
+                        <option @if($leave->leave_type == 'short_leave')selected @endif value="short_leave">Short Leave</option>                             
+                        <option @if($leave->leave_type == 'paid_leave')selected @endif value="paid_leave">Paid Leave</option>
                     </select>
                 </div>
             </div>
@@ -62,9 +49,9 @@
 
                     <label for="status">Status</label>
                     <select name="status" class="form-control">
-                        <option value="pending">Pending</option>
-                        <option value="approval">Approval</option>
-                        <option value="declined">Declined</option>
+                        <option @if($leave->status == 'Pending') selected @endif value="Pending">Pending</option>
+                        <option @if($leave->status == 'Approval') selected @endif value="Approval">Approval</option>
+                        <option @if($leave->status == 'Declined') selected @endif value="Declined">Declined</option>
                     </select>
 
                 </div>

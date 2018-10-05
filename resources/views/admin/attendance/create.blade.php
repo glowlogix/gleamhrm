@@ -43,50 +43,51 @@
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="col-md-6">
-                        <label for="time_in">Time In</label>
-                        <div class="input-group timepicker">
-                            <input class="form-control" name="time_in" value="{{$current_time}}" />
-                            <span class="input-group-addon">
-                                <i class="fa fa-clock-o" style="font-size:16px"></i>
-                            </span>
+                        <div class="col-md-6">
+                            <label for="time_in">Time In</label>
+                            <div class="input-group timepicker">
+                                <input class="form-control" name="time_in" value="{{$current_time}}" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-clock-o" style="font-size:16px"></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-
-                    <div class="col-md-6">
-                        <label for="time_out">Time Out</label>
-                        <div class="input-group timepicker">
-                            <input class="form-control" name="time_out" value="{{$current_time}}" />
-                            <span class="input-group-addon">
-                                <i class="fa fa-clock-o" style="font-size:16px"></i>
-                            </span>
+                        <div class="col-md-6">
+                            <label for="time_out">Time Out</label>
+                            <div class="input-group timepicker">
+                                <input class="form-control" name="time_out" value="{{$current_time}}" />
+                                <span class="input-group-addon">
+                                    <i class="fa fa-clock-o" style="font-size:16px"></i>
+                                </span>
+                            </div>
                         </div>
-                    </div>
-                    
-                    <div class="container-fluid" id="totalhours">
-                        <label for="delay">is Delay ?</label>
-                        <div>
-                            @if(isset($attendance_summary->is_delay)) {{$attendance_summary->is_delay}} @endif
-                        </div>
-
-                        <label for="name">Total hours</label>
-                        <div>
-                            @if(isset($attendance_summary->total_time)) {{$attendance_summary->total_time / 60}} @endif
-                        </div>
-
-                        <label for="name">Total Checks</label>
-                        <div>
-                            @if($attendances->count()) {{$attendances->count()}} @endif
-                        </div>
-                    </div>
-
-                    <div class="col-md-2">
-                        <div class="form-group">
-                            <button class="btn btn-success create-btn" id="add-btn"  type="submit" > Create</button>
+                        <div class="col-md-2">
+                            <div class="form-group">
+                                <button class="btn btn-success create-btn" id="add-btn"  type="submit" > Create</button>
+                            </div>
                         </div>
                     </div>
                 </form>
+            </div>
+            <div class="panel-body">
+                <div class="container-fluid" id="totalhours">
+                    <label for="delay">is Delay ?</label>
+                    <div>
+                        @if(isset($attendance_summary->is_delay)) {{$attendance_summary->is_delay}} @endif
+                    </div>
+
+                    <label for="name">Total hours</label>
+                    <div>
+                        @if(isset($attendance_summary->total_time)) 
+                        {{ number_format(($attendance_summary->total_time / 60), 2, '.', '')}} 
+                        @endif
+                    </div>
+
+                    <label for="name">Total Checks</label>
+                    <div>
+                        @if($attendances->count()) {{$attendances->count()}} @endif
+                    </div>
+                </div>
             </div>
         </div>
         <div class="row">

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Employee;
+use App\Salary;
 use App\Document;
 use App\OfficeLocation;
 use Session;
@@ -13,6 +14,7 @@ use App\Traits\SlackTrait;
 use App\Traits\ZohoTrait;
 use Mail;
 use File;
+use App\Mail\EmailPasswordChange;
 use App\Mail\SlackInvitationMail;
 use App\Mail\ZohoInvitationMail;
 use App\Mail\CompanyPoliciesMail;
@@ -47,6 +49,22 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
+
+		// Create a stream
+		$opts = [
+		    "http" => [
+		        "method" => "GET",
+		        "header" => "Accept-language: en\r\n" .
+		            "Cookie: foo=bar\r\n"
+		    ]
+		];
+
+		$context = stream_context_create($opts);
+
+		// Open the file using the HTTP headers set above
+		$file = file_get_contents('http://www.example.com/', false, $context);
+
+
 		$data = Employee::get();
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees',$data)
@@ -64,7 +82,6 @@ class EmployeeController extends Controller
 
 	public function store(Request $request)
 	{
-		// dd($request);
 		//also do js validation
 		$this->validate($request,[
 			'firstname' => 'required',
@@ -73,6 +90,10 @@ class EmployeeController extends Controller
 			'personal_email' => 'required|email|unique:employees',
 			'contact_no' => 'required|unique:employees',
 		]);
+
+		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
+			return redirect()->back()->with('error','Enter correct official email like "abc@glowlogix.com"');
+		}
 		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
@@ -90,6 +111,7 @@ class EmployeeController extends Controller
 			'official_email'    => $request->official_email,
 			'personal_email'    => $request->personal_email,
 			'status'        	=> 1,
+			'basic_salary'     	=> $request->salary,
 			'role'          	=> $request->role,
             'type' 				=> $request->type,
             'cnic' 				=> $request->cnic,
@@ -135,7 +157,12 @@ class EmployeeController extends Controller
 			//slack mail
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}
-
+		$employee_id = $employee->id;
+		
+		//send message for password information and change password.
+		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
+		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee_id));
+		
 		//policies
 		Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
 
@@ -154,7 +181,7 @@ class EmployeeController extends Controller
 
 		return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
-		->with('office_locations',OfficeLocation::all())
+		->with('office_locations', OfficeLocation::all())
 		->with('roles', $this->roles);
 	}
 
@@ -174,6 +201,10 @@ class EmployeeController extends Controller
 			'contact_no' 	 => 'required|unique:employees,contact_no,'.$id,
 		]);
 
+		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
+			return redirect()->back()->with('error','Enter correct official email like "abc@glowlogix.com"');
+		}
+
 		$employee 					= Employee::find($id);
 
 		$employee->firstname 		= $request->firstname;
@@ -183,6 +214,7 @@ class EmployeeController extends Controller
 		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
 		$employee->official_email 	= $request->official_email;
 		$employee->personal_email 	= $request->personal_email;
+		$employee->basic_salary 	= $request->salary;
 		$employee->role 			= $request->role;
 		$employee->type 			= $request->type;
 		$employee->office_location_id= $request->office_location_id;
@@ -214,6 +246,8 @@ class EmployeeController extends Controller
 			$this->updateZohoAccount($params,$employee->account_id);    
 		}
 
+		$when = now()->addMinutes(1);
+
 		if($request->zoho){
 			$response = $this->updateZohoAccount( $params );
 
@@ -238,6 +272,8 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
+		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
+		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
 		$employee->save();        
 
 		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
@@ -263,6 +299,9 @@ class EmployeeController extends Controller
 	{
 		$employee=Employee::withTrashed()->where('id', $id)->first();
 		$employee->restore();
+		
+		return redirect()->route('employees')->with('success','Employee is deleted succesfully');     
+
 	}
 
 	public function destroy(Request $request, $id)
@@ -280,15 +319,32 @@ class EmployeeController extends Controller
 		$emp = Employee::find($id);
 		$account_id = $emp->account_id;
 		$zuid = $emp->zuid;
-		$response = $emp->delete();
-		if($response){
+		$email = $emp->official_email;
+		// $response = $emp->delete();
+
+		// if($response)
+		if($request->invite_to_zoho == 1){
 			$arr = [
-				"zuid" => $zuid ,
-				"password" => $adminPassword /*get pass from admin model box*/
+				"zuid" => $zuid,
+				"password" => bcrypt($request->zoho_password), /*get pass from admin model box*/
 			];
 
-			$this->deleteZohoAccount($arr,$account_id);
+			$this->deleteZohoAccount($arr, $account_id);
 		}
+
+		if($request->invite_to_asana == 1){
+			$arr = [
+				"zuid" => $zuid,
+				"password" => $adminPassword, /*get pass from admin model box*/
+			];
+
+			$this->removeUser($email);
+		}
+
+		if($request->invite_to_slack == 1){
+			//run bot
+		}
+
 		return redirect()->back()->with('success','Employee is trash succesfully');
 	}
 

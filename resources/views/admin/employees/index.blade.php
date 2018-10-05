@@ -55,7 +55,28 @@
 						                Are you sure you want to delete Employee {{ $employee->firstname }}?
 						            </div>
 						            <div class="modal-body">
-                						<input type="password" class="form-control" placeholder="Admin Password" name="password" required>
+                						<label>Admin Password</label>
+					                    <input type="password" class="form-control" placeholder="Admin Password" name="password" required>
+                						
+                						<label>
+					                        <input type="hidden" name="invite_to_asana" value="0" />
+					                       	<input type="checkbox" class="asana" name="invite_to_asana" value="1" {{($employee->invite_to_asana == 1) ? 'checked' : ''}}/> Delete from Asana ?
+					                    </label>
+                						<input type="hidden" class="form-control" name="asana_email" value="{{$employee->official_email}}">
+                						<br>
+										<label>
+					                        <input type="hidden" name="invite_to_slack" value="0" />
+					                       	<input type="checkbox" class="slack" name="invite_to_slack" value="1" {{($employee->invite_to_slack == 1) ? 'checked' : ''}}/> Delete from Slack?
+					                    </label>
+                						<br>
+					                    <label>
+					                        <input type="hidden" name="invite_to_zoho" value="0" />
+					                       	<input type="checkbox" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}}/> Delete from Zoho
+					                    </label>
+					                    <div>
+					                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
+					                    </div>
+                						<br>								
 						            </div>
 						            <div class="modal-footer">
 						                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

@@ -60,7 +60,7 @@
             <div class="form-group col-sm-4">
                 <br>
                 <label for="text">Salary:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary">
+                <input style="width: 250px;" type="text" class="form-control" id="salary" placeholder="Enter Salary" name="salary"  value="{{$employee->basic_salary}}">
             </div>
             <div class="form-group col-sm-4">
                 <br>
@@ -115,21 +115,21 @@
                 <br>
                 <label>
                     <input type="hidden" name="invite_to_asana" value="0" />
-                    <input type="checkbox" class="asana" name="invite_to_asana" value="1" /> Invite to Asana
+                    <input type="checkbox" class="asana" name="invite_to_asana" value="1"  @if($employee->invite_to_asana) checked @endif /> Invite to Asana
                 </label>
             </div>
             <div class="form-group  col-sm-4">
                 <br>
                 <label>
                     <input type="hidden" name="invite_to_slack" value="0" />
-                    <input type="checkbox" name="invite_to_slack" value="1" /> Invite to Slack
+                    <input type="checkbox" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif /> Invite to Slack
                 </label>
             </div>
             <div class="form-group  col-sm-4">
                 <br>
                 <label>
                     <input type="hidden" name="invite_to_zoho" value="0" />
-                    <input type="checkbox" name="invite_to_zoho" id="invite_to_zoho" value="1" /> Invite to Zoho
+                    <input type="checkbox" name="invite_to_zoho" id="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif /> Invite to Zoho
                 </label>
             </div>
 
@@ -137,7 +137,10 @@
                 <a href="{{route('employees')}}" class="btn btn-success" align="right">Back</a>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm">Update</button>
             </div>
-
+            <div class="col-md-5">
+                <ul id="asana_teams">
+                </ul>
+            </div>
             <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -149,8 +152,9 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button class="btn btn-success" type="submit"> Update</button>
+                            <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
                         </div>
+
                     </div>
                 </div>
             </div>
@@ -165,17 +169,58 @@
                     });
                 });
                 
-                var pass_flag = false;
+                var pass_flag = 0;
 
-                $("#confirm_pass").on("change",function(){
-                    pass_flag = true;
+                $("#submit_update").click(function(){
+                    pass_flag = 1;
                 });
 
                 // console.log(pass_flag); here
                 $("#employee_form").submit(function(event){
-                    if (!pass_flag){
-                        $('#confirm').modal('show');
+                    $('#confirm').modal('show');
+                    if (pass_flag != 1){
                         event.preventDefault();
+                    }
+                });
+
+                var teams = $('#asana_teams');
+                var count = 0;
+                var orgId = '{{config('values.asanaWorkspaceId')}}';
+                var token = '{{config('values.asanaToken')}}';
+                $('.asana').bind('click', function () {
+                    if ($(this).is(':checked')) {
+                      
+                        $.ajax({
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
+                            type: 'GET',
+                            cache: false,
+                            dataType: 'json',
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            success: function (res) {
+                                count++;
+                                if (count == 1) {
+                                    teams.append("<h3 class='head'>Teams in Asana</h3>");
+                                    res.data.forEach(function (item, index) {
+                                        teams.append("<li class='teams'>" + item.name +
+                                            " <input name='teams[]' value='" +
+                                            item.id + "' type='checkbox'></li>"
+                                        );
+
+                                    });
+
+                                }
+                                teams.show();
+
+                            },
+                            error:function(err){
+                                console.log(err);
+                            }
+
+                        })
+                    } else {
+                        teams.hide();
                     }
                 });
 

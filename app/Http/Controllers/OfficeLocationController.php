@@ -118,7 +118,7 @@ class OfficeLocationController extends Controller
         
         $office_location->save();
 
-        Session::flash('success','Office location is created succesfully');
+        Session::flash('success','Office location is updated succesfully');
         return redirect()->back();
     }
 

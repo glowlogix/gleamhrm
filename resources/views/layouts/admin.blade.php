@@ -140,12 +140,12 @@
                         <li class="list-group-item" {{ request()->is('admin/employees') ? 'id=active1' : ''}}>
                             <a href="{{route('employees')}}">Employees</a>
                         </li>
+                        <li class="list-group-item" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>
+                            <a href="{{route('timeline')}}">Timeline</a>
+                        </li>
                         <li class="list-group-item" >
                             <a href="{{route('attendance')}}" {{ request()->is('admin/attendance') ? 'id=active1' : ''}}>Attendance</a>
                             <ul>
-                                <li>
-                                    <a href="{{route('timeline')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Timeline</a>
-                                </li>
                                 <li>
                                     <a href="{{route('leaves')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
                                 </li>

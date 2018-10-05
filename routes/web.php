@@ -66,8 +66,9 @@ Route::get('/docs/list', [
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//dashboard
-	Route::get('/dashboard',[
-		'uses' => 'UsersController@dashboard',
+	Route::get('/dashboard/{id?}',[
+		'uses' => 'AttendanceController@showTimeline',
+		// 'uses' => 'UsersController@dashboard',
 		'as' => 'admin.dashboard'
 	]);
 	
