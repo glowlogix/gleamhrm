@@ -70,15 +70,12 @@
 					                       	<input type="checkbox" id="zoho_{{$employee->id}}" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}}/> Delete from Zoho?
 					                    </label>
 
-					                    @if($employee->invite_to_zoho == 1) 
-						                    <div id="div_zoho_{{$employee->id}}" style="">
-						                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
+					                    	<div id="div_zoho_{{$employee->id}}" 
+					                    		@if($employee->invite_to_zoho == 0) 
+					                    		style="display: none;"
+					                    		@endif>
+						                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password">
 						                    </div>
-					                    @else
-					                    	<div id="div_zoho_{{$employee->id}}" style="display: none;">
-						                    	<input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password" required>
-						                    </div>
-					                    @endif
                 						<br>								
 						            </div>
 						            <div class="modal-footer">
