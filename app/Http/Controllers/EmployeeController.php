@@ -312,7 +312,7 @@ class EmployeeController extends Controller
 		$account_id = $emp->account_id;
 		$zuid = $emp->zuid;
 		$email = $emp->official_email;
-		// $response = $emp->delete();
+		$response = $emp->delete();
 
 		// if($response)
 		if($request->invite_to_zoho == 1){
