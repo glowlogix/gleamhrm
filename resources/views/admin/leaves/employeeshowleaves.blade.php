@@ -1,8 +1,4 @@
-@if(Auth::user()->admin)
-@extends('layouts.admin') 
-@else
 @extends('layouts.profile') 
-@endif
 
 @section('content')
 

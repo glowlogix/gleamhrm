@@ -109,7 +109,7 @@
                 if (event.title.search('present') != -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('Leave') != -1) {
+                if (event.title.search('leave') != -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },

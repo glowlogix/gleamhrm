@@ -163,7 +163,6 @@ return [
         Illuminate\Translation\TranslationServiceProvider::class,
         Illuminate\Validation\ValidationServiceProvider::class,
         Illuminate\View\ViewServiceProvider::class,
-
         /*
          * Package Service Providers...
          */
@@ -178,6 +177,7 @@ return [
         App\Providers\RouteServiceProvider::class,
         // MaddHatter\LaravelFullcalendar\ServiceProvider::class,
         
+        Spatie\Permission\PermissionServiceProvider::class,
         
     ],
 

@@ -14,6 +14,7 @@
         "league/csv": "9.0",
         "maddhatter/laravel-fullcalendar": "^1.3",
         "nesbot/carbon": "^1.26",
+        "spatie/laravel-permission": "^2.21",
         "twbs/bootstrap": "^4.0"
     },
     "require-dev": {

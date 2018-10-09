@@ -19,21 +19,18 @@
     <link href="{{asset('css/data.css') }}" rel="stylesheet">
     <link href="{{asset('css/app.css') }}" rel="stylesheet">
     <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap-theme.min.css">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/css/bootstrap-datetimepicker.min.css"
-    />
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <link rel="stylesheet" href="{{asset('bootstrap/bootstrap.min.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/bootstrap-theme.min.css')}}">
+    <link rel="stylesheet" href="{{asset('bootstrap/bootstrap-datetimepicker.min.css')}}"/>
+    <link rel="stylesheet" href="{{asset('bootstrap/font-awesome.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
-    
 
     <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.10.6/moment.min.js"></script>
-
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
+    <script src="{{asset('bootstrap/moment.min.js')}}"></script>
+    <script src="{{asset('bootstrap/jquery.min.js')}}"></script>
+    <script src="{{asset('bootstrap/jquery-ui.min.js')}}"></script>
+    <script src="{{asset('bootstrap/bootstrap.min.js')}}"></script>
+    <script src="{{asset('bootstrap/bootstrap-datetimepicker.min.js')}}"></script>
 
     <!-- full calendar -->
 
@@ -47,8 +44,8 @@
 
     <!-- full calendar -->
 
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+    <link href="{{asset('plugins/select2/select2.min.css')}}" rel="stylesheet" />
+    <script src="{{asset('plugins/select2/select2.min.js')}}"></script>
 </head>
 
 <body>
@@ -85,7 +82,6 @@
                         <li>
                             <a href="{{ route('employee.login') }}">Employee Login</a>
                         </li>
-
                         <li>
                             <a href="{{ route('login') }}">Administrator Login</a>
                         </li>
@@ -146,6 +142,9 @@
                         <li class="list-group-item" {{ request()->is('admin/employees') ? 'id=active1' : ''}}>
                             <a href="{{route('employees')}}">Employees</a>
                         </li>
+                        <li class="list-group-item" {{ request()->is('admin/rolespermissions') ? 'id=active1' : ''}}>
+                            <a href="{{route('roles_permissions')}}">Roles Permissions</a>
+                        </li>
                         <li class="list-group-item" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>
                             <a href="{{route('timeline')}}">Timeline</a>
                         </li>
@@ -189,8 +188,6 @@
 
             </div>
         </div>
-
-
     </div>
 
     <!-- Scripts -->
@@ -198,7 +195,6 @@
     <script src="{{ asset('js/app.js') }}"></script> --}}
     @yield('scripts')
     @stack('scripts')
-
 </body>
 
 </html>

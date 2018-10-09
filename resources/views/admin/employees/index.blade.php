@@ -3,8 +3,6 @@
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
 		<b style="text-align: center;">Employees</b>
-		@if(Auth::user()->admin)
-
 		<span style="float: left;">
 			<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="right">
 				<span class="glyphicon glyphicon-plus"></span> Add Employee
@@ -15,6 +13,7 @@
 				<span class="glyphicon glyphicon-plus"></span>Trashed Employees
 			</a>
         </span>
+		@if(Auth::user()->admin)
 		@endif
 	</div>
 </div>
@@ -37,9 +36,11 @@
 				<td>{{$employee->official_email}}</td>
 				<td>{{$employee->contact_no}}</td>
 				<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
-				<td>{{$employee->officeLocation->name}}</td>
+				<td>{{isset($employee->officeLocation) ? $employee->officeLocation->name : ''}}</td>
 				<td>
 					@if(Auth::user()->admin)
+					@endif
+					
 					<button class="btn btn-default" data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}">Delete</button>
 
 					<div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -88,7 +89,6 @@
 					</div>
 					<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}">Edit</a>
 
-					@endif
 				</td>
 			</tr>
 			@endforeach @else No Applicant found. @endif

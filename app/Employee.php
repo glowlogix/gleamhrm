@@ -2,13 +2,16 @@
 
 namespace App;
 
-use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Notifications\Notifiable;
+use Illuminate\Foundation\Auth\User as Authenticatable;
+use Spatie\Permission\Traits\HasRoles;
 
-
-class Employee extends Model
+class Employee extends Authenticatable
 {
-    use SoftDeletes;
+    use Notifiable, SoftDeletes, HasRoles;
+    
+    protected $guard_name = 'web'; 
 
     protected $dates = ['deleted_at'];
     protected $appends = ['full_name'];

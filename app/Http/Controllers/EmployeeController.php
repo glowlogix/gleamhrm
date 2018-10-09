@@ -49,7 +49,9 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
+		// $users = Employee::role('writer')->get();
 		$data = Employee::with('officeLocation')->get();
+		// dd($data);
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('roles',$this->roles);
@@ -84,13 +86,15 @@ class EmployeeController extends Controller
 
 		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
 			return redirect()->back()->with('error','Enter correct official email like "abc@glowlogix.com"');
+			// return redirect()->back()->withInput($request)->with('error','Enter correct official email like "abc@glowlogix.com"');
 		}
 		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
 		$when = now()->addMinutes(1);
 		$l=8;
-		$password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
+		// $password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
+		$password = bcrypt("123456");
 		
 		$employee = Employee::create([
 			'firstname'     	=> $request->firstname,
@@ -349,16 +353,19 @@ class EmployeeController extends Controller
 			'email' => 'required',
 			'password' => 'required'
 		]);
-		$email = $request->email;
-		$password = $request->password;
-		$row = DB::table('employees')->where(['official_email' => $email , 'password' => $password , 'role' => 'member'])
-		->get();
 
-		if(count($row)>0){
-			foreach($row as $data){                
-				$request->session()->put('emp_auth', $data->id);
-				return redirect()->route('employee.profile');
-			}
+		$email = $request->email;
+		$employee = Employee::where(['official_email' => $email])->first();
+		if(isset($employee->password)){
+			return redirect()->back()->with('error','Email not found');
+		}
+		if(!Hash::check($request->password, $employee->password)){
+			return redirect()->back()->with('error','Wrong email/password entered');
+		}
+
+		if(isset($employee->id)){
+			$request->session()->put('emp_auth', $employee->id);
+			return redirect()->route('employee.profile');
 		}       
 
 		$messages = 'Username/Password Incorrect';
@@ -366,8 +373,8 @@ class EmployeeController extends Controller
 	}
 
 	public function EmployeeProfile(Request $request){
-		$data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-		return view('admin.employees.profile',['data' => $data,'title' => 'Update Profile']);
+		$employee = Employee::find($request->session()->get('emp_auth'));
+		return view('admin.employees.profile',['employee' => $employee,'title' => 'Update Profile']);
 
 	}
 

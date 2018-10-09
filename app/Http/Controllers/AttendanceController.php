@@ -529,7 +529,6 @@ class AttendanceController extends Controller
                 "color" => $color,
             ];
         }
-
         $leave = Leave::all();
         foreach ($leave as $key => $value) {
           $color = '';
@@ -550,8 +549,8 @@ class AttendanceController extends Controller
                 "resourceId" => $value->employee_id,
                 "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
                 "date" => $value->datefrom,
-                "start" => $value->datefrom,
-                "end" => $value->dateTo,
+                "start" => Carbon::parse($value->datefrom)->toDateString(),
+                "end" => Carbon::parse($value->dateto)->toDateString(),
                 "color" => $color,
             ];
         }

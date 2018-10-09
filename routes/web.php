@@ -34,6 +34,21 @@ Route::post('/employee/login', [
 	'uses' => 'EmployeeController@postEmployeeLogin'
 ]);
 
+//Leaves
+Route::Get('/leave',[
+	'uses' => 'LeaveController@create',
+	'as' => 'leaves'
+]);
+
+Route::Post('/leave/store',[
+	'uses' => 'LeaveController@store',
+	'as' => 'leaves.store'
+]);
+
+Route::Get('/leave/show/{id}',[
+	'uses' => 'LeaveController@indexEmployee',
+	'as' => 'leave.employeeshow'
+]);
 
 Route::get('/employee/profile', [
 	'as' => 'employee.profile',
@@ -213,6 +228,32 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Get('/user/not_admin/{id}',[
 		'uses' => 'UsersController@Not_Admin',
 		'as' => 'user.not_admin'
+	]);
+
+	Route::Get('/rolespermissions',[
+		'uses' => 'RolePermissionsController@index',
+		'as' => 'roles_permissions'
+	]);
+	Route::Get('/rolespermissions/create',[
+		'uses' => 'RolePermissionsController@create',
+		'as' => 'roles_permissions.create'
+	]);
+	Route::Post('/rolespermissions/store',[
+		'uses' => 'RolePermissionsController@store',
+		'as' => 'roles_permissions.store'
+	]);
+	Route::Get('/rolespermissions/edit/{id}',[
+		'uses' => 'RolePermissionsController@edit',
+		'as' => 'roles_permissions.edit'
+	]);
+	Route::Post('/rolespermissions/update/{id}',[
+		'uses' => 'RolePermissionsController@update',
+		'as' => 'roles_permissions.update'
+	]);
+
+	Route::Post('/rolespermissions/delete',[
+		'uses' => 'RolePermissionsController@destroy',
+		'as' => 'roles_permissions.delete'
 	]);
 
 	Route::Get('/employees',[
