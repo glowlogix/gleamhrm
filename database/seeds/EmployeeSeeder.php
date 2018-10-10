@@ -18,18 +18,18 @@ class EmployeeSeeder extends Seeder
     public function run()
     {
         $employees = Employee::create([
-            'firstname' => 'awaid',
-            'lastname' => 'Shan',
+            'firstname' => 'Kosar',
+            'lastname' => 'Latif',
             'contact_no' => '0332456783',
             'emergency_contact' => '0332456783',
             'emergency_contact_relationship' => 'brother',
-            'password'=>bcrypt('awaid'),
+            'password'=>bcrypt('kosar'),
             'cnic' => '1320245699852',
             'date_of_birth' => '1998-09-19',
             'zuid' => '123',
             'account_id' => '123',
-            'official_email' => 'awaid@glowlogix.com',
-            'personal_email' => 'awaid@gmail.com',
+            'official_email' => 'kosar@glowlogix.com',
+            'personal_email' => 'kosar@gmail.com',
             'role' => 'Software Developer',
             'city' => 'Islamabad',
             'office_location_id' => '1',
@@ -38,6 +38,7 @@ class EmployeeSeeder extends Seeder
             'invite_to_asana' => 0,
             'status' => 1,
         ]);
+
         /*$employees = $this->getZohoAccount();
         $employees = $employees->original->data;
         foreach($employees as $employee){
