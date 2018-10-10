@@ -49,9 +49,7 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
-		// $users = Employee::role('writer')->get();
 		$data = Employee::with('officeLocation')->get();
-		// dd($data);
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('roles',$this->roles);

@@ -80,10 +80,7 @@
                         <!-- Authentication Links -->
                         @guest
                         <li>
-                            <a href="{{ route('employee.login') }}">Employee Login</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('login') }}">Administrator Login</a>
+                            <a href="{{ route('login') }}">Login</a>
                         </li>
                         {{--
                         <li>
@@ -91,15 +88,12 @@
                         </li> --}} @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
-                                {{ Auth::user()->name }}
+                                {{ Auth::user()->firstname }}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
                                 <li>
-                                    <a href="{{ route('logout') }}" onclick="event.preventDefault();
-                                                     document.getElementById('logout-form').submit();">
-                                        Logout
-                                    </a>
+                                    <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"> Logout </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         {{ csrf_field() }}
                                     </form>
@@ -142,6 +136,9 @@
                         <li class="list-group-item" {{ request()->is('admin/employees') ? 'id=active1' : ''}}>
                             <a href="{{route('employees')}}">Employees</a>
                         </li>
+                        <li class="list-group-item" {{ request()->is('admin/organize_employee') ? 'id=active1' : ''}}>
+                            <a href="{{route('organization_hierarchy.index')}}">Organization Hierarchy</a>
+                        </li>
                         <li class="list-group-item" {{ request()->is('admin/rolespermissions') ? 'id=active1' : ''}}>
                             <a href="{{route('roles_permissions')}}">Roles Permissions</a>
                         </li>
@@ -152,7 +149,7 @@
                             <a href="{{route('attendance')}}" {{ request()->is('admin/attendance') ? 'id=active1' : ''}}>Attendance</a>
                             <ul>
                                 <li>
-                                    <a href="{{route('leaves')}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
+                                    <a href="{{route('leave.show', Auth::user()->id)}}" {{ request()->is('admin/leave') ? 'id=active1' : ''}}>Leaves</a>
                                 </li>
                                 <li>
                                     <a href="{{route('salary.show')}}" {{ request()->is('admin/salary') ? 'id=active1' : '' }} >Salary</a>

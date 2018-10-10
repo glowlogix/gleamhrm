@@ -1,3 +1,4 @@
+
 @extends('layouts.admin') @section('title') HRM|{{$title}} @endsection @section('content')
 
 <div class="panel panel-default">
@@ -23,7 +24,7 @@
 			<th>Name</th>
 			<th>Email</th>
 			<th>Contact </th>
-			<th>Role</th>
+			<th>Designation</th>
 			<th>Office</th>
 			@if(Auth::user()->admin)
 			<th>Manage Employees</th>
@@ -101,7 +102,6 @@
 
 
 @push('scripts')
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="{{ asset('js/bootstrap.js')}}"></script>
 <script type="text/javascript">	
 	$("input.zoho").click(function (event) {

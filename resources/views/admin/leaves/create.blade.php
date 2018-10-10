@@ -23,7 +23,7 @@
 				<label for="name">Name:</label>
 				<select class="form-control" name="employee_id">
 				 @foreach($employees as $employee)
-				   <option  @if(old('employee_id') == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
+				   <option  @if(old('employee_id') == $employee->id || Auth::user()->id == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
 				 @endforeach
 				</select>
 			</div>
@@ -34,8 +34,10 @@
 					<select class="form-control" name="leave_type">
 						<option @if(old('leave_type') == 'unpaid_leave')selected @endif value="unpaid_leave">Unpaid Leave</option>
 						<option @if(old('leave_type') == 'half_leave')selected @endif value="half_leave">Half Leave</option>
-						<option @if(old('leave_type') == 'short_leave')selected @endif value="short_leave">Short Leave</option>								
+						<option @if(old('leave_type') == 'short_leave')selected @endif value="short_leave">Short Leave</option>
 						<option @if(old('leave_type') == 'paid_leave')selected @endif value="paid_leave">Paid Leave</option>
+						<option @if(old('leave_type') == 'sick_leave')selected @endif value="sick_leave">Sick Leave</option>
+						<option @if(old('leave_type') == 'casual_leave')selected @endif value="casual_leave">Casual Leave</option>
 					</select>
 				</div>
 		  </div>
@@ -90,6 +92,12 @@
 				 @endforeach
 				</select>
 			</div>
+		  </div>
+		  <div class="form-group">
+				<div class="col-md-6">
+					<label for="cc_to">CC To</label>
+					<input type="email"  multiple="multiple" class="form-control" name="cc_to" id="cc_to" value="{{old('cc_to')}}">
+				</div>
 		  </div>
 		  <div class="form-group">
 				<div class="col-md-8" style="padding-top:23px;">

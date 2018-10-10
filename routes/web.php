@@ -230,6 +230,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'user.not_admin'
 	]);
 
+	Route::resources([
+	    'organization_hierarchy' => 'OrganizationHierarchyController',
+	]);
+
 	Route::Get('/rolespermissions',[
 		'uses' => 'RolePermissionsController@index',
 		'as' => 'roles_permissions'
@@ -242,6 +246,14 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'uses' => 'RolePermissionsController@store',
 		'as' => 'roles_permissions.store'
 	]);
+	Route::Get('/rolespermissions/applyrole',[
+		'uses' => 'RolePermissionsController@applyRole',
+		'as' => 'roles_permissions.applyrole'
+	]);
+	Route::Post('/rolespermissions/applyrolepost',[
+		'uses' => 'RolePermissionsController@applyRolePost',
+		'as' => 'roles_permissions.applyrolepost'
+	]);
 	Route::Get('/rolespermissions/edit/{id}',[
 		'uses' => 'RolePermissionsController@edit',
 		'as' => 'roles_permissions.edit'
@@ -251,7 +263,7 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'roles_permissions.update'
 	]);
 
-	Route::Post('/rolespermissions/delete',[
+	Route::Post('/rolespermissions/delete/{id}',[
 		'uses' => 'RolePermissionsController@destroy',
 		'as' => 'roles_permissions.delete'
 	]);
@@ -503,4 +515,4 @@ Route::any('/search',function(){
         return view('searchview')->withDetails($applicant)->withQuery ( $q );
     else return view ('searchview')->withMessage('No Details found. Try to search again !');
 });
-Route::get('welcome-mail','UserController@welcomeMail');
+// Route::get('welcome-mail','UserController@welcomeMail');

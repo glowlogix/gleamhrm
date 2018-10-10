@@ -4,7 +4,7 @@
 	<div class="panel-heading text-center">
 		<b> Create new Role</b>
 		<span style="float: right;">
-            <a href="{{route('offices')}}" class="btn btn-info btn-xs" align="right">
+            <a href="{{route('roles_permissions')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon"></span> Back
             </a>
         </span>
@@ -24,11 +24,14 @@
 
 			<div class="form-group">
 				@foreach ($all_controllers as $key => $row)
-				<label for="name">{{$key}}</label>
+				<input type="checkbox" class="check_all_sub" id="{{$key}}">{{$key}}
 			 	<br>
-				@foreach ($row as $route)
-				<input type="checkbox" name="permissions[]" value="web:{{$key}}:{{$route}}"> {{$route}}<br>
-				@endforeach
+			 	<div class="{{$key}}">
+					@foreach ($row as $route)
+					<input type="checkbox" name="permissions[]" value="web:{{$key}}:{{$route}}"> {{$route}}<br>
+					@endforeach
+				</div>			
+			 	<br>
 				@endforeach
 			</div>			
 
@@ -45,6 +48,9 @@ $(document).ready(function () {
     $(function () {
 	    $("#check_all").click(function(){
 		    $('input:checkbox').not(this).prop('checked', this.checked);
+		});
+    	$(".check_all_sub").click(function(){
+		    $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);
 		});
     });
 });

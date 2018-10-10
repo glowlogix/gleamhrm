@@ -14,6 +14,15 @@ class LeaveController extends Controller
 {
     use MetaTrait;
     
+    public $leave_types = [
+        "unpaid_leave" => "Unpaid Leave",
+        "half_leave" => "Half Leave",
+        "short_leave" => "Short Leave",
+        "paid_leave" => "Paid Leave",
+        "sick_leave" => "Sick Leave",
+        "casual_leave" => "Casual Leave",
+    ];
+
     /**
      * Display a listing of the resource.
      *

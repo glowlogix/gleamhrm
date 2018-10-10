@@ -50,10 +50,7 @@
                         <!-- Authentication Links -->
                         @guest
                         <li>
-                            <a href="{{ route('employee.login') }}">Employee Login</a>
-                        </li>
-                        <li>
-                            <a href="{{ route('login') }}">Administrator Login</a>
+                            <a href="{{ route('login') }}">Login</a>
                         </li>
                         {{--
                         <li>

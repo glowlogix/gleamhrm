@@ -1,16 +1,15 @@
-@if(Auth::user()->admin)
 @extends('layouts.admin') 
-@else
-@extends('layouts.profile') 
-@endif
 
 @section('content')
 
 <div class="panel panel-default">
     <div class="panel-heading text-center">
-        <div>
-            <b style="text-align: center;">All Leaves</b>
-        </div>
+        <b style="text-align: center;">All Leaves</b>
+        <span style="float: left;">
+            <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon glyphicon-plus"></span> Add Leave
+            </a>
+        </span>
     </div>
     <div class="panel-body">
         <table class="table">
@@ -34,12 +33,12 @@
                     <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
                     <td>
                         @if(Auth::user()->admin)
+                        @endif
                         <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
-                        @endif
                     </td>
                 </tr>
                 @endforeach @else No leave found. @endif

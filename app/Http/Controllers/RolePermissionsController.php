@@ -6,6 +6,7 @@ use Spatie\Permission\Models\Permission;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Traits\MetaTrait;
+use App\Employee;
 
 class RolePermissionsController extends Controller
 {
@@ -27,6 +28,30 @@ class RolePermissionsController extends Controller
             'roles' => $roles, 
             'permissions' => $permissions,
         ]);
+    }
+
+    public function applyRole()
+    {
+        $this->meta['title'] = 'Apply Roles to Employee';
+
+        $roles = Role::all();
+        $employees = Employee::all();
+        $permissions = Permission::all();
+
+        return view('admin.roles_permissions.applyRole',$this->metaResponse())->with([
+            'roles' => $roles, 
+            'employees' => $employees,
+        ]);
+    }
+
+    public function applyRolePost(Request $request)
+    {
+        $role = Role::find($request->role_id);
+        $employee = Employee::find($request->employee_id);
+
+        $employee->assignRole($role);
+
+        return redirect()->route('roles_permissions')->with('success','Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');      
     }
 
     /**
@@ -71,12 +96,14 @@ class RolePermissionsController extends Controller
             foreach ($request->permissions as $value) {
                 $val = explode(':', $value);
                 $data = [
-                    'role_id' => $role->id,
                     'guard_name' => $val[0],
                     'name' => $val[1].':'.$val[2],
                 ];
 
-                $permission = Permission::create($data);
+                $permission = Permission::where($data)->first();
+                if (!isset($permission->id)) {
+                    $permission = Permission::create($data);
+                }
                 $role->givePermissionTo($permission);
             }
         }
@@ -106,7 +133,11 @@ class RolePermissionsController extends Controller
     {
         $this->meta['title'] = 'Update Role';                                                                        
         $role = Role::find($id);
-
+        $permissions = $role->permissions()->get()->toArray();
+        $routes=array();
+        foreach ($permissions as $permission) {
+            $routes[] = $permission['name'];
+        }
         $all_controllers = [];
         
         foreach (Route::getRoutes()->getRoutes() as $route){
@@ -119,8 +150,10 @@ class RolePermissionsController extends Controller
                 $all_controllers[$index][] = $row[1];
             }
         }
+
         return view('admin.roles_permissions.edit',$this->metaResponse())->with([
             'role' => $role,
+            'routes' => $routes,
             'all_controllers' => $all_controllers,
         ]);
     }
@@ -147,10 +180,15 @@ class RolePermissionsController extends Controller
                 ];
 
                 $permission = Permission::where($data)->first();
-                if (!isset($permission->id)) {
-                    $permission = Permission::create($data);
+                if (in_array($value, $request->permissions_checked)){
+                    if (!isset($permission->id)) {
+                        $permission = Permission::create($data);
+                    }
+                    $role->givePermissionTo($permission);
                 }
-                $role->givePermissionTo($permission);
+                else{
+                    $role->revokePermissionTo($permission);
+                }
             }
         }
 
@@ -165,6 +203,12 @@ class RolePermissionsController extends Controller
      */
     public function destroy($id)
     {
-        //
+        $role = Role::find($id);
+        foreach ($role->permissions as $key => $permission) {
+            $role->revokePermissionTo($permission);
+        }
+        $role->delete();
+
+        return redirect()->back()->with('success','Role and assigned permissions is deleted successfully.');
     }
 }
