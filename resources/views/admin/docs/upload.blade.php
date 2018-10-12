@@ -9,17 +9,20 @@
 			<br>
 			<div class="row">
 				<div class="col-md-8">
-					<form action="/admin/upload/docs" method="post" enctype="multipart/form-data">
+					<form action="{{route('documents.upload')}}" method="post" enctype="multipart/form-data">
 						{{ csrf_field() }}
 						<br />
 						<label for="document_name">Enter Document Name:</label>
 						<input type="text" class="form-control" placeholder="Enter Document Name" name="document_name">
 						<br>
-						<label for="documents">Documents(can attach more than one):</label>
+						<label for="documents">Document:</label>
 
-						<input type="file" class="form-control" name="documents[]" multiple />
+						<input type="file" class="form-control" name="document" />
 
 						<br />
+						
+						<a href="{{route('documents')}}" class="btn btn-default">Cancel</a>
+
 						<input type="submit" class="btn btn-primary" value="Upload" />
 					</form>		
 				</div>

@@ -131,8 +131,8 @@
                         <li class="list-group-item">
                             <a href="{{route('branch.index')}}">Branches</a>
                         </li>
-                        <li class="list-group-item" {{ request()->is('admin/upload/docs') ? 'id=active1' : ''}}>
-                            <a href="{{ route('documents.upload') }}">Documents</a>
+                        <li class="list-group-item" {{ request()->is('admin/documents') ? 'id=active1' : ''}}>
+                            <a href="{{ route('documents') }}">Documents</a>
                         </li>
                         <li class="list-group-item" {{ request()->is('admin/employees') ? 'id=active1' : ''}}>
                             <a href="{{route('employees')}}">Employees</a>

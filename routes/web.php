@@ -74,7 +74,7 @@ Route::post('/employee/logout', [
 
 //docs List
 
-Route::get('/docs/list', [
+Route::get('/documents/list', [
 	'as' => 'documents.list',
 	'uses' => 'EmployeeController@showDocs'
 ]);
@@ -433,34 +433,34 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	//upload Docs
-	Route::get('/upload/docs',[
-		'as' => 'documents.upload',
+	Route::get('/documents',[
+		'as' => 'documents',
 		'uses' => 'DocumentsController@index'
 	]);
 
-	Route::get('/upload/docs/upload',[
-		'as' => 'documents.docs.upload',
+	Route::get('/documents/create',[
+		'as' => 'documents.create',
 		'uses' => 'DocumentsController@createDocs'
 	]);
 
-	Route::post('/upload/delete/{id}',[
-		'as' => 'documents.docs.delete',
+	Route::post('/documents/upload',[
+		'as' => 'documents.upload',
+		'uses' => 'DocumentsController@uploadDocs'
+	]);
+
+	Route::post('/documents/delete/{id}',[
+		'as' => 'documents.delete',
 		'uses' => 'DocumentsController@deleteDocument'
 	]);
 
-	Route::get('/upload/docs/edit/{id}',[
-		'as' => 'documents.docs.edit',
+	Route::get('/documents/edit/{id}',[
+		'as' => 'documents.edit',
 		'uses' => 'DocumentsController@editDocument'
 	]);
 
-	Route::post('/upload/docs/update/{id}',[
-		'as' => 'documents.docs.update',
-		'uses' => 'DocumentsController@updateDocument'
-	]);
-
-	Route::post('/upload/docs',[
-		'as' => 'documents.upload',
-		'uses' => 'DocumentsController@uploadDocs'
+	Route::post('/documents/update/{id}',[
+		'as' => 'documents.update',
+		'uses' => 'DocumentsController@update'
 	]);
 
 });

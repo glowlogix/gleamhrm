@@ -8,28 +8,35 @@
         </div>
     </div>
     <div class="panel-body">
-        <form action="{{route('documents.docs.update',['id'=>$document->id])}}" method="post">
+        <form action="{{route('documents.update',['id'=>$document->id])}}" method="post" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="form-group">
                 <label for="documentname">Name</label>
-                <input type="text" name="documentname" value="{{$document->name}}" class="form-control">
+                <input type="text" name="document_name" value="{{$document->name}}" class="form-control">
+            </div>
+            
+            <div class="form-group">
+                <label for="documents">Document:</label>
+                <input type="file" class="" name="document" />
+                {{$document->url}}
+            </div>
+
+            <div class="form-group">
+                <label for="upload_status">Status</label>
+                {{ csrf_field() }}
+                <select name="upload_status" id="upload_status" class="form-control">
+                    @if($document->status == 1)
+                    <option selected value="1">Enable</option>
+                    <option value="0">Disable</option>
+                    @else
+                    <option value="1">Enable</option>
+                    <option selected value="0">Disable</option>
+                    @endif
+                </select>
             </div>
             <div class="form-group">
-                <label for="url">Status</label>
-                        {{ csrf_field() }}
-                        <div>
-                            <select name="upload_status" id="upload_status" class="form-control">
-                                @if($document->status == 1)
-                                <option selected value="1">Enable</option>
-                                <option value="0">Disable</option>
-                                @else
-                                <option value="1">Enable</option>
-                                <option selected value="0">Disable</option>
-                                @endif
-                            </select>
-                        </div>
-                        <br>
-                    <button class="btn btn-success center-block" type="submit"> Update</button>
+                <a href="{{route('documents')}}" class="btn btn-default">Cancel</a>
+                <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>
         </form>
     </div>

@@ -4,7 +4,7 @@
 	<div class="panel-heading text-center">
 		<b>All Documents</b>
 		<span style="float: right;">
-			<a href="{{route('documents.docs.upload')}}" class="btn btn-info btn-xs" align="left">
+			<a href="{{route('documents.create')}}" class="btn btn-info btn-xs" align="left">
 				<span class="glyphicon glyphicon-plus"></span> Add Document
 			</a>
 		</span>
@@ -14,19 +14,7 @@
 			<br>
 			<div class="row">
 				<div class="col-md-8">
-					<form action="/admin/upload/docs" method="post" enctype="multipart/form-data">
-
-						{{ csrf_field() }}
-						<label for="docs">Documents(can attach more than one):</label>
-						<br />
-						<input type="file" class="form-control" name="docs[]" multiple />
-						<br />
-						<input type="submit" class="btn btn-primary" value="Upload" />
-					</form>
-
-
 					<table class="table table-striped">
-
 						@if(count($files) > 0)
 						<thead>
 							<tr>
@@ -42,9 +30,11 @@
 									<a target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->name }}</a>
 								</td>
 								<td>
+									{{ ($file->status == 1) ? 'Active' : 'Inactive' }}
+								</td>
+								<td>
 									<div class="col-sm-2">
-											
-										<form action="{{ route('documents.docs.delete' , $file->id )}}" method="post">
+										<form action="{{ route('documents.delete' , $file->id )}}" method="post">
 											{{ csrf_field() }}
 											<button class="btn btn-danger btn-sm">
 												<span class="glyphicon glyphicon-trash"></span>
@@ -52,9 +42,9 @@
 										</form>
 									</div>
 									<div class="col-sm-1">
-											<a class="btn btn-info btn-sm" href="{{route('documents.docs.edit',['id'=>$file->id])}}">
-												<span class="glyphicon glyphicon-edit"></span>
-											</a>
+										<a class="btn btn-info btn-sm" href="{{route('documents.edit',['id'=>$file->id])}}">
+											<span class="glyphicon glyphicon-edit"></span>
+										</a>
 									</div>
 								</td>
 							</tr>
