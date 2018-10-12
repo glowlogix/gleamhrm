@@ -4,14 +4,15 @@
 	<div class="panel-heading text-center">
 		<b> Update Office Location</b>
 		<span style="float: right;">
-            <a href="{{route('offices')}}" class="btn btn-info btn-xs" align="right">
+            <a href="{{route('branch.index')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon"></span> Back
             </a>
         </span>
 	</div>
 	<div class="panel-body">
 
-		<form action="{{route('office_location.update',['id'=>$office_location->id])}}" method="post" enctype="multipart/form-data">
+		<form action="{{route('branch.update',['id'=>$office_location->id])}}" method="post" enctype="multipart/form-data">
+			<input name="_method" type="hidden" value="PUT">
 			{{csrf_field()}}
 			<div class="form-group">
 				<label for="name">Name</label>
@@ -51,7 +52,7 @@
 				<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{$office_location->phone_number}}">
 			</div>	
 			<div class="form-group">
-				<a href="{{route('offices')}}" class="btn btn-default">
+				<a href="{{route('branch.index')}}" class="btn btn-default">
 	                 Cancel
 	            </a>
 				<button class="btn btn-success center-block left" style="display: inline; float: left; margin-right: 5px;" type="submit"> Update</button>

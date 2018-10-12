@@ -42,9 +42,10 @@ class OrganizationHierarchyController extends Controller
         $all_controllers = [];
         
         $employees = Employee::all();
-
+        $OrganizationHierarchyCnt = OrganizationHierarchy::all()->count();
         return view('admin.organization_hierarchy.create',$this->metaResponse())->with([
-			'employees' => $employees,
+            'employees' => $employees,
+			'OrganizationHierarchyCnt' => $OrganizationHierarchyCnt,
         ]);
     }
 

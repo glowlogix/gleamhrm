@@ -18,6 +18,7 @@
 		@endif
 	</div>
 </div>
+
 <div class="panel-body">
 	<table class="table">
 		<thead>
@@ -37,7 +38,7 @@
 				<td>{{$employee->official_email}}</td>
 				<td>{{$employee->contact_no}}</td>
 				<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
-				<td>{{isset($employee->officeLocation) ? $employee->officeLocation->name : ''}}</td>
+				<td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
 				<td>
 					@if(Auth::user()->admin)
 					@endif
@@ -93,16 +94,11 @@
 				</td>
 			</tr>
 			@endforeach @else No Applicant found. @endif
-
 		</tbody>
 	</table>
 </div>
 
-</div>
-
-
 @push('scripts')
-<script src="{{ asset('js/bootstrap.js')}}"></script>
 <script type="text/javascript">	
 	$("input.zoho").click(function (event) {
         if ($(this).is(":checked")) {
@@ -111,7 +107,6 @@
             $("#div_" + event.target.id).hide();
         }
     });
-
 </script>
 @endpush
 @stop

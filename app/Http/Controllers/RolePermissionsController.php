@@ -51,7 +51,18 @@ class RolePermissionsController extends Controller
 
         $employee->assignRole($role);
 
-        return redirect()->route('roles_permissions')->with('success','Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');      
+        return redirect()->route('roles_permissions')->with('success','Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');   
+    }
+
+    public function getPermissionsFromRole($id)
+    {
+        $role = Role::find($id);
+
+        return view('admin.roles_permissions.getPermissionsFromRole')->with([
+            'role' => $role,
+            'permissions' => $role->permissions()->get(),
+        ]);
+
     }
 
     /**

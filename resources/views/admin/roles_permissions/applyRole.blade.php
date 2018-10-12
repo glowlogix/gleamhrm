@@ -2,7 +2,7 @@
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<b> Update Office Location</b>
+		<b>Apply Role to Employee</b>
 		<span style="float: right;">
             <a href="{{route('roles_permissions')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon"></span> Back
@@ -29,9 +29,9 @@
 				<label for="employee_id">Employee</label>
 				<select name="employee_id" id="employee_id" class="form-control">
 				@foreach ($employees as $employee)
-				<option value="{{$employee->id}}">
-					{{$employee->firstname}} {{$employee->lastname}}
-				</option>
+					<option value="{{$employee->id}}">
+						{{$employee->firstname}} {{$employee->lastname}}
+					</option>
 				@endforeach
 				</select>
 			</div>

@@ -4,14 +4,14 @@
 	<div class="panel-heading text-center">
 		<b> Create new Office Location</b>
 		<span style="float: right;">
-            <a href="{{route('offices')}}" class="btn btn-info btn-xs" align="right">
+            <a href="{{route('branch.index')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon"></span> Back
             </a>
         </span>
 	</div>
 	<div class="panel-body">
 
-		<form action="{{route('office_location.store')}}" method="post" enctype="multipart/form-data">
+		<form action="{{route('branch.store')}}" method="post" enctype="multipart/form-data">
 			{{csrf_field()}}
 			<div class="form-group">
 				<label for="name">Name</label>
@@ -45,7 +45,7 @@
 				<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number')}}">
 			</div>	
 			<div class="form-group">
-				<a href="{{route('offices')}}" class="btn btn-default">
+				<a href="{{route('branch.index')}}" class="btn btn-default">
 	                 Cancel
 	            </a>
 	            <button class="btn btn-success center-block" style="display: inline; float: left; margin-right: 5px;" type="submit"> Create</button>

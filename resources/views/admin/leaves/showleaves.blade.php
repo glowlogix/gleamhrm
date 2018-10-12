@@ -12,6 +12,15 @@
         </span>
     </div>
     <div class="panel-body">
+        <div class="form-group">
+            <div class="col-md-6">
+                <label for="name">Total Leaves:</label> {{$employee->allowed_leaves}}
+            </div>
+            <div class="col-md-6">
+                <label for="name">Consumed Leaves:</label> {{$consumed_leaves}}
+            </div>
+        </div>
+        
         <table class="table">
             <thead>
                 <th>Leave Type</th>

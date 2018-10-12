@@ -20,6 +20,9 @@
 					@endforeach
 				</select>
 			</div>
+			
+			@if($OrganizationHierarchyCnt > 0)
+
 			<div class="form-group">
 				<label for="name">Line Manager</label>
 				<select name="line_manager_id" class="form-control">
@@ -36,6 +39,7 @@
 					@endforeach
 				</select>
 			</div>		
+			@endif
 			<div class="form-group">
 				<a href="{{route('organization_hierarchy.index')}}" class="btn btn-default">Cancel</a>
 	            <button class="btn btn-success center-block" style="display: inline; float: left; margin-right: 5px;" type="submit">Create</button>

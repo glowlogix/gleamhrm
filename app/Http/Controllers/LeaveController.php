@@ -23,6 +23,11 @@ class LeaveController extends Controller
         "casual_leave" => "Casual Leave",
     ];
 
+    public $statuses = [
+        "pending" => "Pending",
+        "approved" => "Approved",
+    ];
+
     /**
      * Display a listing of the resource.
      *
@@ -33,8 +38,22 @@ class LeaveController extends Controller
         // dd(Auth::user());
         $this->meta['title'] = 'Show Leaves';  
         $leaves = Leave::where('employee_id', $id)->get();
-        
-        return view('admin.leaves.showleaves',$this->metaResponse(),['leaves' => $leaves]);
+        $employee = Employee::find($id);
+
+        $consumed_leaves = 0; 
+        if ($leaves->count() > 0) {
+            foreach ($leaves as $leave) {
+                $datefrom = Carbon::parse($leave->datefrom);
+                $dateto = Carbon::parse($leave->dateto);
+                $consumed_leaves += $dateto->diffInDays($datefrom) + 1;
+            }
+        }
+
+        return view('admin.leaves.showleaves',$this->metaResponse(),[
+            'leaves' => $leaves,
+            'consumed_leaves' => $consumed_leaves,
+            'employee' => $employee,
+        ]);
     }
 
     public function indexEmployee($id)
@@ -108,7 +127,7 @@ class LeaveController extends Controller
             'description' => $request->description,
             'point_of_contact' => $request->point_of_contact,
             'cc_to' => $request->cc_to,
-            'status' => $request->status,
+            'status' => 'pending',
         ]);
 
         if($leave){

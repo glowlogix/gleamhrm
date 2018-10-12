@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateAttandancesTable extends Migration
+class CreateBranchesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,14 @@ class CreateAttandancesTable extends Migration
      */
     public function up()
     {
-        Schema::create('attandances', function (Blueprint $table) {
+        Schema::create('branches', function (Blueprint $table) {
             $table->increments('id');
-            $table->integer('employee_id');
-            $table->boolean('delay');
-            $table->dateTime('checkintime');
-            $table->dateTime('checkouttime');
-            $table->dateTime('hourslogged');            
+            $table->string('name');
+            $table->boolean('status')->default(1);
+            $table->time('timing_start')->nullable();
+            $table->time('timing_off')->nullable();
+            $table->string('address');
+            $table->string('phone_number');
             $table->timestamps();
         });
     }
@@ -31,6 +32,6 @@ class CreateAttandancesTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('attandances');
+        Schema::dropIfExists('branches');
     }
 }

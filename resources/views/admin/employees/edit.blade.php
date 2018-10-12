@@ -11,7 +11,7 @@
         </span>
     </div>
     <div class="panel-body">
-        <form id="employee_form" action="{{route('employee.update',['id'=>$employee->id])}}" method="post">
+        <form id="employee_form" action="{{route('employee.update',['id'=>$employee->id])}}" method="post" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
@@ -22,11 +22,18 @@
                 <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" value="{{$employee->lastname}}" required>
             </div>
             <div class="form-group col-sm-4">
+                <label for="personal_email">Profile Picture:</label>
+                <input style="width: 250px;" type="file" class="form-control" id="picture" placeholder="picture" name="picture" value="{{$employee->picture}}">{{$employee->picture}}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="exit_date">Exit Date:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{$employee->exit_date}}" required>
+            </div>
+            <div class="form-group col-sm-4">
                 <label for="personal_email">Personal Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{$employee->personal_email}}" required>
             </div>
             <div class="form-group col-sm-4">
-                <br>
                 <label for="official_email">Official Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="official_email" placeholder="Enter Email Address" name="official_email" value="{{$employee->official_email}}" required>
             </div>
@@ -34,8 +41,8 @@
                 <br>
                 <label for="role">Role:</label>
                 <select style="width: 250px;" class="form-control" name="role">
-                    @foreach($roles as $k => $role)
-                        <option value="{{$k}}" @if($employee->role == $k) selected @endif>{{$role}}</option>
+                    @foreach($designations as $k => $designation)
+                        <option value="{{$k}}" @if($employee->role == $k) selected @endif>{{$designation}}</option>
                     @endforeach
                 </select>
             </div>
@@ -51,7 +58,7 @@
                 <br>
                 <label for="office_location_id">Office Location:</label>
                 <select style="width: 250px;" class="form-control" name="office_location_id">
-                    @foreach($office_locations as $office_location)
+                    @foreach($branches as $office_location)
                     <option value="{{$office_location->id}}" @if($office_location->id == $employee->office_location_id) selected @endif>{{$office_location->name}} ({{$office_location->address}})</option>
                     @endforeach
                 </select>
@@ -104,10 +111,27 @@
                 <label for="permanent_address">Permanent Address:</label>
                 <input style="width: 250px;" type="text" class="form-control" id="permanent_address" placeholder="Enter Permanent Address" name="permanent_address" value="{{$employee->permanent_address}}">
             </div>
+            
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="permanent_address">Allowed Leaves:</label>
+                <input style="width: 250px;" type="number" class="form-control" id="allowed_leaves" placeholder="Enter Allowed Leaves" name="allowed_leaves" value="{{$employee->allowed_leaves}}" @if (Auth::user()->id != 1) disabled @endif>
+            </div>
             <div class="form-group col-sm-4">
                 <br>
                 <label for="city">City:</label>
                 <input style="width: 250px;" type="text" class="form-control" id="city" placeholder="Enter City" name="city" value="{{$employee->city}}">
+            </div>
+            <div class="form-group  col-sm-4">
+                <br>
+                <label for="password">New Password:</label>
+                <input type="text" name="password" id="password" class="form-control"/>
+            </div>
+
+            <div class="form-group  col-sm-4">
+                <br>
+                <label for="password_confirmation">Confirm Password:</label>
+                <input type="text" name="password_confirmation" id="password_confirmation" class="form-control"/>
             </div>
 
             <div class="row">
@@ -132,7 +156,25 @@
                     <input type="checkbox" name="invite_to_zoho" id="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif /> Invite to Zoho
                 </label>
             </div>
-
+            <div class="form-group col-sm-4">
+                <br>
+                <label for="password_confirmation">Roles:</label>
+                <select style="width: 250px;" class="form-control" name="role_id" id="role">
+                    @foreach($roles as $role)
+                        <option value="{{$role->id}}" @if($role->id == $employee_role->id)) selected @endif>{{$role->name}}</option>
+                    @endforeach
+                </select>
+            </div>
+            <div id="permissions">
+                <input type="checkbox" id="check_all">Check All<br>
+                <div class="form-group">
+                    @foreach ($permissions as $route)
+                    <input type="hidden" name="permissions[]" value="{{$route->id}}" >
+                    <input type="checkbox" name="permissions_checked[]" value="{{$route->id}}" @if(in_array($route->id, $employee_permissions)) checked @endif>{{$route->guard_name}}:{{$route->name}}
+                    <br>
+                    @endforeach
+                </div>
+            </div>
             <div class="form-group">
                 <a href="{{route('employees')}}" class="btn btn-success" align="right">Back</a>
                 <button type="button" class="btn btn-success" data-toggle="modal" data-target="#confirm">Update</button>
@@ -148,7 +190,7 @@
                             Are you sure you want to update Employee : {{ $employee->firstname }}?
                         </div>
                         <div class="modal-body">
-                            <input type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="password" required>
+                            <input type="password" id="old_password" class="form-control" placeholder="Admin Password" name="old_password" required>
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -166,6 +208,14 @@
                 $(function () {
                     $('#date_of_birth').datetimepicker({
                         format: 'YYYY-MM-DD',
+                    });
+                    $('#exit_date').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                    });
+                    
+                    $("#role").on("change",function() {
+                        var role_id = this.value;
+                        $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id);
                     });
                 });
                 
@@ -225,7 +275,18 @@
                 });
 
             });
-        </script>
+
+            $(document).ready(function () {
+                $(function () {
+                    $("#check_all").on('click', function(){
+                        $('input:checkbox').not(this).prop('checked', this.checked);
+                    });
+                    $(".check_all_sub").click(function(){
+                        $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);
+                    });
+                });
+            });
+            </script>
     </div>
 </div>
  @stop

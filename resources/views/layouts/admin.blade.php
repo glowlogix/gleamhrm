@@ -85,13 +85,17 @@
                         {{--
                         <li>
                             <a href="{{ route('register') }}">Register</a>
-                        </li> --}} @else
+                        </li> --}} 
+                        @else
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                 {{ Auth::user()->firstname }}
                                 <span class="caret"></span>
                             </a>
                             <ul class="dropdown-menu">
+                                <li>
+                                    <a href="{{ route('employee.edit', Auth::user()->id) }}">Profile</a>
+                                </li>
                                 <li>
                                     <a href="{{ route('logout') }}" onclick="event.preventDefault();document.getElementById('logout-form').submit();"> Logout </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
@@ -125,10 +129,7 @@
                         </li>
                         
                         <li class="list-group-item">
-                            <a href="{{route('offices')}}">Offices</a>
-                        </li>
-                        <li class="list-group-item" {{ request()->is('admin/users') ? 'id=active1' : ''}}>
-                            <a href="{{route('users')}}">Users</a>
+                            <a href="{{route('branch.index')}}">Branches</a>
                         </li>
                         <li class="list-group-item" {{ request()->is('admin/upload/docs') ? 'id=active1' : ''}}>
                             <a href="{{ route('documents.upload') }}">Documents</a>

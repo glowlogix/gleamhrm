@@ -17,7 +17,7 @@
         </span>
     </div>
     <div class="panel-body">
-        <form class="form-inline" action="{{route('employee.store')}}" method="post">
+        <form class="form-inline" action="{{route('employee.store')}}" method="post" enctype="multipart/form-data">
             {{csrf_field()}}
             <div class="form-group col-sm-4">
                 <label for="firstname">First Name:</label>
@@ -28,11 +28,18 @@
                 <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" value="{{ old('lastname') }}" required>
             </div>
             <div class="form-group col-sm-4">
+                <label for="personal_email">Profile Picture:</label>
+                <input style="width: 250px;" type="file" class="form-control" id="picture" placeholder="picture" name="picture" value="{{old('picture')}}">{{old('picture')}}
+            </div>
+            <div class="form-group col-sm-4">
+                <label for="exit_date">Exit Date:</label>
+                <input style="width: 250px;" type="text" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date')}}" required>
+            </div>
+            <div class="form-group col-sm-4">
                 <label for="personal_email">Personal Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{ old('personal_email') }}" required>
             </div>
             <div class="form-group col-sm-4">
-                <br>
                 <label for="official_email">Official Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="official_email" placeholder="Enter Email Address" name="official_email" value="{{ old('official_email') }}" required>
             </div>
@@ -41,8 +48,8 @@
                 <label for="role">Designation:</label>
 
                 <select style="width: 250px;" class="form-control" name="role">
-                @foreach($roles as $k => $role)
-                    <option value="{{$k}}" @if(old("role") == "$k") selected @endif>{{$role}}</option>
+                @foreach($designations as $k => $designation)
+                    <option value="{{$k}}" @if(old("role") == "$k") selected @endif>{{$designation}}</option>
                 @endforeach
                 </select>
             </div>
@@ -58,7 +65,7 @@
                 <br>
                 <label for="office_location_id">Office Location:</label>
                 <select style="width: 250px;" class="form-control" name="office_location_id">
-                    @foreach($office_locations as $office_location)
+                    @foreach($branches as $office_location)
                     <option value="{{$office_location->id}}" @if(old("office_location_id") == "remote") selected @endif>{{$office_location->name}} ({{$office_location->address}})</option>
                     @endforeach
                 </select>
@@ -200,6 +207,9 @@
                 $(".nameselect2").select2();
                 $(function () {
                     $('#date_of_birth').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                    });
+                    $('#exit_date').datetimepicker({
                         format: 'YYYY-MM-DD',
                     });
                 });

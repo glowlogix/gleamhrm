@@ -87,34 +87,8 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'admin.dashboard'
 	]);
 	
-	Route::get('/offices',[
-		'uses' => 'OfficeLocationController@index',
-		'as' => 'offices'
-	]);
-
-	Route::get('/offices/create',[
-		'uses' => 'OfficeLocationController@create',
-		'as' => 'office_location.create'
-	]);
-	
-	Route::Post('/offices/store',[
-		'uses' => 'OfficeLocationController@store',
-		'as' => 'office_location.store'
-	]);
-
-	Route::get('/office/edit/{id}',[
-		'uses' => 'OfficeLocationController@edit',
-		'as' => 'office_location.edit'
-	]);
-
-	Route::Post('/office/update/{id}',[
-		'uses' => 'OfficeLocationController@update',
-		'as' => 'office_location.update'
-	]);
-
-	Route::Get('/office/delete/{id}',[
-		'uses'=> 'OfficeLocationController@destroy',
-		'as'=> 'office_location.delete' 
+	Route::resources([
+	    'branch' => 'BranchesController',
 	]);
 
 	Route::get('/job',[
@@ -253,6 +227,10 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Post('/rolespermissions/applyrolepost',[
 		'uses' => 'RolePermissionsController@applyRolePost',
 		'as' => 'roles_permissions.applyrolepost'
+	]);
+	Route::Get('/rolespermissions/getPermissionsFromRole/{id}',[
+		'uses' => 'RolePermissionsController@getPermissionsFromRole',
+		'as' => 'roles_permissions.getPermissionsFromRole'
 	]);
 	Route::Get('/rolespermissions/edit/{id}',[
 		'uses' => 'RolePermissionsController@edit',

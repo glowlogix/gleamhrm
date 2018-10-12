@@ -4,7 +4,7 @@ namespace App;
 
 use Illuminate\Database\Eloquent\Model;
 
-class OfficeLocation extends Model
+class Branch extends Model
 {
     protected $fillable=[
 		'name', 'status','address','phone_number', 'timing_start', 'timing_off'

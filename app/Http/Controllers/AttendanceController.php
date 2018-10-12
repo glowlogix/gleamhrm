@@ -8,7 +8,7 @@ use App\Traits\MetaTrait;
 use App\Attendance;
 use App\AttendanceSummary;
 use App\Employee;
-use App\OfficeLocation;
+use App\Branch;
 use Carbon\Carbon;
 use App\Leave;
 use Session;
@@ -195,7 +195,7 @@ class AttendanceController extends Controller
             $employee->office_location_id = 2;
         }
         
-        $office_location = OfficeLocation::find($employee->office_location_id);
+        $office_location = Branch::find($employee->office_location_id);
         $ofc_in = Carbon::parse($office_location->timing_start);
         $emp_in = Carbon::parse($first_time_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
@@ -471,7 +471,7 @@ class AttendanceController extends Controller
                 }
             }
         }
-        $office_locations = OfficeLocation::all();
+        $office_locations = Branch::all();
         
         return view('admin.attendance.allattendance',$this->metaResponse(),[
             'office_location_id' => $id,
@@ -556,7 +556,7 @@ class AttendanceController extends Controller
         }
 
         $events = json_encode($events);
-        $office_locations = OfficeLocation::all();
+        $office_locations = Branch::all();
         
         return view('admin.attendance.timeline',$this->metaResponse(), [
             'employees' => $employees,
