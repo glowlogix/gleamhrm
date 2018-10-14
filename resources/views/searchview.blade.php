@@ -1,4 +1,5 @@
-@extends('layouts.admin') @section('content')
+@extends('layouts.admin')
+@section('content')
 <div class="container">
     @if(isset($details))
     <p> The Search results for your query

@@ -1,4 +1,4 @@
-@extends('layouts.app') @section('content')
+@extends('layouts.app')@section('content')
 <link href="{{ asset('css/applicantRegistration.css') }}" rel="stylesheet">
 
 <link href="//db.onlinewebfonts.com/c/a4e256ed67403c6ad5d43937ed48a77b?family=Core+Sans+N+W01+35+Light" rel="stylesheet"
@@ -18,12 +18,12 @@
 	    <strong>!</strong> {{Session::get('error')}}
 	</div>
 	@endif
-	
+
 	<div class="module">
 		<h1> Apply for Job </h1>
 		<form class="form" action="{{route('applicant.store')}}" method="post" enctype="multipart/form-data" autocomplete="off">
 			{{csrf_field()}}
-			
+
 			<div class="form-group">
 			<label for="job_id">Select job</label>
 			<select name="job_id" id="job_id" type="select" class="job_id form-control">

@@ -1,5 +1,12 @@
-@extends('layouts.admin') @section('content')
-
+@extends('layouts.admin')
+@section('Heading')
+    <h3 class="text-themecolor">Dashboad</h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="javascript:void(0)">Home</a></li>
+        <li class="breadcrumb-item active">Dashboard</li>
+    </ol>
+@stop
+@section('content')
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b style="text-align: center;">All Attendance</b>
@@ -51,15 +58,15 @@
                     // window.location = "{{route('employees')}}/"+event.resourceId + "/" + event.date;
                     // console.log('found');
                 }
-                if (event.title.search('present') != -1) {
+                if (event.title.search('present') !== -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('Leave') != -1) {
+                if (event.title.search('Leave') !== -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },
-            resources: {!! $employees !!},
-            events: {!! $events !!}
+            resources:{!! $employees !!},
+            events:{!! $events !!}
         });
 
         $("#selectOffice").change(function(e){
@@ -72,11 +79,5 @@
         });
     });
 </script>
-<style type="text/css">
-@if($office_location_id == 1)
-    .fc-sat { background-color:lightgrey;}
-@endif
-    .fc-sun { background-color:lightgrey;}
-</style>
 </div>
 @stop

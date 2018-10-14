@@ -1,5 +1,12 @@
 @extends('layouts.admin')
-
+@section('Heading')
+	<h3 class="text-themecolor">Leaves</h3>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Attendence</li>
+		<li class="breadcrumb-item active">Leaves</li>
+	</ol>
+@stop
 @section('content')
 <div class="panel panel-default">
 	<div class="panel-heading text-center">

@@ -1,4 +1,9 @@
 @extends('layouts.admin')
+@section('Heading')
+
+    <h3 class="text-themecolor">Add Attendance</h3>
+@endsection
+
 
 @section('content')
 
@@ -16,7 +21,7 @@
                     <span class="glyphicon"></span> Back
                 </a>
             </span>
-        </span>
+        </div>
         </div>
         <div class="row">
             <div class="panel-body">
@@ -93,10 +98,10 @@
         <div class="row">
             <div class="panel-body">
                 <table class="table">
-                    <thead>
+                    <tr>
                         <th>Time In</th>
                         <th>Time Out</th>
-                    </thead>
+                    </tr>
                     <tbody class="table-bordered table-hover table-striped">
                         @if($attendances->count() > 0) @foreach($attendances as $att)
                         <tr>
@@ -228,4 +233,4 @@
             
         </script>
     </div>
-@stop
+@endsection

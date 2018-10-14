@@ -1,8 +1,12 @@
-@extends('layouts.admin') @section('content')
+@extends('layouts.admin')
+@section('Heading')
+    <h3 class="text-themecolor">All Attendance</h3>
+@stop
+@section('content')
+
 
 <div class="panel panel-default">
     <div class="panel-heading text-center">
-        <b style="text-align: center;">All Attendance</b>
         <span style="float: left;">
             <a href="{{route('attendance.create')}}" class="btn btn-info btn-xs" align="right">
                 <span class="glyphicon glyphicon-plus"></span> Add Attendance
@@ -48,7 +52,7 @@
                                 <div class="form-group">
                                     <div class="col-md-7">
                                         <label for="datefrom">StartDate</label>
-                                        <div class='input-group date' id='datefrompicker' name="datefrompicker">
+                                        <div class='input-group date' id='datefrompicker' >
                                             <input type='text' id='datefrom' class="form-control" name="datefrom" />
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar" id="cl1"></span>
@@ -60,7 +64,7 @@
                                 <div class="form-group">
                                     <div class="col-md-7">
                                         <label for="dateto">EndDate</label>
-                                        <div class='input-group date' id='datetopicker' name="datetopicker">
+                                        <div class='input-group date' id='datetopicker' >
                                             <input type='text' id='dateto' class="form-control" name="dateto" />
                                             <span class="input-group-addon">
                                                 <span class="glyphicon glyphicon-calendar"></span>
@@ -102,14 +106,14 @@
             "eventLimit":true,
             "editable":1,
             "eventClick":function(event, jsEvent, view) {
-                if (event.title.search('Birthday') != -1) {
+                if (event.title.search('Birthday') !== -1) {
                     // window.location = "{{route('employees')}}/"+event.resourceId + "/" + event.date;
                     // console.log('found');
                 }
-                if (event.title.search('present') != -1) {
+                if (event.title.search('present') !== -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('Leave') != -1) {
+                if (event.title.search('Leave') !== -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },
@@ -135,11 +139,5 @@
     });
 
 </script>
-<style type="text/css">
-@if($office_location_id == 1)
-    .fc-sat { background-color:lightgrey;}
-@endif
-    .fc-sun { background-color:lightgrey;}
-</style>
 </div>
 @stop

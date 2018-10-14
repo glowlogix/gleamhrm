@@ -10,6 +10,8 @@
 
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
+    <link href="{{ asset('css/data.css') }}" rel="stylesheet">
+
 
     <!-- Styles -->
     <style>
@@ -22,7 +24,6 @@
             height: 100vh;
             margin: 0;
         }
-
         .full-height {
             height: 100vh;
         }
@@ -63,6 +64,7 @@
 
         .m-b-md {
             margin-bottom: 30px;
+
         }
     </style>
 </head>
@@ -74,8 +76,7 @@
             @auth
             <a href="{{ url('/home') }}">Home</a>
             @else
-            <a href="{{ route('employee.login') }}">Employee Login</a>
-            <a href="{{ route('login') }}">Administrator Login</a>
+            <a  href="{{ route('login') }}">Login</a>
             {{--
             <a class="reg" href="{{ route('register') }}">Register</a> --}} @endauth
         </div>
