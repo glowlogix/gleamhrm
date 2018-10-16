@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -50,7 +49,7 @@
                     <!-- Right Side Of Navbar -->
                     <ul class="nav navbar-nav navbar-right">
                         <!-- Authentication Links -->
-                        @if (\Session::has('emp_auth'))
+                        @if (Session::has('emp_auth'))
                         <li class="dropdown">
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                                 {{ $d->firstname }}
@@ -142,6 +141,7 @@
 
             @endforeach
         </div>
+    </div>
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}"></script>
@@ -159,7 +159,6 @@
 </body>
 
 </html>
-=======
 @extends('layouts.profile') @section('content') @foreach($data as $d)
 
 <nav class="navbar navbar-default navbar-static-top">
@@ -189,7 +188,7 @@
             <!-- Right Side Of Navbar -->
             <ul class="nav navbar-nav navbar-right">
                 <!-- Authentication Links -->
-                @if (\Session::has('emp_auth'))
+                @if (Session::has('emp_auth'))
                 <li class="dropdown">
                     <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-expanded="false" aria-haspopup="true">
                         {{ $d->firstname }}
@@ -294,4 +293,4 @@
     </div>
 </div>
 @endforeach @stop
->>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc
+
