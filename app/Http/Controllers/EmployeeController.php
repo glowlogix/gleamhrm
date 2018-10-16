@@ -218,7 +218,7 @@ class EmployeeController extends Controller
 		$employee->invite_to_zoho 	= $request->invite_to_zoho;
 		$employee->invite_to_slack 	= $request->invite_to_slack;
 		$employee->invite_to_asana 	= $request->invite_to_asana;
-		// dd($employee);
+
 		//admin password get from model confirmation box.
 		$params = [
 			"mode" => '',
@@ -264,8 +264,8 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
-		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
-		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
+//		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
+//		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
 		$employee->save();        
 
 		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
