@@ -1,11 +1,10 @@
-@extends('layouts.admin')  @section('content')
-
+@extends('layouts.admin')
+@section('content')
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b>Create new User</b>
     </div>
     <div class="panel-body">
-
         <form action="{{route('user.store')}}" method="Post">
             {{csrf_field()}}
             <div class="form-group">
@@ -31,10 +30,6 @@
                 <button class="btn btn-success center-block" type="submit"> Create User</button>
             </div>
         </form>
-
-
-
     </div>
 </div>
-
 @stop

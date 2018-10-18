@@ -47,12 +47,10 @@
 							</ul>
 						</div>
 					</td>
-
 				</tr>
 				@endforeach @else
 				<tr> No Applicant found.</tr>
 				@endif
-
 			</tbody>
 		</table>
 	@stop

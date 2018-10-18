@@ -13,10 +13,8 @@
 		<div class="card">
 			<div class="card-body">
 				<h6 class="card-subtitle">
-					@if(Auth::user()->admin)
 						<button type="button"  onclick="window.location.href='{{route('employee.create')}}'" class="btn btn-info btn-rounded m-t-10 float-left">Add Employee</button>
 						<button type="button"  onclick="window.location.href='{{route('employee.trashed')}}'" class="btn btn-info btn-rounded m-t-10 float-right">Trashed Employee</button>
-					@endif
 				</h6>
 			<br>
 				<div class="table">
@@ -36,15 +34,13 @@
 						<tbody>
 						@if(count($employees) > 0) @foreach($employees as $employee)
 							<tr>
-
 								<td>{{$employee->firstname}} {{$employee->lastname}}</td>
 								<td>{{$employee->official_email}}</td>
 								<td>{{$employee->contact_no}}</td>
 								<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
-								<td>{{$employee->officelocation->name}}</td>
+								<td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
 								<td class="text-nowrap">
-									@if(Auth::user()->admin)
-									<a class="btn btn-danger btn-sm"  data-target="#confirm-delete{{ $employee->id }}" data-toggle="tooltip" data-original-title="Close"> <i class="fas fa-window-close text-white"></i> </a>
+									<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>
 									{{--///Dialog Box/// --}}
 										<div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 											<div class="modal-dialog">
@@ -84,25 +80,17 @@
 															<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
 															<button  type="submit" class="btn btn-danger btn-ok">Delete</button>
 														</div>
-
 													</form>
-
 												</div>
 											</div>
 										</div>
-
-
 									{{--///End Dialog Box///--}}
 									<a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
-
 								</td>
-								@endif
-
 							</tr>
 						@endforeach @else
 							<tr> No Employee Found.</tr>
 						@endif
-
 						</tbody>
 					</table>
 				</div>

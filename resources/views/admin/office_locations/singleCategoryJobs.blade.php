@@ -5,7 +5,6 @@
 		<b> Jobs </b>
 	</div>
 	<div class="panel-body">
-
 		<table class="table">
 			<thead>
 				<th>Image</th>

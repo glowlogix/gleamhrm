@@ -13,6 +13,7 @@
 			<div class="card-body">
 				<div class="table-responsive">
 					<table class="table">
+						@if($applicants->count() > 0)
 						<thead>
 						<tr>
 							<th>Name</th>
@@ -24,7 +25,7 @@
 						</tr>
 						</thead>
 						<tbody>
-						@if($applicants->count() > 0) @foreach($applicants as $applicant)
+						@foreach($applicants as $applicant)
 						<tr>
 							<td>
 								<a href="javascript:void(0)"><img src="/{{$applicant->avatar}}" alt="user" width="40" class="img-circle" />{{$applicant->name}}</a>
@@ -43,7 +44,7 @@
 						</tr>
 						@endforeach
 						@else
-							<tr> No Applicant found.</tr>
+							<p class="text-center" >No Applicant found.</p>
 						@endif
 						</tbody>
 					</table>

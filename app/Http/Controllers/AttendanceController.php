@@ -8,7 +8,7 @@ use App\Traits\MetaTrait;
 use App\Attendance;
 use App\AttendanceSummary;
 use App\Employee;
-use App\OfficeLocation;
+use App\Branch;
 use Carbon\Carbon;
 use App\Leave;
 use Session;
@@ -28,7 +28,7 @@ class AttendanceController extends Controller
     
     public function index($id)
     {
-        $this->meta['title'] = 'Show Attendance';  
+        $this->meta['title'] = 'Show Attendance';
         $attendance = Attandance::where('employee_id',$id)->get();
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
      
@@ -195,7 +195,7 @@ class AttendanceController extends Controller
             $employee->office_location_id = 2;
         }
         
-        $office_location = OfficeLocation::find($employee->office_location_id);
+        $office_location = Branch::find($employee->office_location_id);
         $ofc_in = Carbon::parse($office_location->timing_start);
         $emp_in = Carbon::parse($first_time_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
@@ -471,7 +471,7 @@ class AttendanceController extends Controller
                 }
             }
         }
-        $office_locations = OfficeLocation::all();
+        $office_locations = Branch::all();
         
         return view('admin.attendance.allattendance',$this->metaResponse(),[
             'office_location_id' => $id,
@@ -529,7 +529,6 @@ class AttendanceController extends Controller
                 "color" => $color,
             ];
         }
-
         $leave = Leave::all();
         foreach ($leave as $key => $value) {
           $color = '';
@@ -550,14 +549,14 @@ class AttendanceController extends Controller
                 "resourceId" => $value->employee_id,
                 "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
                 "date" => $value->datefrom,
-                "start" => $value->datefrom,
-                "end" => $value->dateTo,
+                "start" => Carbon::parse($value->datefrom)->toDateString(),
+                "end" => Carbon::parse($value->dateto)->toDateString(),
                 "color" => $color,
             ];
         }
 
         $events = json_encode($events);
-        $office_locations = OfficeLocation::all();
+        $office_locations = Branch::all();
         
         return view('admin.attendance.timeline',$this->metaResponse(), [
             'employees' => $employees,

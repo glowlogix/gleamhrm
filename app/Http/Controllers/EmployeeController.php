@@ -7,7 +7,7 @@ use Illuminate\Support\Facades\Hash;
 use App\Employee;
 use App\Salary;
 use App\Document;
-use App\OfficeLocation;
+use App\Branch;
 use Session;
 use App\Traits\AsanaTrait;
 use App\Traits\SlackTrait;
@@ -23,6 +23,8 @@ use DB;
 use Response;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
+use Spatie\Permission\Models\Role;
+use Spatie\Permission\Models\Permission;
 
 class EmployeeController extends Controller
 {
@@ -30,7 +32,7 @@ class EmployeeController extends Controller
 	use ZohoTrait;
 	use SlackTrait;
 
-	public $roles = [
+	public $designations = [
 		"project_coordinator" 			=> "Project Coordinator",
 		"web_developer" 				=> "Web Developer",
 		"junior_web_developer" 			=> "Junior Web Developer",
@@ -49,10 +51,10 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
-		$data = Employee::with('officeLocation')->get();
+		$data = Employee::with('branch')->get();
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
-		->with('roles',$this->roles);
+		->with('designations', $this->designations);
 	}
 
 
@@ -65,8 +67,8 @@ class EmployeeController extends Controller
         });*/
  
 		return view('admin.employees.create',['title' => 'Add Employee'])
-		->with('office_locations',OfficeLocation::all())
-		->with('roles', $this->roles);
+		->with('branches',Branch::all())
+		->with('designations', $this->designations);
 	}
 
 
@@ -84,15 +86,16 @@ class EmployeeController extends Controller
 
 		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
 			return redirect()->back()->with('error','Enter correct official email like "abc@glowlogix.com"');
+			// return redirect()->back()->withInput($request)->with('error','Enter correct official email like "abc@glowlogix.com"');
 		}
 		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
 		$when = now()->addMinutes(1);
 		$l=8;
-		$password = substr(md5(uniqid(mt_rand(), true)), 0, $l);
-		
-		$employee = Employee::create([
+		$password = bcrypt("123456");
+
+		$arr = [
 			'firstname'     	=> $request->firstname,
 			'lastname'      	=> $request->lastname,
 			'contact_no'       	=> $request->contact_no,
@@ -102,6 +105,7 @@ class EmployeeController extends Controller
 			'official_email'    => $request->official_email,
 			'personal_email'    => $request->personal_email,
 			'status'        	=> 1,
+			'exit_date' 		=> $request->exit_date,
 			'basic_salary'     	=> $request->salary,
 			'role'          	=> $request->role,
             'type' 				=> $request->type,
@@ -110,11 +114,19 @@ class EmployeeController extends Controller
             'current_address' 	=> $request->current_address,
             'permanent_address' => $request->permanent_address,
             'city' 				=> $request->city,
-            'office_location_id' => $request->office_location_id,  
+            'office_location_id'=> $request->office_location_id,  
 			'invite_to_zoho'  	=> $request->invite_to_zoho,
 			'invite_to_slack' 	=> $request->invite_to_slack,
 			'invite_to_asana' 	=> $request->invite_to_asana,
-		]);
+		];
+
+		if($request->picture != ""){
+			$picture 					= time().'_'.$request->picture->getClientOriginalName();
+        	$request->picture->move(public_path().'/images/', $picture);  
+			$arr['picture'] 			= $picture;
+		}
+		
+		$employee = Employee::create($arr);
 
 		$params = [
 			'emailAddress'          => $request->official_email,
@@ -170,17 +182,32 @@ class EmployeeController extends Controller
 			abort(404);
 		}
 
-		return view('admin.employees.edit',['title' => 'Update Employee'])
+        $roles = Role::all();
+		
+		$employee_role = $employee->roles[0];
+		$employee_permissions = array(); 
+		foreach ($employee->permissions as $key => $value) {
+			$employee_permissions[] = $value->id;
+		}
+
+		$role = Role::find($id);
+        $permissions = $role->permissions()->get();
+
+        return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
-		->with('office_locations', OfficeLocation::all())
-		->with('roles', $this->roles);
+		->with('branches', Branch::all())
+		->with('designations', $this->designations)
+		->with('employee_role', $employee_role)
+		->with('permissions', $permissions)
+		->with('employee_permissions', $employee_permissions)
+		->with('roles', $roles);
 	}
 
 	public function update(Request $request, $id)
 	{
 		$adminPassword = Auth::user()->password;
 		
-		if(!Hash::check($request->password, $adminPassword)){
+		if(!Hash::check($request->old_password, $adminPassword)){
 			return redirect()->back()->with('error','Wrong admin password entered');
 		}
 
@@ -190,10 +217,13 @@ class EmployeeController extends Controller
 			'official_email' => 'required|email|unique:employees,official_email,'.$id,
 			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
 			'contact_no' 	 => 'required|size:11|unique:employees,contact_no,'.$id,
+        	'password' 	 	 => 'confirmed',
+            'picture' 		 => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
 			// 'cnic' => 'size:13',
 		]);
 
-		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
+		// rename image name or file name 
+        if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
 			return redirect()->back()->with('error','Enter correct official email like "abc@glowlogix.com"');
 		}
 
@@ -202,6 +232,14 @@ class EmployeeController extends Controller
 		$employee->firstname 		= $request->firstname;
 		$employee->lastname 		= $request->lastname;
 		$employee->contact_no 		= $request->contact_no;
+		
+		if($request->picture != ""){
+			$picture 					= time().'_'.$request->picture->getClientOriginalName();
+			$employee->picture 			= $picture;
+        	$request->picture->move(public_path().'/images/', $picture);  
+		}
+		
+		$employee->exit_date 		= $request->exit_date;
 		$employee->emergency_contact= $request->emergency_contact;
 		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
 		$employee->official_email 	= $request->official_email;
@@ -215,6 +253,15 @@ class EmployeeController extends Controller
 		$employee->current_address 	= $request->current_address;
 		$employee->permanent_address= $request->permanent_address;
 		$employee->city 			= $request->city;
+		
+		if (!empty($request->password) && !empty($request->confirm_password)) {
+			$employee->password			= Hash::make($request->password);
+		}
+
+		if (Auth::user()->id == 1){
+			$employee->allowed_leaves = $request->allowed_leaves;
+		}
+		
 		$employee->invite_to_zoho 	= $request->invite_to_zoho;
 		$employee->invite_to_slack 	= $request->invite_to_slack;
 		$employee->invite_to_asana 	= $request->invite_to_asana;
@@ -264,9 +311,20 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
-//		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
-//		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
-		$employee->save();        
+		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
+		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
+
+        $old_role = $employee->roles[0];
+        $employee->removeRole($old_role);
+        
+        $role = Role::find($request->role_id);
+        $employee->assignRole($role);
+        
+        foreach ($request->permissions_checked as $permission) {
+        	$employee->givePermissionTo($permission);
+        }
+		$employee->save();
+
 
 		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
 	}
@@ -349,16 +407,19 @@ class EmployeeController extends Controller
 			'email' => 'required',
 			'password' => 'required'
 		]);
-		$email = $request->email;
-		$password = $request->password;
-		$row = DB::table('employees')->where(['official_email' => $email , 'password' => $password , 'role' => 'member'])
-		->get();
 
-		if(count($row)>0){
-			foreach($row as $data){                
-				$request->session()->put('emp_auth', $data->id);
-				return redirect()->route('employee.profile');
-			}
+		$email = $request->email;
+		$employee = Employee::where(['official_email' => $email])->first();
+		if(isset($employee->password)){
+			return redirect()->back()->with('error','Email not found');
+		}
+		if(!Hash::check($request->password, $employee->password)){
+			return redirect()->back()->with('error','Wrong email/password entered');
+		}
+
+		if(isset($employee->id)){
+			$request->session()->put('emp_auth', $employee->id);
+			return redirect()->route('employee.profile');
 		}       
 
 		$messages = 'Username/Password Incorrect';
@@ -366,8 +427,8 @@ class EmployeeController extends Controller
 	}
 
 	public function EmployeeProfile(Request $request){
-		$data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
-		return view('admin.employees.profile',['data' => $data,'title' => 'Update Profile']);
+		$employee = Employee::find($request->session()->get('emp_auth'));
+		return view('admin.employees.profile',['employee' => $employee,'title' => 'Update Profile']);
 
 	}
 

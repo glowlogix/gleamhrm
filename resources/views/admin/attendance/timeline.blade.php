@@ -20,7 +20,6 @@
                 <span class="glyphicon glyphicon-plus"></span> Add Leave
             </a>
         </span>
-        
     </div>
     <div class="panel-body">
         <span style="float: right;">
@@ -34,7 +33,6 @@
         <div id="calendar">
         </div>
     </div>
-
 <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
@@ -46,7 +44,7 @@
                 center: 'title',
                 right: 'timelineDay,timelineWeek,timelineMonth'
             },
-            // slotWidth : 30,
+            slotWidth : 60,
             resourceColumns: [
                 {
                     labelText: 'Employees',
@@ -61,7 +59,7 @@
                 if (event.title.search('present') !== -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('Leave') !== -1) {
+                if (event.title.search('leave') != -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },

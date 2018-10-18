@@ -24,7 +24,6 @@
 								<th> Timing Off</th>
 								<th> Contact No</th>
 								<th> Actions</th>
-
 							</tr>
 							</thead>
 							<tbody>
@@ -40,7 +39,6 @@
 									<a class="btn btn-info btn-sm" href="{{route('office_location.edit',['id'=>$office_location->id])}}"  data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
 									<a class="btn btn-danger btn-sm" href="{{route ('office_location.delete',['id'=>$office_location->id])}}" data-original-title="Close"> <i class="fas fa-window-close text-white  "></i> </a>
 								</td>
-
 							</tr>
 								@endforeach @else
 								<tr> No Office Location found.</tr>

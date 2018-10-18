@@ -11,12 +11,9 @@
     <!-- Bootstrap Core CSS -->
     <link href="{{ asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}"  rel="stylesheet">
     <!-- Custom CSS -->
-
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
-
     <link href="{{ asset('css/colors/blue.css') }}" rel="stylesheet">
-
     <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
     <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
     <!--[if lt IE 9]>
@@ -47,11 +44,11 @@
                     <h3 class = "box-title m-b-20">Sign In</h3>
                     <div class="form-group " {{ $errors->has('email') ? ' has-error' : '' }}>
                         <div class="col-xs-12" >
-         <input class="form-control" type="email" name="email" placeholder="E-Mail Address" id="email" value="{{ old('email') }}" required autofocus>
+         <input class="form-control" type="email" name="official_email" placeholder="E-Mail Address" id="email" value="{{ old('official_email') }}" required autofocus>
                         </div>
-                        @if ($errors->has('email'))
+                        @if ($errors->has('official_email'))
                             <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
+                                    <strong>{{ $errors->first('official_email') }}</strong>
                                 </span>
                         @endif
                     </div>
@@ -120,5 +117,4 @@
 <!-- Style switcher -->
 <!-- ============================================================== -->
 <script src="{{ asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
-
 </body>

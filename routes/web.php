@@ -34,6 +34,21 @@ Route::post('/employee/login', [
 	'uses' => 'EmployeeController@postEmployeeLogin'
 ]);
 
+//Leaves
+Route::Get('/leave',[
+	'uses' => 'LeaveController@create',
+	'as' => 'leaves'
+]);
+
+Route::Post('/leave/store',[
+	'uses' => 'LeaveController@store',
+	'as' => 'leaves.store'
+]);
+
+Route::Get('/leave/show/{id}',[
+	'uses' => 'LeaveController@indexEmployee',
+	'as' => 'leave.employeeshow'
+]);
 
 Route::get('/employee/profile', [
 	'as' => 'employee.profile',
@@ -59,47 +74,26 @@ Route::post('/employee/logout', [
 
 //docs List
 
-Route::get('/docs/list', [
+Route::get('/documents/list', [
 	'as' => 'documents.list',
 	'uses' => 'EmployeeController@showDocs'
 ]);
 Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//dashboard
-	Route::get('/dashboard/{id?}',[
-		'uses' => 'AttendanceController@showTimeline',
-		// 'uses' => 'UsersController@dashboard',
+	Route::get('/dashboard',[
+		'uses' => 'DashboardController@index',
 		'as' => 'admin.dashboard'
 	]);
+
+    //	Help
+    Route::get('/help',[
+        'uses' => 'DashboardController@help',
+        'as' => 'admin.help'
+    ]);
 	
-	Route::get('/offices',[
-		'uses' => 'OfficeLocationController@index',
-		'as' => 'offices'
-	]);
-
-	Route::get('/offices/create',[
-		'uses' => 'OfficeLocationController@create',
-		'as' => 'office_location.create'
-	]);
-	
-	Route::Post('/offices/store',[
-		'uses' => 'OfficeLocationController@store',
-		'as' => 'office_location.store'
-	]);
-
-	Route::get('/office/edit/{id}',[
-		'uses' => 'OfficeLocationController@edit',
-		'as' => 'office_location.edit'
-	]);
-
-	Route::Post('/office/update/{id}',[
-		'uses' => 'OfficeLocationController@update',
-		'as' => 'office_location.update'
-	]);
-
-	Route::Get('/office/delete/{id}',[
-		'uses'=> 'OfficeLocationController@destroy',
-		'as'=> 'office_location.delete' 
+	Route::resources([
+	    'branch' => 'BranchesController',
 	]);
 
 	Route::get('/job',[
@@ -213,6 +207,48 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	Route::Get('/user/not_admin/{id}',[
 		'uses' => 'UsersController@Not_Admin',
 		'as' => 'user.not_admin'
+	]);
+
+	Route::resources([
+	    'organization_hierarchy' => 'OrganizationHierarchyController',
+	]);
+
+	Route::Get('/rolespermissions',[
+		'uses' => 'RolePermissionsController@index',
+		'as' => 'roles_permissions'
+	]);
+	Route::Get('/rolespermissions/create',[
+		'uses' => 'RolePermissionsController@create',
+		'as' => 'roles_permissions.create'
+	]);
+	Route::Post('/rolespermissions/store',[
+		'uses' => 'RolePermissionsController@store',
+		'as' => 'roles_permissions.store'
+	]);
+	Route::Get('/rolespermissions/applyrole',[
+		'uses' => 'RolePermissionsController@applyRole',
+		'as' => 'roles_permissions.applyrole'
+	]);
+	Route::Post('/rolespermissions/applyrolepost',[
+		'uses' => 'RolePermissionsController@applyRolePost',
+		'as' => 'roles_permissions.applyrolepost'
+	]);
+	Route::Get('/rolespermissions/getPermissionsFromRole/{id}',[
+		'uses' => 'RolePermissionsController@getPermissionsFromRole',
+		'as' => 'roles_permissions.getPermissionsFromRole'
+	]);
+	Route::Get('/rolespermissions/edit/{id}',[
+		'uses' => 'RolePermissionsController@edit',
+		'as' => 'roles_permissions.edit'
+	]);
+	Route::Post('/rolespermissions/update/{id}',[
+		'uses' => 'RolePermissionsController@update',
+		'as' => 'roles_permissions.update'
+	]);
+
+	Route::Post('/rolespermissions/delete/{id}',[
+		'uses' => 'RolePermissionsController@destroy',
+		'as' => 'roles_permissions.delete'
 	]);
 
 	Route::Get('/employees',[
@@ -402,34 +438,34 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	]);
 
 	//upload Docs
-	Route::get('/upload/docs',[
-		'as' => 'documents.upload',
+	Route::get('/documents',[
+		'as' => 'documents',
 		'uses' => 'DocumentsController@index'
 	]);
 
-	Route::get('/upload/docs/upload',[
-		'as' => 'documents.docs.upload',
+	Route::get('/documents/create',[
+		'as' => 'documents.create',
 		'uses' => 'DocumentsController@createDocs'
 	]);
 
-	Route::post('/upload/delete/{id}',[
-		'as' => 'documents.docs.delete',
+	Route::post('/documents/upload',[
+		'as' => 'documents.upload',
+		'uses' => 'DocumentsController@uploadDocs'
+	]);
+
+	Route::post('/documents/delete/{id}',[
+		'as' => 'documents.delete',
 		'uses' => 'DocumentsController@deleteDocument'
 	]);
 
-	Route::get('/upload/docs/edit/{id}',[
-		'as' => 'documents.docs.edit',
+	Route::get('/documents/edit/{id}',[
+		'as' => 'documents.edit',
 		'uses' => 'DocumentsController@editDocument'
 	]);
 
-	Route::post('/upload/docs/update/{id}',[
-		'as' => 'documents.docs.update',
-		'uses' => 'DocumentsController@updateDocument'
-	]);
-
-	Route::post('/upload/docs',[
-		'as' => 'documents.upload',
-		'uses' => 'DocumentsController@uploadDocs'
+	Route::post('/documents/update/{id}',[
+		'as' => 'documents.update',
+		'uses' => 'DocumentsController@update'
 	]);
 
 });
@@ -462,4 +498,4 @@ Route::any('/search',function(){
         return view('searchview')->withDetails($applicant)->withQuery ( $q );
     else return view ('searchview')->withMessage('No Details found. Try to search again !');
 });
-Route::get('welcome-mail','UserController@welcomeMail');
+// Route::get('welcome-mail','UserController@welcomeMail');

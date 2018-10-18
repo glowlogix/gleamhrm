@@ -2,7 +2,6 @@
 @section('Heading')
 	<h3 class="text-themecolor"> Applcants</h3>
 @stop
-
 @section('content')
 
 <div class="panel panel-default">
@@ -55,7 +54,6 @@
 				@endforeach @else
 				<tr> No Applicant found.</tr>
 				@endif
-
 			</tbody>
 		</table>
 	</div>

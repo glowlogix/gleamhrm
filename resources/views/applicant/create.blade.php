@@ -11,14 +11,12 @@
 	        <strong>Success!</strong> {{Session::get('success')}}
 	    </div>
     @endif
-
     @if (Session::has('error'))
 	<div class="alert alert-warning" align="left">
 	    <a href="#" class="close" data-dismiss="alert">&times;</a>
 	    <strong>!</strong> {{Session::get('error')}}
 	</div>
 	@endif
-
 	<div class="module">
 		<h1> Apply for Job </h1>
 		<form class="form" action="{{route('applicant.store')}}" method="post" enctype="multipart/form-data" autocomplete="off">

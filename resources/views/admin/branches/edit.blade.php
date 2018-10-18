@@ -11,9 +11,9 @@
 <div class="row">
 	<div class="col-lg-12">
 		<div class="card card-outline-info">
-
 			<div class="card-body">
-				<form  action="{{route('office_location.update',['id'=>$office_location->id])}}" method="post" enctype="multipart/form-data">
+				<form  action="{{route('branch.update',['id'=>$office_location->id])}}" method="post" enctype="multipart/form-data">
+					<input name="_method" type="hidden" value="PUT">
 					{{csrf_field()}}
 					<div class="form-body">
 
@@ -65,12 +65,10 @@
 								<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{$office_location->phone_number}}">
 							</div>
 						</div>
-
 					</div>
-
 					<div class="form-actions">
 						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Location</button>
-						<button type="button" onclick="window.location.href='{{route('offices')}}'" class="btn btn-inverse">Cancel</button>
+						<button type="button" onclick="window.location.href='{{route('branch.index')}}'" class="btn btn-inverse">Cancel</button>
 					</div>
 				</form>
 			</div>

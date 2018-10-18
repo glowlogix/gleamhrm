@@ -17,16 +17,17 @@
 					<div class="table">
 						<table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
 							<thead>
+							@if($jobs->count() > 0)
 							<tr>
 								<th> Title</th>
 								<th> City</th>
 								<th> Actions </th>
 							</tr>
 							</thead>
-							<tbody>
-							@if($jobs->count() > 0) @foreach($jobs as $job)
-							<tr>
 
+							<tbody>
+							 @foreach($jobs as $job)
+							<tr>
 								<td>{{$job->title}}</td>
 								<td>{{$job->city}}</td>
 								<td class="text-nowrap">
@@ -36,7 +37,7 @@
 
 							</tr>
 							@endforeach @else
-								<tr> No job found.</tr>
+								<p class="text-center"> No job found.</p>
 							@endif
 
 							</tbody>

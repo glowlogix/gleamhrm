@@ -5,16 +5,33 @@
 @section('content')
 <div class="panel panel-default">
     <div class="panel-heading text-center">
-        <div>
-            <b style="text-align: center;">Update Leave</b>
-        </div>
+          <b style="text-align: center;">Update Leave</b>
+          <span style="float: left;">
+            <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
+                <span class="glyphicon glyphicon-plus"></span> Add Leave
+            </a>
+          </span>
+          <span style="float: right;">
+              <a href="{{route('leave.show',Auth::user()->id)}}" class="btn btn-info btn-xs" align="right">
+                  <span class="glyphicon"></span> Back
+              </a>
+          </span>
     </div>
     <div class="panel-body">
-        <form action="{{route('leave.update',['id'=>$leave->employee_id])}}" method="post">
-            {{csrf_field()}}
-            <div class="form-group">
-                <div class="col-md-7">
-
+        <form action="{{route('leave.update', ['id'=>$leave->id])}}" method="post">
+           {{csrf_field()}}
+          <div class="form-group">
+            <div class="col-md-6">
+                <label for="name">Name:</label>
+                <select class="form-control" name="employee_id">
+                 @foreach($employees as $employee)
+                   <option  @if($leave->employee_id == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
+                 @endforeach
+                </select>
+            </div>
+          </div>
+          <div class="form-group">
+                <div class="col-md-6">
                     <label for="leave_type">Leave Type</label>
                     <select class="form-control" name="leave_type">
                         <option @if($leave->leave_type == 'unpaid_leave')selected @endif value="unpaid_leave">Unpaid Leave</option>
@@ -23,68 +40,94 @@
                         <option @if($leave->leave_type == 'paid_leave')selected @endif value="paid_leave">Paid Leave</option>
                     </select>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-7">
-                    <label for="datefrom">DateFrom</label>
+          </div>
+          <div class="form-group" >
+                <div class="col-md-6" style="padding-top:15px;">
+                    <label for="datefrom">FromDate</label>
                     <div class='input-group date' id='datefrom' name="datefrom">
-                        <input type='text' value="{{$leave->datefrom}}" id="dtfrom" class="form-control" name="datefrom" />
+                        <input type='text' class="form-control" name="datefrom" value="{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}" />
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </div>
-            </div>
-
-            <div class="form-group">
-                <div class="col-md-7">
-                    <label for="dateto">DateTo</label>
+          </div>
+                
+          <div class="form-group" >
+                <div class="col-md-6" style="padding-top:15px;">
+                    <label for="dateto">ToDate</label>
                     <div class='input-group date' id='dateto' name="dateto">
-                        <input type="text" value="{{$leave->dateto}}" class="form-control" id="dtto" name="dateto" />
+                        <input type='text' class="form-control" name="dateto" value="{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}"/>
                         <span class="input-group-addon">
                             <span class="glyphicon glyphicon-calendar"></span>
                         </span>
                     </div>
                 </div>
-            </div>
-            <div class="form-group">
-                <div class="col-md-7">
-
-                    <label for="status">Status</label>
-                    <select name="status" class="form-control">
-                        <option @if($leave->status == 'Pending') selected @endif value="Pending">Pending</option>
-                        <option @if($leave->status == 'Approval') selected @endif value="Approval">Approval</option>
-                        <option @if($leave->status == 'Declined') selected @endif value="Declined">Declined</option>
-                    </select>
-
+          </div>
+                
+          <div class="form-group">
+                <div class="col-md-6">
+                    <label for="subject">Subject</label>
+                    <input type="text" class="form-control" name="subject" value="{{$leave->subject}}">
                 </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6">
+              <label for="name">Line Manager</label>
+              <select name="line_manager" class="form-control">
+                @foreach ($employees as $employee)
+                <option value="{{$employee->id}}" @if($employee->id == old('line_manager')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
+                @endforeach
+              </select>
             </div>
-            <div class="form-group">
-                <div class="col-md-7">
-                    <label for="reason">Reason</label>
-                    <input type="text" value="{{$leave->reason}}" class="form-control" name="reason">
+          </div>
+          <div class="form-group">
+                <div class="col-md-6">
+                    <label for="description">Description</label>
+                    <input type="text" class="form-control" name="description" value="{{$leave->description}}">
                 </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6">
+                <label for="point_of_contact">Back up/ Point of Contact:</label>
+                <select class="form-control" name="point_of_contact">
+                 @foreach($employees as $employee)
+                   <option  @if($leave->employee_id == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
+                 @endforeach
+                </select>
             </div>
-            <div class="form-group">
-                <div class="col-md-5">
-                    <button class="btn btn-success center-block" type="submit"> Update</button>
+          </div>
+          <div class="form-group">
+                <div class="col-md-6">
+                    <label for="cc_to">CC To</label>
+                    <input type="text" class="form-control" name="cc_to" id="cc_to" value="{{$leave->cc_to}}">
                 </div>
+          </div>
+          <div class="form-group">
+            <div class="col-md-6">
+              <label for="status">Status:</label>
+              <select class="form-control" name="status">
+                 <option value="pending" @if($leave->status == 'pending') selected @endif>Pending</option>
+                 <option value="approved" @if($leave->status == 'approved') selected @endif>Approved</option>
+              </select>
             </div>
+            </div>
+          <div class="form-group">
+                <div class="col-md-8" style="padding-top:23px;">
+                    <button class="btn btn-success" type="submit" style="margin-left: 360px;"> Update Leave</button>
+                </div>
+         </div> 
         </form>
 
         <script type="text/javascript">
             $(document).ready(function () {
-
                 $(function () {
                     $('#datefrom').datetimepicker({
-                        format: 'L',
-                        date: $('#dtfrom').val()
+                        format: "YYYY-MM-DD"
                     });
                     $('#dateto').datetimepicker({
-                        format: 'L',
-                        date: $('#dtto').val()
+                        format: "YYYY-MM-DD"
                     });
-
                 });
             });
         </script>

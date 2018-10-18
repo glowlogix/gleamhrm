@@ -3,8 +3,6 @@
     <h3 class="text-themecolor">All Attendance</h3>
 @stop
 @section('content')
-
-
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <span style="float: left;">
@@ -113,7 +111,7 @@
                 if (event.title.search('present') !== -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('Leave') !== -1) {
+                if (event.title.search('leave') != -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },

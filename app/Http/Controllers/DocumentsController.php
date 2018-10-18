@@ -2,12 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use DB;
 use File;
 use Session;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
+use App\Document;
 
 class DocumentsController extends Controller
 {
@@ -16,35 +16,8 @@ class DocumentsController extends Controller
     public function index(){
 
         $this->meta['title'] = 'Upload Documnents';        
-        $data = DB::table('documents')->get();
+        $data = Document::get();
         return view('admin.docs.index',['files' => $data],$this->metaResponse());
-    }
-
-    public function uploadDocs1(Request $request){
-        $this->validate($request, [
-            'docs.*'=>'required|mimes:doc,docx,pdf|max:2000',
-            'application_name' => 'required'
-        ]);
-
-        $files = $request->file('docs');    
-        $application_name = $request->application_name;
-        foreach($files as $file){
-
-            $Uniquefilename = uniqid().$file->getClientOriginalName();
-            $filename = $file->getClientOriginalName();;
-            $path = public_path('storage/public/');
-
-            $fileObject = $file->move($path, $Uniquefilename);
-            if($fileObject){
-                DB::table('uploads')->insert([
-                    'filename' => $Uniquefilename,
-                    'originalname' => $filename,
-                    'status' => 1      
-                ]);
-            }
-        }
-        Session::flash('success','File is upploaded succesfully');
-        return redirect()->back();
     }
 
     public function createDocs(Request $request){
@@ -52,31 +25,36 @@ class DocumentsController extends Controller
     }
 
     public function editDocument(Request $request,$id){
-        $document = DB::table('documents')->where('id',$id)->first();
+        $document = Document::find($id);
         return view('admin.docs.edit',['document'=>$document]);
     }
 
-    public function updateDocument(Request $request,$id){
+    public function update(Request $request,$id){
 
         $this->validate($request, [
-            'documentname' => 'required',
+            // 'document' => 'required',
             'upload_status' => 'required'
         ]);
+        
+        $document = Document::find($id);
 
-        DB::table('documents')->where('id',$id)->first();
-        $status = $request->upload_status;
-        $name = $request->documentname;
-        DB::table('documents')
-        ->where('id', $id)
-        ->update(['status' => $status,'name' => $name]);
+        if ($request->document != ""){
+            $document_file = time().'_'.$request->document->getClientOriginalName();
+            $request->document->move(public_path().'/documents/', $document_file);  
+            $document->url = $document_file;
+        }
+
+        $document->name = $request->document_name;
+        $document->status = $request->upload_status;
+        $document->save();
         
         Session::flash('success','Document is updated succesfully');            
         
-        return redirect()->route('documents.upload');
+        return redirect()->route('documents');
     }
 
     public function deleteDocument(Request $request,$id){
-        DB::table('documents')->where('id',$id)->delete();
+        Document::find($id)->delete();
         
         Session::flash('success','Document is deleted succesfully');            
         
@@ -86,26 +64,24 @@ class DocumentsController extends Controller
 
     public function uploadDocs(Request $request){
         $this->validate($request, [
-            'documents.*' => 'required|mimes:doc,docx,pdf|max:2000',
+            'document' => 'required|mimes:doc,docx,pdf|max:2000',
             'document_name' => 'required'
         ]);
+        $arr = array();
 
-        $files = $request->file('documents');
-        $document_name = $request->document_name;
-        foreach ($files as $file) {
+        $arr = [
+            'name' => $request->document_name,
+        ];
 
-            $Uniquefilename = time().$file->getClientOriginalName();
-            $path = public_path('storage/public/');
-
-            $fileObject = $file->move($path, $Uniquefilename);
-            if ($fileObject) {
-                DB::table('documents')->insert([
-                    'url' => $Uniquefilename,
-                    'name' => $document_name
-                ]);
-            }
+        if($request->document != ""){
+            $document                    = time().'_'.$request->document->getClientOriginalName();
+            $request->document->move(public_path().'/documents/', $document);  
+            $arr['url'] = $document;
         }
+
+        Document::insert($arr);
+
         Session::flash('success', 'File is upploaded succesfully');
-        return redirect()->route('documents.upload');
+        return redirect()->route('documents');
     }
 }

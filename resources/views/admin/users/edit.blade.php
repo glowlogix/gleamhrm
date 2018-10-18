@@ -8,7 +8,6 @@
         <b>Update User</b>
     </div>
     <div class="panel-body">
-
         <form action="{{route('user.update',['id'=>$user->id])}}" method="Post">
             {{csrf_field()}}        
             <div class="form-group">
@@ -41,7 +40,6 @@
                 <button class="btn btn-success center-block" type="submit"> Update</button>
             </div>
         </form>
-
     </div>
 </div>
 

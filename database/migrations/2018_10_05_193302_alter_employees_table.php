@@ -18,6 +18,7 @@ class AlterEmployeesTable extends Migration
             $table->integer('basic_salary')->default(0)->after('status');
             $table->integer('bonus')->default(0)->after('status');
             $table->integer('total_salary')->default(0)->after('status');
+            $table->integer('remember_token')->nullable()->after('status');
         });
 
     }
