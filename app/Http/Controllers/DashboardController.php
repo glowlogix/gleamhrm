@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Employee;
 use Illuminate\Http\Request;
 use App\Applicant;
 use App\JobPosition;
@@ -23,7 +24,7 @@ class DashboardController extends Controller
 //        $this->meta['title'] = 'Applicants';
 //        $applicants = Applicant::where('recruited', 0)->take(10)->get();
         
-        return view('admin.dashboard.index',$this->metaResponse());
+        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::all());
     }
 //    Help
     public function help()

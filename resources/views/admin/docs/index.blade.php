@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('documents.create')}}'" data-toggle="modal" data-target="#add-contact"><span class="fas fa-plus" ></span> Add New Document</button>
 	<h3 class="text-themecolor">Documents</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -12,7 +13,6 @@
 			<div class="card">
 				<div class="card-body">
 					<h6 class="card-subtitle"></h6>
-					<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('documents.create')}}'" data-toggle="modal" data-target="#add-contact">Add New Document</button>
 					<div class="table">
 						<table id="demo-foo-addrow" class="table table-box m-t-20 table-hover contact-list" data-paging="true" data-paging-size="7">
 							@if(count($files) > 0)

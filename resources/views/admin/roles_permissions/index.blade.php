@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button"  onclick="window.location.href='{{route('roles_permissions.create')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Role</button>
 	<h3 class="text-themecolor">Permission And Roles</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -13,8 +14,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h6 class="card-subtitle"></h6>
-					<button type="button"  onclick="window.location.href='{{route('roles_permissions.create')}}'" class="btn btn-info btn-rounded m-t-10 float-left">Add Role</button>
-					<button type="button"  onclick="window.location.href='{{route('roles_permissions.applyrole')}}'" class="btn btn-info btn-rounded m-t-10 float-right">Apply Role</button>
+					{{--<button type="button"  onclick="window.location.href='{{route('roles_permissions.applyrole')}}'" class="btn btn-info btn-rounded m-t-10 float-right">Apply Role</button>--}}
 					<br>
 					<div class="table">
 						<table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">

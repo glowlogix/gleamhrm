@@ -20,7 +20,7 @@
 							<div class="form-group">
 								<label class="control-label">Timing Start</label>
 								<input class="form-control" type="time" name="timing_start" placeholder="Enter Timing Start here"  id="timing_start" value="{{old('timing_start')}}">
-								<span class="input-group-addon timepicker">
+								<span class="input-group-addon">
                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                     </span>
 							</div>
@@ -29,7 +29,7 @@
 							<div class="form-group">
 								<label class="control-label">Timing OFF</label>
 								<input class="form-control" type="time" name="timing_off" placeholder="Enter Timing Off here"  id="timing_off" value="{{old('timing_off')}}" />
-								<span class="input-group-addon timepicker">
+								<span class="input-group-addon">
                         <i class="fa fa-clock-o" style="font-size:16px"></i>
 								</span>
 						</div>

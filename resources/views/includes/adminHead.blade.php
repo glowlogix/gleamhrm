@@ -61,4 +61,5 @@
     </style>
 
     {{--END Organisational Structure--}}
+    <link href="{{asset('assets/plugins/footable/css/footable.bootstrap.min.css')}}" rel="stylesheet">
 </head>
