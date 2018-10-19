@@ -26,10 +26,6 @@
                 <input style="width: 250px;" type="file" class="form-control" id="picture" placeholder="picture" name="picture" value="{{$employee->picture}}">{{$employee->picture}}
             </div>
             <div class="form-group col-sm-4">
-                <label for="exit_date">Exit Date:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{$employee->exit_date}}" required>
-            </div>
-            <div class="form-group col-sm-4">
                 <label for="personal_email">Personal Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{$employee->personal_email}}" required>
             </div>
@@ -127,13 +123,6 @@
                 <label for="password">New Password:</label>
                 <input type="text" name="password" id="password" class="form-control"/>
             </div>
-
-            <div class="form-group  col-sm-4">
-                <br>
-                <label for="password_confirmation">Confirm Password:</label>
-                <input type="text" name="password_confirmation" id="password_confirmation" class="form-control"/>
-            </div>
-
             <div class="row">
             <div class="form-group  col-sm-4">
                 <br>
@@ -165,7 +154,9 @@
                     @endforeach
                 </select>
             </div>
-            <div id="permissions">
+            <hr>
+            <br>
+            <div id="permissions" style="display: inline-block">
                 <input type="checkbox" id="check_all">Check All<br>
                 <div class="form-group">
                     @foreach ($permissions as $route)
@@ -279,7 +270,7 @@
             $(document).ready(function () {
                 $(function () {
                     $("#check_all").on('click', function(){
-                        $('input:checkbox').not(this).prop('checked', this.checked);
+                        $('div#permissions input:checkbox').not(this).prop('checked', this.checked);
                     });
                     $(".check_all_sub").click(function(){
                         $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);

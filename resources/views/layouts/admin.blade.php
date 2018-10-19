@@ -181,7 +181,9 @@
                         <a href="#" class="close" data-dismiss="alert">&times;</a>
                         <strong>Error!</strong> {{Session::get('error')}}
                     </div>
-                    @endif @yield('content')
+                    @endif 
+
+                    @yield('content')
                 </div>
 
             </div>

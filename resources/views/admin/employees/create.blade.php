@@ -32,10 +32,6 @@
                 <input style="width: 250px;" type="file" class="form-control" id="picture" placeholder="picture" name="picture" value="{{old('picture')}}">{{old('picture')}}
             </div>
             <div class="form-group col-sm-4">
-                <label for="exit_date">Exit Date:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date')}}" required>
-            </div>
-            <div class="form-group col-sm-4">
                 <label for="personal_email">Personal Email Address:</label>
                 <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{ old('personal_email') }}" required>
             </div>

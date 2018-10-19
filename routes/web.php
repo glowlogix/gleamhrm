@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use App\Applicant;
 use Illuminate\Support\Facades\Input;
 
@@ -78,7 +79,10 @@ Route::get('/documents/list', [
 	'as' => 'documents.list',
 	'uses' => 'EmployeeController@showDocs'
 ]);
-Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
+
+
+Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function (){
+// Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//dashboard
 	Route::get('/dashboard/{id?}',[
@@ -326,7 +330,6 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.showByAjax'
 	]);
 
-
 	Route::Get('/attendance/edit/{id}',[
 		'uses' => 'AttendanceController@edit',
 		'as' => 'attendance.edit'
@@ -462,8 +465,8 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'documents.update',
 		'uses' => 'DocumentsController@update'
 	]);
-
 });
+
 	Route::Get('/applicant/apply',[
 		'uses' => 'ApplicantController@create',
 		'as' => 'applicant.apply'

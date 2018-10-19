@@ -10,7 +10,7 @@ class Job extends Model
 		'title','description','city'
 	];
 	
-    public function applicant(){
+    /*public function applicant(){
     	return $this->hasOne('App\Applicant');
-    }
+    }*/
 }

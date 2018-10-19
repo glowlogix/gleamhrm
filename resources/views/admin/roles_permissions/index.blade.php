@@ -7,11 +7,6 @@
 				<span class="glyphicon glyphicon-plus"></span> Add Roles
 			</a>
         </span>
-        <span style="float: right;">
-            <a href="{{route('roles_permissions.applyrole')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon"></span> Apply Role
-            </a>
-        </span>
 	</div>
 </div>
 <div class="panel panel-default">

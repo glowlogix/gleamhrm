@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class RemoveOfficeLocationsTable extends Migration
+class AddRememberTokenEmployeesTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,7 +13,10 @@ class RemoveOfficeLocationsTable extends Migration
      */
     public function up()
     {
-        Schema::dropIfExists('office_locations');
+        Schema::table('employees', function($table)
+        {
+            $table->string('remember_token', 61)->nullable()->after('status');
+        });
     }
 
     /**

@@ -35,8 +35,8 @@
                 </select>
             </div>
             <div class="form-group">
-                <a href="{{route('documents')}}" class="btn btn-default">Cancel</a>
-                <button class="btn btn-success center-block" type="submit"> Update</button>
+                <a href="{{route('documents')}}" class="btn btn-success" align="right">Cancel</a>
+                <button class="btn btn-success" type="submit"> Update</button>
             </div>
         </form>
     </div>
