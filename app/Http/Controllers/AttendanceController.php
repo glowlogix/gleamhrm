@@ -28,7 +28,7 @@ class AttendanceController extends Controller
     
     public function index($id)
     {
-        $this->meta['title'] = 'Show Attendance';  
+        $this->meta['title'] = 'Show Attendance';
         $attendance = Attandance::where('employee_id',$id)->get();
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
      

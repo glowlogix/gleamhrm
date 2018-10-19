@@ -7,10 +7,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
     <title>HRM | GlowLogix</title>
-
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
-
+    <link href="{{ asset('css/data.css') }}" rel="stylesheet">
     <!-- Styles -->
     <style>
         html,
@@ -22,7 +21,6 @@
             height: 100vh;
             margin: 0;
         }
-
         .full-height {
             height: 100vh;
         }
@@ -63,6 +61,7 @@
 
         .m-b-md {
             margin-bottom: 30px;
+
         }
     </style>
 </head>
@@ -76,7 +75,8 @@
             @else
             <a href="{{ route('login') }}">Login</a>
             {{--
-            <a class="reg" href="{{ route('register') }}">Register</a> --}} @endauth
+            <a class="reg" href="{{ route('register') }}">Register</a> --}}
+            @endauth
         </div>
         @endif
 

@@ -1,5 +1,8 @@
-@extends('layouts.admin') @section('content')
-
+@extends('layouts.admin')
+@section('Heading')
+    <h3 class="text-themecolor">Edit Leave</h3>
+@stop
+@section('content')
 <div class="panel panel-default">
     <div class="panel-heading text-center">
           <b style="text-align: center;">Update Leave</b>

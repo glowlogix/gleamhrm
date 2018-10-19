@@ -1,4 +1,9 @@
-@extends('layouts.attendance') @section('content') @foreach($data as $d)
+@extends('layouts.attendance')
+@section('Heading')
+    <h3 class="text-themecolor">All Attendance</h3>
+@stop
+@section('content') @foreach($data as $d)
+
 
 <nav class="navbar navbar-default navbar-static-top">
     <div class="container">

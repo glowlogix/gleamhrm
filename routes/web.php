@@ -85,11 +85,16 @@ Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function
 // Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 
 	//dashboard
-	Route::get('/dashboard/{id?}',[
-		'uses' => 'AttendanceController@showTimeline',
-		// 'uses' => 'UsersController@dashboard',
+	Route::get('/dashboard',[
+		'uses' => 'DashboardController@index',
 		'as' => 'admin.dashboard'
 	]);
+
+    //	Help
+    Route::get('/help',[
+        'uses' => 'DashboardController@help',
+        'as' => 'admin.help'
+    ]);
 	
 	Route::resources([
 	    'branch' => 'BranchesController',

@@ -1,13 +1,17 @@
-@extends('layouts.admin') @section('content')
+@extends('layouts.admin')
+@section('Heading')
+	<h3 class="text-themecolor"> Applcants</h3>
+@stop
+@section('content')
 
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
-		<b> Applcants </b>
 	</div>
 	<div class="panel-body">
 
 		<table class="table">
 			<thead>
+			<tr>
 				<th> Image</th>
 				<th> Name</th>
 				<th> City</th>
@@ -15,12 +19,13 @@
 				<th>Apllied for</th>
 				<th> CV </th>
 				<th>Actions</th>
+			</tr>
 			</thead>
 			<tbody class="table-bordered table-hover table-striped">
 				@if($applicants->count() > 0) @foreach($applicants as $applicant)
 				<tr>
 					<td>
-						<img src="/{{$applicant->avatar}}" alt="" width="50px" width="50px">
+						<img src="/{{$applicant->avatar}}" alt="" width="50px">
 					</td>
 					<td>{{$applicant->name}}</td>
 					<td>{{$applicant->city}}</td>
@@ -49,7 +54,6 @@
 				@endforeach @else
 				<tr> No Applicant found.</tr>
 				@endif
-
 			</tbody>
 		</table>
 	</div>

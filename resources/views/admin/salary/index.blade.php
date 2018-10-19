@@ -1,4 +1,13 @@
-@extends('layouts.admin') @section('content')
+@extends('layouts.admin')
+@section('Heading')
+	<h3 class="text-themecolor">Salary</h3>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Attendance</li>
+		<li class="breadcrumb-item active">Salary</li>
+	</ol>
+@stop
+@section('content')
 
 <div class="panel panel-default">
 
@@ -84,11 +93,11 @@
                         </div>
                 </div>
 			<table class="table">
-				<thead>
+				<tr>
 					<th>Name</th>
 					<th>Salary</th>
 					<th>Add Bonus</th>
-				</thead>
+				</tr>
 
 				@foreach($employees as $employee)
 				

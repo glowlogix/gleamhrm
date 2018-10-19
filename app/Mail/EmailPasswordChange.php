@@ -29,8 +29,7 @@ class EmailPasswordChange extends Mailable
      */
     public function build()
     {
-        $employee = Employee::find($id);
-
+        $employee = Employee::find($this->employee_id );
         return $this->view('emails.email_password_change')
         ->with('employee', $employee);
     }

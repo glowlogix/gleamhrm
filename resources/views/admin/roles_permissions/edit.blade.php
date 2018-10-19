@@ -1,5 +1,13 @@
-@extends('layouts.admin') @section('content')
-
+@extends('layouts.admin')
+@section('Heading')
+	<h3 class="text-themecolor">Edit Role</h3>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Roles Permissions</li>
+		<li class="breadcrumb-item active">Edit Role</li>
+	</ol>
+@stop
+@section('content')
 <div class="panel panel-default">
 	<div class="panel-heading text-center">
 		<b> Edit Role Permissions</b>

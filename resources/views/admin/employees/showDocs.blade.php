@@ -1,5 +1,3 @@
-<<<<<<< HEAD
-
 <!DOCTYPE html>
 <html lang="{{ app()->getLocale() }}">
 
@@ -132,11 +130,9 @@
                                 @endforeach @else
                                 <p class="text-center">No Documnets Found</p>
                                 @endif
+                            </table>
                         </div>
-                        </table>
-
                     </div>
-                </div>
 
 
                 <!-- Scripts -->
@@ -150,7 +146,11 @@
                     toastr.info("{{Session::get('info')}}")
                     @endif
                 </script>
-                @yield('scripts')
+            </div>
+        </div>
+        </div>
+    </div>
+    @yield('scripts')
 
 </body>
 
@@ -176,4 +176,3 @@
 @endforeach @else
 <p class="text-center">No Documnets Found</p>
 @endif @stop
->>>>>>> c20c5e38d3ee97b490800e6067225edba3ee08cc

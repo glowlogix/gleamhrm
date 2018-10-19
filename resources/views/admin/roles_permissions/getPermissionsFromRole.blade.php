@@ -6,4 +6,3 @@
 	<input type="checkbox" name="permissions_checked[]" value="{{$route->id}}">{{$route->guard_name}}:{{$route->name}}<br>
 	@endforeach
 </div>
-

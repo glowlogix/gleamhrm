@@ -1,5 +1,11 @@
 @extends('layouts.admin')
-
+@section('Heading')
+    <h3 class="text-themecolor">Attendance</h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+        <li class="breadcrumb-item active">Attendance</li>
+    </ol>
+@stop
 @section('content')
 
     <div class="panel panel-default">
@@ -73,10 +79,10 @@
         <div class="row">
             <div class="panel-body">
                 <table class="table">
-                    <thead>
+                    <tr>
                         <th>Check Time</th>
                         <th>At Time</th>
-                    </thead>
+                    </tr>
                     <tbody class="table-bordered table-hover table-striped">
                         @if($attendances->count() > 0) @foreach($attendances as $att)
                         <tr>

@@ -1,7 +1,8 @@
-@extends('layouts.admin') 
-
+@extends('layouts.admin')
+@section('Heading')
+    <h3 class="text-themecolor">All Leaves</h3>
+@stop
 @section('content')
-
 <div class="panel panel-default">
     <div class="panel-heading text-center">
         <b style="text-align: center;">All Leaves</b>
@@ -20,7 +21,6 @@
                 <label for="name">Consumed Leaves:</label> {{$consumed_leaves}}
             </div>
         </div>
-        
         <table class="table">
             <thead>
                 <th>Leave Type</th>
@@ -51,11 +51,9 @@
                     </td>
                 </tr>
                 @endforeach @else No leave found. @endif
-
             </tbody>
         </table>
     </div>
-
 </div>
 
 @stop
