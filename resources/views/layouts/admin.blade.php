@@ -30,21 +30,24 @@
 
                 </div>
             </div>
-            @include('admin.includes.errors') @if(Session::has('success'))
+
+                @include('admin.includes.errors') 
+                @if(Session::has('success'))
                 <div class="alert alert-success">
                     <a href="#" class="close" data-dismiss="alert">&times;</a>
                     <strong>Success!</strong> {{Session::get('success')}}
                 </div>
-            @endif
-            @if(Session::has('error'))
+                @endif
+                @if(Session::has('error'))
                 <div class="alert alert-danger">
                     <a href="#" class="close" data-dismiss="alert">&times;</a>
                     <strong>Error!</strong> {{Session::get('error')}}
                 </div>
-            @endif
-        @yield('content')
+                @endif 
+
+                @yield('content')
+        </div>
     </div>
-</div>
 </div>
 @include('includes.adminScripts')
 </body>

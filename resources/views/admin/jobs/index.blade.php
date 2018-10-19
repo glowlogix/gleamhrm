@@ -33,9 +33,27 @@
 								<td>{{$job->city}}</td>
 								<td class="text-nowrap">
 									<a class="btn btn-info btn-sm" href="{{route('job.edit',['id'=>$job->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
-									<a class="btn btn-danger btn-sm" href="{{route ('job.delete',['id'=>$job->id])}}" data-toggle="tooltip" data-original-title="Close"> <i class="fas fa-window-close text-white"></i> </a>
-								</td>
 
+									<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $job->id }}"> <i class="fas fa-window-close text-white"></i></a>
+									
+									<div class="modal fade" id="confirm-delete{{ $job->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+										<div class="modal-dialog">
+											<div class="modal-content">
+												<form action="{{ route('job.destroy' , $job->id )}}" method="post">
+													<input name="_method" type="hidden" value="DELETE">
+													{{ csrf_field() }}
+													<div class="modal-header">
+														Are you sure you want to delete this Job?
+													</div>
+													<div class="modal-footer">
+														<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+														<button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+													</div>
+												</form>
+											</div>
+										</div>
+									</div>
+								</td>
 							</tr>
 							@endforeach @else
 								<p class="text-center"> No job found.</p>

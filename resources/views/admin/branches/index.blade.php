@@ -36,6 +36,7 @@
 										<td>{{$branch->phone_number}}</td>
 										<td class="text-nowrap">
 											<a class="btn btn-info btn-sm" href="{{route('branch.edit',['id'=>$branch->id])}}"  data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
+											
 											<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $branch->id }}"> <i class="fas fa-window-close text-white  "></i> </a>
 											<div class="modal fade" id="confirm-delete{{ $branch->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 												<div class="modal-dialog">

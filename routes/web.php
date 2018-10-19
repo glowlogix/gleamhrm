@@ -10,6 +10,7 @@
 | contains the "web" middleware group. Now create something great!
 |
 */
+
 use App\Applicant;
 use Illuminate\Support\Facades\Input;
 
@@ -24,62 +25,9 @@ Route::any('/register', function() {
 });
 
 Route::get('/home', 'HomeController@index')->name('home');
-//Employee Login
-Route::get('/employee/login', [
-	'as' => 'employee.login',
-	'uses' => 'EmployeeController@EmployeeLogin'
-]);
-Route::post('/employee/login', [
-	'as' => 'employee.login',
-	'uses' => 'EmployeeController@postEmployeeLogin'
-]);
 
-//Leaves
-Route::Get('/leave',[
-	'uses' => 'LeaveController@create',
-	'as' => 'leaves'
-]);
-
-Route::Post('/leave/store',[
-	'uses' => 'LeaveController@store',
-	'as' => 'leaves.store'
-]);
-
-Route::Get('/leave/show/{id}',[
-	'uses' => 'LeaveController@indexEmployee',
-	'as' => 'leave.employeeshow'
-]);
-
-Route::get('/employee/profile', [
-	'as' => 'employee.profile',
-	'uses' => 'EmployeeController@EmployeeProfile'
-]);
-
-//attendance Employee
-Route::get('/employee/attendance', [
-	'as' => 'employee.attendance',
-	'uses' => 'EmployeeController@showAttendance'
-]);
-
-Route::post('/employee/profile/{id}', [
-	'as' => 'employee.profile.update',
-	'uses' => 'EmployeeController@UpdateEmployeeProfile'
-]);
-
-
-Route::post('/employee/logout', [
-	'as' => 'employee.logout',
-	'uses' => 'EmployeeController@EmployeeLogout'
-]);
-
-//docs List
-
-Route::get('/documents/list', [
-	'as' => 'documents.list',
-	'uses' => 'EmployeeController@showDocs'
-]);
-Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
-
+// Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function (){
+Route::group(['middleware' => 'auth'], function (){
 	//dashboard
 	Route::get('/dashboard',[
 		'uses' => 'DashboardController@index',
@@ -96,35 +44,8 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 	    'branch' => 'BranchesController',
 	]);
 
-	Route::get('/job',[
-		'uses' => 'JobsController@index',
-		'as' => 'jobs'
-	]);
-
-	Route::get('/job/create',[
-		'uses' => 'JobsController@create',
-		'as' => 'job.create'
-	]);
-
-	Route::Post('/job/store',[
-		'uses' => 'JobsController@store',
-		'as' => 'job.store'
-	]);
-	Route::get('/job/edit/{id}',[
-		'uses' => 'JobsController@edit',
-		'as' => 'job.edit'
-	]);
-	Route::Post('/job/update/{id}',[
-		'uses' => 'JobsController@update',
-		'as' => 'job.update'
-	]);
-	Route::get('/job/delete',[
-		'uses' => 'JobsController@delete',
-		'as' => 'job.delete'
-	]);
-	Route::Get('/singleCategoryJobs/{id}',[
-		'uses' => 'JobsController@singleCategoryJobs',
-		'as' => 'singleCategoryJobs'
+	Route::resources([
+	    'job' => 'JobsController',
 	]);
 
 	Route::Get('/applicant/create',[
@@ -331,7 +252,6 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'attendance.showByAjax'
 	]);
 
-
 	Route::Get('/attendance/edit/{id}',[
 		'uses' => 'AttendanceController@edit',
 		'as' => 'attendance.edit'
@@ -467,30 +387,28 @@ Route::group(['prefix' =>'admin','middleware' => 'auth'], function (){
 		'as' => 'documents.update',
 		'uses' => 'DocumentsController@update'
 	]);
-
 });
-	Route::Get('/applicant/apply',[
-		'uses' => 'ApplicantController@create',
-		'as' => 'applicant.apply'
-	]);
 
-	Route::Post('/applicant/store',[
-		'uses' => 'ApplicantController@store',
-		'as' => 'applicant.store'
-	]);
+Route::Get('/applicant/apply',[
+	'uses' => 'ApplicantController@create',
+	'as' => 'applicant.apply'
+]);
 
-	Route::get('/findjob','ApplicantController@findjob');
+Route::Post('/applicant/store',[
+	'uses' => 'ApplicantController@store',
+	'as' => 'applicant.store'
+]);
 
-	//Route::get('sendmail', 'SendMailController@sendMail');
+Route::get('/findjob','ApplicantController@findjob');
 
-	//Route::get('/ajax-job',function(){
-	//		$cat_id = Input::get('cat_id');
-	//	$jobs = Jobs::where('job_position_id', '=',$cat_id)->get();
-	//	return Response::json($jobs);
-	// });
+//Route::get('sendmail', 'SendMailController@sendMail');
+
+//Route::get('/ajax-job',function(){
+//		$cat_id = Input::get('cat_id');
+//	$jobs = Jobs::where('job_position_id', '=',$cat_id)->get();
+//	return Response::json($jobs);
+// });
 	
-
-
 Route::any('/search',function(){
     $q = Input::get ( 'q' );
     $applicant = Applicant::where('city','LIKE','%'.$q.'%')->get();

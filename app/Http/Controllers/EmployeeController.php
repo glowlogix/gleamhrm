@@ -49,6 +49,12 @@ class EmployeeController extends Controller
 		"admin" 						=> "Admin",
 	];
 
+	public function __construct()
+	{
+	    // $this->middleware(['role_or_permission:super-admin|edit articles']);
+	}
+
+
 	public function index()
 	{
 		$data = Employee::with('branch')->get();
@@ -105,7 +111,7 @@ class EmployeeController extends Controller
 			'official_email'    => $request->official_email,
 			'personal_email'    => $request->personal_email,
 			'status'        	=> 1,
-			'exit_date' 		=> $request->exit_date,
+			// 'exit_date' 		=> $request->exit_date,
 			'basic_salary'     	=> $request->salary,
 			'role'          	=> $request->role,
             'type' 				=> $request->type,
@@ -217,7 +223,7 @@ class EmployeeController extends Controller
 			'official_email' => 'required|email|unique:employees,official_email,'.$id,
 			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
 			'contact_no' 	 => 'required|size:11|unique:employees,contact_no,'.$id,
-        	'password' 	 	 => 'confirmed',
+        	// 'password' 	 	 => 'confirmed',
             'picture' 		 => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
 			// 'cnic' => 'size:13',
 		]);
@@ -239,7 +245,7 @@ class EmployeeController extends Controller
         	$request->picture->move(public_path().'/images/', $picture);  
 		}
 		
-		$employee->exit_date 		= $request->exit_date;
+		// $employee->exit_date 		= $request->exit_date;
 		$employee->emergency_contact= $request->emergency_contact;
 		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
 		$employee->official_email 	= $request->official_email;

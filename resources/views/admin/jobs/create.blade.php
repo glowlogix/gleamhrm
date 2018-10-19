@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
 	<h3 class="text-themecolor">Create New Job</h3>
-
 @stop
 @section('content')
 
@@ -44,7 +43,7 @@
 
 					<div class="form-actions">
 						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Create Job </button>
-						<button type="button" onclick="window.location.href='{{route('jobs')}}'" class="btn btn-inverse">Cancel</button>
+						<button type="button" onclick="window.location.href='{{route('job.index')}}'" class="btn btn-inverse">Cancel</button>
 					</div>
 				</form>
 			</div>
@@ -53,7 +52,4 @@
 
 </div>
 <!-- Row -->
-
-
-
 @stop

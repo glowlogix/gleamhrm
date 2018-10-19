@@ -21,4 +21,8 @@ class OrganizationHierarchy extends Model
     public function parentEmployee(){
         return $this->belongsTo('App\Employee', 'parent_id');
     }
+
+    public function childs() {
+        return $this->hasMany('App\OrganizationHierarchy','parent_id','employee_id');
+    }
 }

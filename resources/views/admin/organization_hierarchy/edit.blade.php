@@ -16,6 +16,7 @@
 
 				<div class="card-body">
 					<form  action="{{route('organization_hierarchy.update',['id' => $organization_hierarchy->id])}}" method="post">
+						<input name="_method" type="hidden" value="PUT">
 						{{csrf_field()}}
 						<div class="form-body">
 							<div class="col-md-10">
