@@ -40,8 +40,9 @@ class JobsController extends Controller
         ]);
 
         Session::flash('success','job is created succesfully');
-        return redirect()->back();
-    } 
+        return redirect()->route('job.index');
+    }
+
     public function edit($id)
     {
         $this->meta['title'] = 'Update Job';                                                                        
@@ -49,30 +50,24 @@ class JobsController extends Controller
         return view('admin.jobs.edit',$this->metaResponse())->with('job',$job);
 
     }
+
     public function update($id , Request $request)
     {
-        $job=job::find($id);
-        /*if($request->featured)
-        {
-            $featured=$request->featured;
-            $new_featured= time().$featured->getClientOriginalName();
-            $featured->move('uploads/jobs',$new_featured);
-            $job->featured=$new_featured;
-        }*/
-
-        $job->title=$request->title;
+        $job=Job::find($id);
+ 
+        $job->title = $request->title;
         $job->city = $request->city;
-        
-        $job->description=$request->description;
-        $job->job_position_id= $request->job_position_id;
+        $job->description = $request->description;
         $job->save();
-        Session::flash('success','job is created succesfully');
-        return redirect()->back();
+        Session::flash('success','job is updated succesfully');
+        return redirect()->route('job.index');
     }
 
-    public function singleJobPositionJobs($id){
-        $this->meta['title'] = 'Jobs';                                                                                
-        $jobs = Job::where('job_position_id',$id)->with('category')->get();
-        return view('admin.jobs.singleJobPositionJobs',$this->metaResponse())->with('jobs',$jobs);
+    public function destroy($id)
+    {
+        $job = Job::find($id);
+        $job->delete();
+        Session::flash('success','Job deleted successfuly.');
+        return redirect()->back();
     }
 }

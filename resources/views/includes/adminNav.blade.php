@@ -24,7 +24,7 @@
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{route('applicants')}}">Application</a></li>
-                        <li><a href="{{route('jobs')}}">Jobs</a></li>
+                        <li><a href="{{route('job.index')}}">Jobs</a></li>
                     </ul>
                 </li>
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}

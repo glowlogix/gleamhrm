@@ -200,43 +200,6 @@
                                     </div>
                                 </div>
 
-<<<<<<< HEAD
-<div class="panel panel-default">
-    <div class="panel-heading text-center">
-        <b>Create new employee</b>
-        <span style="float: right;">
-            <a href="{{route('employees')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon"></span> Back
-            </a>
-        </span>
-    </div>
-    <div class="panel-body">
-        <form class="form-inline" action="{{route('employee.store')}}" method="post" enctype="multipart/form-data">
-            {{csrf_field()}}
-            <div class="form-group col-sm-4">
-                <label for="firstname">First Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="firstname" placeholder="Enter First Name" name="firstname" value="{{ old('firstname') }}" required>
-            </div>
-            <div class="form-group col-sm-4">
-                <label for="lastname">Last Name:</label>
-                <input style="width: 250px;" type="text" class="form-control" id="lastname" placeholder="Enter Last Name" name="lastname" value="{{ old('lastname') }}" required>
-            </div>
-            <div class="form-group col-sm-4">
-                <label for="personal_email">Profile Picture:</label>
-                <input style="width: 250px;" type="file" class="form-control" id="picture" placeholder="picture" name="picture" value="{{old('picture')}}">{{old('picture')}}
-            </div>
-            <div class="form-group col-sm-4">
-                <label for="personal_email">Personal Email Address:</label>
-                <input style="width: 250px;" type="email" class="form-control" id="personal_email" placeholder="Enter Email Address" name="personal_email" value="{{ old('personal_email') }}" required>
-            </div>
-            <div class="form-group col-sm-4">
-                <label for="official_email">Official Email Address:</label>
-                <input style="width: 250px;" type="email" class="form-control" id="official_email" placeholder="Enter Email Address" name="official_email" value="{{ old('official_email') }}" required>
-            </div>
-            <div class="form-group col-sm-4">
-                <br>
-                <label for="role">Designation:</label>
-=======
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Current Address</label>
@@ -257,7 +220,6 @@
                                     </div>
                                 </div>
                             </div>
->>>>>>> 925711937c300567d0c8946cbf37d7dcc09b2025
 
                             <div class="col-md-6">
                                 <div class="form-group row">

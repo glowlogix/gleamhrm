@@ -10,14 +10,29 @@ use App\Employee;
 
 class OrganizationHierarchyController extends Controller
 {
-    
 
     use MetaTrait;
+    public $hierarchy = '';
+
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
+
+    function processHierarchy(){
+        $hierarchy = $this->hierarchy();
+
+        foreach ($hierarchy as $key => $row) {
+            if (isset($row['children'])) {
+                foreach ($row['children'] as $child) {
+                    # code...
+                }
+                $this->hierarchy[$key]->children = $row;
+            }
+        }
+    }
+
     public function index()
     {
         $this->meta['title'] = 'Organization Hierarchy';
@@ -25,10 +40,37 @@ class OrganizationHierarchyController extends Controller
         $organization_hierarchies = OrganizationHierarchy::with('employee')
         ->with('lineManager')
         ->with('parentEmployee')
+        ->with('childs')
         ->get();
+
+        $this->hierarchy .= '[';
+        $this->myhire($organization_hierarchies);
+        $this->hierarchy .= ']';
+        $this->hierarchy = str_replace('},]', '}]', $this->hierarchy);
+        $hierarchy = json_decode($this->hierarchy);
+        $hierarchy = json_encode($hierarchy[0]);
+
         return view('admin.organization_hierarchy.index',$this->metaResponse())->with([
             'organization_hierarchies' => $organization_hierarchies,
+            'hierarchy' => $hierarchy,
         ]);
+    }
+
+    function myhire($organization_hierarchies){
+        foreach($organization_hierarchies as $organization_hierarchy){
+            
+            $this->hierarchy .= '{
+                "id": "'.$organization_hierarchy->employee->id.'", 
+                "name": "'.$organization_hierarchy->employee->firstname.'", 
+                "title": "'.$organization_hierarchy->employee->role.'"';
+
+            if(count($organization_hierarchy->childs) > 0) {
+                $this->hierarchy .= ',"children": [';
+                $this->myhire($organization_hierarchy->childs);
+                $this->hierarchy .= ']';
+            }
+            $this->hierarchy .= '},';
+        }
     }
 
     /**

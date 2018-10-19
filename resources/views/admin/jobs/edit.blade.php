@@ -9,6 +9,7 @@
 
 			<div class="card-body">
 				<form action="{{route('job.update',['id'=>$job->id])}}" method="post" enctype="multipart/form-data">
+					<input name="_method" type="hidden" value="PUT">
 					{{csrf_field()}}
 					<div class="form-body">
 						<div class="col-md-6">
@@ -41,7 +42,7 @@
 
 					<div class="form-actions">
 						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Job</button>
-						<button type="button" onclick="window.location.href='{{route('jobs')}}'" class="btn btn-inverse">Cancel</button>
+						<button type="button" onclick="window.location.href='{{route('job.index')}}'" class="btn btn-inverse">Cancel</button>
 					</div>
 				</form>
 			</div>
