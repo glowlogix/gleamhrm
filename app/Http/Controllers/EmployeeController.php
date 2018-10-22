@@ -189,15 +189,20 @@ class EmployeeController extends Controller
 		}
 
         $roles = Role::all();
-		
-		$employee_role = $employee->roles[0];
-		$employee_permissions = array(); 
-		foreach ($employee->permissions as $key => $value) {
-			$employee_permissions[] = $value->id;
-		}
+        $employee_role = '';
+        $employee_permissions = array();
+        $role = array();
+        $permissions = array();
+        if (!$roles->isEmpty()){
+            $employee_role = $employee->roles[0]; //todo
+            $employee_permissions = array();
+            foreach ($employee->permissions as $key => $value) {
+                $employee_permissions[] = $value->id;
+            }
+            $role = Role::find($id);
+            $permissions = $role->permissions()->get();
+        }
 
-		$role = Role::find($id);
-        $permissions = $role->permissions()->get();
 
         return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
