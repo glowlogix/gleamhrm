@@ -37,7 +37,7 @@
 								<td>{{$employee->firstname}} {{$employee->lastname}}</td>
 								<td>{{$employee->official_email}}</td>
 								<td>{{$employee->contact_no}}</td>
-								<td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
+								<td>{{isset($designations[$employee->role]) ? $designations[$employee->role] : ''}}</td>
 								<td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
 								<td class="text-nowrap">
 									<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>

@@ -66,8 +66,8 @@
                                     <label class="control-label text-right col-md-3">Designation</label>
                                     <div class="col-md-9">
                                         <select class="form-control custom-select" name="role">
-                                            @foreach($roles as $k => $role)
-                                                <option value="{{$k}}" @if($employee->role == $k) selected @endif>{{$role->name}}</option>
+                                            @foreach($designations as $k => $designation)
+                                                <option value="{{$k}}" @if($employee->role == $k) selected @endif>{{$designation}}</option>
                                             @endforeach
                                         </select>
                                     </div>

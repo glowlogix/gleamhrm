@@ -39,26 +39,4 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datetimepicker/4.17.37/js/bootstrap-datetimepicker.min.js"></script>
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
 
-{{--Organisational Structure--}}
-    <link rel="icon" href="{{asset('OH/img/logo.png')}}">
-    <link rel="stylesheet" href="{{asset('OH/css/jquery.orgchart.css')}}">
-    {{--Add ICON--}}
-    <style type="text/css">
-        .orgchart .second-menu-icon {
-            transition: opacity .5s;
-            opacity: 0;
-            right: -5px;
-            top: -5px;
-            z-index: 2;
-            color: rgba(68, 157, 68, 0.5);
-            font-size: 18px;
-            position: absolute;
-            color: black;
-        }
-        .orgchart .second-menu-icon:hover { color:black; }
-        .orgchart .node:hover .second-menu-icon { opacity: 1; }
-
-    </style>
-
-    {{--END Organisational Structure--}}
 </head>

@@ -17,7 +17,7 @@
 				<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('organization_hierarchy.create')}}'">Add Employee To Organization</button>
 				<br>
 				<div class="table">
-				<table id="demo-foo-addrow" class="table  m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
+				<!-- <table id="demo-foo-addrow" class="table  m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
 					<thead>
 					@if($organization_hierarchies->count() > 0)
 					<tr>
@@ -76,14 +76,14 @@
 					<p class="text-center float-left" style="margin-top: 70px;">No Employees found.</p>
 					@endif
 					</tbody>
-				</table>
+				</table> -->
+				{{--Orgnisation chart--}}
+				<div id="chart-container">
+				</div>
+				{{--END Orgnisation chart--}}
 				</div>
 			</div>
 		</div>
-		{{--Orgnisation chart--}}
-		<div id="chart-container">
-		</div>
-		{{--END Orgnisation chart--}}
 	</div>
 </div>
 @stop
@@ -104,24 +104,59 @@ $(function() {
         'data' : '/orgchart/initdata',
         'nodeContent': 'title',
         'createNode': function($node, data) {
-            var secondMenuIcon = $('<li id="'+data.id+'">', {
+            var secondMenuIcon = $('<li>', {
                 'class': 'fas fa-plus-circle second-menu-icon',
+                // 'id': data.id
+            	'onclick' : "location.href='{{route('organization_hierarchy.create')}}/'"
+            	// 'onclick' : "location.href='{{route('organization_hierarchy.create')}}/" + data.id+"'"
             });
             $node.append(secondMenuIcon);
-            $node.on('click', 'li#' +data.id, function() {
-            	location.href = "{{route('organization_hierarchy.create')}}/" + data.id;
-            });
-            
+
             var thirdMenuIcon = $('<li>', {
-                'class': 'fas fa-minus-circle third-menu-icon',
+                'class': 'fas fa-edit third-menu-icon',
+            	'onclick' : "location.href='{{route('organization_hierarchy.index')}}/" + data.id+"/edit'"
             });
 
             $node.append(thirdMenuIcon);
-            $node.on('click', function() {
-            	location.href = "{{route('organization_hierarchy.index')}}/" + data.id+"/edit";
-            });
         }
     });
 });
 </script>
+
+{{--Organisational Structure--}}
+<link rel="icon" href="{{asset('OH/img/logo.png')}}">
+<link rel="stylesheet" href="{{asset('OH/css/jquery.orgchart.css')}}">
+{{--Add ICON--}}
+<style type="text/css">
+    .orgchart .second-menu-icon {
+        transition: opacity .5s;
+        opacity: 0;
+        right: 112px;
+        top: -5px;
+        z-index: 2;
+        color: rgba(68, 157, 68, 0.5);
+        font-size: 18px;
+        position: absolute;
+        color: black;
+    }
+    .orgchart .second-menu-icon:hover { color:black; }
+    .orgchart .node:hover .second-menu-icon { opacity: 1; }
+	
+	.orgchart .third-menu-icon {
+        transition: opacity .5s;
+        opacity: 0;
+        right: -5px;
+        top: -5px;
+        z-index: 2;
+        color: rgba(68, 157, 68, 0.5);
+        font-size: 18px;
+        position: absolute;
+        color: black;
+    }
+    .orgchart .third-menu-icon:hover { color:black; }
+    .orgchart .node:hover .third-menu-icon { opacity: 1; }
+    
+</style>
+
+{{--END Organisational Structure--}}
 @endpush
