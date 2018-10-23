@@ -119,7 +119,6 @@ class EmployeeController extends Controller
             'current_address' 	=> $request->current_address,
             'permanent_address' => $request->permanent_address,
             'city' 				=> $request->city,
-            'branch_id' 		=> $request->branch_id,  
 			'invite_to_zoho'  	=> $request->invite_to_zoho,
 			'invite_to_slack' 	=> $request->invite_to_slack,
 			'invite_to_asana' 	=> $request->invite_to_asana,
