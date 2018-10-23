@@ -625,19 +625,27 @@ class AttendanceController extends Controller
         $this->meta['title'] = 'Show Attendance';
         
         $today = Carbon::now()->toDateString();
+        // $today = Carbon::parse('2018-10-22')->toDateString();
 
-        $employees = AttendanceSummary::leftJoin('employees', function($join) {
+        /*$employees = Employee::leftJoin('attendance_summaries', function($join) {
             $join->on('employees.id', '=', 'attendance_summaries.employee_id');
+            $join->where('attendance_summaries.employee_id', '2018-10-22');
         })
-        ->where('attendance_summaries.date', $today)
         ->get([
             'employees.*',
             'attendance_summaries.date',
             'attendance_summaries.first_time_in',
             'attendance_summaries.last_time_out',
             'attendance_summaries.total_time',
-        ]);
-        
+        ])->toArray();
+        dd($employees);*/
+
+        $employees = Employee::with([
+            'attendanceSummary' => function($join) use($today) {
+                $join->where('date', $today);
+            }
+        ],'branch')->get();
+        // dd($employees);
         $active_employees = Employee::where('status','1')->get()->count(); 
 
         // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
