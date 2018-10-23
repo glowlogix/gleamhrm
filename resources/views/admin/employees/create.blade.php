@@ -21,7 +21,7 @@
                     <button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-info float-right">Back</button>
                 </div>
                 <div class="card-body">
-                    <form action="{{route('employee.store')}}" method="post" class="form-horizontal">
+                    <form action="{{route('employee.store')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-body">
                             <h3 class="box-title">Employee Information</h3>
@@ -127,14 +127,14 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Exit Date</label>
-                                        <div class="col-md-9">
-                                            <input type="date" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date')}}" required>
-                                        </div>
-                                    </div>
-                                </div>
+                                {{--<div class="col-md-6">--}}
+                                    {{--<div class="form-group row">--}}
+                                        {{--<label class="control-label text-right col-md-3">Exit Date</label>--}}
+                                        {{--<div class="col-md-9">--}}
+                                            {{--<input type="date" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date')}}" required>--}}
+                                        {{--</div>--}}
+                                    {{--</div>--}}
+                                {{--</div>--}}
                                 <!--/span-->
                             </div>
                             {{--//////End Picture/////--}}
@@ -237,7 +237,7 @@
                                     <div class="demo-checkbox">
                            &nbsp;&nbsp; <input type="hidden" name="invite_to_asana" value="0" />
                                         <input type="checkbox" id="basic_checkbox_1"  class="asana" name="invite_to_asana" value="1"/>
-                                        <label for="basic_checkbox_1">Asaana</label>
+                                        <label for="basic_checkbox_1">Asana</label>
 
                                         <input type="hidden" name="invite_to_slack" value="0" />
                                         <input type="checkbox" id="basic_checkbox_2"  class="zoho" name="invite_to_slack" value="1"/>
