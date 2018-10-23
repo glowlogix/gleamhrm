@@ -731,12 +731,12 @@
                         </div>
                         <!--/span-->
                     </div>
-                    <div class="col-md-6">
+                    <div class="col-md-8">
                         <div class="form-group row">
                             <div class="card-body">
                                 <div class="demo-checkbox">
                                     <input type="hidden" name="invite_to_asana" value="0" />
-                                    &nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
+                                    <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
                                     <label for="basic_checkbox_1">Asaana</label>
                                     <input type="hidden" name="invite_to_slack" value="0" />
                                     <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>

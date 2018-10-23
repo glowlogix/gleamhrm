@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('user.create')}}'"><span class="fas fa-plus"></span> Add User</button>
 	<h3 class="text-themecolor">Users</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -10,7 +11,6 @@
 	<div class="col-12">
 		<div class="card">
 			<div class="card-body">
-				<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('user.create')}}'">Add User</button>
 				<div class="table">
 					<table class="table">
 						<thead>

@@ -1,33 +1,7 @@
-<<<<<<< HEAD
-@extends('layouts.admin')  @section('content')
-<div class="panel panel-default">
-	<div class="panel-heading text-center">
-		<b style="text-align: center;">Roles Permissions</b>
-		<span style="float: left;">
-			<a href="{{route('roles_permissions.create')}}" class="btn btn-info btn-xs" align="right">
-				<span class="glyphicon glyphicon-plus"></span> Add Roles
-			</a>
-        </span>
-	</div>
-</div>
-<div class="panel panel-default">
-	<div class="panel-body">
-		<table class="table">
-			<thead>
-				<th>Roles</th>
-				<th>Action</th>
-			</thead>
-			<tbody class="table-bordered table-hover table-striped">
-				@if($roles->count() > 0) 
-				@foreach($roles as $role)
-				<tr>
-					<td>{{$role->name}}</td>
-					<td>
-						<a href="{{route('roles_permissions.edit',['id'=>$role->id])}}">Edit</a>
-						<button class="btn btn-default" data-toggle="modal" data-target="#confirm-delete{{ $role->id }}">Delete</button>
-=======
+
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button"  onclick="window.location.href='{{route('roles_permissions.create')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Role</button>
 	<h3 class="text-themecolor">Permission And Roles</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -41,8 +15,7 @@
 			<div class="card">
 				<div class="card-body">
 					<h6 class="card-subtitle"></h6>
-					<button type="button"  onclick="window.location.href='{{route('roles_permissions.create')}}'" class="btn btn-info btn-rounded m-t-10 float-left">Add Role</button>
-					<button type="button"  onclick="window.location.href='{{route('roles_permissions.applyrole')}}'" class="btn btn-info btn-rounded m-t-10 float-right">Apply Role</button>
+					{{--<button type="button"  onclick="window.location.href='{{route('roles_permissions.applyrole')}}'" class="btn btn-info btn-rounded m-t-10 float-right">Apply Role</button>--}}
 					<br>
 					<div class="table">
 						<table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
@@ -79,7 +52,6 @@
 											</div>
 										</div>
 									</td>
->>>>>>> 925711937c300567d0c8946cbf37d7dcc09b2025
 
 								</tr>
 							@endforeach @else

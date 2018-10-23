@@ -18,7 +18,6 @@
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
                 {{--/////Second Start--}}
-                <li class="nav-small-cap">PERSONAL</li>
                 <li> <a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
@@ -61,7 +60,7 @@
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{ route('documents') }}">Documents</a></li>
-                        <li><a href="{{ route('branch.index') }}">Offices</a></li>
+                        <li><a href="{{ route('branch.index') }}">Branches</a></li>
                         <li><a href="#">Departments</a></li>
                         <li><a href="#">Designations</a></li>
                         <li><a href="#">Vendor Categories</a></li>
@@ -95,8 +94,8 @@
     <!-- Bottom points-->
     <div class="sidebar-footer">
         <!-- item--><a href="" class="link" data-toggle="tooltip" title="Settings"><i class="ti-settings"></i></a>
-        <!-- item--><a href="" class="link" data-toggle="tooltip" title="Email"><i class="mdi mdi-gmail"></i></a>
-        <!-- item--><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a> </div>
+        <!-- item--><a href="https://www.zoho.com/mail/index1.html" class="link" data-toggle="tooltip" title="Email"><i class="mdi mdi-gmail"></i></a>
+        <!-- item--><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="link" data-toggle="tooltip" title="Logout"><i class="mdi mdi-power"></i></a></div>
     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>
     <!-- End Bottom points-->
 </aside>
