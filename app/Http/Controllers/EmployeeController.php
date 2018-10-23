@@ -125,6 +125,10 @@ class EmployeeController extends Controller
 			'invite_to_asana' 	=> $request->invite_to_asana,
 		];
 
+		if (!empty($request->branch_id)) {
+			$arr['branch_id'] 		= $request->branch_id;
+		}
+
 		if($request->picture != ""){
 			$picture 					= time().'_'.$request->picture->getClientOriginalName();
         	$request->picture->move(public_path().'/images/', $picture);  
