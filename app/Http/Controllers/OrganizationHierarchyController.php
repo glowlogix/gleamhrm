@@ -42,13 +42,15 @@ class OrganizationHierarchyController extends Controller
         ->with('parentEmployee')
         ->with('childs')
         ->get();
-
-        $this->hierarchy .= '[';
-        $this->myhire($organization_hierarchies);
-        $this->hierarchy .= ']';
-        $this->hierarchy = str_replace('},]', '}]', $this->hierarchy);
-        $hierarchy = json_decode($this->hierarchy);
-        $hierarchy = json_encode($hierarchy[0]);
+        $hierarchy = '';
+        if ($organization_hierarchies->count() > 0) {
+            $this->hierarchy .= '[';
+            $this->myhire($organization_hierarchies);
+            $this->hierarchy .= ']';
+            $this->hierarchy = str_replace('},]', '}]', $this->hierarchy);
+            $hierarchy = json_decode($this->hierarchy);
+            $hierarchy = json_encode($hierarchy[0]);
+        }
 
         return view('admin.organization_hierarchy.index',$this->metaResponse())->with([
             'organization_hierarchies' => $organization_hierarchies,
@@ -62,7 +64,7 @@ class OrganizationHierarchyController extends Controller
             $this->hierarchy .= '{
                 "id": "'.$organization_hierarchy->employee->id.'", 
                 "name": "'.$organization_hierarchy->employee->firstname.'", 
-                "title": "'.$organization_hierarchy->employee->role.'"';
+                "title": "'.$organization_hierarchy->employee->designation.'"';
 
             if(count($organization_hierarchy->childs) > 0) {
                 $this->hierarchy .= ',"children": [';

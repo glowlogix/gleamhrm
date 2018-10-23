@@ -71,9 +71,9 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Designation</label>
                                         <div class="col-md-9">
-                                            <select class="form-control custom-select" name="role">
+                                            <select class="form-control custom-select" name="designation">
                                                 @foreach($designations as $k => $designation)
-                                                    <option value="{{$k}}" @if(old("role") == "$k") selected @endif>{{$designation}}</option>
+                                                    <option value="{{$k}}" @if(old("designation") == "$k") selected @endif>{{$designation}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -96,11 +96,11 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Office Location</label>
+                                        <label class="control-label text-right col-md-3">Branch</label>
                                         <div class="col-md-9">
-                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="office_location_id">
-                                                @foreach($branches as $office_location)
-                                                    <option value="{{$office_location->id}}" @if(old("office_location_id") == "remote") selected @endif>{{$office_location->name}} ({{$office_location->address}})</option>
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="branch_id">
+                                                @foreach($branches as $branch)
+                                                    <option value="{{$branch->id}}" @if(old("branch_id") == "remote") selected @endif>{{$branch->name}} ({{$branch->address}})</option>
                                                 @endforeach
                                             </select>
                                         </div>

@@ -28,7 +28,7 @@
                                         <th>Name</th>
                                         <th>Email</th>
                                         <th>Mobile </th>
-                                        <th>Role</th>
+                                        <th>Designation</th>
                                         <th>Office</th>
                                         <th>Joining Date</th>
                                         <th>Status</th>
@@ -41,7 +41,7 @@
                                             <td>{{$employee->firstname}} {{$employee->lastname}}</td>
                                             <td>{{$employee->official_email}}</td>
                                             <td>{{$employee->contact_no}}</td>
-                                            <td>{{isset($roles[$employee->role]) ? $roles[$employee->role] : ''}}</td>
+                                            <td>{{isset($designations[$employee->designation]) ? $designations[$employee->designation] : ''}}</td>
                                             <td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
                                             <td></td>
                                             <td>@if($employee->status ?:'1')

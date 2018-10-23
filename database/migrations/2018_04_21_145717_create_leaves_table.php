@@ -17,9 +17,13 @@ class CreateLeavesTable extends Migration
             $table->increments('id');
             $table->integer('employee_id');
             $table->string('leave_type');
-            $table->dateTime('datefrom');
-            $table->dateTime('dateto');
-            $table->string('reason');    
+            $table->dateTime('datefrom')->nullable();
+            $table->dateTime('dateto')->nullable();
+            $table->string('cc_to')->nullable();
+            $table->integer('point_of_contact')->default(0);
+            $table->longText('description')->nullable();
+            $table->string('line_manager')->nullable();
+            $table->string('subject')->nullable();
             $table->string('status');                        
             $table->timestamps();
         });

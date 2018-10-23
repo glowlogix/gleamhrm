@@ -111,16 +111,15 @@ class EmployeeController extends Controller
 			'official_email'    => $request->official_email,
 			'personal_email'    => $request->personal_email,
 			'status'        	=> 1,
-			// 'exit_date' 		=> $request->exit_date,
 			'basic_salary'     	=> $request->salary,
-			'role'          	=> $request->role,
+			'designation'       => $request->designation,
             'type' 				=> $request->type,
             'cnic' 				=> $request->cnic,
             'date_of_birth' 	=> $request->date_of_birth,
             'current_address' 	=> $request->current_address,
             'permanent_address' => $request->permanent_address,
             'city' 				=> $request->city,
-            'office_location_id'=> $request->office_location_id,  
+            'branch_id' 		=> $request->branch_id,  
 			'invite_to_zoho'  	=> $request->invite_to_zoho,
 			'invite_to_slack' 	=> $request->invite_to_slack,
 			'invite_to_asana' 	=> $request->invite_to_asana,
@@ -188,34 +187,35 @@ class EmployeeController extends Controller
 			abort(404);
 		}
 
-        $roles = Role::all();
-        $employee_role = '';
-        $employee_permissions = array();
-        $role = array();
-        $permissions = array();
-        if (!$roles->isEmpty()){
-            $employee_role = $employee->roles[0]; //todo
-            $employee_permissions = array();
-            foreach ($employee->permissions as $key => $value) {
-                $employee_permissions[] = $value->id;
-            }
-            $role = Role::find($id);
-            $permissions = $role->permissions()->get();
-        }
+        $employee_role_id = ''; //todo
+		if($employee->roles->count() > 0){
+        	$employee_role_id = $employee->roles[0]->id; //todo
+		}
 
+        $employee_permissions = array();
+        foreach ($employee->permissions as $key => $value) {
+            $employee_permissions[] = $value->id;
+        }
+        
+        $role = Role::find($id);
+        $permissions = array();
+        if ($role) {
+        	$permissions = $role->permissions()->get();
+        }
 
         return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
 		->with('branches', Branch::all())
 		->with('designations', $this->designations)
-		->with('employee_role', $employee_role)
+		->with('employee_role_id', $employee_role_id)
 		->with('permissions', $permissions)
 		->with('employee_permissions', $employee_permissions)
-		->with('roles', $roles);
+		->with('roles', Role::all());
 	}
 
 	public function update(Request $request, $id)
 	{
+		// dd($request->toArray());
 		$adminPassword = Auth::user()->password;
 		
 		if(!Hash::check($request->old_password, $adminPassword)){
@@ -250,15 +250,18 @@ class EmployeeController extends Controller
         	$request->picture->move(public_path().'/images/', $picture);  
 		}
 		
-		// $employee->exit_date 		= $request->exit_date;
+		$employee->joining_date 		= $request->joining_date;
+		$employee->exit_date 		= $request->exit_date;
 		$employee->emergency_contact= $request->emergency_contact;
 		$employee->emergency_contact_relationship= $request->emergency_contact_relationship;
 		$employee->official_email 	= $request->official_email;
 		$employee->personal_email 	= $request->personal_email;
 		$employee->basic_salary 	= $request->salary;
-		$employee->role 			= $request->role;
+		$employee->designation 		= $request->designation;
 		$employee->type 			= $request->type;
-		$employee->office_location_id= $request->office_location_id;
+		if (!empty($request->branch_id)) {
+			$employee->branch_id 		= $request->branch_id;
+		}
 		$employee->cnic 			= $request->cnic;
 		$employee->date_of_birth 	= $request->date_of_birth;
 		$employee->current_address 	= $request->current_address;
@@ -325,14 +328,20 @@ class EmployeeController extends Controller
 		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
 		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
 
-        $old_role = $employee->roles[0];
-        $employee->removeRole($old_role);
+		if ($employee->roles->count() > 0) {
+        	$old_role = $employee->roles[0];
+        	$employee->removeRole($old_role);
+		}
         
-        $role = Role::find($request->role_id);
-        $employee->assignRole($role);
-        
-        foreach ($request->permissions_checked as $permission) {
-        	$employee->givePermissionTo($permission);
+		if (!empty($request->role_id)) {
+	        $role = Role::find($request->role_id);
+	        $employee->assignRole($role);
+        }
+
+		if (!empty($request->permissions_checked)) {
+	        foreach ($request->permissions_checked as $permission) {
+	        	$employee->givePermissionTo($permission);
+	        }
         }
 		$employee->save();
 
