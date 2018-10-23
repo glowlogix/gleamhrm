@@ -229,6 +229,11 @@ Route::group(['middleware' => 'auth'], function (){
 		'as' => 'timeline'
 	]);
 
+	Route::Get('/attendance/today_timeline/{id?}',[
+		'uses' => 'AttendanceController@todayTimeline', //show Attendance
+		'as' => 'today_timeline'
+	]);
+
 	// Route::Resource('attendance','AttendanceController');
 	
 	Route::Get('/attendance/sheet/{id}',[

@@ -19,9 +19,9 @@
     <div class="panel-body">
         <span style="float: right;">
             <select class="form-control" id="selectOffice">
-                <option value="0" @if($office_location_id == 0) selected @endif>All Offices</option>
+                <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
                 @foreach($office_locations as $office_location)
-                <option value="{{$office_location->id}}" @if($office_location_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
+                <option value="{{$office_location->id}}" @if($branch_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
                 @endforeach
             </select>
         </span>

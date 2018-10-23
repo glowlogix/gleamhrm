@@ -31,9 +31,8 @@
 <!-- ============================================================== -->
 
 <script src="{{asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
-<script src="{{ asset('js/app.js') }}"></script>
-{{--////File Upload////--}}
 
+<script src="{{asset('bootstrap/bootstrap-datetimepicker.min.js')}}"></script>
 
 @yield('scripts')
 @stack('scripts')

@@ -38,8 +38,6 @@
 
                     </ul>
                 </li>
-
-
                 <li> <a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <?php
@@ -47,14 +45,14 @@
                         $monthee= "2018_".$month;
                         ?>
                         <li><a href="{{route('attendance',['id'=>$monthee])}}">Sheet</a></li>
-                        <li><a href="#">Today</a></li>
+                        <li><a href="{{route('today_timeline')}}">Today</a></li>
                         <li><a href="#">History</a></li>
                         <li><a href="#">Incomplete</a></li>
                         <li><a href="#">Today</a></li>
                         <li><a href="{{route('leave.show', Auth::user()->id)}}">Leave</a></li>
                         <li><a href="#">My Leaves</a></li>
                         <li><a href="#">My Attendance</a></li>
-                        <li><a href="{{route('timeline')}}">Time Line</a></li>
+                        <li><a href="{{route('timeline')}}">Timeline</a></li>
                     </ul>
                 </li>
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>

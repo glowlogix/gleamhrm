@@ -31,7 +31,6 @@ class AttendanceController extends Controller
         $this->meta['title'] = 'Show Attendance';
         $attendance = Attandance::where('employee_id',$id)->get();
         return view('admin.attendance.showattendance',$this->metaResponse(),['attendances' => $attendance]);
-     
     }
     public function sheet($id)
     {
@@ -191,11 +190,11 @@ class AttendanceController extends Controller
         ])->first();
 
         $employee = Employee::find($request->employee_id);
-        if ($employee->office_location_id == 0) {
-            $employee->office_location_id = 2;
+        if ($employee->branch_id == 0) {
+            $employee->branch_id = 2;
         }
         
-        $office_location = Branch::find($employee->office_location_id);
+        $office_location = Branch::find($employee->branch_id);
         $ofc_in = Carbon::parse($office_location->timing_start);
         $emp_in = Carbon::parse($first_time_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
@@ -380,7 +379,7 @@ class AttendanceController extends Controller
             $data = Employee::get();
         }
         else{
-            $data = Employee::where(['office_location_id' => $id])->get();
+            $data = Employee::where(['branch_id' => $id])->get();
         }
         $events = [];
         
@@ -474,7 +473,7 @@ class AttendanceController extends Controller
         $office_locations = Branch::all();
         
         return view('admin.attendance.allattendance',$this->metaResponse(),[
-            'office_location_id' => $id,
+            'branch_id' => $id,
             'office_locations' => $office_locations,
             'events' => json_encode($events),
         ]);
@@ -487,7 +486,7 @@ class AttendanceController extends Controller
             $employees = Employee::all()->toJson();
         }
         else{
-            $employees = Employee::where(['office_location_id' => $id])->get()->toJson();
+            $employees = Employee::where(['branch_id' => $id])->get()->toJson();
         }
         
         $attendance_summaries = AttendanceSummary::all();
@@ -560,9 +559,35 @@ class AttendanceController extends Controller
         
         return view('admin.attendance.timeline',$this->metaResponse(), [
             'employees' => $employees,
-            'office_location_id' => $id,
+            'branch_id' => $id,
             'office_locations' => $office_locations,
             'events' => $events
+        ]);
+    }
+
+    public function todayTimeline($id=0){
+        $this->meta['title'] = 'Show Attendance';
+
+        // $employees = Employee::leftJoin('attendance_summaries', function($join) {
+        //     $join->on('employees.id', '=', 'attendance_summaries.employee_id');
+        // })->get([
+        //     'attendance_summaries.first_time_in',
+        //     'attendance_summaries.last_time_out',
+        // ]);
+        // dd($employees->toArray());
+        $active_employees = Employee::where('status','1')->get()->count(); 
+
+        if ($id == 0) {
+            $employees = Employee::with('attendanceSummary', 'branch')->get();
+        }
+        else{
+            $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
+        }
+
+        return view('admin.attendance.today_timeline',$this->metaResponse(), [
+            'active_employees' => $active_employees,
+            'employees' => $employees,
+            'branch_id' => $id,
         ]);
     }
 
