@@ -28,24 +28,29 @@
                                 <th>Branch</th>
                                 <th>Time in</th>
                                 <th>Time Out</th>
+                                <th>Total Time</th>
                                 <th>Actions</th>
                             </tr>
                             </thead>
                             <tbody>
                             @if(count($employees) > 0) @foreach($employees as $employee)
                                 <tr>
-                                    <td>{{$employee->fullname}}</td>
+                                    <td>{{$employee->firstname}} {{$employee->lastname}}</td>
                                     <td>{{$employee->city}}</td>
                                     <td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
-                                    <td>isset($employee->attendanceSummary) ? $employee->attendanceSummary->first_time_in : ''</td>
-                                    <td>isset($employee->attendanceSummary) ? $employee->attendanceSummary->last_time_out : ''</td>
+                                    <td>{{!empty($employee->first_time_in) ? Carbon\Carbon::parse($employee->first_time_in)->format('h:i a') : ''}}</td>
+                                    <td>{{!empty($employee->last_time_out) ? Carbon\Carbon::parse($employee->last_time_out)->format('h:i a') : ''}}</td>
+                                    <td>{{!empty($employee->total_time) ? number_format(($employee->total_time / 60), 2, '.', '') : ''}}</td>
                                     <td class="text-nowrap">
-                                        <a class="btn btn-info btn-sm"  data-toggle="modal" data-target="#popup{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>
+
+                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee->id }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
+                                        
+
                                         {{--///Dialog Box/// --}}
                                         <div class="modal fade" id="popup{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="{{route('attendance.store')}}" method='POST'>
+                                                    <form action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
                                                         {{ csrf_field() }}
                                                         <div class="modal-header">
                                                             Adding attendance for Employee {{ $employee->fullname }}?
@@ -56,7 +61,7 @@
                                                                     <label for="date">Select Date</label></br>
                                                                     <div class="input-group date1">
                                                                         <input type="hidden" name="employee_id" value="{{$employee->id}}" />
-                                                                        <input class="form-control" name="date" value="{{Carbon\Carbon::now()->format('h:i a')}}" />
+                                                                        <input class="form-control" name="date" value="{{Carbon\Carbon::parse($employee->date)->format('Y-m-d')}}" />
                                                                         <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                                         </span>
@@ -65,7 +70,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_in">Time In</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input class="form-control" name="time_in" value="{{Carbon\Carbon::now()->format('h:i a')}}" />
+                                                                        <input class="form-control" name="time_in" value="{{Carbon\Carbon::parse($employee->first_time_in)->format('h:i a')}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>
@@ -74,7 +79,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_out">Time Out</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input class="form-control" name="time_out" value="{{Carbon\Carbon::now()->format('h:i a')}}" />
+                                                                        <input class="form-control" name="time_out" value="{{Carbon\Carbon::parse($employee->last_time_out)->format('h:i a')}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>

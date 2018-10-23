@@ -261,6 +261,11 @@ Route::group(['middleware' => 'auth'], function (){
 		'uses' => 'AttendanceController@edit',
 		'as' => 'attendance.edit'
 	]);
+	Route::Post('/attendance/storeAttendanceSummaryToday',[
+		'uses' => 'AttendanceController@storeAttendanceSummaryToday',
+		'as' => 'attendance.storeAttendanceSummaryToday'
+	]);
+	
 	Route::Post('/attendance/store',[
 		'uses' => 'AttendanceController@store',
 		'as' => 'attendance.store'

@@ -224,7 +224,63 @@ class AttendanceController extends Controller
             // dump($arr);
             $attendance_summary = AttendanceSummary::create($arr);
         }
-        // exit;
+    }
+
+    public function storeAttendanceSummaryToday(Request $request)
+    {
+        $attendance_summary = AttendanceSummary::where([
+            'employee_id' => $request->employee_id,
+            'date' => $request->date,
+        ])->first();
+
+        $employee = Employee::find($request->employee_id);
+        if ($employee->branch_id == 0) {
+            $employee->branch_id = 2;
+        }
+        
+        $branch = Branch::find($employee->branch_id);
+        $ofc_in = Carbon::parse('9:00 PM');
+        if(isset($branch->timing_start)){
+            $ofc_in = Carbon::parse($branch->timing_start);
+        }
+        $emp_in = Carbon::parse($request->time_in);
+        $delay = $emp_in->diffInMinutes($ofc_in);
+     
+        $is_delay = 'no';
+        if ($emp_in->gt($ofc_in) && $delay > 30) {
+            $is_delay = 'yes';
+        }
+
+        $in = Carbon::parse($request->time_in);
+        $out = Carbon::parse($request->time_out);
+        $totaltime = $out->diffInMinutes($in);
+
+        if (isset($attendance_summary->id)) {
+            $attendance_summary->first_time_in  = $in;
+            $attendance_summary->last_time_out  = $out;
+            $attendance_summary->total_time     = $totaltime;
+            $attendance_summary->date           = $request->date;
+            $attendance_summary->is_delay       = $is_delay;
+            $attendance_summary->save();
+        }
+        else{
+            $arr= [
+                'employee_id'   => $request->employee_id,
+                'first_time_in' => $in,
+                'last_time_out' => $out,
+                'total_time'    => $totaltime,
+                'is_delay'      => $is_delay,
+                'date'          => $request->date,
+            ];
+            // dump($arr);
+            $attendance_summary = AttendanceSummary::create($arr);
+        }
+        if($attendance_summary){
+            return redirect()->back()->with('success','Attendance is created succesfully');
+        }
+        else{
+            return redirect()->back()->with('error','Error while add attendance');
+        }
     }
 
     /**
@@ -567,26 +623,35 @@ class AttendanceController extends Controller
 
     public function todayTimeline($id=0){
         $this->meta['title'] = 'Show Attendance';
+        
+        $today = Carbon::now()->toDateString();
 
-        // $employees = Employee::leftJoin('attendance_summaries', function($join) {
-        //     $join->on('employees.id', '=', 'attendance_summaries.employee_id');
-        // })->get([
-        //     'attendance_summaries.first_time_in',
-        //     'attendance_summaries.last_time_out',
-        // ]);
-        // dd($employees->toArray());
+        $employees = AttendanceSummary::leftJoin('employees', function($join) {
+            $join->on('employees.id', '=', 'attendance_summaries.employee_id');
+        })
+        ->where('attendance_summaries.date', $today)
+        ->get([
+            'employees.*',
+            'attendance_summaries.date',
+            'attendance_summaries.first_time_in',
+            'attendance_summaries.last_time_out',
+            'attendance_summaries.total_time',
+        ]);
+        
         $active_employees = Employee::where('status','1')->get()->count(); 
 
-        if ($id == 0) {
-            $employees = Employee::with('attendanceSummary', 'branch')->get();
-        }
-        else{
-            $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
-        }
+        // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
+        // if ($id == 0) {
+        //     $employees = Employee::with('attendanceSummary', 'branch')->get();
+        // }
+        // else{
+        //     $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
+        // }
 
         return view('admin.attendance.today_timeline',$this->metaResponse(), [
             'active_employees' => $active_employees,
             'employees' => $employees,
+            'today' => $today,
             'branch_id' => $id,
         ]);
     }
