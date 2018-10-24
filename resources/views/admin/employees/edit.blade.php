@@ -111,20 +111,9 @@
                             </div>
                             <!--/span-->
                         </div>
-                        {{--///// Start Allowed Leaves and Exit Date/////--}}
                         <div class="row">
                             <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Allowed Leaves</label>
-                                    <div class="col-md-9">
-                                        <input  type="number" class="form-control" id="allowed_leaves" placeholder="Enter Allowed Leaves" name="allowed_leaves" value="{{$employee->allowed_leaves}}" @if (Auth::user()->id != 1) disabled @endif>
-                                    </div>
-                                </div>
-                            </div>
-                        {{--////////End Allowed Leaves And Exit Date//////--}}
-                            <!--/span-->
-                        {{--//////Picture/////--}}
+                            {{--//////Picture/////--}}
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Picture Upload</label>
@@ -134,7 +123,7 @@
                                     </div>
                                 </div>
                             </div>
-                        {{--//////End Picture/////--}}
+                            {{--//////End Picture/////--}}
                         </div>
                     </div>
                     {{--///Password///--}}
@@ -283,6 +272,7 @@
                             <label class="control-label text-right col-md-3">Roles</label>
                             <div class="col-md-9">
                                 <select class="form-control custom-select" name="role_id" id="role">
+                                    <option value="">Select Role</option>
                                     @if($roles->count() >0)
                                     @foreach($roles as $role)
                                         <option value="{{$role->id}}" @if($role->id == $employee_role_id)) selected @endif>{{$role->name}}</option>

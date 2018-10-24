@@ -337,7 +337,7 @@ Route::group(['middleware' => 'auth'], function (){
 	]);
 
 	//Leaves
-	Route::Get('/leave',[
+	Route::Get('/leave/create',[
 		'uses' => 'LeaveController@create',
 		'as' => 'leaves'
 	]);
@@ -347,9 +347,14 @@ Route::group(['middleware' => 'auth'], function (){
 		'as' => 'leaves.store'
 	]);
 
-	Route::Get('/leave/show/{id}',[
+	Route::Get('/leaves',[
 		'uses' => 'LeaveController@index',
 		'as' => 'leave.show'
+	]);
+
+	Route::Get('/employee_leaves',[
+		'uses' => 'LeaveController@employeeleaves',
+		'as' => 'employeeleaves'
 	]);
 
     Route::Get('/leave/edit/{id}',[
@@ -360,6 +365,11 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::Post('/leave/update/{id}',[
 		'uses' => 'LeaveController@update',
 		'as' => 'leave.update'
+	]);
+
+	Route::Get('/leave/updateStatus/{id}/{status}',[
+		'uses' => 'LeaveController@updateStatus',
+		'as' => 'leave.updateStatus'
 	]);
 
 	Route::Post('/leave/delete/{id}',[

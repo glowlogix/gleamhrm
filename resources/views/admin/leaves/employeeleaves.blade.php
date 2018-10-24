@@ -15,7 +15,7 @@
     <div class="panel-body">
         <div class="form-group">
             <div class="col-md-6">
-                <label for="name">Total Leaves:</label> {{$employee->allowed_leaves}}
+                <label for="name">Total Leaves:</label> 
             </div>
             <div class="col-md-6">
                 <label for="name">Consumed Leaves:</label> {{$consumed_leaves}}
@@ -23,6 +23,7 @@
         </div>
         <table class="table">
             <thead>
+                <th>Employee</th>
                 <th>Leave Type</th>
                 <th>Date From</th>
                 <th>Date To</th>
@@ -33,24 +34,25 @@
                 @endif
             </thead>
             <tbody class="table-bordered table-hover table-striped">
-                @if(count($leaves) > 0) @foreach($leaves as $leave)
+                @if(count($employees) > 0) @foreach($employees as $employee)
                 <tr>
-                    <td>{{$leave->leave_type}}</td>
-                    <td>{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}</td>
-                    <td>{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}</td>
-                    <td>{{$leave->subject}}</td>
-                    <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
+                    <td>{{$employee->firstname}} {{$employee->lastname}}</td>
+                    <td>{{$employee->leave_type}}</td>
+                    <td>{{Carbon\Carbon::parse($employee->leave_datefrom)->format('Y-m-d')}}</td>
+                    <td>{{Carbon\Carbon::parse($employee->leave_dateto)->format('Y-m-d')}}</td>
+                    <td>{{$employee->leave_subject}}</td>
+                    <td>{{($employee->leave_status != '') ? $employee->leave_status : 'Pending'}}</td>
                     <td>
                         @if(Auth::user()->admin)
                         @endif
-                        <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
+                        <form action="{{ route('leave.destroy' , $employee->employee_id )}}" method="post">
                             {{ csrf_field() }}
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
-                        <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
+                        <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$employee->id])}}">Edit</a>
 
-                        @if($leave->status == '')
-                        <select class="update_status form-control" id="{{$leave->id}}">
+                        @if($employee->status == 'Pending')
+                        <select class="update_status form-control" id="{{$employee->id}}">
                             <option value="">Update Status</option>
                             <option value="Approved">Approved</option>
                             <option value="Declined">Declined</option>

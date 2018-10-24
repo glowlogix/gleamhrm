@@ -9,7 +9,7 @@
             </a>
         </span>
         <span style="float: right;">
-              <a href="{{route('leave.show',Auth::user()->id)}}" class="btn btn-info btn-xs" align="right">
+              <a href="{{route('leave.show')}}" class="btn btn-info btn-xs" align="right">
                   <span class="glyphicon"></span> Back
               </a>
           </span>
@@ -18,25 +18,12 @@
 		<form action="{{route('leaves.store')}}" method="post">
 		   {{csrf_field()}}
 		  <div class="form-group">
-			<div class="col-md-6">
-				<label for="name">Name:</label>
-				<select class="form-control" name="employee_id">
-				 @foreach($employees as $employee)
-				   <option  @if(old('employee_id') == $employee->id || Auth::user()->id == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
-				 @endforeach
-				</select>
-			</div>
-		  </div>
-		  <div class="form-group">
 				<div class="col-md-6">
 					<label for="leave_type">Leave Type</label>
 					<select class="form-control" name="leave_type">
-						<option @if(old('leave_type') == 'unpaid_leave')selected @endif value="unpaid_leave">Unpaid Leave</option>
-						<option @if(old('leave_type') == 'half_leave')selected @endif value="half_leave">Half Leave</option>
-						<option @if(old('leave_type') == 'short_leave')selected @endif value="short_leave">Short Leave</option>
-						<option @if(old('leave_type') == 'paid_leave')selected @endif value="paid_leave">Paid Leave</option>
-						<option @if(old('leave_type') == 'sick_leave')selected @endif value="sick_leave">Sick Leave</option>
-						<option @if(old('leave_type') == 'casual_leave')selected @endif value="casual_leave">Casual Leave</option>
+						@foreach($leave_types as $leave_type)
+						<option @if(old('leave_type') == $leave_type->id)selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->amount}})</option>
+						@endforeach
 					</select>
 				</div>
 		  </div>
@@ -73,11 +60,8 @@
 		  <div class="form-group">
 				<div class="col-md-6">
 					<label for="name">Line Manager</label>
-					<select name="line_manager" class="form-control">
-						@foreach ($employees as $employee)
-						<option value="{{$employee->id}}" @if($employee->id == old('line_manager')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
-						@endforeach
-					</select>
+					<input type="hidden" name="line_manager" value="{{isset($line_manager->id) ? $line_manager->id : ''}}">
+					<input type="text" class="form-control" value="{{isset($line_manager->id) ? $line_manager->firstname.'  '. $line_manager->lastname : ''}}" disabled>
 				</div>
 		  </div>
 		  <div class="form-group">

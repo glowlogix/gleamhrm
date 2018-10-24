@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Employee;
+use App\LeaveType;
 use App\Salary;
 use App\Document;
 use App\Branch;
@@ -169,6 +170,13 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}
 		$employee_id = $employee->id;
+
+		$leave_types = LeaveType::get();
+		$arr = array();
+		foreach ($leave_types as $leave_type) {
+			$arr[$leave_type->id] = array( 'count' => $leave_type->amount);
+		}
+        $employee->leaveTypes()->sync($arr);
 		
 		//send message for password information and change password.
 		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
@@ -190,7 +198,7 @@ class EmployeeController extends Controller
 			abort(404);
 		}
 
-        $employee_role_id = ''; //todo
+		$employee_role_id = ''; //todo
 		if($employee->roles->count() > 0){
         	$employee_role_id = $employee->roles[0]->id; //todo
 		}
@@ -274,10 +282,6 @@ class EmployeeController extends Controller
 		if (!empty($request->password) && !empty($request->confirm_password)) {
 			$employee->password			= Hash::make($request->password);
 		}
-
-		if (Auth::user()->id == 1){
-			$employee->allowed_leaves = $request->allowed_leaves;
-		}
 		
 		$employee->invite_to_zoho 	= $request->invite_to_zoho;
 		$employee->invite_to_slack 	= $request->invite_to_slack;
@@ -347,7 +351,6 @@ class EmployeeController extends Controller
 	        }
         }
 		$employee->save();
-
 
 		return redirect()->route('employees')->with('success','Employee is updated succesfully');      
 	}
