@@ -61,30 +61,10 @@
 								<!--/span-->
 								<div class="col-md-6">
 									<div class="form-group row">
-										<label class="control-label text-right col-md-3">Subject</label>
-										<div class="col-md-9">
-											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{old('subject')}}">
-										</div>
-									</div>
-								</div>
-								<!--/span-->
-							</div>
-							<div class="row">
-								<div class="col-md-6">
-									<div class="form-group row">
 										<label class="control-label text-right col-md-3">Line Manager</label>
 										<div class="col-md-9">
 											<input type="hidden" name="line_manager" value="{{isset($line_manager->id) ? $line_manager->id : ''}}">
 											<input type="text" class="form-control" value="{{isset($line_manager->id) ? $line_manager->firstname.'  '. $line_manager->lastname : ''}}" disabled>
-										</div>
-									</div>
-								</div>
-								<!--/span-->
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="control-label text-right col-md-3">Description</label>
-										<div class="col-md-9">
-											<input type="text" class="form-control" name="description" placeholder="Enter Description Here" value="{{old('description')}}">
 										</div>
 									</div>
 								</div>
@@ -113,6 +93,26 @@
 									</div>
 								</div>
 								<!--/span-->
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Subject</label>
+										<div class="col-md-9">
+											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{old('subject')}}">
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Description</label>
+										<div class="col-md-9">
+											<textarea type="text" class="form-control" name="description" placeholder="Enter Description Here">{{old('description')}}</textarea>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
 						<hr>

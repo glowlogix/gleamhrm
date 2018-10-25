@@ -1,6 +1,10 @@
 @extends('layouts.admin')
 @section('Heading')
+<<<<<<< HEAD
     <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('attendance.create')}}'"><span class="fas fa-plus" ></span> Add Attendence</button>
+=======
+    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('leaves')}}}'"><span class="fas fa-plus" ></span> Add Attendence</button>
+>>>>>>> 6eb54d563a8b8dfba9b10a466e7ca65771615778
     <h3 class="text-themecolor">Edit Leave</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -12,11 +16,22 @@
     <div class="row">
         <div class="col-lg-12">
             <div class="card card-outline-info">
+<<<<<<< HEAD
+=======
+                <div style="margin:10px 10px">
+                    <h4 class="m-b-0 text-white"><button type="button" class="btn btn-info float-right" onclick="window.location.href='{{route('leave.show')}}'">Back</button>
+                    </h4>
+                </div>
+>>>>>>> 6eb54d563a8b8dfba9b10a466e7ca65771615778
                 <div class="card-body">
                     <form class="form-horizontal" action="{{route('leave.update', ['id'=>$leave->id])}}" method="post">
                         {{csrf_field()}}
                         <div class="form-body">
+<<<<<<< HEAD
                             <h3 class="box-title">Update Leave</h3>
+=======
+                            <h3 class="box-title">Create Leave</h3>
+>>>>>>> 6eb54d563a8b8dfba9b10a466e7ca65771615778
                             <hr class="m-t-0 m-b-40">
                             <!--/row-->
                             <div class="row">
@@ -89,13 +104,18 @@
                                 <!--/span-->
                             </div>
                             <div class="row">
+<<<<<<< HEAD
                                 <div class="col-md-6">
+=======
+                              <div class="col-md-6">
+>>>>>>> 6eb54d563a8b8dfba9b10a466e7ca65771615778
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Subject</label>
                                         <div class="col-md-9">
                                             <input type="text" class="form-control" name="subject" value="{{$leave->subject}}">
                                         </div>
                                     </div>
+<<<<<<< HEAD
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
@@ -107,6 +127,19 @@
                                     </div>
                                 </div>
                                 <!--/span-->
+=======
+                              </div>
+                                <!--/span-->
+                              <div class="col-md-6">
+                                  <div class="form-group row">
+                                      <label class="control-label text-right col-md-3">Description</label>
+                                      <div class="col-md-9">
+                                          <input type="text" class="form-control" name="description" value="{{$leave->description}}">
+                                      </div>
+                                  </div>
+                              </div>
+                              <!--/span-->
+>>>>>>> 6eb54d563a8b8dfba9b10a466e7ca65771615778
                             </div>
                             <hr>
                             <div class="form-actions">
