@@ -14,25 +14,25 @@ class EmployeeLeaveTypeSeeder extends Seeder
     {
         $leave_type = EmployeeLeaveType::create([
             'employee_id' => '1',
-            'name' => '1',
+            'leave_type_id' => '1',
             'count' => '12',
         ]);
 
         $leave_type = EmployeeLeaveType::create([
             'employee_id' => '1',
-            'name' => '2',
+            'leave_type_id' => '2',
             'count' => '12',
         ]);
 
         $leave_type = EmployeeLeaveType::create([
             'employee_id' => '2',
-            'name' => '1',
+            'leave_type_id' => '1',
             'count' => '12',
         ]);
 
         $leave_type = EmployeeLeaveType::create([
             'employee_id' => '2',
-            'name' => '2',
+            'leave_type_id' => '2',
             'count' => '12',
         ]);
     }

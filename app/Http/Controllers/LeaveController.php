@@ -121,9 +121,10 @@ class LeaveController extends Controller
         $this->meta['title'] = 'Create Leave';    
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $id)->with('lineManager')->first();
         $employees = Employee::all();
+        $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         return view('admin.leaves.create',$this->metaResponse(),[
             'employees' => $employees,
-            'line_manager' => $OrganizationHierarchy->lineManager,
+            'line_manager' => $line_manager,
             'leave_types' => LeaveType::all(),
         ]);
     }
@@ -223,6 +224,7 @@ class LeaveController extends Controller
         
         $employee_id = Auth::User()->id;
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $employee_id)->with('lineManager')->first();
+        $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         
         $employees = Employee::all();
         
@@ -231,7 +233,7 @@ class LeaveController extends Controller
 
         return view('admin.leaves.edit',$this->metaResponse(),[
             'employees' => $employees,
-            'line_manager' => $OrganizationHierarchy->lineManager,
+            'line_manager' => $line_manager,
             'leave_types' => LeaveType::all(),
             'leave' => $leave,
         ]);
