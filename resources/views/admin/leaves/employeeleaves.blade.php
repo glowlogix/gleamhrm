@@ -42,9 +42,6 @@
                                     <td>{{$employee->leave_subject}}</td>
                                     <td>{{($employee->leave_status != '') ? $employee->leave_status : 'Pending'}}</td>
                                     <td class="row">
-                                        @if())
-
-                                        @endif
                                         @if((Auth::user()->id == $employee->id) || ($employee->leave_status == 'Pending' && $employee->leave_status == '')) {{--work on this condition--}}
                                         <form action="{{ route('leave.destroy' , $employee->employee_id )}}" method="post">
                                             {{ csrf_field() }}
