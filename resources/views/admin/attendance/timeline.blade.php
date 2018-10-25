@@ -33,6 +33,12 @@
         <div id="calendar">
         </div>
     </div>
+@push('scripts')
+<link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
+<link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
+<link href="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet' />
+<script src="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
+<script src="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
@@ -77,5 +83,6 @@
         });
     });
 </script>
+@endpush
 </div>
 @stop

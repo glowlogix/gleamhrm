@@ -14,6 +14,7 @@ use App\Traits\MetaTrait;
 use Carbon\Carbon;
 use DB;
 use Session;
+use Mail;
 
 class LeaveController extends Controller
 {
@@ -180,10 +181,23 @@ class LeaveController extends Controller
             'cc_to' => $request->cc_to,
             'status' => 'pending',
         ]);
+        
+        // $this->sendEmail($leave);
 
         if ($leave){
            return redirect()->route('leave.show')->with('success','Leave is created succesfully');
         }
+    }
+
+    public function sendEmail($leave)
+    {
+        Mail::raw($leave->description, function($message) use ($leave)
+        {
+            $message->from('hr@glowlogix.com', 'HR GlowLogix');
+            $message->to($leave->cc_to)->subject($leave->subject);
+        });
+
+        return 'mail sent to '. $request->email;
     }
 
     /**
@@ -212,6 +226,7 @@ class LeaveController extends Controller
         $employees = Employee::all();
         
         $leave = Leave::find($id);
+        // $this->sendEmail($leave);
 
         return view('admin.leaves.edit',$this->metaResponse(),[
             'employees' => $employees,
@@ -325,15 +340,4 @@ class LeaveController extends Controller
         return redirect()->back()->with('success','Leave is deleted succesfully');   
     }
 
-    public function sendEmail($body)
-    {
-        Mail::raw($body, function($message) use ($request)
-        {
-            $message->from('kosar@glowlogix.com', 'NWDWMP');
-
-            $message->to($request->email, $request->name)->subject('From WDWM');
-        });
-
-        return 'mail sent to '. $request->email;
-    }
 }

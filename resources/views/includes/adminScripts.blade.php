@@ -31,8 +31,5 @@
 <!-- ============================================================== -->
 
 <script src="{{asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
-
-<script src="{{asset('bootstrap/bootstrap-datetimepicker.min.js')}}"></script>
-
 @yield('scripts')
 @stack('scripts')
