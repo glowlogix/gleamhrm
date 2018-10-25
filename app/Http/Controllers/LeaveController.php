@@ -306,8 +306,6 @@ class LeaveController extends Controller
         if ($leave->status == 'Approved') { // if already approved do nothing
             return redirect()->back()->with('success','Leave already approved');   
         }
-        $leave->status = $status;
-        $leave->save();
         
         if ($status == 'Approved') {
             $dateFromTime = Carbon::parse($leave->datefrom);
@@ -319,11 +317,14 @@ class LeaveController extends Controller
                 'employee_id' => $leave->employee_id,
                 'leave_type_id' => $leave->leave_type,
             ])->first();
-
+            
             $cnt = $employee_leave_type->count -= $consumed_leaves;
             
             DB::statement("UPDATE employee_leave_type SET count = $cnt where employee_id = ".$leave->employee_id." AND leave_type_id = ". $leave->leave_type);
         }
+
+        $leave->status = $status;
+        $leave->save();
 
         return redirect()->back()->with('success','Leave status is updated succesfully');   
     }
