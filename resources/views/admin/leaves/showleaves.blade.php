@@ -1,59 +1,72 @@
 @extends('layouts.admin')
 @section('Heading')
     <h3 class="text-themecolor">All Leaves</h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+        <li class="breadcrumb-item active">Attendance</li>
+        <li class="breadcrumb-item active">Leaves</li>
+    </ol>
 @stop
 @section('content')
-<div class="panel panel-default">
-    <div class="panel-heading text-center">
-        <b style="text-align: center;">All Leaves</b>
-        <span style="float: left;">
-            <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon glyphicon-plus"></span> Add Leave
-            </a>
-        </span>
-    </div>
-    <div class="panel-body">
-        <div class="form-group">
-            <div class="col-md-6">
-                <label for="name">Total Leaves:</label> {{$employee->allowed_leaves}}
-            </div>
-            <div class="col-md-6">
-                <label for="name">Consumed Leaves:</label> {{$consumed_leaves}}
+    <div class="row">
+        <div class="col-12">
+            <div class="card">
+                <div class="card-body">
+                    <h6 class="card-subtitle"></h6>
+
+                    <div class="table">
+                        <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
+                            <thead>
+                            @if(count($leaves) > 0)
+                                <tr>
+                                    <th>Leave Type</th>
+                                    <th>Date From</th>
+                                    <th>Date To</th>
+                                    <th>Subject</th>
+                                    <th>Status</th>
+                                    @if(Auth::user()->id = 1)
+                                        <th>Actions</th>
+                                    @endif
+                                </tr>
+                            </thead>
+                            <tbody>
+                            @foreach($leaves as $leave)
+                                <tr>
+                                    <td>{{$leave->leaveType->name}}</td>
+                                    <td>{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}</td>
+                                    <td>{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}</td>
+                                    <td>{{$leave->subject}}</td>
+                                    <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
+                                    <td class=" row">
+                                        @if(Auth::user()->admin)
+                                        @endif
+                                        <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
+                                            {{ csrf_field() }}
+                                            <button class=" btn btn-danger btn-sm " type="submit"><i class="fas fa-window-close text-white "></i></button>
+                                        </form>
+                                        &nbsp;
+                                        <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
+                                    </td>
+                                </tr>
+                            @endforeach @else
+                                <p style="text-align: center;">No leave found.</p>
+
+                            @endif
+
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
             </div>
         </div>
-        <table class="table">
-            <thead>
-                <th>Leave Type</th>
-                <th>Date From</th>
-                <th>Date To</th>
-                <th>Subject</th>
-                <th>Status</th>
-                @if(Auth::user()->id = 1)
-                <th>Manage Leaves</th>
-                @endif
-            </thead>
-            <tbody class="table-bordered table-hover table-striped">
-                @if(count($leaves) > 0) @foreach($leaves as $leave)
-                <tr>
-                    <td>{{$leave->leaveType->name}}</td>
-                    <td>{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}</td>
-                    <td>{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}</td>
-                    <td>{{$leave->subject}}</td>
-                    <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
-                    <td>
-                        @if(Auth::user()->admin)
-                        @endif
-                        <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
-                            {{ csrf_field() }}
-                            <button class="btn btn-danger btn-sm">Delete</button>
-                        </form>
-                        <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
-                    </td>
-                </tr>
-                @endforeach @else No leave found. @endif
-            </tbody>
-        </table>
     </div>
-</div>
-
+    @push('scripts')
+        <script type="text/javascript">
+            $(".update_status").on('change', function (event) {
+                if ($(this).val() !== '') {
+                    location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+                }
+            });
+        </script>
+    @endpush
 @stop

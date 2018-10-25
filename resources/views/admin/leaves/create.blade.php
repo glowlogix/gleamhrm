@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@include('admin.includes.errors')
 @section('Heading')
 	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('attendance.create')}}'"><span class="fas fa-plus" ></span> Add Attendence</button>
 	<h3 class="text-themecolor">Add Leave</h3>
@@ -41,7 +42,7 @@
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">From Date</label>
 										<div class="col-md-9">
-											<input type="date" class="form-control" placeholder="dd/mm/yyyy"  name="datefrom" value="{{old('datefrom')}}">
+											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}">
 										</div>
 									</div>
 								</div>
@@ -121,7 +122,6 @@
 									<div class="row">
 										<div class="col-md-offset-3 col-md-9">
 											<button type="submit" class="btn btn-success">Apply</button>
-											<button type="button" class="btn btn-inverse">Cancel</button>
 										</div>
 									</div>
 								</div>
