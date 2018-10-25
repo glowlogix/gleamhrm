@@ -49,7 +49,7 @@
                         </form>
                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
 
-                        @if($leave->status == '')
+                        @if($leave->status == '' || strtolower($leave->status) == 'pending')
                         <select class="update_status form-control" id="{{$leave->id}}">
                             <option value="">Update Status</option>
                             <option value="Approved">Approved</option>
@@ -67,7 +67,9 @@
 @push('scripts')
 <script type="text/javascript">
 $(".update_status").on('change', function (event) {
-    location.href = "{{route('leaves')}}/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+    if ($(this).val() != '') {
+        location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+    }
 });
 </script>
 @endpush

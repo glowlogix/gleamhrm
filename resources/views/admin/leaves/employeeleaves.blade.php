@@ -13,14 +13,6 @@
         </span>
     </div>
     <div class="panel-body">
-        <div class="form-group">
-            <div class="col-md-6">
-                <label for="name">Total Leaves:</label> 
-            </div>
-            <div class="col-md-6">
-                <label for="name">Consumed Leaves:</label> {{$consumed_leaves}}
-            </div>
-        </div>
         <table class="table">
             <thead>
                 <th>Employee</th>
@@ -35,6 +27,9 @@
             </thead>
             <tbody class="table-bordered table-hover table-striped">
                 @if(count($employees) > 0) @foreach($employees as $employee)
+                @if (empty($employee->id))
+                    @continue
+                @endif
                 <tr>
                     <td>{{$employee->firstname}} {{$employee->lastname}}</td>
                     <td>{{$employee->leave_type}}</td>
@@ -51,13 +46,14 @@
                         </form>
                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$employee->id])}}">Edit</a>
 
-                        @if($employee->status == 'Pending')
-                        <select class="update_status form-control" id="{{$employee->id}}">
+                        @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
+                        <select class="update_status form-control" id="{{$employee->leave_id}}">
                             <option value="">Update Status</option>
                             <option value="Approved">Approved</option>
                             <option value="Declined">Declined</option>
                         </select>
                         @endif
+
                     </td>
                 </tr>
                 @endforeach @else No leave found. @endif
@@ -69,7 +65,9 @@
 @push('scripts')
 <script type="text/javascript">
 $(".update_status").on('change', function (event) {
-    location.href = "{{route('leaves')}}/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+    if ($(this).val() != '') {
+        location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+    }
 });
 </script>
 @endpush

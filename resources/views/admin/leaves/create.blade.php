@@ -87,15 +87,6 @@
 				</div>
 		  </div>
 		  <div class="form-group">
-			<div class="col-md-6">
-				<label for="status">Status:</label>
-				<select class="form-control" name="status">
-				   <option value="pending" @if(old('status') == 'pending') selected @endif>Pending</option>
-				   <option value="approved" @if(old('status') == 'approved') selected @endif>Approved</option>
-				</select>
-			</div>
-		  </div>
-		  <div class="form-group">
 				<div class="col-md-8" style="padding-top:23px;">
 					<button class="btn btn-success" type="submit" style="margin-left: 360px;"> Apply Leave</button>
 				</div>

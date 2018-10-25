@@ -20,7 +20,7 @@ class CreateBranchesTable extends Migration
             $table->time('timing_start')->nullable();
             $table->time('timing_off')->nullable();
             $table->string('address');
-            $table->string('phone_number');
+            $table->string('phone_number')->nullable();
             $table->timestamps();
         });
     }

@@ -64,30 +64,35 @@ class LeaveController extends Controller
     public function employeeleaves()
     {
         $this->meta['title'] = 'Show Employee Leaves';  
+        $user = Auth::user()->id;
+        if ($user == 1) {
+            $employees = Leave::leftJoin('employees', function($join) {
+                $join->on('employees.id', '=', 'leaves.employee_id');
+                // $join->where('leaves.status', 'Approved');
+                $join->whereIn('leaves.status', ['', 'Pending']);
+            });
+        }
+        else{
+            $employees = Leave::leftJoin('employees', function($join) use ($user) {
+                $join->on('employees.id', '=', 'leaves.employee_id');
+                $join->where('leaves.status', '');
+                $join->where('leaves.line_manager', $user);
+                $join->where('leaves.point_of_contact', $user);
+            });
+        }
 
-        $employees = Employee::leftJoin('leaves', function($join) {
-            $join->on('employees.id', '=', 'leaves.employee_id');
-            $join->where('leaves.status', '');
-        })
-        ->get([
+        $employees = $employees->get([
             'employees.*',
             'leaves.id AS leave_id',
             'leaves.datefrom AS leave_from',
             'leaves.dateto AS leave_dateto',
             'leaves.subject AS leave_subject',
+            'leaves.line_manager AS line_manager',
+            'leaves.point_of_contact AS point_of_contact',
             'leaves.status AS leave_status',
         ]);
-        $consumed_leaves = 0; 
-        // if ($leaves->count() > 0) {
-        //     foreach ($leaves as $leave) {
-        //         $datefrom = Carbon::parse($leave->datefrom);
-        //         $dateto = Carbon::parse($leave->dateto);
-        //         $consumed_leaves += $dateto->diffInDays($datefrom) + 1;
-        //     }
-        // }
+        // dd($employees->toArray());
         return view('admin.leaves.employeeleaves',$this->metaResponse(),[
-            // 'leaves' => $leaves,
-            'consumed_leaves' => $consumed_leaves,
             'employees' => $employees,
         ]);
     }
@@ -172,7 +177,7 @@ class LeaveController extends Controller
         ]);
 
         if ($leave){
-           return redirect()->route('leave.show', $employee_id)->with('success','Leave is created succesfully');
+           return redirect()->route('leave.show')->with('success','Leave is created succesfully');
         }
     }
 
