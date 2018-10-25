@@ -35,7 +35,7 @@
             <tbody class="table-bordered table-hover table-striped">
                 @if(count($leaves) > 0) @foreach($leaves as $leave)
                 <tr>
-                    <td>{{$leave->leave_type}}</td>
+                    <td>{{$leave->leaveType->name}}</td>
                     <td>{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}</td>
                     <td>{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}</td>
                     <td>{{$leave->subject}}</td>
@@ -48,14 +48,6 @@
                             <button class="btn btn-danger btn-sm">Delete</button>
                         </form>
                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}">Edit</a>
-
-                        @if($leave->status == '' || strtolower($leave->status) == 'pending')
-                        <select class="update_status form-control" id="{{$leave->id}}">
-                            <option value="">Update Status</option>
-                            <option value="Approved">Approved</option>
-                            <option value="Declined">Declined</option>
-                        </select>
-                        @endif
                     </td>
                 </tr>
                 @endforeach @else No leave found. @endif
@@ -64,13 +56,4 @@
     </div>
 </div>
 
-@push('scripts')
-<script type="text/javascript">
-$(".update_status").on('change', function (event) {
-    if ($(this).val() != '') {
-        location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
-    }
-});
-</script>
-@endpush
 @stop

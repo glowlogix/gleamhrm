@@ -32,7 +32,7 @@
                 @endif
                 <tr>
                     <td>{{$employee->firstname}} {{$employee->lastname}}</td>
-                    <td>{{$employee->leave_type}}</td>
+                    <td>{{$employee->leaveType->name}}</td>
                     <td>{{Carbon\Carbon::parse($employee->leave_datefrom)->format('Y-m-d')}}</td>
                     <td>{{Carbon\Carbon::parse($employee->leave_dateto)->format('Y-m-d')}}</td>
                     <td>{{$employee->leave_subject}}</td>

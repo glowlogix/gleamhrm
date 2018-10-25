@@ -43,7 +43,7 @@ class LeaveController extends Controller
     {
         $employee = Auth::User();
         $this->meta['title'] = 'Show Leaves';  
-        $leaves = Leave::where('employee_id', $employee->id)->get();
+        $leaves = Leave::where('employee_id', $employee->id)->with('leaveType')->get();
 
         $consumed_leaves = 0; 
         if ($leaves->count() > 0) {
@@ -66,24 +66,26 @@ class LeaveController extends Controller
         $this->meta['title'] = 'Show Employee Leaves';  
         $user = Auth::user()->id;
         if ($user == 1) {
-            $employees = Leave::leftJoin('employees', function($join) {
+            $leaves = Leave::leftJoin('employees', function($join) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                // $join->where('leaves.status', 'Approved');
                 $join->whereIn('leaves.status', ['', 'Pending']);
             });
         }
         else{
-            $employees = Leave::leftJoin('employees', function($join) use ($user) {
+            $leaves = Leave::leftJoin('employees', function($join) use ($user) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                $join->where('leaves.status', '');
-                $join->where('leaves.line_manager', $user);
-                $join->where('leaves.point_of_contact', $user);
+                $join->whereIn('leaves.status', ['', 'Pending']);
+                $join->where(function($q) use ($user) {
+                    $q->where('leaves.line_manager', $user)
+                    ->orWhere('leaves.point_of_contact', $user);
+                });
             });
         }
-
-        $employees = $employees->get([
+        
+        $leaves = $leaves->with('leaveType')->get([
             'employees.*',
             'leaves.id AS leave_id',
+            'leaves.leave_type AS leave_type',
             'leaves.datefrom AS leave_from',
             'leaves.dateto AS leave_dateto',
             'leaves.subject AS leave_subject',
@@ -91,9 +93,11 @@ class LeaveController extends Controller
             'leaves.point_of_contact AS point_of_contact',
             'leaves.status AS leave_status',
         ]);
-        // dd($employees->toArray());
+
+        // dd($leaves->toArray());
+
         return view('admin.leaves.employeeleaves',$this->metaResponse(),[
-            'employees' => $employees,
+            'employees' => $leaves,
         ]);
     }
 
@@ -172,6 +176,7 @@ class LeaveController extends Controller
             'subject' => $request->subject,
             'description' => $request->description,
             'point_of_contact' => $request->point_of_contact,
+            'line_manager' => $request->line_manager,
             'cc_to' => $request->cc_to,
             'status' => 'pending',
         ]);
