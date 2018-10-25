@@ -25,9 +25,7 @@
                                     <th>Date To</th>
                                     <th>Subject</th>
                                     <th>Status</th>
-                                    @if(Auth::user()->id = 1)
-                                        <th>Actions</th>
-                                    @endif
+                                    <th>Actions</th>
                                     <th>Approve/Decline</th>
                                 </tr>
                             </thead>
@@ -53,11 +51,13 @@
                                     </td>
                                     <td>
                                         @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
+                                            @if(Auth::user()->id == 1 || (Auth::user()->id != $employee->id))
                                             <select class="update_status form-control" id="{{$employee->leave_id}}" style="width:160px;">
                                                 <option value="">Update Status</option>
                                                 <option value="Approved">Approved</option>
                                                 <option value="Declined">Declined</option>
                                             </select>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>

@@ -69,13 +69,13 @@ class LeaveController extends Controller
         if ($user == 1) {
             $leaves = Leave::leftJoin('employees', function($join) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                $join->whereIn('leaves.status', ['', 'Pending']);
+                // $join->whereIn('leaves.status', ['', 'Pending']);
             });
         }
         else{
             $leaves = Leave::leftJoin('employees', function($join) use ($user) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                $join->whereIn('leaves.status', ['', 'Pending']);
+                // $join->whereIn('leaves.status', ['', 'Pending']);
                 $join->where(function($q) use ($user) {
                     $q->where('leaves.line_manager', $user)
                     ->orWhere('leaves.point_of_contact', $user);
@@ -284,7 +284,7 @@ class LeaveController extends Controller
         $leave->line_manager =  $request->line_manager;
         $leave->point_of_contact = $request->point_of_contact;
         $leave->cc_to =  $request->cc_to;
-        $leave->status = $request->status;
+        $leave->status = 'Pending';
 
         $leave = $leave->save();
 
