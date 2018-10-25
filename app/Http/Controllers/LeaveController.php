@@ -249,7 +249,7 @@ class LeaveController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $employee_id = Auth::User()->id;
+        $leave = Leave::find($id);
 
         $this->validate($request,[
             'datefrom' => 'required',
@@ -261,7 +261,7 @@ class LeaveController extends Controller
         
         $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
         
-        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+        $attendance_summaries = AttendanceSummary::where(['employee_id' => $leave->employee_id])
             ->whereDate('date', '>=', $dateFromTime->toDateString())
             ->whereDate('date', '<=', $dateToTime->toDateString())
             ->get();
@@ -274,8 +274,6 @@ class LeaveController extends Controller
             return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
         }
 
-        $leave = Leave::find($id);
-        $leave->employee_id =  $employee_id;
         $leave->leave_type =  $request->leave_type;
         $leave->datefrom =  $dateFromTime;
         $leave->dateto =  $dateToTime;
@@ -288,7 +286,7 @@ class LeaveController extends Controller
 
         $leave = $leave->save();
 
-        return redirect()->route('leave.show', $employee_id)->with('success','Leave is created succesfully');
+        return redirect()->route('leave.show')->with('success','Leave is created succesfully');
     }
 
     function updateEmployeeLeaveType($employee_id, $leave_type_id){
