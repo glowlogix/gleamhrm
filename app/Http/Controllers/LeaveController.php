@@ -223,6 +223,7 @@ class LeaveController extends Controller
         
         $employee_id = Auth::User()->id;
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $employee_id)->with('lineManager')->first();
+        
         $employees = Employee::all();
         
         $leave = Leave::find($id);
