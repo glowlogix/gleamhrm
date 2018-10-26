@@ -42,7 +42,7 @@
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">From Date</label>
 										<div class="col-md-9">
-											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}">
+											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}"  min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
 										</div>
 									</div>
 								</div>
@@ -54,7 +54,7 @@
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">To Date</label>
 										<div class="col-md-9">
-											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}">
+											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}" min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
 										</div>
 									</div>
 								</div>

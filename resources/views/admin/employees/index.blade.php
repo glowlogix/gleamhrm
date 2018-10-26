@@ -9,7 +9,6 @@
 	</ol>
 @stop
 @section('content')
-
 	<div class="card">
 		<div class="card-body">
 			<!-- Accordian -->
@@ -21,7 +20,7 @@
 					</div>
 					<div id="col1" class="collapse show" aria-labelledby="heading1" data-parent="#accordionTable">
 						<div class="card-body">
-							<div class="table">
+							<div class="table-responsive">
 								<table id="demo-foo-accordion" class="table table-bordered m-b-0 table-hover toggle-arrow-tiny" data-filtering="true" data-paging="true" data-sorting="true" data-paging-size="7">
 									<thead>
 									<tr class="footable-filtering">
@@ -110,7 +109,6 @@
 			</div>
 		</div>
 	</div>
-
 @push('scripts')
 <script type="text/javascript">
 $("input.zoho").click(function (event) {

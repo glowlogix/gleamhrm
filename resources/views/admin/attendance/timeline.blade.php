@@ -1,4 +1,5 @@
 @extends('layouts.admin')
+@extends('layouts.admin')
 @section('Heading')
     <h3 class="text-themecolor">Dashboad</h3>
     <ol class="breadcrumb">

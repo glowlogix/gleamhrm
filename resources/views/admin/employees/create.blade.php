@@ -195,7 +195,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Date OF Birth</label>
                                         <div class="col-md-9">
-                                            <input type="text"  class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{Carbon\Carbon::now()->subYears(20)->format('Y-m-d') }}" required>
+                                            <input type="date"  class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{Carbon\Carbon::now()->subYears(20)->format('Y-m-d') }}" required>
                                         </div>
                                     </div>
                                 </div>

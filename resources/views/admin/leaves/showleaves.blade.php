@@ -1,6 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
-    <button type="button"  onclick="window.location.href='{{route('leaves')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Leave</button>
+    <button type="button"  onclick="window.location.href='{{route('leaves')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Apply For Leave</button>
     <h3 class="text-themecolor">All Leaves</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -13,11 +13,6 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
-<<<<<<< HEAD
-
-=======
-                    <button type="button"  onclick="window.location.href='{{route('leaves')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Apply For Leave</button>
->>>>>>> 0ea12e103f47930768db9989e8012ae4bb5a8d8c
                     <h6 class="card-subtitle"></h6>
                     <div class="table">
                         <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
@@ -43,6 +38,7 @@
                                     <td>{{$leave->subject}}</td>
                                     <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
                                     <td class=" row">
+
                                         @if(Auth::user()->admin)
                                         @endif
                                         <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
