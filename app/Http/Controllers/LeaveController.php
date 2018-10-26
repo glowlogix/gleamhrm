@@ -69,13 +69,13 @@ class LeaveController extends Controller
         if ($user == 1) {
             $leaves = Leave::leftJoin('employees', function($join) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                $join->whereIn('leaves.status', ['', 'Pending']);
+                // $join->whereIn('leaves.status', ['', 'Pending']);
             });
         }
         else{
             $leaves = Leave::leftJoin('employees', function($join) use ($user) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
-                $join->whereIn('leaves.status', ['', 'Pending']);
+                // $join->whereIn('leaves.status', ['', 'Pending']);
                 $join->where(function($q) use ($user) {
                     $q->where('leaves.line_manager', $user)
                     ->orWhere('leaves.point_of_contact', $user);
@@ -121,9 +121,10 @@ class LeaveController extends Controller
         $this->meta['title'] = 'Create Leave';    
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $id)->with('lineManager')->first();
         $employees = Employee::all();
+        $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         return view('admin.leaves.create',$this->metaResponse(),[
             'employees' => $employees,
-            'line_manager' => $OrganizationHierarchy->lineManager,
+            'line_manager' => $line_manager,
             'leave_types' => LeaveType::all(),
         ]);
     }
@@ -223,6 +224,7 @@ class LeaveController extends Controller
         
         $employee_id = Auth::User()->id;
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $employee_id)->with('lineManager')->first();
+        $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         
         $employees = Employee::all();
         
@@ -231,7 +233,7 @@ class LeaveController extends Controller
 
         return view('admin.leaves.edit',$this->metaResponse(),[
             'employees' => $employees,
-            'line_manager' => $OrganizationHierarchy->lineManager,
+            'line_manager' => $line_manager,
             'leave_types' => LeaveType::all(),
             'leave' => $leave,
         ]);
@@ -247,7 +249,7 @@ class LeaveController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $employee_id = Auth::User()->id;
+        $leave = Leave::find($id);
 
         $this->validate($request,[
             'datefrom' => 'required',
@@ -259,7 +261,7 @@ class LeaveController extends Controller
         
         $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
         
-        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+        $attendance_summaries = AttendanceSummary::where(['employee_id' => $leave->employee_id])
             ->whereDate('date', '>=', $dateFromTime->toDateString())
             ->whereDate('date', '<=', $dateToTime->toDateString())
             ->get();
@@ -272,8 +274,6 @@ class LeaveController extends Controller
             return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
         }
 
-        $leave = Leave::find($id);
-        $leave->employee_id =  $employee_id;
         $leave->leave_type =  $request->leave_type;
         $leave->datefrom =  $dateFromTime;
         $leave->dateto =  $dateToTime;
@@ -282,11 +282,11 @@ class LeaveController extends Controller
         $leave->line_manager =  $request->line_manager;
         $leave->point_of_contact = $request->point_of_contact;
         $leave->cc_to =  $request->cc_to;
-        $leave->status = $request->status;
+        $leave->status = 'Pending';
 
         $leave = $leave->save();
 
-        return redirect()->route('leave.show', $employee_id)->with('success','Leave is created succesfully');
+        return redirect()->route('leave.show')->with('success','Leave is created succesfully');
     }
 
     function updateEmployeeLeaveType($employee_id, $leave_type_id){
@@ -306,8 +306,6 @@ class LeaveController extends Controller
         if ($leave->status == 'Approved') { // if already approved do nothing
             return redirect()->back()->with('success','Leave already approved');   
         }
-        $leave->status = $status;
-        $leave->save();
         
         if ($status == 'Approved') {
             $dateFromTime = Carbon::parse($leave->datefrom);
@@ -319,11 +317,14 @@ class LeaveController extends Controller
                 'employee_id' => $leave->employee_id,
                 'leave_type_id' => $leave->leave_type,
             ])->first();
-
+            
             $cnt = $employee_leave_type->count -= $consumed_leaves;
             
             DB::statement("UPDATE employee_leave_type SET count = $cnt where employee_id = ".$leave->employee_id." AND leave_type_id = ". $leave->leave_type);
         }
+
+        $leave->status = $status;
+        $leave->save();
 
         return redirect()->back()->with('success','Leave status is updated succesfully');   
     }

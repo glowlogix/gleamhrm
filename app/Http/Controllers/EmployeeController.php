@@ -239,7 +239,6 @@ class EmployeeController extends Controller
 			'official_email' => 'required|email|unique:employees,official_email,'.$id,
 			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
 			'contact_no' 	 => 'required|size:11|unique:employees,contact_no,'.$id,
-        	// 'password' 	 	 => 'confirmed',
             'picture' 		 => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
 			// 'cnic' => 'size:13',
 		]);
@@ -279,7 +278,7 @@ class EmployeeController extends Controller
 		$employee->permanent_address= $request->permanent_address;
 		$employee->city 			= $request->city;
 		
-		if (!empty($request->password) && !empty($request->confirm_password)) {
+		if (!empty($request->password)) {
 			$employee->password			= Hash::make($request->password);
 		}
 		

@@ -13,9 +13,12 @@
         <div class="col-12">
             <div class="card">
                 <div class="card-body">
+<<<<<<< HEAD
 
+=======
+                    <button type="button"  onclick="window.location.href='{{route('leaves')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Apply For Leave</button>
+>>>>>>> 0ea12e103f47930768db9989e8012ae4bb5a8d8c
                     <h6 class="card-subtitle"></h6>
-
                     <div class="table">
                         <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
                             <thead>

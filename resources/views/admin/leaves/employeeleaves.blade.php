@@ -25,9 +25,7 @@
                                     <th>Date To</th>
                                     <th>Subject</th>
                                     <th>Status</th>
-                                    @if(Auth::user()->id = 1)
-                                        <th>Actions</th>
-                                    @endif
+                                    <th>Actions</th>
                                     <th>Approve/Decline</th>
                                 </tr>
                             </thead>
@@ -44,20 +42,24 @@
                                     <td>{{$employee->leave_subject}}</td>
                                     <td>{{($employee->leave_status != '') ? $employee->leave_status : 'Pending'}}</td>
                                     <td class="row">
+                                        @if((Auth::user()->id == $employee->id) || ($employee->leave_status == 'Pending' && $employee->leave_status == '')) {{--work on this condition--}}
                                         <form action="{{ route('leave.destroy' , $employee->employee_id )}}" method="post">
                                             {{ csrf_field() }}
                                             <button class=" btn btn-danger btn-sm " type="submit"><i class="fas fa-window-close text-white "></i></button>
                                         </form>
                                         &nbsp;
                                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
+                                        @endif
                                     </td>
                                     <td>
                                         @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
+                                            @if(Auth::user()->id == 1 || (Auth::user()->id != $employee->id))
                                             <select class="update_status form-control" id="{{$employee->leave_id}}" style="width:160px;">
                                                 <option value="">Update Status</option>
                                                 <option value="Approved">Approved</option>
                                                 <option value="Declined">Declined</option>
                                             </select>
+                                            @endif
                                         @endif
                                     </td>
                                 </tr>
