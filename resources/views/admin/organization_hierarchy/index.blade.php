@@ -80,6 +80,24 @@
 				{{--Orgnisation chart--}}
 				<div id="chart-container">
 				</div>
+
+				<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+					<div class="modal-dialog">
+						<div class="modal-content">
+							<form id="delete" action="" method="post">
+								<input name="_method" type="hidden" value="DELETE">
+								{{ csrf_field() }}
+								<div class="modal-header">
+									Are you sure you want to delete this Employee & his subordinates from Organization Hierarchy ?
+								</div>
+								<div class="modal-footer">
+									<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+									<button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+								</div>
+							</form>
+						</div>
+					</div>
+				</div>
 				{{--END Orgnisation chart--}}
 				</div>
 			</div>
@@ -92,32 +110,46 @@
 <script type="text/javascript" src="{{asset('OH/js/jquery.mockjax.min.js')}}"></script>
 <script type="text/javascript" src="{{asset('OH/js/jquery.orgchart.js')}}"></script>
 <script type="text/javascript">
+function assignFormAction(id){
+	$('form#delete').attr('action',  "{{route('organization_hierarchy.index')}}/" + id);
+}
 $(function() {
     $.mockjax({
         url: '/orgchart/initdata',
         responseTime: 1000,
-        contentType: 'application/json',
-        responseText: {!! $hierarchy !!}
+        contentType: 'application/json'
+        @if ($hierarchy)
+        ,responseText: {!! $hierarchy !!}
+        @endif
     });
 
     $('#chart-container').orgchart({
         'data' : '/orgchart/initdata',
         'nodeContent': 'title',
+        'width': '100%',
         'createNode': function($node, data) {
             var secondMenuIcon = $('<li>', {
-                'class': 'fas fa-plus-circle second-menu-icon',
-                // 'id': data.id
+                'class': 'fas fa-plus-circle create-menu-icon',
             	'onclick' : "location.href='{{route('organization_hierarchy.create')}}/'"
             	// 'onclick' : "location.href='{{route('organization_hierarchy.create')}}/" + data.id+"'"
             });
             $node.append(secondMenuIcon);
 
             var thirdMenuIcon = $('<li>', {
-                'class': 'fas fa-edit third-menu-icon',
+                'class': 'fas fa-edit edit-menu-icon',
             	'onclick' : "location.href='{{route('organization_hierarchy.index')}}/" + data.id+"/edit'"
             });
 
             $node.append(thirdMenuIcon);
+
+            var deleteIcon = $('<li>', {
+                'class': 'fas fa-trash delete-menu-icon',
+                'data-toggle' : 'modal',
+                'data-target' : '#confirm-delete',
+            	'onclick' : "assignFormAction("+data.id+")",
+            });
+
+            $node.append(deleteIcon);
         }
     });
 });
@@ -128,7 +160,9 @@ $(function() {
 <link rel="stylesheet" href="{{asset('OH/css/jquery.orgchart.css')}}">
 {{--Add ICON--}}
 <style type="text/css">
-    .orgchart .second-menu-icon {
+    .orgchart{ width: 100% }
+
+    .orgchart .create-menu-icon {
         transition: opacity .5s;
         opacity: 0;
         right: 112px;
@@ -139,10 +173,10 @@ $(function() {
         position: absolute;
         color: black;
     }
-    .orgchart .second-menu-icon:hover { color:black; }
-    .orgchart .node:hover .second-menu-icon { opacity: 1; }
+    .orgchart .create-menu-icon:hover { color:black; }
+    .orgchart .node:hover .create-menu-icon { opacity: 1; }
 	
-	.orgchart .third-menu-icon {
+	.orgchart .edit-menu-icon {
         transition: opacity .5s;
         opacity: 0;
         right: -5px;
@@ -153,8 +187,22 @@ $(function() {
         position: absolute;
         color: black;
     }
-    .orgchart .third-menu-icon:hover { color:black; }
-    .orgchart .node:hover .third-menu-icon { opacity: 1; }
+    .orgchart .edit-menu-icon:hover { color:black; }
+    .orgchart .node:hover .edit-menu-icon { opacity: 1; }
+
+    .orgchart .delete-menu-icon {
+        transition: opacity .5s;
+        opacity: 0;
+        right: -1px;
+        top: 30px;
+        z-index: 2;
+        color: rgba(68, 157, 68, 0.5);
+        font-size: 18px;
+        position: absolute;
+        color: black;
+    }
+    .orgchart .delete-menu-icon:hover { color:black; }
+    .orgchart .node:hover .delete-menu-icon { opacity: 1; }
     
 </style>
 

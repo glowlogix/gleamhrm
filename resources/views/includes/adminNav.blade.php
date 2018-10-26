@@ -50,7 +50,7 @@
                         <li><a href="#">Incomplete</a></li>
                         <li><a href="#">Today</a></li>
                         <li><a href="{{route('employeeleaves')}}">Leaves</a></li>
-                        <li><a href="{{route('leave.show')}}">My Leaves</a></li>
+                        <li><a href="{{route('leave.index')}}">My Leaves</a></li>
                         <li><a href="#">My Attendance</a></li>
                         <li><a href="{{route('timeline')}}">Timeline</a></li>
                     </ul>

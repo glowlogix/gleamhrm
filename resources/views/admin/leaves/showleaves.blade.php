@@ -24,7 +24,7 @@
                                     <th>Date To</th>
                                     <th>Subject</th>
                                     <th>Status</th>
-                                    @if(Auth::user()->id = 1)
+                                    @if(Auth::user()->id == 1)
                                         <th>Actions</th>
                                     @endif
                                 </tr>
@@ -38,14 +38,18 @@
                                     <td>{{$leave->subject}}</td>
                                     <td>{{($leave->status != '') ? $leave->status : 'Pending'}}</td>
                                     <td class=" row">
-                                        @if(Auth::user()->admin)
-                                        @endif
+                                        @if(
+                                            (strtolower($leave->status) == 'pending' || $leave->status == '')
+                                        ) 
                                         <form action="{{ route('leave.destroy' , $leave->employee_id )}}" method="post">
                                             {{ csrf_field() }}
                                             <button class=" btn btn-danger btn-sm " type="submit"><i class="fas fa-window-close text-white "></i></button>
                                         </form>
                                         &nbsp;
                                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$leave->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
+                                        &nbsp;
+                                        @endif
+                                        <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$leave->id])}}" data-toggle="tooltip" data-original-title="Show"> <i class="fas fa-eye text-white "></i></a>
                                     </td>
                                 </tr>
                             @endforeach @else

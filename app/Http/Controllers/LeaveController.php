@@ -186,7 +186,7 @@ class LeaveController extends Controller
         // $this->sendEmail($leave);
 
         if ($leave){
-           return redirect()->route('leave.show')->with('success','Leave is created succesfully');
+           return redirect()->route('leave.index')->with('success','Leave is created succesfully');
         }
     }
 
@@ -207,9 +207,27 @@ class LeaveController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function show(Leave $leave)
+    public function show($id)
     {
-        //
+        $this->meta['title'] = 'Leave Details';
+        
+        $employee_id = Auth::User()->id;
+        
+        $leave = Leave::find($id)->with([
+            'employee', 
+            'lineManager',
+            'pointOfContact',
+            'leaveType',
+        ])->first();
+
+        $dateFromTime = Carbon::parse($leave->datefrom);
+        $dateToTime = Carbon::parse($leave->dateto);
+        $leave_days = $dateToTime->diffInDays($dateFromTime) + 1;
+
+        return view('admin.leaves.show',$this->metaResponse(),[
+            'leave' => $leave,
+            'leave_days' => $leave_days,
+        ]);
     }
 
     /**
@@ -286,7 +304,7 @@ class LeaveController extends Controller
 
         $leave = $leave->save();
 
-        return redirect()->route('leave.show')->with('success','Leave is created succesfully');
+        return redirect()->route('leave.index')->with('success','Leave is created succesfully');
     }
 
     function updateEmployeeLeaveType($employee_id, $leave_type_id){

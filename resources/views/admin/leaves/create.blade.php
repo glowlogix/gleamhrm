@@ -77,7 +77,9 @@
 										<div class="col-md-9">
 											<select class="form-control custom-select" name="point_of_contact">
 												@foreach($employees as $employee)
+													@if(Auth::user()->id != $employee->id)
 													<option  @if(old('employee_id') == $employee->id) selected @endif value={{$employee->id}}>{{$employee->firstname}} {{$employee->lastname}}</option>
+													@endif
 												@endforeach
 											</select>
 										</div>

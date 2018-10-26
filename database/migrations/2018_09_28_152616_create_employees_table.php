@@ -31,6 +31,7 @@ class CreateEmployeesTable extends Migration
             $table->string('designation')->nullable();    
             $table->string('type')->comment('work from remote/office')->default('office');    
             $table->integer('status')->default(1);
+            $table->string('employment_status')->nullable();
             $table->string('picture')->nullable();
             $table->date('joining_date')->nullable();
             $table->date('exit_date')->nullable();

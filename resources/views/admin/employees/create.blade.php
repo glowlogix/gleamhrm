@@ -56,7 +56,7 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">officia Email</label>
+                                        <label class="control-label text-right col-md-3">Official Email</label>
                                         <div class="col-md-9">
                                             <input type="email" name="official_email" value="{{ old('official_email') }}" class="form-control " placeholder="Enter Official Email" required>
                                         </div>
@@ -74,6 +74,18 @@
                                             <select class="form-control custom-select" name="designation">
                                                 @foreach($designations as $k => $designation)
                                                     <option value="{{$k}}" @if(old("designation") == "$k") selected @endif>{{$designation}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Employment Status</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" name="employment_status">
+                                                @foreach($employment_statuses as $k => $employment_status)
+                                                    <option value="{{$k}}" @if(old("employment_status") == "$k") selected @endif>{{$employment_status}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -195,7 +207,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Date OF Birth</label>
                                         <div class="col-md-9">
-                                            <input type="text"  class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{Carbon\Carbon::now()->subYears(20)->format('Y-m-d') }}" required>
+                                            <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{Carbon\Carbon::now()->subYears(20)->format('Y-m-d') }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -231,11 +243,22 @@
                             </div>
                             <!--/span-->
                         </div>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Joining Date</label>
+                                    <div class="col-md-9">
+                                        <input type="date" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{old('joining_date')}}">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
                         <div class="col-md-8">
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
-                           &nbsp;&nbsp; <input type="hidden" name="invite_to_asana" value="0" />
+                                        &nbsp;&nbsp; 
+                                        <input type="hidden" name="invite_to_asana" value="0" />
                                         <input type="checkbox" id="basic_checkbox_1"  class="asana" name="invite_to_asana" value="1"/>
                                         <label for="basic_checkbox_1">Asana</label>
 
@@ -248,6 +271,9 @@
                                         <label for="basic_checkbox_3">zoho</label>
                                     </div>
                                 </div>
+                            </div>
+                            <div id="asana_teams" class="row asana_teams">
+                                
                             </div>
                         </div>
                         <hr>
@@ -268,16 +294,16 @@
             </div>
         </div>
     </div>
+    @push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
-            $(".nameselect2").select2();
             $(function () {
-                $('#date_of_birth').datetimepicker({
+                /*$('#date_of_birth').datetimepicker({
                     format: 'YYYY-MM-DD',
                 });
                 $('#exit_date').datetimepicker({
                     format: 'YYYY-MM-DD',
-                });
+                });*/
 
                 $("#role").on("change",function() {
                     var role_id = this.value;
@@ -303,6 +329,7 @@
             var count = 0;
             var orgId = '{{config('values.asanaWorkspaceId')}}';
             var token = '{{config('values.asanaToken')}}';
+            
             $('.asana').bind('click', function () {
                 if ($(this).is(':checked')) {
 
@@ -337,11 +364,10 @@
             })
         });
 
-        $(".nameselect2").select2();
         $(function () {
-            $('#date_of_birth').datetimepicker({
+            /*$('#date_of_birth').datetimepicker({
                 format: 'YYYY-MM-DD',
-            });
+            });*/
 
             $(document).ready(function () {
                 $(function () {
@@ -355,4 +381,5 @@
             });
         });
     </script>
+    @endpush
 @stop

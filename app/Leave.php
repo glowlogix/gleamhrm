@@ -15,4 +15,19 @@ class Leave extends Model
         return $this->belongsTo('App\LeaveType', 'leave_type', 'id');
     }
 
+    public function employee()
+    {
+        return $this->belongsTo('App\Employee');
+    }
+
+    public function pointOfContact()
+    {
+        return $this->belongsTo('App\Employee', 'point_of_contact', 'id');
+    }
+
+    public function lineManager()
+    {
+        return $this->belongsTo('App\Employee', 'line_manager', 'id');
+    }
+
 }

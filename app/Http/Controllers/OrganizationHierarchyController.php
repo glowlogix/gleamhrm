@@ -59,11 +59,12 @@ class OrganizationHierarchyController extends Controller
     }
 
     function myhire($organization_hierarchies){
+        // dd($organization_hierarchies);
         foreach($organization_hierarchies as $organization_hierarchy){
             
             $this->hierarchy .= '{
                 "id": "'.$organization_hierarchy->employee->id.'", 
-                "name": "'.$organization_hierarchy->employee->firstname.'", 
+                "name": "'.$organization_hierarchy->employee->firstname.' '.$organization_hierarchy->employee->lastname.'", 
                 "title": "'.$organization_hierarchy->employee->designation.'"';
 
             if(count($organization_hierarchy->childs) > 0) {
@@ -173,12 +174,9 @@ class OrganizationHierarchyController extends Controller
      */
     public function destroy($id)
     {
-        $role = Role::find($id);
-        foreach ($role->permissions as $key => $permission) {
-            $role->revokePermissionTo($permission);
-        }
-        $role->delete();
+        OrganizationHierarchy::where('parent_id', $id)->delete();
+        OrganizationHierarchy::where('employee_id', $id)->delete();
 
-        return redirect()->back()->with('success','Role and assigned permissions is deleted successfully.');
+        return redirect()->back()->with('success','Employee & his subordinates in OrganizationHierarchy are deleted succesfully');
     }
 }

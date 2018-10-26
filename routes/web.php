@@ -349,7 +349,7 @@ Route::group(['middleware' => 'auth'], function (){
 
 	Route::Get('/leaves',[
 		'uses' => 'LeaveController@index',
-		'as' => 'leave.show'
+		'as' => 'leave.index'
 	]);
 
 	Route::Get('/employee_leaves',[
@@ -360,6 +360,11 @@ Route::group(['middleware' => 'auth'], function (){
     Route::Get('/leave/edit/{id}',[
 		'uses' => 'LeaveController@edit',
 		'as' => 'leave.edit'
+	]);
+
+	Route::Get('/leave/show/{id}',[
+		'uses' => 'LeaveController@show',
+		'as' => 'leave.show'
 	]);
 
 	Route::Post('/leave/update/{id}',[

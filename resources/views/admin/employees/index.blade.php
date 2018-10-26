@@ -43,7 +43,7 @@
                                             <td>{{$employee->contact_no}}</td>
                                             <td>{{isset($designations[$employee->designation]) ? $designations[$employee->designation] : ''}}</td>
                                             <td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
-                                            <td></td>
+                                            <td>{{$employee->joining_date}}</td>
                                             <td>@if($employee->status ?:'1')
                                                     Active
                                                     @else

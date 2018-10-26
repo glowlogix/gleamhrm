@@ -50,6 +50,16 @@ class EmployeeController extends Controller
 		"admin" 						=> "Admin",
 	];
 
+	public $employment_statuses = [
+		"permanent" 	=> "Permanent",
+		"contractual" 	=> "Contractual",
+		"probation" 	=> "Probation",
+		"intern" 		=> "Intern",
+		"resigned" 		=> "Resigned",
+		"terminated" 	=> "Terminated",
+		"on_leave" 		=> "On Leave",
+	];
+
 	public function __construct()
 	{
 	    // $this->middleware(['role_or_permission:super-admin|edit articles']);
@@ -75,6 +85,7 @@ class EmployeeController extends Controller
  
 		return view('admin.employees.create',['title' => 'Add Employee'])
 		->with('branches',Branch::all())
+		->with('employment_statuses', $this->employment_statuses)
 		->with('designations', $this->designations);
 	}
 
@@ -112,6 +123,7 @@ class EmployeeController extends Controller
 			'official_email'    => $request->official_email,
 			'personal_email'    => $request->personal_email,
 			'status'        	=> 1,
+			'employment_status' => $request->employment_status,
 			'basic_salary'     	=> $request->salary,
 			'designation'       => $request->designation,
             'type' 				=> $request->type,
@@ -131,7 +143,7 @@ class EmployeeController extends Controller
 
 		if($request->picture != ""){
 			$picture 					= time().'_'.$request->picture->getClientOriginalName();
-        	$request->picture->move(public_path().'/images/', $picture);  
+        	$request->picture->move(storage_path().'/app/public/employees/profile/', $picture);  
 			$arr['picture'] 			= $picture;
 		}
 		
@@ -218,6 +230,7 @@ class EmployeeController extends Controller
 		->with('employee',$employee)
 		->with('branches', Branch::all())
 		->with('designations', $this->designations)
+		->with('employment_statuses', $this->employment_statuses)
 		->with('employee_role_id', $employee_role_id)
 		->with('permissions', $permissions)
 		->with('employee_permissions', $employee_permissions)
@@ -253,11 +266,10 @@ class EmployeeController extends Controller
 		$employee->firstname 		= $request->firstname;
 		$employee->lastname 		= $request->lastname;
 		$employee->contact_no 		= $request->contact_no;
-		
 		if($request->picture != ""){
 			$picture 					= time().'_'.$request->picture->getClientOriginalName();
 			$employee->picture 			= $picture;
-        	$request->picture->move(public_path().'/images/', $picture);  
+        	$request->picture->move(storage_path().'/app/public/employees/profile/', $picture);  
 		}
 		
 		$employee->joining_date 		= $request->joining_date;
@@ -268,6 +280,7 @@ class EmployeeController extends Controller
 		$employee->personal_email 	= $request->personal_email;
 		$employee->basic_salary 	= $request->salary;
 		$employee->designation 		= $request->designation;
+		$employee->employment_status= $request->employment_status;
 		$employee->type 			= $request->type;
 		if (!empty($request->branch_id)) {
 			$employee->branch_id 		= $request->branch_id;

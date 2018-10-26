@@ -24,9 +24,8 @@
                                     <th>Date From</th>
                                     <th>Date To</th>
                                     <th>Subject</th>
-                                    <th>Status</th>
                                     <th>Actions</th>
-                                    <th>Approve/Decline</th>
+                                    <th>Status</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -40,9 +39,10 @@
                                     <td>{{Carbon\Carbon::parse($employee->leave_datefrom)->format('Y-m-d')}}</td>
                                     <td>{{Carbon\Carbon::parse($employee->leave_dateto)->format('Y-m-d')}}</td>
                                     <td>{{$employee->leave_subject}}</td>
-                                    <td>{{($employee->leave_status != '') ? $employee->leave_status : 'Pending'}}</td>
                                     <td class="row">
-                                        @if((Auth::user()->id == $employee->id) || ($employee->leave_status == 'Pending' && $employee->leave_status == '')) {{--work on this condition--}}
+                                        @if(
+                                            ($employee->leave_status == 'Pending' && $employee->leave_status == '')
+                                        )
                                         <form action="{{ route('leave.destroy' , $employee->employee_id )}}" method="post">
                                             {{ csrf_field() }}
                                             <button class=" btn btn-danger btn-sm " type="submit"><i class="fas fa-window-close text-white "></i></button>
@@ -50,6 +50,8 @@
                                         &nbsp;
                                         <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
                                         @endif
+                                        &nbsp;
+                                        <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Show"> <i class="fas fa-eye text-white "></i></a>
                                     </td>
                                     <td>
                                         @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
@@ -60,6 +62,10 @@
                                                 <option value="Declined">Declined</option>
                                             </select>
                                             @endif
+                                        @endif
+
+                                        @if(strtolower($employee->leave_status) == 'approved' || strtolower($employee->leave_status) == 'declined')
+                                        {{$employee->leave_status}}
                                         @endif
                                     </td>
                                 </tr>

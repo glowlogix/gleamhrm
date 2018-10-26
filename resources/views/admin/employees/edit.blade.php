@@ -73,6 +73,18 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Employment Status</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" name="employment_status">
+                                                @foreach($employment_statuses as $k => $employment_status)
+                                                    <option value="{{$k}}" @if($employee->employment_status == $k) selected @endif>{{$employment_status}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             <!--/span-->
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -90,9 +102,9 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Office Location</label>
+                                    <label class="control-label text-right col-md-3">Branch</label>
                                     <div class="col-md-9">
-                                        <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="branch_id">
+                                        <select class="form-control custom-select" data-placeholder="Choose a Category" name="branch_id">
                                             @foreach($branches as $branch)
                                                 <option value="{{$branch->id}}" @if($branch->id == $employee->branch_id) selected @endif>{{$branch->name}} ({{$branch->address}})</option>
                                             @endforeach
@@ -119,7 +131,13 @@
                                     <label class="control-label text-right col-md-3">Picture Upload</label>
                                     <div class="col-md-9">
                                         <input type="file" class="form-control" id="exampleInputFile" name="picture">
-                                        {{$employee->picture}}
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <div class="col-md-9">
+                                        <img src="{{asset('employees/profile/'.$employee->picture)}}">
                                     </div>
                                 </div>
                             </div>
@@ -197,7 +215,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Date OF Birth</label>
                                     <div class="col-md-9">
-                                        <input type="text"  class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{$employee->date_of_birth}}" >
+                                        <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{$employee->date_of_birth}}" >
                                     </div>
                                 </div>
                             </div>
@@ -236,7 +254,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Joining Date</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{$employee->joining_date}}">
+                                        <input type="date" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{$employee->joining_date}}">
                                     </div>
                                 </div>
                             </div>
@@ -244,7 +262,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Exit Date</label>
                                     <div class="col-md-9">
-                                        <input type="text" id="exit_date" class="form-control" placeholder="Enter Exit Date" name="exit_date" value="{{$employee->exit_date}}">
+                                        <input type="date" id="exit_date" class="form-control" placeholder="Enter Exit Date" name="exit_date" value="{{$employee->exit_date}}">
                                     </div>
                                 </div>
                             </div>
@@ -266,6 +284,7 @@
                             </div>
                         </div>
                     </div>
+                    <div id="asana_teams" class="row"></div>
                     <hr>
                     <div class="col-md-6">
                         <div class="form-group row">
@@ -330,16 +349,16 @@
         </div>
     </div>
 </div>
+@push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-            $(".nameselect2").select2();
             $(function () {
-                $('#date_of_birth').datetimepicker({
+                /*$('#date_of_birth').datetimepicker({
                     format: 'YYYY-MM-DD',
                 });
                 $('#exit_date').datetimepicker({
                     format: 'YYYY-MM-DD',
-                });
+                });*/
                 
                 $("#role").on("change",function() {
                     var role_id = this.value;
@@ -399,11 +418,10 @@
             })
     });
 
-    $(".nameselect2").select2();
     $(function () {
-        $('#date_of_birth').datetimepicker({
+        /*$('#date_of_birth').datetimepicker({
             format: 'YYYY-MM-DD',
-        });
+        });*/
 
         $(document).ready(function () {
             $(function () {
@@ -417,5 +435,5 @@
         });
     });
 </script>
-
+@endpush
 @stop
