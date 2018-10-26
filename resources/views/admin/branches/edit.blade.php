@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('Heading')
-	<h3 class="text-themecolor">Employees</h3>
+	<h3 class="text-themecolor">Edit Branch</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Office Location</li>
-		<li class="breadcrumb-item active">Edit Location</li>
+		<li class="breadcrumb-item active">Branches</li>
+		<li class="breadcrumb-item active">Edit</li>
 	</ol>
 @stop
 @section('content')
