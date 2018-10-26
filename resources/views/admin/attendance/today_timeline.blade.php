@@ -44,17 +44,19 @@
                                     <td class="text-nowrap">
 
                                         <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
-                                        
-
-                                        {{--///Dialog Box/// --}}
+                                        <div class="modal-body ">                                        {{--///Dialog Box/// --}}
                                         <div class="modal fade" id="popup{{ $employee['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
                                                     <form action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
                                                         {{ csrf_field() }}
-                                                        <div class="modal-header">
-                                                            Adding attendance for Employee {{$employee['firstname']}} {{$employee['lastname']}}
+                                                        <div class="modal-header" style="margin-right: 20px;">
+                                                            Adding attendance for Employee:
                                                         </div>
+                                                        <div class="modal-header">
+                                                            <h4>{{$employee['firstname']}} {{$employee['lastname']}}</h4>
+                                                        </div>
+
                                                         <div class="modal-body">
                                                             <div class="container-fluid">
                                                                 <div class="col-md-6">
@@ -94,6 +96,7 @@
                                                     </form>
                                                 </div>
                                             </div>  
+                                        </div>
                                         </div>
                                         {{--///End Dialog Box///--}}
                                     </td>

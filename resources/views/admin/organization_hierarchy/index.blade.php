@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('organization_hierarchy.create')}}'"><span class="fas fa-plus"></span> Add Org Employee</button>
 	<h3 class="text-themecolor">Organization Hierarchy</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)"></a>Dashboard</li>
@@ -14,7 +15,6 @@
 		<div class="card">
 			<div class="card-body">
 				<h6 class="card-subtitle"></h6>
-				<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('organization_hierarchy.create')}}'">Add Employee To Organization</button>
 				<br>
 				<div class="table">
 				<!-- <table id="demo-foo-addrow" class="table  m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">

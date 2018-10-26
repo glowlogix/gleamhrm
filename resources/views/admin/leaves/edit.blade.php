@@ -37,7 +37,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">From Date</label>
                                         <div class="col-md-9">
-                                            <input type='text' class="form-control" name="datefrom" value="{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}" />
+                                            <input type='date' class="form-control" name="datefrom" value="{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}" />
                                         </div>
                                     </div>
                                 </div>
@@ -49,7 +49,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">To Date</label>
                                         <div class="col-md-9">
-                                            <input type='text' class="form-control" name="dateto" value="{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}"/>
+                                            <input type='date' class="form-control" name="dateto" value="{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}"/>
                                         </div>
                                     </div>
                                 </div>

@@ -10,6 +10,7 @@
 				<form  action="{{route('branch.store')}}" method="post" enctype="multipart/form-data">
 					{{csrf_field()}}
 					<div class="form-body">
+						<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label class="control-label">Name</label>
@@ -25,6 +26,8 @@
                     </span>
 							</div>
 						</div>
+						</div>
+						<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label class="control-label">Timing OFF</label>
@@ -40,6 +43,8 @@
 								<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address')}}">
 							</div>
 						</div>
+						</div>
+						<div class="row">
 						<div class="col-md-6">
 							<div class="form-group">
 								<label class="control-label">Phone#</label>
@@ -47,6 +52,8 @@
 							</div>
 						</div>
 					</div>
+					</div>
+					<hr>
 					<div class="form-actions">
 						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Create Location</button>
 						<button type="button" onclick="window.location.href='{{route('branch.index')}}'" class="btn btn-inverse">Cancel</button>

@@ -1,10 +1,10 @@
 @extends('layouts.admin')
 @section('Heading')
-	<h3 class="text-themecolor">Employees</h3>
+	<h3 class="text-themecolor">Edit Branch</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Office Location</li>
-		<li class="breadcrumb-item active">Edit Location</li>
+		<li class="breadcrumb-item active">Branches</li>
+		<li class="breadcrumb-item active">Edit</li>
 	</ol>
 @stop
 @section('content')
@@ -20,7 +20,7 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label class="control-label">Name</label>
-								<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{$office_location->name}}">
+								<input  type="text" name="name" placeholder="Enter name here" class="form-control"  value="{{old('name', $office_location->name)}}">
 							</div>
 						</div>
 						<div class="form-body">
@@ -38,8 +38,8 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label class="control-label">Timing Start</label>
-								<input class="form-control" type="text" name="timing_start" placeholder="Enter Timing Start here"   id="timing_start" value="{{Carbon\Carbon::parse($office_location->timing_start)->format('h:i A')}}">
-								<span class="input-group-addon timepicker1">
+								<input class="form-control " type="text" name="timing_start" placeholder="Enter Timing Start here"   id="timing_start" value="{{old('timing_start', Carbon\Carbon::parse($office_location->timing_start)->format('h:i A'))}}">
+								<span class="input-group-addon ">
                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                     </span>
 							</div>
@@ -47,8 +47,8 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label class="control-label">Timing OFF</label>
-								<input class="form-control" type="text" name="timing_off" placeholder="Enter Timing Off here"  value="{{Carbon\Carbon::parse($office_location->timing_off)->format('h:i A')}}" />
-								<span class="input-group-addon timepicker1">
+								<input class="form-control" type="text" name="timing_off" placeholder="Enter Timing Off here"  value="{{old('timing_off', Carbon\Carbon::parse($office_location->timing_off)->format('h:i A'))}}" />
+								<span class="input-group-addon ">
                         <i class="fa fa-clock-o" style="font-size:16px"></i>
 								</span>
 							</div>
@@ -56,13 +56,13 @@
 						<div class="col-md-8">
 							<div class="form-group">
 								<label class="control-label">Address</label>
-								<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{$office_location->address}}">
+								<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address', $office_location->address)}}">
 							</div>
 						</div>
 						<div class="col-md-8">
 							<div class="form-group">
 								<label class="control-label">Phone#</label>
-								<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{$office_location->phone_number}}">
+								<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number', $office_location->phone_number)}}">
 							</div>
 						</div>
 					</div>
