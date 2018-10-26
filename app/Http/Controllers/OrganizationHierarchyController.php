@@ -63,7 +63,8 @@ class OrganizationHierarchyController extends Controller
         foreach($organization_hierarchies as $organization_hierarchy){
             
             $this->hierarchy .= '{
-                "id": "'.$organization_hierarchy->employee->id.'", 
+                "id": "'.$organization_hierarchy->id.'", 
+                "employee_id": "'.$organization_hierarchy->employee->id.'", 
                 "name": "'.$organization_hierarchy->employee->firstname.' '.$organization_hierarchy->employee->lastname.'", 
                 "title": "'.$organization_hierarchy->employee->designation.'"';
 
@@ -139,7 +140,6 @@ class OrganizationHierarchyController extends Controller
 
 		$employees = Employee::all();
 		$organization_hierarchy = OrganizationHierarchy::find($id);
-
         return view('admin.organization_hierarchy.edit',$this->metaResponse())->with([
             'organization_hierarchy' => $organization_hierarchy,
             'employees' => $employees,

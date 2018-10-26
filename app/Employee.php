@@ -17,7 +17,7 @@ class Employee extends Authenticatable
     protected $appends = ['full_name'];
     
     protected $fillable = [
-    	'firstname', 'lastname', 'contact_no', 'emergency_contact_relationship', 'emergency_contact', 'password', 'zuid', 'account_id', 'official_email', 'personal_email', 'designation', 'status', 'employment_status','picture', 'exit_date', 'total_salary', 'bonus', 'basic_salary', 'invite_to_zoho', 'invite_to_slack', 'invite_to_asana', 'cnic', 'date_of_birth', 'current_address', 'permanent_address', 'city', 'branch_id', 'deleted_at', 'created_at', 'updated_at'
+    	'firstname', 'lastname', 'contact_no', 'emergency_contact_relationship', 'emergency_contact', 'password', 'zuid', 'account_id', 'official_email', 'personal_email', 'designation', 'status', 'employment_status','picture', 'exit_date', 'total_salary', 'bonus', 'basic_salary', 'invite_to_zoho', 'invite_to_slack', 'invite_to_asana', 'cnic', 'date_of_birth', 'current_address', 'permanent_address', 'city', 'joining_date', 'exit_date', 'branch_id', 'deleted_at', 'created_at', 'updated_at'
     ];
 
 	public function getFullNameAttribute()

@@ -135,6 +135,7 @@ class EmployeeController extends Controller
 			'invite_to_zoho'  	=> $request->invite_to_zoho,
 			'invite_to_slack' 	=> $request->invite_to_slack,
 			'invite_to_asana' 	=> $request->invite_to_asana,
+			'joining_date' 		=> $request->joining_date,
 		];
 
 		if (!empty($request->branch_id)) {
@@ -143,8 +144,8 @@ class EmployeeController extends Controller
 
 		if($request->picture != ""){
 			$picture 					= time().'_'.$request->picture->getClientOriginalName();
-        	$request->picture->move(storage_path().'/app/public/employees/profile/', $picture);  
-			$arr['picture'] 			= $picture;
+			$request->picture->move('storage/employees/profile/', $picture);
+			$arr['picture'] 			= 'storage/employees/profile/'.$picture;
 		}
 		
 		$employee = Employee::create($arr);
@@ -268,10 +269,9 @@ class EmployeeController extends Controller
 		$employee->contact_no 		= $request->contact_no;
 		if($request->picture != ""){
 			$picture 					= time().'_'.$request->picture->getClientOriginalName();
-			$employee->picture 			= $picture;
-        	$request->picture->move(storage_path().'/app/public/employees/profile/', $picture);  
+        	$request->picture->move('storage/employees/profile/', $picture);
+			$employee->picture 			= 'storage/employees/profile/'.$picture;
 		}
-		
 		$employee->joining_date 		= $request->joining_date;
 		$employee->exit_date 		= $request->exit_date;
 		$employee->emergency_contact= $request->emergency_contact;

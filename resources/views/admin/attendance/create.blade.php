@@ -55,7 +55,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Time In</label>
                                         <div class="col-md-9 timepicker">
-                                            <input type="text" class="form-control" name="time_in" value="{{$current_time}}">
+                                            <input type="time" class="form-control" name="time_in" value="{{$current_time}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                     <div class="form-group row ">
                                         <label class="control-label text-right col-md-3">Time Out</label>
                                         <div class="col-md-9 timepicker">
-                                            <input type="text" class="form-control" name="time_out" value="{{$current_time}}">
+                                            <input type="time" class="form-control" name="time_out" value="{{$current_time}}">
                                         </div>
                                     </div>
                                 </div>

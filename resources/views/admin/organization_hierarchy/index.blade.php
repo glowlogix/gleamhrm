@@ -146,7 +146,7 @@ $(function() {
                 'class': 'fas fa-trash delete-menu-icon',
                 'data-toggle' : 'modal',
                 'data-target' : '#confirm-delete',
-            	'onclick' : "assignFormAction("+data.id+")",
+            	'onclick' : "assignFormAction("+data.employee_id+")",
             });
 
             $node.append(deleteIcon);

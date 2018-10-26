@@ -63,7 +63,7 @@
                                                                     <label for="date">Select Date</label></br>
                                                                     <div class="input-group date1">
                                                                         <input type="hidden" name="employee_id" value="{{$employee['id']}}" />
-                                                                        <input class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['date'])->format('Y-m-d') : Carbon\Carbon::now()->format('Y-m-d')}}" />
+                                                                        <input type="date" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['date'])->format('Y-m-d') : Carbon\Carbon::now()->format('Y-m-d')}}" />
                                                                         <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                                         </span>
@@ -72,7 +72,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_in">Time In</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_time_in'])->format('h:i a') : Carbon\Carbon::now()->format('h:i a')}}" />
+                                                                        <input type="time" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_time_in'])->format('h:i a') : Carbon\Carbon::now()->format('h:i a')}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>
@@ -81,7 +81,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_out">Time Out</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a') : Carbon\Carbon::now()->format('h:i a')}}" />
+                                                                        <input type="time" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a') : Carbon\Carbon::now()->format('h:i a')}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>
