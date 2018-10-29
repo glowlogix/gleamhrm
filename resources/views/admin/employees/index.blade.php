@@ -30,7 +30,7 @@
                                         <th>Designation</th>
                                         <th>Office</th>
                                         <th>Joining Date</th>
-                                        <th>Status</th>
+                                        <th>Employment Status</th>
                                         <th>Actions</th>
 									</tr>
 									</thead>
@@ -43,11 +43,7 @@
                                             <td>{{isset($designations[$employee->designation]) ? $designations[$employee->designation] : ''}}</td>
                                             <td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
                                             <td>{{$employee->joining_date}}</td>
-                                            <td>@if($employee->status ?:'1')
-                                                    Active
-                                                    @else
-                                                    InActive
-                                                @endif</td>
+                                            <td>{{$employee->employment_status}}</td>
 
                                             <td class="text-nowrap">
                                                 <a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>

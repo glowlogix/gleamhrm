@@ -68,7 +68,11 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
-		$data = Employee::with('branch')->get();
+		$data = Employee::with('branch')
+		->where('employment_status', '!=', 'resigned')
+		->where('employment_status', '!=', 'terminated')
+		->get();
+		
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('designations', $this->designations);
@@ -222,6 +226,40 @@ class EmployeeController extends Controller
         }
         
         $role = Role::find($id);
+        $permissions = array();
+        if ($role) {
+        	$permissions = $role->permissions()->get();
+        }
+
+        return view('admin.employees.edit',['title' => 'Update Employee'])
+		->with('employee',$employee)
+		->with('branches', Branch::all())
+		->with('designations', $this->designations)
+		->with('employment_statuses', $this->employment_statuses)
+		->with('employee_role_id', $employee_role_id)
+		->with('permissions', $permissions)
+		->with('employee_permissions', $employee_permissions)
+		->with('roles', Role::all());
+	}
+
+	public function profile()
+	{
+		$employee = Auth::user();
+		if(!$employee){
+			abort(404);
+		}
+
+		$employee_role_id = ''; //todo
+		if($employee->roles->count() > 0){
+        	$employee_role_id = $employee->roles[0]->id; //todo
+		}
+
+        $employee_permissions = array();
+        foreach ($employee->permissions as $key => $value) {
+            $employee_permissions[] = $value->id;
+        }
+        
+        $role = Role::find($employee->id);
         $permissions = array();
         if ($role) {
         	$permissions = $role->permissions()->get();

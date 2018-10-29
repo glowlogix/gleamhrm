@@ -7,36 +7,29 @@
     </ol>
 @stop
 @section('content')
-<div class="panel panel-default">
-    <div class="panel-heading text-center">
-        <b style="text-align: center;">All Attendance</b>
-        <span style="float: left;">
-            <a href="{{route('attendance.create')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon glyphicon-plus"></span> Add Attendance
-            </a>
-        </span>
-        <span style="float: right;">
-            <a href="{{route('leaves')}}" class="btn btn-info btn-xs" align="right">
-                <span class="glyphicon glyphicon-plus"></span> Add Leave
-            </a>
-        </span>
-    </div>
-    <div class="panel-body">
-        <span style="float: right;">
-            <select class="form-control" id="selectOffice">
-                <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
-                @foreach($office_locations as $office_location)
-                <option value="{{$office_location->id}}" @if($branch_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
-                @endforeach
-            </select>
-        </span>
+<div class="card">
+    <div class="card-body">
+        <div class="panel-body">
+            <span style="float: right;">
+                <select class="form-control" id="selectOffice">
+                    <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
+                    @foreach($office_locations as $office_location)
+                    <option value="{{$office_location->id}}" @if($branch_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
+                    @endforeach
+                </select>
+            </span>
+        </div>
+        
         <div id="calendar">
         </div>
     </div>
+</div>
+
 @push('scripts')
 <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
 <link href="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet' />
+<script src="{{asset('assets/plugins/fullcalendar-3.9.0/2.22.2-moment.min.js')}}"></script>
 <script src="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
 <script src="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 <script type="text/javascript">
@@ -84,5 +77,4 @@
     });
 </script>
 @endpush
-</div>
 @stop

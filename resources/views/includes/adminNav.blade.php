@@ -44,11 +44,9 @@
                         $month = date('m');
                         $monthee= "2018_".$month;
                         ?>
-                        <li><a href="{{route('attendance',['id'=>$monthee])}}">Sheet</a></li>
                         <li><a href="{{route('today_timeline')}}">Today</a></li>
                         <li><a href="#">History</a></li>
                         <li><a href="#">Incomplete</a></li>
-                        <li><a href="#">Today</a></li>
                         <li><a href="{{route('employeeleaves')}}">Leaves</a></li>
                         <li><a href="{{route('leave.index')}}">My Leaves</a></li>
                         <li><a href="#">My Attendance</a></li>

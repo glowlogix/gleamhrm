@@ -27,7 +27,8 @@ Route::any('/register', function() {
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function (){
-Route::group(['middleware' => 'auth'], function (){
+// Route::group(['middleware' => 'auth'], function (){
+Route::group(['middleware' => 'allowed_permission'], function (){
 	//dashboard
 	Route::get('/dashboard',[
 		'uses' => 'DashboardController@index',
@@ -188,6 +189,11 @@ Route::group(['middleware' => 'auth'], function (){
 	Route::get('/employee/edit/{id}',[
 		'uses' => 'EmployeeController@edit',
 		'as' => 'employee.edit'
+	]);
+	
+	Route::get('/employee/profile',[
+		'uses' => 'EmployeeController@profile',
+		'as' => 'employee.profile'
 	]);
 
 	//update
@@ -383,7 +389,7 @@ Route::group(['middleware' => 'auth'], function (){
 	]);
 
 	//upload Docs
-	Route::get('/documents',[
+	Route::get('/documents/index',[
 		'as' => 'documents',
 		'uses' => 'DocumentsController@index'
 	]);

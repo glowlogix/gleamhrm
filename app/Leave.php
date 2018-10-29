@@ -17,7 +17,7 @@ class Leave extends Model
 
     public function employee()
     {
-        return $this->belongsTo('App\Employee');
+        return $this->belongsTo('App\Employee', 'employee_id', 'id');
     }
 
     public function pointOfContact()

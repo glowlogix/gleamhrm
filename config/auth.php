@@ -36,16 +36,16 @@ return [
     */
 
     'guards' => [
+        'api' => [
+            'driver' => 'token',
+            'provider' => 'employees',
+            // 'provider' => 'users',
+        ],
         'web' => [
             'driver' => 'session',
             'provider' => 'employees',
         ],
 
-        'api' => [
-            'driver' => 'token',
-            // 'provider' => 'users',
-            'provider' => 'employees',
-        ],
     ],
 
     /*

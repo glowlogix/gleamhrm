@@ -20,7 +20,9 @@
 							<tr>
 								<th>Document Name</th>
 								<th>Status</th>
+								@if(Auth::user()->hasRole('admin'))
 								<th>Action</th>
+								@endif
 							</tr>
 							</thead>
 								@foreach($files as $file)
@@ -31,24 +33,26 @@
 								<td>
 									{{ ($file->status == 1) ? 'Active' : 'Inactive' }}
 								</td>
-							<td class="row">
-							<div class="col-sm-2">
-								<form action="{{ route('documents.docs.delete' , $file->id )}}" method="post">
-									{{ csrf_field() }}
-									<button class="btn btn-danger btn-sm">
-										<span class="fas fa-window-close"></span>
-									</button>
-								</form>
-							</div>
-							<div class="col-sm-2">
-								<a class="btn btn-info btn-sm" href="{{route('documents.docs.edit',['id'=>$file->id])}}">
-									<span class="fas fa-pencil-alt"></span>
-								</a>
-							</div>
-							</td>
+								@if(Auth::user()->hasRole('admin'))
+								<td class="row">
+									<div class="col-sm-2">
+										<form action="{{ route('documents.delete' , $file->id )}}" method="post">
+											{{ csrf_field() }}
+											<button class="btn btn-danger btn-sm">
+												<span class="fas fa-window-close"></span>
+											</button>
+										</form>
+									</div>
+									<div class="col-sm-2">
+										<a class="btn btn-info btn-sm" href="{{route('documents.edit',['id'=>$file->id])}}">
+											<span class="fas fa-pencil-alt"></span>
+										</a>
+									</div>
+								</td>
+								@endif
 							@endforeach
-								@else
-										<p class="text-center" style="margin-top:70px;" >No Documents Found</p>
+							@else
+							<p class="text-center" style="margin-top:70px;" >No Documents Found</p>
 							@endif
 							</tbody>
 						</table>

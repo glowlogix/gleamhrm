@@ -13,7 +13,7 @@
 		<div class="col-lg-12">
 			<div class="card card-outline-info">
 				<div style="margin-top:10px; margin-right: 10px;">
-					<button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-info float-right">Back</button>
+					<a class="btn btn-info float-right" href="{{route('roles_permissions')}}"> Back</a>
 				</div>
 				<div class="card-body">
 					<form  action="{{route('roles_permissions.store')}}" method="post" enctype="multipart/form-data">
@@ -31,16 +31,18 @@
 							<input type="checkbox" id="check_all"/>
 							<label for="check_all">Select All</label>
 							<br>
+							<br>
 							<div class="form-group">
 								@foreach ($all_controllers as $key => $row)
 
 									<input type="checkbox" class="check_all_sub" id="{{$key}}">
 									<label for="{{$key}}">{{$key}}</label>
 									<br>
+									<br>
 									<div class="{{$key}}">
 										@foreach ($row as $route)
-											<input type="checkbox" id="{{$key}}" name="permissions[]" value="web:{{$key}}:{{$route}}">
-											<label for="{{$key}}">{{$route}}</label>
+											<input type="checkbox" id="{{$key}}:{{$route}}" name="permissions[]" value="web:{{$key}}:{{$route}}">
+											<label for="{{$key}}:{{$route}}">{{$route}}</label>
 											 <br>
 										@endforeach
 									</div>
@@ -58,50 +60,8 @@
 			</div>
 		</div>
 	</div>
-	{{----}}
-{{--<div class="panel panel-default">--}}
-	{{--<div class="panel-heading text-center">--}}
-		{{--<b> Create new Role</b>--}}
-		{{--<span style="float: right;">--}}
-            {{--<a href="{{route('roles_permissions')}}" class="btn btn-info btn-xs" align="right">--}}
-                {{--<span class="glyphicon"></span> Back--}}
-            {{--</a>--}}
-        {{--</span>--}}
-	{{--</div>--}}
-	{{--<div class="panel-body">--}}
-		{{--<form action="{{route('roles_permissions.store')}}" method="post" enctype="multipart/form-data">--}}
-			{{--{{csrf_field()}}--}}
-			{{--<div class="form-group">--}}
-				{{--<label for="name">Name</label>--}}
-				{{--<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">--}}
-				{{--<input type="hidden" name="status" value="1">--}}
-			{{--</div>--}}
 
-			{{--<div class="form-group">--}}
-				{{--<input type="checkbox" id="check_all" value="">Select All--}}
-			{{--</div>--}}
-
-			{{--<div class="form-group">--}}
-				{{--@foreach ($all_controllers as $key => $row)--}}
-				{{--<input type="checkbox" class="check_all_sub" id="{{$key}}">{{$key}}--}}
-			 	{{--<br>--}}
-			 	{{--<div class="{{$key}}">--}}
-					{{--@foreach ($row as $route)--}}
-					{{--<input type="checkbox" name="permissions[]" value="web:{{$key}}:{{$route}}"> {{$route}}<br>--}}
-					{{--@endforeach--}}
-				{{--</div>--}}
-			 	{{--<br>--}}
-				{{--@endforeach--}}
-			{{--</div>--}}
-
-			{{--<div class="form-group">--}}
-				{{--<a href="{{route('roles_permissions')}}" class="btn btn-default">Cancel</a>--}}
-	            {{--<button class="btn btn-success center-block" style="display: inline; float: left; margin-right: 5px;" type="submit">Create</button>--}}
-			{{--</div>--}}
-		{{--</form>--}}
-	{{--</div>--}}
-
-{{--</div>--}}
+@push('scripts')
 <script type="text/javascript">
 $(document).ready(function () {
     $(function () {
@@ -114,4 +74,5 @@ $(document).ready(function () {
     });
 });
 </script>
+@endpush
 @stop

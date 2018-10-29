@@ -137,7 +137,9 @@
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <div class="col-md-9">
+                                        @if($employee->picture != '')
                                         <img width="50px" src="{{asset($employee->picture)}}">
+                                        @endif
                                     </div>
                                 </div>
                             </div>

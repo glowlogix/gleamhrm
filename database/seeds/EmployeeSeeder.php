@@ -2,6 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Employee;
+use App\Role;
 use App\Salary;
 use App\Traits\ZohoTrait;
 
@@ -17,7 +18,7 @@ class EmployeeSeeder extends Seeder
      */
     public function run()
     {
-        $employees = Employee::create([
+        $employee = Employee::create([
             'firstname' => 'Admin',
             'lastname' => '',
             'contact_no' => '03324567833',
@@ -38,8 +39,11 @@ class EmployeeSeeder extends Seeder
             'invite_to_slack' => 0,
             'invite_to_asana' => 0,
         ]);
+        
+        $role = Role::find(1);
+        $employee->assignRole($role);
 
-        $employees = Employee::create([
+        $employee = Employee::create([
             'firstname' => 'Kosar',
             'lastname' => 'Latif',
             'contact_no' => '03324567844',
@@ -61,6 +65,7 @@ class EmployeeSeeder extends Seeder
             'invite_to_asana' => 0,
         ]);
 
+        
         /*$employees = $this->getZohoAccount();
         $employees = $employees->original->data;
         foreach($employees as $employee){

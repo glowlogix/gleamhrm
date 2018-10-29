@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Leave;
 use App\LeaveType;
 use App\Employee;
+use App\Branch;
 use App\OrganizationHierarchy;
 use App\EmployeeLeaveType;
 use App\AttendanceSummary;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
 use Carbon\Carbon;
+use Carbon\CarbonPeriod;
 use DB;
 use Session;
 use Mail;
@@ -210,19 +212,34 @@ class LeaveController extends Controller
     public function show($id)
     {
         $this->meta['title'] = 'Leave Details';
-        
-        $employee_id = Auth::User()->id;
-        
-        $leave = Leave::find($id)->with([
+                
+        $leave = Leave::where(['id' => $id])->with([
+        // $leave = Leave::find($id)->with([
             'employee', 
             'lineManager',
             'pointOfContact',
             'leaveType',
         ])->first();
-
+        
         $dateFromTime = Carbon::parse($leave->datefrom);
         $dateToTime = Carbon::parse($leave->dateto);
         $leave_days = $dateToTime->diffInDays($dateFromTime) + 1;
+        $period = CarbonPeriod::create($dateFromTime, $dateToTime);
+
+        $branch_id = $leave->employee->branch_id;
+        $branch = Branch::find($branch_id);
+
+        // Iterate over the period
+        foreach ($period as $date) {
+            if (strstr($branch->address, 'Islamabad')) { //if islamabad offc sat off
+                if($date->format('l') == "Saturday"){
+                    $leave_days--;
+                }
+            }
+            if($date->format('l') == "Sunday"){
+                $leave_days--;
+            }
+        }
 
         return view('admin.leaves.show',$this->metaResponse(),[
             'leave' => $leave,

@@ -11,7 +11,7 @@ class Employee extends Authenticatable
 {
     use Notifiable, SoftDeletes, HasRoles;
     
-    protected $guard_name = 'web'; 
+    protected $guard_name = 'web';
 
     protected $dates = ['deleted_at'];
     protected $appends = ['full_name'];

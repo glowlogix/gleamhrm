@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use File;
 use Session;
+use Auth;
 use App\Http\Requests;
 use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
@@ -14,8 +15,7 @@ class DocumentsController extends Controller
     use MetaTrait;
     
     public function index(){
-
-        $this->meta['title'] = 'Upload Documnents';        
+        $this->meta['title'] = 'Documnents';        
         $data = Document::get();
         return view('admin.docs.index',['files' => $data],$this->metaResponse());
     }

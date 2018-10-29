@@ -82,6 +82,14 @@ class RolePermissionsController extends Controller
                 $row = explode('@', $action['controller']);
                 $index = str_replace("App\Http\Controllers\\", "", $row[0]);
                 $index = str_replace("Auth\\", "", $index);
+                if (
+                    $index == 'LoginController' ||
+                    $index == 'RegisterController' ||
+                    $index == 'ForgotPasswordController' ||
+                    $index == 'ResetPasswordController'
+                ) {
+                    continue;
+                }
                 $all_controllers[$index][] = $row[1];
             }
         }
@@ -120,7 +128,6 @@ class RolePermissionsController extends Controller
         }
 
         return redirect()->route('roles_permissions')->with('success','Role is created succesfully');      
-
     }
 
     /**
@@ -149,19 +156,26 @@ class RolePermissionsController extends Controller
         foreach ($permissions as $permission) {
             $routes[] = $permission['name'];
         }
+        // dd($routes);
         $all_controllers = [];
         
         foreach (Route::getRoutes()->getRoutes() as $route){
             $action = $route->getAction();
-
             if (array_key_exists('controller', $action)){
                 $row = explode('@', $action['controller']);
                 $index = str_replace("App\Http\Controllers\\", "", $row[0]);
                 $index = str_replace("Auth\\", "", $index);
+                if (
+                    $index == 'LoginController' ||
+                    $index == 'RegisterController' ||
+                    $index == 'ForgotPasswordController' ||
+                    $index == 'ResetPasswordController'
+                ) {
+                    continue;
+                }
                 $all_controllers[$index][] = $row[1];
             }
         }
-
         return view('admin.roles_permissions.edit',$this->metaResponse())->with([
             'role' => $role,
             'routes' => $routes,
@@ -191,17 +205,21 @@ class RolePermissionsController extends Controller
                 ];
 
                 $permission = Permission::where($data)->first();
+
                 if (in_array($value, $request->permissions_checked)){
+                    // dump('give permission' . $permission->id. '==>' . $role->id.'<br>');
                     if (!isset($permission->id)) {
                         $permission = Permission::create($data);
                     }
                     $role->givePermissionTo($permission);
                 }
                 else{
+                    // dump('revoke permission' . $permission->id. '==>' . $role->id.'<br>');
                     $role->revokePermissionTo($permission);
                 }
             }
         }
+        // dd('here');
 
         return redirect()->route('roles_permissions')->with('success','Role is updated succesfully');      
     }
