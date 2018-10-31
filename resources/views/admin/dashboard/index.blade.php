@@ -157,7 +157,7 @@
                         @foreach($employee as $employees)
                             @if($employees->id!='1')
                         <tr>
-                            <td style="width:40px"><img src="{{asset($employees->picture)}}" width="50" class="img-circle" alt="logo"></td>
+                            <td style="width:40px"><img src="{{asset($employees->picture)}}" onerror="if (this.src !== '{{$employees->picture}}' ) this.src ='{{asset('assets/images/default.png')}}';" width="50" height="50" class="img-circle" alt="logo"></td>
                             <td>{{$employees->firstname}}</td>
                             <td align="right"><span class="label label-light-danger">{{ $diff = Carbon\Carbon::parse($employees->joining_date)->subMonth()->diffForHumans()}}</span></td>
                         </tr>

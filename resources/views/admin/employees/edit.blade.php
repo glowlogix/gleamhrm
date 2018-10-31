@@ -20,10 +20,10 @@
                     <section>
                         <center >
                             @if($employee->picture != '')
-                                <input type="image"  src="{{asset($employee->picture)}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" onclick="document.getElementById('wizard-picture').click();" />
+                                <input type="image"  src="{{asset($employee->picture)}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" onclick="document.getElementById('wizard-picture').click();"  width="150"/>
                                 <input  type="file" name="picture" id="wizard-picture" class="" hidden>
                             @else
-                                <input type="image" src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" />
+                                <input type="image" src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" height="150" />
                             @endif
                             <h6 class="card-title m-t-10">Click On Image to Update  Picture</h6>
                         </center>
@@ -128,6 +128,14 @@
                                     </div>
                                 </div>
                             </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Date OF Birth</label>
+                                    <div class="col-md-9">
+                                        <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{old('date_of_birth',$employee->date_of_birth)}}">
+                                    </div>
+                                </div>
+                            </div>
                             <!--/span-->
                         </div>
                     </section>
@@ -156,10 +164,14 @@
                             </div>
                         </div>
                         <!--/row-->
+                        <br>
+                        <br>
+                        <h4>Emergency Contact</h4>
+                        <hr>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Emergency Contact#</label>
+                                    <label class="control-label text-right col-md-3">Contact#</label>
                                     <div class="col-md-9">
                                         <input type="text"  class="form-control " placeholder="Enter Emergency Contact#" name="emergency_contact" value="{{old('emergency_contact',$employee->emergency_contact)}}" required>
                                     </div>
@@ -167,7 +179,7 @@
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Emergency Contact Relationship</label>
+                                    <label class="control-label text-right col-md-3"> Contact Relationship</label>
                                     <div class="col-md-9">
                                         <select class="form-control custom-select" name="emergency_contact_relationship">
                                             <option value="father" @if($employee->emergency_contact_relationship == "father") selected @endif>Father</option>
@@ -179,26 +191,11 @@
                             </div>
                         </div>
                         <!--/row-->
+                        <br>
+                        <br>
+                        <h4>Address  Details</h4>
+                        <hr>
 
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Date OF Birth</label>
-                                    <div class="col-md-9">
-                                        <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{old('date_of_birth',$employee->date_of_birth)}}">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">City</label>
-                                    <div class="col-md-9">
-                                        <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{old('city',$employee->city)}}" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -221,6 +218,26 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">City</label>
+                                    <div class="col-md-9">
+                                        <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{old('city',$employee->city)}}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <!--/span-->
+                        </div>
+
+                    </section>
+                    <br>
+                    <br>
+                    <!-- Step 3 -->
+                    <h6>Additional</h6>
+                    <section>
+                        <h4>Joining / Exit</h4>
+                        <hr>
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Joining Date</label>
                                     <div class="col-md-9">
                                         <input type="date" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{old('joining_date',$employee->joining_date)}}">
@@ -236,27 +253,8 @@
                                 </div>
                             </div>
                         </div>
-                    </section>
-                    <!-- Step 3 -->
-                    <h6>Change Password</h6>
-                    <section>
-                        <div class="form-body">
-                            <hr class="m-t-0 m-b-40">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">New Password</label>
-                                        <div class="col-md-9">
-                                            <input type="text" id="password"  class="form-control" type="text" name="password" >
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </section>
-                    <!-- Step 4 -->
-                    <h6>Additional</h6>
-                    <section>
+                        <br>
+                        <br>
                         <div class="col-md-8">
                             <div class="form-group row">
                                 <div class="card-body">
@@ -319,6 +317,23 @@
                                     <div class="modal-footer">
                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                         <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    {{--Section 4--}}
+                    <h6>Change Password</h6>
+                    <section>
+                        <div class="form-body">
+                            <hr class="m-t-0 m-b-40">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">New Password</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="password"  class="form-control" type="text" name="password" >
+                                        </div>
                                     </div>
                                 </div>
                             </div>
@@ -445,6 +460,7 @@
     $(".tab-wizard").steps({
         headerTag: "h6",
         bodyTag: "section",
+        enableAllSteps: true,
         transitionEffect: "fade",
         titleTemplate: '<span class="step">#index#</span> #title#',
         labels: {

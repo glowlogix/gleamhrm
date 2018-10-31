@@ -34,6 +34,7 @@ class EmployeeController extends Controller
 	use SlackTrait;
 
 	public $designations = [
+	    "ceo" 						    => "CEO",
 		"project_coordinator" 			=> "Project Coordinator",
 		"web_developer" 				=> "Web Developer",
 		"junior_web_developer" 			=> "Junior Web Developer",
