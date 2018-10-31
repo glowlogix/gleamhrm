@@ -1,11 +1,10 @@
 @extends('layouts.admin') @section('title') HRM|{{$title}} @endsection
 @section('Heading')
-    <button type="button"  onclick="window.location.href='{{route('employee.create')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Employee</button>
-    <h3 class="text-themecolor">Employees</h3>
+    <h3 class="text-themecolor">Attendance</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">People Management</li>
-        <li class="breadcrumb-item active">Employees</li>
+        <li class="breadcrumb-item active">Attendance</li>
+        <li class="breadcrumb-item active">Today Attendance</li>
     </ol>
 @stop
 @section('content')
@@ -59,7 +58,7 @@
 
                                                         <div class="modal-body">
                                                             <div class="container-fluid">
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-14">
                                                                     <label for="date">Select Date</label></br>
                                                                     <div class="input-group date1">
                                                                         <input type="hidden" name="employee_id" value="{{$employee['id']}}" />
@@ -69,6 +68,8 @@
                                                                         </span>
                                                                     </div>
                                                                 </div>
+                                                                <br>
+                                                                <div class="row">
                                                                 <div class="col-md-6">
                                                                     <label for="time_in">Time In</label>
                                                                     <div class="input-group timepicker">
@@ -87,6 +88,7 @@
                                                                         </span>
                                                                     </div>
                                                                 </div>
+                                                            </div>
                                                             </div>
                                                         </div>
                                                         <div class="modal-footer">

@@ -46,7 +46,7 @@
                                             <td>{{$employee->employment_status}}</td>
 
                                             <td class="text-nowrap">
-                                                <a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>
+                                                {{--<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>--}}
                                                 {{--///Dialog Box/// --}}
                                                 <div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                                     <div class="modal-dialog">

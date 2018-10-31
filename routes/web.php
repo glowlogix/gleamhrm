@@ -27,8 +27,8 @@ Route::any('/register', function() {
 Route::get('/home', 'HomeController@index')->name('home');
 
 // Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function (){
-// Route::group(['middleware' => 'auth'], function (){
-Route::group(['middleware' => 'allowed_permission'], function (){
+ Route::group(['middleware' => 'auth'], function (){
+//Route::group(['middleware' => 'allowed_permission'], function (){
 	//dashboard
 	Route::get('/dashboard',[
 		'uses' => 'DashboardController@index',

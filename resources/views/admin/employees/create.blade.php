@@ -24,6 +24,11 @@
                     <form action="{{route('employee.store')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
                         {{csrf_field()}}
                         <div class="form-body">
+                            <center >
+                                <input type="image"  src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" />
+                                <input type="file"  name="picture" id="wizard-picture" class="" hidden>
+                                <h6 class="card-title m-t-10">Click On Image to Add Picture</h6>
+                            </center>
                             <h3 class="box-title">Employee Information</h3>
                             <hr class="m-t-0 m-b-40">
                             <div class="row">
@@ -103,6 +108,14 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Salary</label>
+                                        <div class="col-md-9">
+                                            <input type="text" name="salary" value="{{ old('salary') }}"  class="form-control " placeholder="Enter Salary" required>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <!--/row-->
                             <div class="row">
@@ -118,38 +131,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Salary</label>
-                                        <div class="col-md-9">
-                                            <input type="text" name="salary" value="{{ old('salary') }}"  class="form-control " placeholder="Enter Salary" required>
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <!--/span-->
                             </div>
-                            {{--//////Picture/////--}}
-                            <div class="row">
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Picture Upload</label>
-                                        <div class="col-md-9">
-                                            <input type="file" class="form-control" id="exampleInputFile" name="picture" >
-                                        </div>
-                                    </div>
-                                </div>
-                                {{--<div class="col-md-6">--}}
-                                    {{--<div class="form-group row">--}}
-                                        {{--<label class="control-label text-right col-md-3">Exit Date</label>--}}
-                                        {{--<div class="col-md-9">--}}
-                                            {{--<input type="date" class="form-control" id="exit_date" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date')}}" required>--}}
-                                        {{--</div>--}}
-                                    {{--</div>--}}
-                                {{--</div>--}}
-                                <!--/span-->
-                            </div>
-                            {{--//////End Picture/////--}}
                         </div>
                         <br>
                         {{--///Contact Info///--}}
@@ -168,12 +152,13 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Emergency Contact</label>
+                                        <label class="control-label text-right col-md-3">CNIC#</label>
                                         <div class="col-md-9">
-                                            <input type="text"  class="form-control " placeholder="Enter Emergency Contact#" name="emergency_contact" value="{{ old('emergency_contact') }}" required>
+                                            <input type="text"  class="form-control " placeholder="Enter CNIC#" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{13}">
                                         </div>
                                     </div>
                                 </div>
+
                             </div>
                             <!--/row-->
                             <div class="row">
@@ -193,9 +178,9 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">CNIC#</label>
+                                        <label class="control-label text-right col-md-3">Emergency Contact#</label>
                                         <div class="col-md-9">
-                                            <input type="text"  class="form-control " placeholder="Enter CNIC#" name="cnic" value="{{ old('cnic') }}" pattern="[0-9]{13}">
+                                            <input type="text"  class="form-control " placeholder="Enter Emergency Contact#" name="emergency_contact" value="{{ old('emergency_contact') }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -211,12 +196,11 @@
                                         </div>
                                     </div>
                                 </div>
-
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Current Address</label>
+                                        <label class="control-label text-right col-md-3">City</label>
                                         <div class="col-md-9">
-                                            <input type="text"  class="form-control " placeholder="Enter Current Address" name="current_address" value="{{ old('current_address') }}" required>
+                                            <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{ old('city') }}" required>
                                         </div>
                                     </div>
                                 </div>
@@ -228,16 +212,15 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Permanent Address</label>
                                     <div class="col-md-9">
-                                        <input type="text"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{ old('permanent_address') }}" required>
+                                        <textarea rows="4"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{ old('permanent_address') }}" required></textarea>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">City</label>
+                                    <label class="control-label text-right col-md-3">Current Address</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{ old('city') }}" required>
+                                        <textarea  rows="4"  class="form-control " placeholder="Enter Current Address" name="current_address" value="{{ old('current_address') }}" required></textarea>
                                     </div>
                                 </div>
                             </div>
@@ -272,8 +255,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="asana_teams" class="row asana_teams">
-                                
+                            <div id="asana_teams" class=" asana_teams col-md-12">
                             </div>
                         </div>
                         <hr>
@@ -381,5 +363,31 @@
             });
         });
     </script>
+        <script>
+            $(document).ready(function(){
+// Prepare the preview for profile picture
+                $("#wizard-picture").change(function(){
+                    readURL(this);
+                });
+            });
+            function readURL(input) {
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function (e) {
+                        $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+                    }
+                    reader.readAsDataURL(input.files[0]);
+                }           }
+            $("input[type='image']").click(function() {
+                $("input[id='wizard-picture']").click();
+            });
+            $(".form-control").keypress(function(e) {
+                if (e.which == 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
+        </script>
     @endpush
 @stop

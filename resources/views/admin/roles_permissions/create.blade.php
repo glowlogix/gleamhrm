@@ -19,7 +19,6 @@
 					<form  action="{{route('roles_permissions.store')}}" method="post" enctype="multipart/form-data">
 						{{csrf_field()}}
 						<div class="form-body">
-
 							<div class="col-md-6">
 								<div class="form-group">
 									<label class="control-label">Name</label>
@@ -32,25 +31,25 @@
 							<label for="check_all">Select All</label>
 							<br>
 							<br>
-							<div class="form-group">
+							<div class="form-group row">
 								@foreach ($all_controllers as $key => $row)
-
+									<div class="col-md-4">
+									<hr>
 									<input type="checkbox" class="check_all_sub" id="{{$key}}">
-									<label for="{{$key}}">{{$key}}</label>
-									<br>
+									<label for="{{$key}}"><b>{{$key}} :</b></label>
 									<br>
 									<div class="{{$key}}">
 										@foreach ($row as $route)
+											<div class="col-md-6">
 											<input type="checkbox" id="{{$key}}:{{$route}}" name="permissions[]" value="web:{{$key}}:{{$route}}">
 											<label for="{{$key}}:{{$route}}">{{$route}}</label>
-											 <br>
+											</div>
 										@endforeach
 									</div>
-									<br>
+									</div>
 								@endforeach
-							</div>
 						</div>
-
+						</div>
 						<div class="form-actions">
 							&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Create Role</button>
 							<button type="button" onclick="window.location.href='{{route('roles_permissions')}}'" class="btn btn-inverse">Cancel</button>

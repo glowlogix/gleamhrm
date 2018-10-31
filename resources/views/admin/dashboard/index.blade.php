@@ -18,7 +18,7 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-lg align-self-center round-info"><i class="ti-user"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{count($employee)}}</h3>
+                                    <h3 class="m-b-0 font-light">{{count($employee)-'1'}}</h3>
                                     <h5 class="text-muted m-b-0">Active Employees</h5></div>
                             </div>
                         </div>
@@ -154,31 +154,15 @@
                 <div class="card-body b-t collapse show">
                     <table class="table v-middle no-border">
                         <tbody>
+                        @foreach($employee as $employees)
+                            @if($employees->id!='1')
                         <tr>
-                            <td style="width:40px"><img src="../assets/images/users/1.jpg" width="50" class="img-circle" alt="logo"></td>
-                            <td>Andrew</td>
-                            <td align="right"><span class="label label-light-danger">2 Months</span></td>
+                            <td style="width:40px"><img src="{{asset($employees->picture)}}" width="50" class="img-circle" alt="logo"></td>
+                            <td>{{$employees->firstname}}</td>
+                            <td align="right"><span class="label label-light-danger">{{ $diff = Carbon\Carbon::parse($employees->joining_date)->subMonth()->diffForHumans()}}</span></td>
                         </tr>
-                        <tr>
-                            <td style="width:40px"><img src="../assets/images/users/1.jpg" width="50" class="img-circle" alt="logo"></td>
-                            <td>Andrew</td>
-                            <td align="right"><span class="label label-light-danger">2 Months</span></td>
-                        </tr>
-                        <tr>
-                            <td style="width:40px"><img src="../assets/images/users/1.jpg" width="50" class="img-circle" alt="logo"></td>
-                            <td>Andrew</td>
-                            <td align="right"><span class="label label-light-danger">2 Months</span></td>
-                        </tr>
-                        <tr>
-                            <td style="width:40px"><img src="../assets/images/users/1.jpg" width="50" class="img-circle" alt="logo"></td>
-                            <td>Andrew</td>
-                            <td align="right"><span class="label label-light-danger">2 Months</span></td>
-                        </tr>
-                        <tr>
-                            <td><img src="../assets/images/users/2.jpg" width="50" class="img-circle" alt="logo"></td>
-                            <td>Kristeen</td>
-                            <td align="right"><span class="label label-light-danger">1 Months</span></td>
-                        </tr>
+                        @endif
+                        @endforeach
                         </tbody>
                     </table>
                 </div>
@@ -216,8 +200,6 @@
         <!--stickey kit -->
         <script src="{{asset('assets/plugins/sticky-kit-master/dist/sticky-kit.min.js')}}"></script>
         <script src="{{asset('assets/plugins/sparkline/jquery.sparkline.min.js')}}"></script>
-        <!--Custom JavaScript -->
-        <script src="{{asset('js/custom.min.js')}}"></script>
         <!-- ============================================================== -->
         <!-- This page plugins -->
         <!-- ============================================================== -->
@@ -302,82 +284,6 @@
                     }
                 });
                 // ==============================================================
-                // sales difference
-                // ==============================================================
-                new Chartist.Pie('.ct-chart', {
-                    series: [25, 10]
-                }, {
-                    donut: true
-                    , donutWidth: 20
-                    , startAngle: 0
-                    , showLabel: false
-                });
-                // ==============================================================
-                // world map
-                // ==============================================================
-                jQuery('#visitfromworld').vectorMap({
-                    map: 'world_mill_en'
-                    , backgroundColor: '#fff'
-                    , borderColor: '#ccc'
-                    , borderOpacity: 0.9
-                    , borderWidth: 1
-                    , zoomOnScroll : false
-                    , color: '#ddd'
-                    , regionStyle: {
-                        initial: {
-                            fill: '#fff'
-                        }
-                    }
-                    , markerStyle: {
-                        initial: {
-                            r: 8
-                            , 'fill': '#26c6da'
-                            , 'fill-opacity': 1
-                            , 'stroke': '#000'
-                            , 'stroke-width': 0
-                            , 'stroke-opacity': 1
-                        }
-                        , }
-                    , enableZoom: true
-                    , hoverColor: '#79e580'
-                    , markers: [{
-                        latLng: [21.00, 78.00]
-                        , name: 'India : 9347'
-                        , style: {fill: '#26c6da'}
-                    },
-                        {
-                            latLng : [-33.00, 151.00],
-                            name : 'Australia : 250'
-                            , style: {fill: '#02b0c3'}
-                        },
-                        {
-                            latLng : [36.77, -119.41],
-                            name : 'USA : 250'
-                            , style: {fill: '#11a0f8'}
-                        },
-                        {
-                            latLng : [55.37, -3.41],
-                            name : 'UK   : 250'
-                            , style: {fill: '#745af2'}
-                        },
-                        {
-                            latLng : [25.20, 55.27],
-                            name : 'UAE : 250'
-                            , style: {fill: '#ffbc34'}
-                        }]
-                    , hoverOpacity: null
-                    , normalizeFunction: 'linear'
-                    , scaleColors: ['#fff', '#ccc']
-                    , selectedColor: '#c9dfaf'
-                    , selectedRegions: []
-                    , showTooltip: true
-                    , onRegionClick: function (element, code, region) {
-                        var message = 'You clicked "' + region + '" which has the code: ' + code.toUpperCase();
-                        alert(message);
-                    }
-                });
-                $('#calendar').fullCalendar('option', 'height', 650);
-                // ==============================================================
                 // sparkline chart
                 // ==============================================================
                 var sparklineLogin = function() {
@@ -392,135 +298,6 @@
                         maxSpotColor: '#26c6da',
                         highlightLineColor: 'rgba(0, 0, 0, 0.2)',
                         highlightSpotColor: '#26c6da'
-                    });
-                    $("#spark2").sparkline([0, 2, 8, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#009efb',
-                        fillColor: '#009efb',
-                        minSpotColor: '#009efb',
-                        maxSpotColor: '#009efb',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#009efb'
-                    });
-                    $("#spark3").sparkline([2, 4, 4, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#7460ee',
-                        fillColor: '#7460ee',
-                        maxSpotColor: '#7460ee',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#7460ee'
-                    });
-                    $("#spark4").sparkline([2, 4, 4, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#fff',
-                        fillColor: '#7460ee',
-                        maxSpotColor: '#7460ee',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#7460ee'
-                    });
-                    $("#spark5").sparkline([2, 4, 4, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#fff',
-                        fillColor: '#009efb',
-                        maxSpotColor: '#009efb',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#009efb'
-                    });
-                    $("#spark6").sparkline([2, 4, 4, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#fff',
-                        fillColor: '#26c6da',
-                        maxSpotColor: '#26c6da',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#26c6da'
-                    });
-                    $("#spark7").sparkline([2, 4, 4, 6, 8, 5, 6, 4, 8, 6, 6, 2], {
-                        type: 'line',
-                        width: '100%',
-                        height: '50',
-                        lineColor: '#fff',
-                        fillColor: '#ffbc34',
-                        maxSpotColor: '#ffbc34',
-                        highlightLineColor: 'rgba(0, 0, 0, 0.2)',
-                        highlightSpotColor: '#ffbc34'
-                    });
-                    $('#spark8').sparkline([4, 5, 0, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        width: '100%',
-                        height: '70',
-                        barWidth: '8',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#26c6da'
-                    });
-                    $('#spark9').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        width: '100%',
-                        height: '70',
-                        barWidth: '8',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#7460ee'
-                    });
-                    $('#spark10').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        width: '100%',
-                        height: '70',
-                        barWidth: '8',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#03a9f3'
-                    });
-                    $('#spark11').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        width: '100%',
-                        height: '70',
-                        barWidth: '8',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#f62d51'
-                    });
-                    $('#sparklinedash').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        height: '50',
-                        barWidth: '2',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#26c6da'
-                    });
-                    $('#sparklinedash2').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        height: '50',
-                        barWidth: '2',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#7460ee'
-                    });
-                    $('#sparklinedash3').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        height: '50',
-                        barWidth: '2',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#03a9f3'
-                    });
-                    $('#sparklinedash4').sparkline([0, 5, 6, 10, 9, 12, 4, 9], {
-                        type: 'bar',
-                        height: '50',
-                        barWidth: '2',
-                        resize: true,
-                        barSpacing: '5',
-                        barColor: '#f62d51'
                     });
 
                 };
@@ -574,11 +351,5 @@
             });
 
         </script>
-
-
-        <!-- ============================================================== -->
-        <!-- Style switcher -->
-        <!-- ============================================================== -->
-        <script src="{{asset('../assets/plugins/styleswitcher/jQuery.style.switcher.js')}}"></script>
     @endpush
 @endsection

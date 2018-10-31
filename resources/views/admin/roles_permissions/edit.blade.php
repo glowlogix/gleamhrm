@@ -8,7 +8,6 @@
 	</ol>
 @stop
 @section('content')
-
 	<div class="row">
 		<div class="col-lg-12">
 			<div class="card card-outline-info">
@@ -32,29 +31,32 @@
 							<label for="check_all">Select All</label>
 							<br>
 							<br>
-							<div class="form-group">
+							<div class="form-group row">
 								@foreach ($all_controllers as $key => $row)
 
+									<div class="col-md-4">
+										<hr>
 									<input type="checkbox" class="check_all_sub" id="{{$key}}">
-									<label for="{{$key}}">{{$key}}</label>
-									<br>
+									<label for="{{$key}}"><b>{{$key}}</b></label>
 									<br>
 									<div class="{{$key}}">
 										@foreach ($row as $route)
-											
+											<div class="col-md-6">
 											<input type="hidden" name="permissions[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
 
 											<input type="checkbox" id="{{$key}}:{{$route}}"  name="permissions_checked[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
 
 											<label for="{{$key}}:{{$route}}">{{$route}}</label>
-											 <br>
+											</div>
 										@endforeach
+
 									</div>
-									<br>
+									</div>
+
 								@endforeach
 							</div>
 						</div>
-
+						<hr>
 						<div class="form-actions">
 							&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Role</button>
 							<button type="button" onclick="window.location.href='{{route('roles_permissions')}}'" class="btn btn-inverse">Cancel</button>

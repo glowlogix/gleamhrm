@@ -9,23 +9,31 @@
 @stop
 @section('content')
 <div class="row">
-    <div class="col-lg-12">
-        <div class="card card-outline-info">
-            <div style="margin-top:10px; margin-right: 10px;">
-                <button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-info float-right">Back</button>
-            </div>
-            <div class="card-body">
-                <form action="{{route('employee.update',['id'=>$employee->id])}}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                    {{csrf_field()}}
-                    <div class="form-body">
-                        <h3 class="box-title">Employee Information</h3>
+    <div class="col-12">
+        <div class="card">
+            <div class="card-body wizard-content">
+                <a href="{{route('employees')}}" class="btn btn-sm btn-danger float-right">Cancel</a>
+                <form  class="tab-wizard wizard-circle form" action="{{route('employee.update',['id'=>$employee->id])}}" method="post"  enctype="multipart/form-data">
+                {{csrf_field()}}
+                <!-- Step 1 -->
+                    <h6>Personal Information</h6>
+                    <section>
+                        <center >
+                            @if($employee->picture != '')
+                                <input type="image"  src="{{asset($employee->picture)}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" onclick="document.getElementById('wizard-picture').click();" />
+                                <input  type="file" name="picture" id="wizard-picture" class="" hidden>
+                            @else
+                                <input type="image" src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" />
+                            @endif
+                            <h6 class="card-title m-t-10">Click On Image to Update  Picture</h6>
+                        </center>
                         <hr class="m-t-0 m-b-40">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">First Name</label>
                                     <div class="col-md-9">
-                                        <input type="text"  name="firstname" value="{{$employee->firstname}}" class="form-control" placeholder="Enter First Name" required>
+                                        <input type="text"  name="firstname" value="{{old('firstname', $employee->firstname)}}" class="form-control" placeholder="Enter First Name" required>
                                     </div>
                                 </div>
                             </div>
@@ -34,7 +42,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Last Name</label>
                                     <div class="col-md-9">
-                                        <input type="text" name="lastname" value="{{$employee->lastname}}" class="form-control " placeholder="Enter Last Name" required>
+                                        <input type="text" name="lastname" value="{{old('lastname',$employee->lastname)}}" class="form-control " placeholder="Enter Last Name" required>
                                     </div>
                                 </div>
                             </div>
@@ -43,7 +51,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Personal Email</label>
                                     <div class="col-md-9">
-                                        <input type="email" name="personal_email" value="{{$employee->personal_email}}"  class="form-control " placeholder="Enter Personal Email" required>
+                                        <input type="email" name="personal_email" value="{{old('personal_email',$employee->personal_email)}}"  class="form-control " placeholder="Enter Personal Email" required>
                                     </div>
                                 </div>
                             </div>
@@ -52,7 +60,7 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Official Email</label>
                                     <div class="col-md-9">
-                                        <input type="email" name="official_email" value="{{$employee->official_email}}" class="form-control " placeholder="Enter Official Email" required>
+                                        <input type="email" name="official_email" value="{{old('official_email',$employee->official_email)}}" class="form-control " placeholder="Enter Official Email" required>
                                     </div>
                                 </div>
                             </div>
@@ -74,17 +82,17 @@
                                 </div>
                             </div>
                             <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Employment Status</label>
-                                        <div class="col-md-9">
-                                            <select class="form-control custom-select" name="employment_status">
-                                                @foreach($employment_statuses as $k => $employment_status)
-                                                    <option value="{{$k}}" @if($employee->employment_status == $k) selected @endif>{{$employment_status}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Employment Status</label>
+                                    <div class="col-md-9">
+                                        <select class="form-control custom-select" name="employment_status">
+                                            @foreach($employment_statuses as $k => $employment_status)
+                                                <option value="{{$k}}" @if($employee->employment_status == $k) selected @endif>{{$employment_status}}</option>
+                                            @endforeach
+                                        </select>
                                     </div>
                                 </div>
+                            </div>
                             <!--/span-->
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -94,6 +102,14 @@
                                             <option value="office" @if($employee->type == "office") selected @endif>Work from Office</option>
                                             <option value="remote" @if($employee->type == "remote") selected @endif>Work Remotely</option>
                                         </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Salary</label>
+                                    <div class="col-md-9">
+                                        <input type="text" name="salary" value="{{old('basic_salary',$employee->basic_salary)}}"  class="form-control " placeholder="Enter Salary" required>
                                     </div>
                                 </div>
                             </div>
@@ -112,82 +128,43 @@
                                     </div>
                                 </div>
                             </div>
+                            <!--/span-->
+                        </div>
+                    </section>
+                    <!-- Step 2 -->
+                    <h6>Contact Inofrmation</h6>
 
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Salary</label>
-                                    <div class="col-md-9">
-                                        <input type="text" name="salary" value="{{$employee->basic_salary}}"  class="form-control " placeholder="Enter Salary" required>
-                                    </div>
-                                </div>
-                            </div>
-                            <!--/span-->
-                        </div>
-                        <div class="row">
-                            <!--/span-->
-                            {{--//////Picture/////--}}
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Picture Upload</label>
-                                    <div class="col-md-9">
-                                        <input type="file" class="form-control" id="exampleInputFile" name="picture">
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <div class="col-md-9">
-                                        @if($employee->picture != '')
-                                        <img width="50px" src="{{asset($employee->picture)}}">
-                                        @endif
-                                    </div>
-                                </div>
-                            </div>
-                            {{--//////End Picture/////--}}
-                        </div>
-                    </div>
-                    {{--///Password///--}}
-                    <div class="form-body">
-                        <h3 class="box-title">Change Password</h3>
-                        <hr class="m-t-0 m-b-40">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">New Password</label>
-                                    <div class="col-md-9">
-                                        <input type="text" id="password"  class="form-control" type="text" name="password" >
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    {{--///Contact Info///--}}
-                    <div class="form-body">
-                        <h3 class="box-title">Contact Information</h3>
+                    <section>
                         <hr class="m-t-0 m-b-40">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Contact#</label>
                                     <div class="col-md-9">
-                                        <input type="text" class="form-control" placeholder="Enter Contac#" name="contact_no" value="{{$employee->contact_no}}">
+                                        <input type="text" class="form-control" placeholder="Enter Contac#" name="contact_no" value="{{old('contact_no',$employee->contact_no)}}">
                                     </div>
                                 </div>
                             </div>
                             <!--/span-->
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Emergency Contact</label>
+                                    <label class="control-label text-right col-md-3">CNIC#</label>
                                     <div class="col-md-9">
-                                        <input type="text"  class="form-control " placeholder="Enter Emergency Contact#" name="emergency_contact" value="{{$employee->emergency_contact}}" required>
+                                        <input type="text"  class="form-control " placeholder="Enter CNIC#" name="cnic" value="{{old('cnic',$employee->cnic)}}" pattern="[0-9]{13}">
                                     </div>
                                 </div>
                             </div>
                         </div>
                         <!--/row-->
                         <div class="row">
-                            <!--/span-->
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Emergency Contact#</label>
+                                    <div class="col-md-9">
+                                        <input type="text"  class="form-control " placeholder="Enter Emergency Contact#" name="emergency_contact" value="{{old('emergency_contact',$employee->emergency_contact)}}" required>
+                                    </div>
+                                </div>
+                            </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Emergency Contact Relationship</label>
@@ -200,15 +177,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!--/span-->
-                            <div class="col-md-6">
-                                <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">CNIC#</label>
-                                    <div class="col-md-9">
-                                        <input type="text"  class="form-control " placeholder="Enter CNIC#" name="cnic" value="{{$employee->cnic}}" pattern="[0-9]{13}">
-                                    </div>
-                                </div>
-                            </div>
                         </div>
                         <!--/row-->
 
@@ -217,46 +185,45 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Date OF Birth</label>
                                     <div class="col-md-9">
-                                        <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{$employee->date_of_birth}}" >
+                                        <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{old('date_of_birth',$employee->date_of_birth)}}">
                                     </div>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="form-group row">
-                                    <label class="control-label text-right col-md-3">Current Address</label>
+                                    <label class="control-label text-right col-md-3">City</label>
                                     <div class="col-md-9">
-                                        <input type="text"  class="form-control " placeholder="Enter Current Address" name="current_address" value="{{$employee->current_address}}">
+                                        <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{old('city',$employee->city)}}" required>
                                     </div>
                                 </div>
                             </div>
                             <!--/span-->
                         </div>
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label text-right col-md-3">Permanent Address</label>
-                                <div class="col-md-9">
-                                    <input type="text"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{$employee->permanent_address}}" >
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Current Address</label>
+                                    <div class="col-md-9">
+                                        <textarea rows="4" class="form-control " placeholder="Enter Current Address" name="current_address" value="{{old('current_address',$employee->current_address)}}"></textarea>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label text-right col-md-3">City</label>
-                                <div class="col-md-9">
-                                    <input type="text" class="form-control " placeholder="Enter City" name="city" value="{{$employee->city}}" required>
+                            <div class="col-md-6">
+                                <div class="form-group row">
+                                    <label class="control-label text-right col-md-3">Permanent Address</label>
+                                    <div class="col-md-9">
+                                        <textarea rows="4"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{old('permanent_address',$employee->permanent_address)}}" ></textarea>
+                                    </div>
                                 </div>
                             </div>
+                            <!--/span-->
                         </div>
-                        <!--/span-->
-                    </div>
-                    <div class="row">
-                        <div class="col-md-6">
+                        <div class="row">
+                            <div class="col-md-6">
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Joining Date</label>
                                     <div class="col-md-9">
-                                        <input type="date" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{$employee->joining_date}}">
+                                        <input type="date" id="joining_date" class="form-control" placeholder="Enter Joining Date" name="joining_date" value="{{old('joining_date',$employee->joining_date)}}">
                                     </div>
                                 </div>
                             </div>
@@ -264,88 +231,99 @@
                                 <div class="form-group row">
                                     <label class="control-label text-right col-md-3">Exit Date</label>
                                     <div class="col-md-9">
-                                        <input type="date" id="exit_date" class="form-control" placeholder="Enter Exit Date" name="exit_date" value="{{$employee->exit_date}}">
-                                    </div>
-                                </div>
-                            </div>
-                    </div>
-                    <div class="col-md-8">
-                        <div class="form-group row">
-                            <div class="card-body">
-                                <div class="demo-checkbox">
-                                    <input type="hidden" name="invite_to_asana" value="0" />
-                                    &nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
-                                    <label for="basic_checkbox_1">Asaana</label>
-                                    <input type="hidden" name="invite_to_slack" value="0" />
-                                    <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
-                                    <label for="basic_checkbox_2">Slack</label>
-                                    <input type="hidden" name="invite_to_zoho" value="0" />
-                                    <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
-                                    <label for="basic_checkbox_3">zoho</label>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <div id="asana_teams" class="row"></div>
-                    <hr>
-                    <div class="col-md-6">
-                        <div class="form-group row">
-                            <label class="control-label text-right col-md-3">Roles</label>
-                            <div class="col-md-9">
-                                <select class="form-control custom-select" name="role_id" id="role">
-                                    <option value="">Select Role</option>
-                                    @if($roles->count() >0)
-                                    @foreach($roles as $role)
-                                        <option value="{{$role->id}}" @if($role->id == $employee_role_id)) selected @endif>{{$role->name}}</option>
-                                    @endforeach
-                                    @endif
-                                </select>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="col-md-6" id="permissions">
-                        <div class="form-group row">
-                            <div class="card-body">
-                                <div class="demo-checkbox">
-                                    @foreach ($permissions as $route)
-                                    <input type="hidden" name="permissions[]" value="{{$route->id}}" />
-                                    <input type="checkbox" id="basic_checkbox_{{$route->id}}"  name="permissions_checked[]" value="{{$route->id}}" @if(in_array($route->id, $employee_permissions)) checked @endif>
-                                    <label for="basic_checkbox_{{$route->id}}">{{$route->guard_name}}:{{$route->name}}</label>
-                                    <br>
-                                    @endforeach
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <hr>
-                    <div class="form-actions">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="row">
-                                    <div class="col-md-offset-3 col-md-9">
-                                        <button type="submit" class="btn btn-success"  data-toggle="modal" data-target="#confirm">Update Employee</button>
-                                        <button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-inverse">Cancel</button>
+                                        <input type="date" id="exit_date" class="form-control" placeholder="Enter Exit Date" name="exit_date" value="{{old('exit_date',$employee->exit_date)}}">
                                     </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
-                    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                        <div class="modal-dialog">
-                            <div class="modal-content">
-                                <div class="modal-header">
-                                    Are you sure you want to update Employee : {{ $employee->firstname }}?
-                                </div>
-                                <div class="modal-body">
-                                    <input type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
+                    </section>
+                    <!-- Step 3 -->
+                    <h6>Change Password</h6>
+                    <section>
+                        <div class="form-body">
+                            <hr class="m-t-0 m-b-40">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">New Password</label>
+                                        <div class="col-md-9">
+                                            <input type="text" id="password"  class="form-control" type="text" name="password" >
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
                         </div>
-                    </div>
+                    </section>
+                    <!-- Step 4 -->
+                    <h6>Additional</h6>
+                    <section>
+                        <div class="col-md-8">
+                            <div class="form-group row">
+                                <div class="card-body">
+                                    <div class="demo-checkbox">
+                                        <input type="hidden" name="invite_to_asana" value="0" />
+                                        &nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
+                                        <label for="basic_checkbox_1">Asaana</label>
+                                        <input type="hidden" name="invite_to_slack" value="0" />
+                                        <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
+                                        <label for="basic_checkbox_2">Slack</label>
+                                        <input type="hidden" name="invite_to_zoho" value="0" />
+                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
+                                        <label for="basic_checkbox_3">zoho</label>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="asana_teams" class=""></div>
+                        </div>
+
+                        <hr>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="control-label text-right col-md-3">Roles</label>
+                                <div class="col-md-9">
+                                    <select class="form-control custom-select" name="role_id" id="role">
+                                        <option value="">Select Role</option>
+                                        @if($roles->count() >0)
+                                            @foreach($roles as $role)
+                                                <option value="{{$role->id}}" @if($role->id == $employee_role_id)) selected @endif>{{$role->name}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-md-6" id="permissions">
+                            <div class="form-group row">
+                                <div class="card-body">
+                                    <div class="demo-checkbox">
+                                        @foreach ($permissions as $route)
+                                            <input type="hidden" name="permissions[]" value="{{$route->id}}" />
+                                            <input type="checkbox" id="basic_checkbox_{{$route->id}}"  name="permissions_checked[]" value="{{$route->id}}" @if(in_array($route->id, $employee_permissions)) checked @endif>
+                                            <label for="basic_checkbox_{{$route->id}}">{{$route->guard_name}}:{{$route->name}}</label>
+                                            <br>
+                                        @endforeach
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
+                        <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <div class="modal-header">
+                                        Are you sure you want to update Employee : {{ $employee->firstname }}?
+                                    </div>
+                                    <div class="modal-body">
+                                        <input onkeypress="if (event.keyCode == 13) {return false;}" type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
+                                    </div>
+                                    <div class="modal-footer">
+                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                        <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
                 </form>
             </div>
         </div>
@@ -400,11 +378,12 @@
                         success: function (res) {
                             count++;
                             if (count == 1) {
-                                teams.append("<h3 class='head'>Teams in Asana</h3>");
+                                teams.append("<h3 class='head row'>Teams in Asana</h3>");
                                 res.data.forEach(function (item, index) {
-                                    teams.append("<li class='teams'>" + item.name +
-                                        " <input name='teams[]' value='" +
-                                        item.id + "' type='checkbox'></li>"
+                                    teams.append("<input name='teams[]' value='" +
+                                        item.id + "' type='checkbox'>"+"" +
+                                        "<lable class='teams row'>" + item.name +
+                                    " </lable>"
                                     );
                                 });
                             }
@@ -435,6 +414,45 @@
                 });
             });
         });
+    });
+</script>
+<script>
+    $(document).ready(function(){
+
+        $("#wizard-picture").change(function(){
+            readURL(this);
+        });
+    });
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }           }
+    $(".form-control").keypress(function(e) {
+        if (e.which == 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+</script>
+<script src="{{asset('assets/plugins/wizard/jquery.steps.min.js')}}"></script>
+<script>
+    //Custom design form example
+    $(".tab-wizard").steps({
+        headerTag: "h6",
+        bodyTag: "section",
+        transitionEffect: "fade",
+        titleTemplate: '<span class="step">#index#</span> #title#',
+        labels: {
+            finish: "Update Employee"
+        },
+        onFinished: function (event, currentIndex) {
+            $("#button").click();
+        }
     });
 </script>
 @endpush

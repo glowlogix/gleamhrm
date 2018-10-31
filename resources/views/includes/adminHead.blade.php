@@ -31,4 +31,6 @@
     <link rel="stylesheet" href="{{asset('bootstrap/bootstrap-datetimepicker.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
     <link href="{{asset('assets/plugins/footable/css/footable.bootstrap.min.css')}}" rel="stylesheet">
+
+    <link href="{{asset('assets/plugins/wizard/steps.css')}}" rel="stylesheet" type="text/css">
 </head>

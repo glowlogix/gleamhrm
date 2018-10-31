@@ -8,16 +8,16 @@
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
-                    <img src="{{asset('assets/images/logo-icon.png') }}" alt="homepage" class="dark-logo" />
+                    <img src="{{asset('assets/images/logo.png') }}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo icon -->
-                    <img src="{{asset('assets/images/logo-light-icon.png') }}" alt="homepage" class="light-logo" />
+                    <img src="{{asset('assets/images/logo.png') }}" alt="homepage" class="light-logo" />
                 </b>
                 <!--End Logo icon -->
                 <!-- Logo text --><span>
                          <!-- dark Logo text -->
-                         <img src="{{asset('assets/images/logo-light-icon.png') }}" alt="homepage" class="dark-logo" />
+                         <img src="{{asset('assets/images/logo.png')}}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo text -->
-                    <h3 class="light-logo">GlowLogix</h3></span> </a>
+                    <h3 class="light-logo">lowLogix</h3></span> </a>
         </div>
         <!-- ============================================================== -->
         <!-- End Logo -->

@@ -13,7 +13,6 @@
 		<div class="col-lg-12">
 			<div class="card card-outline-info">
 				<div style="margin:10px 10px">
-					<h4 class="m-b-0 text-white"><button type="button" class="btn btn-info float-right" onclick="window.location.href='{{route('attendance.create')}}'">Back</button>
 					</h4>
 				</div>
 				<div class="card-body">
@@ -39,16 +38,26 @@
 								<!--/span-->
 								<div class="col-md-6">
 									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Line Manager</label>
+										<div class="col-md-9">
+											<input type="hidden" name="line_manager" value="{{isset($line_manager->id) ? $line_manager->id : ''}}">
+											<input type="text" class="form-control" value="{{isset($line_manager->id) ? $line_manager->firstname.'  '. $line_manager->lastname : ''}}" disabled>
+										</div>
+									</div>
+								</div>
+
+								<!--/span-->
+							</div>
+							<!--/row-->
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
 										<label class="control-label text-right col-md-3">From Date</label>
 										<div class="col-md-9">
 											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}"  min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
 										</div>
 									</div>
 								</div>
-								<!--/span-->
-							</div>
-							<!--/row-->
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">To Date</label>
@@ -57,17 +66,6 @@
 										</div>
 									</div>
 								</div>
-								<!--/span-->
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="control-label text-right col-md-3">Line Manager</label>
-										<div class="col-md-9">
-											<input type="hidden" name="line_manager" value="{{isset($line_manager->id) ? $line_manager->id : ''}}">
-											<input type="text" class="form-control" value="{{isset($line_manager->id) ? $line_manager->firstname.'  '. $line_manager->lastname : ''}}" disabled>
-										</div>
-									</div>
-								</div>
-								<!--/span-->
 							</div>
 							<div class="row">
 								<div class="col-md-6">
@@ -104,13 +102,11 @@
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">Description</label>
 										<div class="col-md-9">
-											<textarea type="text" class="form-control" name="description" placeholder="Enter Description Here">{{old('description')}}</textarea>
+											<textarea type="text" class="form-control" rows="3" name="description" placeholder="Enter Description Here">{{old('description')}}</textarea>
 										</div>
 									</div>
 								</div>
@@ -123,6 +119,7 @@
 									<div class="row">
 										<div class="col-md-offset-3 col-md-9">
 											<button type="submit" class="btn btn-success">Apply</button>
+											<a href="{{route('leave.index')}}" class="btn btn-inverse">Cancel</a>
 										</div>
 									</div>
 								</div>
