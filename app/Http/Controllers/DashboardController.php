@@ -24,7 +24,7 @@ class DashboardController extends Controller
        $this->meta['title'] = 'Applicants';
        $applicants = Applicant::where('recruited', 0)->take(10)->get();
         
-        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::take(5)->get()->sortByDesc("id"));
+        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::take(5)->get()->sortByDesc("id"))->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get());
     }
 //    Help
     public function help()
@@ -42,7 +42,6 @@ class DashboardController extends Controller
     {
         return view('applicant.create')->with('jobs',Job::all());
     }
-
     /**
      * @param $id
      * @return $this

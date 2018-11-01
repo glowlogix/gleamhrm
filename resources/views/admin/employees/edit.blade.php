@@ -301,7 +301,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">New Password</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="off" />
+                                            <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="new-password" />
                                         </div>
                                     </div>
                                 </div>
