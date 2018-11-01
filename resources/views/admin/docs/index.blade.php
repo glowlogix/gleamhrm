@@ -28,7 +28,7 @@
 								@foreach($files as $file)
 							<tbody>
 								<td>
-									<a  target="_blank" href="{{asset('storage/public/'.$file->url)}}">{{ $file->name }}</a>
+									<a  target="_blank" href="{{asset('storage/documents/'.$file->url)}}">{{ $file->name }}</a>
 								</td>
 								<td>
 									{{ ($file->status == 1) ? 'Active' : 'Inactive' }}

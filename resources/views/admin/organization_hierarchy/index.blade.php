@@ -16,7 +16,7 @@
 			<div class="card-body">
 				<h6 class="card-subtitle"></h6>
 				<br>
-				<div class="table">
+				<div class="table table-responsive">
 				<!-- <table id="demo-foo-addrow" class="table  m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
 					<thead>
 					@if($organization_hierarchies->count() > 0)
@@ -78,7 +78,7 @@
 					</tbody>
 				</table> -->
 				{{--Orgnisation chart--}}
-				<div id="chart-container">
+				<div id="chart-container" class="table-responsive">
 				</div>
 
 				<div class="modal fade" id="confirm-delete" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

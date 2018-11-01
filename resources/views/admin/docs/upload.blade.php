@@ -7,7 +7,7 @@
 	<div class="col-lg-12">
 		<div class="card card-outline-info">
 			<div class="card-body">
-				<form action="{{asset('admin/upload/docs')}}" method="post" enctype="multipart/form-data">
+				<form action="{{asset('documents/upload')}}" method="post" enctype="multipart/form-data">
 					{{ csrf_field() }}
 					<div class="form-body">
 						<div class="col-md-6">
@@ -23,13 +23,13 @@
 									<h4 class="card-title">File Upload</h4>
 									<label for="input-file-now">You Can Attatch More Than One File </label>
 									<br>
-									<input type="file" id="input-file-now" class="dropify"  name="documents[]" multiple/>
+									<input type="file" class="form-control" name="document" multiple/>
 								</div>
 						</div>
 					</div>
 				<br>
 					<div class="form-actions">
-						&nbsp;&nbsp;&nbsp;<button type="submit" value="Upload" class="btn btn-success">Upload</button>
+						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Upload</button>
 						<button type="button" onclick="window.location.href='{{route('documents')}}'" class="btn btn-inverse">Cancel</button>
 					</div>
 				</form>

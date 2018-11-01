@@ -19,7 +19,6 @@ body {
   left: 10px;
   height: 420px;
   width: calc(100% - 24px);
-  border: 2px dashed #aaa;
   border-radius: 5px;
   overflow: auto;
   text-align: center;

@@ -40,7 +40,7 @@ class DocumentsController extends Controller
 
         if ($request->document != ""){
             $document_file = time().'_'.$request->document->getClientOriginalName();
-            $request->document->move(public_path().'/documents/', $document_file);  
+            $request->document->move('storage/documents/', $document_file);
             $document->url = $document_file;
         }
 
@@ -75,7 +75,7 @@ class DocumentsController extends Controller
 
         if($request->document != ""){
             $document                    = time().'_'.$request->document->getClientOriginalName();
-            $request->document->move(public_path().'/documents/', $document);  
+            $request->document->move('storage/documents/', $document);
             $arr['url'] = $document;
         }
 

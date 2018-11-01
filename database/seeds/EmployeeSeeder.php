@@ -54,7 +54,7 @@ class EmployeeSeeder extends Seeder
             'date_of_birth' => '1998-09-19',
             'official_email' => 'kosar@glowlogix.com',
             'personal_email' => 'kosar@gmail.com',
-            'designation' => 'Admin',
+            'designation' => 'admin',
             'city' => 'Islamabad',
             'branch_id' => '1',
             'status' => 1,

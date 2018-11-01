@@ -164,8 +164,6 @@
                             </div>
                         </div>
                         <!--/row-->
-                        <br>
-                        <br>
                         <h4>Emergency Contact</h4>
                         <hr>
                         <div class="row">
@@ -191,11 +189,8 @@
                             </div>
                         </div>
                         <!--/row-->
-                        <br>
-                        <br>
                         <h4>Address  Details</h4>
                         <hr>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -226,10 +221,7 @@
                             </div>
                             <!--/span-->
                         </div>
-
                     </section>
-                    <br>
-                    <br>
                     <!-- Step 3 -->
                     <h6>Additional</h6>
                     <section>
@@ -254,27 +246,32 @@
                             </div>
                         </div>
                         <br>
-                        <br>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
-                                        <input type="hidden" name="invite_to_asana" value="0" />
-                                        &nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
-                                        <label for="basic_checkbox_1">Asaana</label>
+                                        <input type="hidden" name="invite_to_asana" value="0" /><input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
+                                        <label for="basic_checkbox_1">Asana</label>
                                         <input type="hidden" name="invite_to_slack" value="0" />
                                         <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
                                         <label for="basic_checkbox_2">Slack</label>
                                         <input type="hidden" name="invite_to_zoho" value="0" />
-                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
+                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho " name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
                                         <label for="basic_checkbox_3">zoho</label>
                                     </div>
                                 </div>
                             </div>
                             <div id="asana_teams" class=""></div>
                         </div>
-
                         <hr>
+                        
+                        <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
+
+                    </section>
+                        {{--section 4--}}
+                    <h6>Roles</h6>
+                    <br>
+                    <section>
                         <div class="col-md-6">
                             <div class="form-group row">
                                 <label class="control-label text-right col-md-3">Roles</label>
@@ -293,10 +290,8 @@
                         <div class="col-md-12" id="permissions">
                             
                         </div>
-                        <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
-                        
                     </section>
-                    {{--Section 4--}}
+                    {{--Section 5--}}
                     <h6>Change Password</h6>
                     <section>
                         <div class="form-body">
@@ -306,7 +301,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">New Password</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="password"  class="form-control" type="text" name="password" >
+                                            <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="off" />
                                         </div>
                                     </div>
                                 </div>
@@ -333,6 +328,7 @@
             </div>
         </div>
     </div>
+
 </div>
 @push('scripts')
 <script type="text/javascript">
@@ -405,9 +401,13 @@
     });
 
     $(function () {
+        /*$('#date_of_birth').datetimepicker({
+            format: 'YYYY-MM-DD',
+        });*/
+
         $(document).ready(function () {
             $(function () {
-                $("#check_all").bind('click', function () {
+                $("#check_all").on('click', function () {
                     $('input:checkbox').not(this).prop('checked', this.checked);
                 });
                 $(".check_all_sub").click(function () {
@@ -416,14 +416,14 @@
             });
         });
     });
-
+</script>
+<script>
     $(document).ready(function(){
 
         $("#wizard-picture").change(function(){
             readURL(this);
         });
     });
-
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -432,9 +432,7 @@
                 $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
             }
             reader.readAsDataURL(input.files[0]);
-        }
-    }
-    
+        }           }
     $(".form-control").keypress(function(e) {
         if (e.which == 13) {
             e.preventDefault();
@@ -442,7 +440,6 @@
         }
     });
 </script>
-
 <script src="{{asset('assets/plugins/wizard/jquery.steps.min.js')}}"></script>
 <script>
     //Custom design form example
