@@ -39,8 +39,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Select Date</label>
-                                        <div class="col-md-9 date1" >
-                                            <input  type="date" class="form-control" name="date" value="{{$current_date}}">
+                                        <div class="col-md-9" >
+                                            <input type="date" class="form-control date" name="date" value="{{$current_date}}">
                                             <span class="input-group-addon">
                                         <span class="glyphicon glyphicon-calendar"></span>
                                     </span>
@@ -158,8 +158,8 @@
 
                                                                         <div>
                                                                             <label for="date">Select Date</label></br>
-                                                                            <div class="input-group date">
-                                                                                <input class="form-control" name="date" value="{{$att->date}}" />
+                                                                            <div class="input-group">
+                                                                                <input class="form-control date" name="date" value="{{$att->date}}" />
                                                                                 <span class="input-group-addon">
                                                                 <span class="glyphicon glyphicon-calendar"></span>
                                                             </span>
@@ -233,21 +233,16 @@
             </div>
         </div>
     </div>
+    @push('scripts')
     <script type="text/javascript">
         $(document).ready(function () {
             $('#delay').hide();
 
-            $('.date').datetimepicker({
-                format: "YYYY-MM-DD"
-            });
-
-            $('.date1').datetimepicker({
-                format: "YYYY-MM-DD"
-            }).on("dp.change", function(e) {
+            $('.date').on("change", function(e) {
                         @if($emp_id)
-                var url = '{{route('attendance.create')}}/{{$emp_id}}/' + $('.date1 input').val();
+                var url = '{{route('attendance.create')}}/{{$emp_id}}/' + $(this).val();
                         @else
-                var url = '{{route('attendance.create')}}/0/' + $('.date1 input').val();
+                var url = '{{route('attendance.create')}}/0/' + $(this).val();
                 @endif
                 if (url) {
                     window.location = url;
@@ -255,11 +250,7 @@
                 return false;
             });
 
-            $('.timepicker').datetimepicker({
-                format: "LT"
-            });
-
-            $(".nameselect2").select2().on('change.select2', function(e){
+            $(".custom-select").on('change', function(e){
                 var url = '{{route('attendance.create')}}/' + $(this).val() + '/{{$current_date}}';
 
                 if (url) {
@@ -268,6 +259,6 @@
                 return false;
             });
         });
-
     </script>
+    @endpush
 @stop
