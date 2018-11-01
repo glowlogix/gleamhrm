@@ -18,35 +18,32 @@ class AllowedPermission {
      */
 
     public function handle($request, Closure $next) {
-        $getUrl = \Route::currentRouteAction();
-        $getUrl = str_replace("@", ":", $getUrl);
-        $getUrl = str_replace("App\Http\Controllers\\", "", $getUrl);
-
         if (
             Auth::user()->hasRole('admin') ||
             $request->is('documents/index') ||
-            $request->is('documents/index') ||
-            $request->is('employee/profile') ||
-            // strstr($getUrl, 'organization_hierarchy') ||
+            $request->is('dashboard') ||
+            $request->is('profile') ||
             $request->is('organization_hierarchy') ||
-            $request->is('leaves/*') 
+            $request->is('leaves') 
         ) // If user has this permission
         {
             return $next($request);
         }
+        
 
-        if (!Auth::user()->hasPermissionTo($getUrl)){
-            abort('401');
+        $getUrl = \Route::currentRouteAction();
+        $getUrl = str_replace("@", ":", $getUrl);
+        $getUrl = str_replace("App\Http\Controllers\\", "", $getUrl);
+        
+        if (!Auth::user()->isAllowed($getUrl)){
+            return redirect()->route('error');
+            // dump('401 not authorized to view this page');
         } 
         else {
             return $next($request);
         }
 
         return $next($request);
-    }
-
-    function permiss(){
-        Auth::user()->hasRole('admin');
     }
     
     public function handle_old($request, Closure $next) {

@@ -54,13 +54,22 @@ class RolePermissionsController extends Controller
         return redirect()->route('roles_permissions')->with('success','Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');   
     }
 
-    public function getPermissionsFromRole($id)
+    public function getPermissionsFromRole($id, $employee_id)
     {
+        $emp_permissions = Employee::find($employee_id)->permissions()->get()->pluck('id')->toArray();
         $role = Role::find($id);
-
+        
+        $permissions = $role->permissions()->get();
+        $routes = array();
+        
+        foreach ($permissions as $key => $permission) {
+            $index = explode(':', $permission->name);
+            $routes[$index[0]][] = $permission;
+        }
         return view('admin.roles_permissions.getPermissionsFromRole')->with([
             'role' => $role,
-            'permissions' => $role->permissions()->get(),
+            'all_controllers' => $routes,
+            'emp_permissions' => $emp_permissions,
         ]);
 
     }
@@ -73,27 +82,8 @@ class RolePermissionsController extends Controller
     public function create()
     {
         $this->meta['title'] = 'Create Role';
-        $all_controllers = [];
         
-        foreach (Route::getRoutes()->getRoutes() as $route){
-            $action = $route->getAction();
-
-            if (array_key_exists('controller', $action)){
-                $row = explode('@', $action['controller']);
-                $index = str_replace("App\Http\Controllers\\", "", $row[0]);
-                $index = str_replace("Auth\\", "", $index);
-                if (
-                    $index == 'LoginController' ||
-                    $index == 'RegisterController' ||
-                    $index == 'ForgotPasswordController' ||
-                    $index == 'ResetPasswordController'
-                ) {
-                    continue;
-                }
-                $all_controllers[$index][] = $row[1];
-            }
-        }
-        return view('admin.roles_permissions.create',$this->metaResponse())->with('all_controllers', $all_controllers);
+        return view('admin.roles_permissions.create',$this->metaResponse())->with('all_controllers', $this->routesList());
     }
 
     /**
@@ -156,7 +146,15 @@ class RolePermissionsController extends Controller
         foreach ($permissions as $permission) {
             $routes[] = $permission['name'];
         }
-        // dd($routes);
+        
+        return view('admin.roles_permissions.edit',$this->metaResponse())->with([
+            'role' => $role,
+            'routes' => $routes,
+            'all_controllers' => $this->routesList(),
+        ]);
+    }
+
+    public function routesList(){
         $all_controllers = [];
         
         foreach (Route::getRoutes()->getRoutes() as $route){
@@ -176,11 +174,31 @@ class RolePermissionsController extends Controller
                 $all_controllers[$index][] = $row[1];
             }
         }
-        return view('admin.roles_permissions.edit',$this->metaResponse())->with([
-            'role' => $role,
-            'routes' => $routes,
-            'all_controllers' => $all_controllers,
-        ]);
+        return $all_controllers;
+    }
+
+    public function routesListForEmp(){
+        $all_controllers = [];
+        
+        foreach (Route::getRoutes()->getRoutes() as $route){
+            $action = $route->getAction();
+            if (array_key_exists('controller', $action)){
+                $row = explode('@', $action['controller']);
+                $index = str_replace("App\Http\Controllers\\", "", $row[0]);
+                $index = str_replace("Auth\\", "", $index);
+                if (
+                    $index == 'LoginController' ||
+                    $index == 'RegisterController' ||
+                    $index == 'ForgotPasswordController' ||
+                    $index == 'ResetPasswordController'
+                ) 
+                {
+                    continue;
+                }
+                $all_controllers[$index][] = $row[1];
+            }
+        }
+        return $all_controllers;
     }
 
     /**

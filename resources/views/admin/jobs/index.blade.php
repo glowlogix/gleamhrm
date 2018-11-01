@@ -22,7 +22,12 @@
 							<tr>
 								<th> Title</th>
 								<th> City</th>
+								@if (
+			                        Auth::user()->hasRole('admin') ||
+			                        Auth::user()->hasPermissionTo('EmployeeController:index')
+		                        )
 								<th> Actions </th>
+								@endif
 							</tr>
 							</thead>
 
@@ -32,10 +37,18 @@
 								<td>{{$job->title}}</td>
 								<td>{{$job->city}}</td>
 								<td class="text-nowrap">
+									@if (
+				                        Auth::user()->hasRole('admin') ||
+				                        Auth::user()->hasPermissionTo('JobsController:edit')
+			                        )
 									<a class="btn btn-info btn-sm" href="{{route('job.edit',['id'=>$job->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
+									@endif
 
+									@if (
+				                        Auth::user()->hasRole('admin') ||
+				                        Auth::user()->hasPermissionTo('JobsController:destroy')
+			                        )
 									<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $job->id }}"> <i class="fas fa-window-close text-white"></i></a>
-									
 									<div class="modal fade" id="confirm-delete{{ $job->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
 										<div class="modal-dialog">
 											<div class="modal-content">
@@ -53,6 +66,8 @@
 											</div>
 										</div>
 									</div>
+									@endif
+									
 								</td>
 							</tr>
 							@endforeach @else

@@ -24,12 +24,16 @@ Route::any('/register', function() {
 	abort(403);
 });
 
+Route::get('/error', function () {
+    return view('error');
+})->name('error');
+
 Route::get('/home', 'HomeController@index')->name('home');
 
-// Route::group(['prefix' =>'admin','middleware' => ['role:super-admin']], function (){
- Route::group(['middleware' => 'auth'], function (){
-//Route::group(['middleware' => 'allowed_permission'], function (){
+//Route::group(['middleware' => 'auth'], function (){
+Route::group(['middleware' => 'allowed_permission'], function (){
 	//dashboard
+
 	Route::get('/dashboard',[
 		'uses' => 'DashboardController@index',
 		'as' => 'admin.dashboard'
@@ -155,7 +159,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 		'uses' => 'RolePermissionsController@applyRolePost',
 		'as' => 'roles_permissions.applyrolepost'
 	]);
-	Route::Get('/rolespermissions/getPermissionsFromRole/{id}',[
+	Route::Get('/rolespermissions/getPermissionsFromRole/{id}/{employee_id}',[
 		'uses' => 'RolePermissionsController@getPermissionsFromRole',
 		'as' => 'roles_permissions.getPermissionsFromRole'
 	]);
@@ -191,7 +195,7 @@ Route::get('/home', 'HomeController@index')->name('home');
 		'as' => 'employee.edit'
 	]);
 	
-	Route::get('/employee/profile',[
+	Route::get('/profile',[
 		'uses' => 'EmployeeController@profile',
 		'as' => 'employee.profile'
 	]);

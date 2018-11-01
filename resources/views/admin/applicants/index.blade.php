@@ -6,6 +6,8 @@
 	<li class="breadcrumb-item active">Applicant</li>
 	</ol>
 @stop
+
+
 @section('content')
 	{{--//////startt--}}
 		<div class="col-12">
@@ -21,6 +23,7 @@
 							<th>Job Status</th>
 							<th>Applied For</th>
 							<th>CV</th>
+                        
 							<th>Actions</th>
 						</tr>
 						</thead>

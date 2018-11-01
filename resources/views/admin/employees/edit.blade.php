@@ -290,37 +290,11 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-6" id="permissions">
-                            <div class="form-group row">
-                                <div class="card-body">
-                                    <div class="demo-checkbox">
-                                        @foreach ($permissions as $route)
-                                            <input type="hidden" name="permissions[]" value="{{$route->id}}" />
-                                            <input type="checkbox" id="basic_checkbox_{{$route->id}}"  name="permissions_checked[]" value="{{$route->id}}" @if(in_array($route->id, $employee_permissions)) checked @endif>
-                                            <label for="basic_checkbox_{{$route->id}}">{{$route->guard_name}}:{{$route->name}}</label>
-                                            <br>
-                                        @endforeach
-                                    </div>
-                                </div>
-                            </div>
+                        <div class="col-md-12" id="permissions">
+                            
                         </div>
                         <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
-                        <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        Are you sure you want to update Employee : {{ $employee->firstname }}?
-                                    </div>
-                                    <div class="modal-body">
-                                        <input onkeypress="if (event.keyCode == 13) {return false;}" type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+                        
                     </section>
                     {{--Section 4--}}
                     <h6>Change Password</h6>
@@ -339,6 +313,22 @@
                             </div>
                         </div>
                     </section>
+                    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Are you sure you want to update Employee : {{ $employee->firstname }}?
+                                </div>
+                                <div class="modal-body">
+                                    <input onkeypress="if (event.keyCode == 13) {return false;}" type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
@@ -348,16 +338,16 @@
 <script type="text/javascript">
     $(document).ready(function () {
             $(function () {
-                /*$('#date_of_birth').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                });
-                $('#exit_date').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                });*/
-                
+                $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/{{$employee_role_id}}/{{$employee->id}}");
                 $("#role").on("change",function() {
                     var role_id = this.value;
-                    $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id);
+
+                    if (role_id != '') {
+                        $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id + "/{{$employee->id}}");
+                    }
+                    else{
+                        $('#permissions').html("");
+                    }
                 });
             });
             
@@ -415,13 +405,9 @@
     });
 
     $(function () {
-        /*$('#date_of_birth').datetimepicker({
-            format: 'YYYY-MM-DD',
-        });*/
-
         $(document).ready(function () {
             $(function () {
-                $("#check_all").on('click', function () {
+                $("#check_all").bind('click', function () {
                     $('input:checkbox').not(this).prop('checked', this.checked);
                 });
                 $(".check_all_sub").click(function () {
@@ -430,14 +416,14 @@
             });
         });
     });
-</script>
-<script>
+
     $(document).ready(function(){
 
         $("#wizard-picture").change(function(){
             readURL(this);
         });
     });
+
     function readURL(input) {
         if (input.files && input.files[0]) {
             var reader = new FileReader();
@@ -446,7 +432,9 @@
                 $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
             }
             reader.readAsDataURL(input.files[0]);
-        }           }
+        }
+    }
+    
     $(".form-control").keypress(function(e) {
         if (e.which == 13) {
             e.preventDefault();
@@ -454,6 +442,7 @@
         }
     });
 </script>
+
 <script src="{{asset('assets/plugins/wizard/jquery.steps.min.js')}}"></script>
 <script>
     //Custom design form example

@@ -40,4 +40,24 @@ class Employee extends Authenticatable
             ->withTimestamps();
     }
 
+    public function isAllowed($permission){
+        $allowedLists = $this->permissions()->get()->pluck('name')->toArray();
+        if(
+            $this->hasRole('admin') ||
+            in_array($permission, $allowedLists)
+        ){
+           return 1;
+        } 
+        else{
+            return 0;
+        }
+        
+        /*if(!$this->hasPermissionTo($permission)){
+           return 0;
+        } 
+        else{
+            return 1;
+        }*/
+    }
+
 }

@@ -231,7 +231,7 @@ class EmployeeController extends Controller
         if ($role) {
         	$permissions = $role->permissions()->get();
         }
-
+        
         return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
 		->with('branches', Branch::all())
@@ -279,7 +279,6 @@ class EmployeeController extends Controller
 
 	public function update(Request $request, $id)
 	{
-		// dd($request->toArray());
 		$adminPassword = Auth::user()->password;
 		
 		if(!Hash::check($request->old_password, $adminPassword)){
@@ -396,10 +395,15 @@ class EmployeeController extends Controller
 	        $employee->assignRole($role);
         }
 
-		if (!empty($request->permissions_checked)) {
-	        foreach ($request->permissions_checked as $permission) {
-	        	$employee->givePermissionTo($permission);
-	        }
+        if ($request->permissions) {
+            foreach ($request->permissions as $permission_id) {
+                if (in_array($permission_id, $request->permissions_checked)){
+                    $employee->givePermissionTo($permission_id);
+                }
+                else{
+                    $employee->revokePermissionTo($permission_id);
+                }
+            }
         }
 		$employee->save();
 

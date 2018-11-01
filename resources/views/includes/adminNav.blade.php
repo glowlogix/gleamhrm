@@ -20,18 +20,35 @@
                 {{--/////Second Start--}}
                 <li> <a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
+
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
+                        @if(
+                        Auth::user()->isAllowed('ApplicantController:index')
+                        )
                         <li><a href="{{route('applicants')}}">Application</a></li>
+                        @endif
+                        @if (
+                        Auth::user()->isAllowed('JobsController:index')
+                        )
                         <li><a href="{{route('job.index')}}">Jobs</a></li>
+                        @endif
                     </ul>
                 </li>
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
+                        @if (
+                        Auth::user()->isAllowed('EmployeeController:index')
+                        )
                         <li><a href="{{route('employees')}}">Employees</a></li>
+                        @endif
+                        @if (
+                        Auth::user()->isAllowed('OrganizationHierarchyController:index')
+                        )
                         <li><a href="{{route('organization_hierarchy.index')}}">Org Chart</a></li>
+                        @endif
                         <li><a href="#">Teams</a></li>
                         <li><a href="#">Team Members</a></li>
                         <li><a href="#">Vendors</a></li>
@@ -40,23 +57,39 @@
                 </li>
                 <li> <a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
-                        <?php
-                        $month = date('m');
-                        $monthee= "2018_".$month;
-                        ?>
+                        @if (
+                                Auth::user()->isAllowed('AttendanceController:today_timeline')
+                        )
                         <li><a href="{{route('today_timeline')}}">Today</a></li>
+                        @endif
+                        <li><a href="#">My Attendance</a></li>
+                        @if (
+                        Auth::user()->isAllowed('AttendanceController:timeline')
+                        )
+                        <li><a href="{{route('timeline')}}">Timeline</a></li>
+                        @endif
                         <li><a href="#">History</a></li>
                         <li><a href="#">Incomplete</a></li>
+                        @if (
+                        Auth::user()->isAllowed('LeaveController:employeeleaves')
+                        )
                         <li><a href="{{route('employeeleaves')}}">Leaves</a></li>
+                        @endif
                         <li><a href="{{route('leave.index')}}">My Leaves</a></li>
-                        <li><a href="#">My Attendance</a></li>
-                        <li><a href="{{route('timeline')}}">Timeline</a></li>
                     </ul>
                 </li>
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
                     <ul aria-expanded="false" class="collapse">
+                        @if (
+                        Auth::user()->isAllowed('DocumentsController:index')
+                        )
                         <li><a href="{{ route('documents') }}">Documents</a></li>
+                        @endif
+                        @if (
+                        Auth::user()->isAllowed('BranchController:index')
+                        )
                         <li><a href="{{ route('branch.index') }}">Branches</a></li>
+                        @endif
                         <li><a href="#">Departments</a></li>
                         <li><a href="#">Designations</a></li>
                         <li><a href="#">Vendor Categories</a></li>
@@ -74,7 +107,11 @@
                 </li>
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
                     <ul aria-expanded="false" class="collapse">
+                        @if (
+                        Auth::user()->isAllowed('RolePermissionsController:index')
+                        )
                         <li><a href="{{route('roles_permissions')}}">Roles And Permissions</a></li>
+                        @endif
                     </ul>
                 </li>
 

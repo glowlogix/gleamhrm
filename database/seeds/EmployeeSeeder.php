@@ -2,7 +2,7 @@
 
 use Illuminate\Database\Seeder;
 use App\Employee;
-use App\Role;
+use Spatie\Permission\Models\Role;
 use App\Salary;
 use App\Traits\ZohoTrait;
 
@@ -29,7 +29,7 @@ class EmployeeSeeder extends Seeder
             'date_of_birth' => '1998-09-19',
             'official_email' => 'admin@glowlogix.com',
             'personal_email' => 'admin@gmail.com',
-            'designation' => 'Admin',
+            'designation' => 'admin',
             'city' => 'Islamabad',
             'branch_id' => '1',
             'status' => 1,

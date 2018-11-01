@@ -1,5 +1,6 @@
 @extends('layouts.admin') @section('title') HRM|{{$title}} @endsection
 @section('Heading')
+    <a href="{{route('attendance.create')}}" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Attendance</a>
     <h3 class="text-themecolor">Attendance</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -41,6 +42,7 @@
                                     <td>{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a') : ''}}</td>
                                     <td>{{isset($employee['attendanceSummary'][0]) ? number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') : ''}}</td>
                                     <td class="text-nowrap">
+                                        <a class="btn btn-info btn-sm" href="{{route('attendance.create', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
 
                                         <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
                                         <div class="modal-body ">                                        {{--///Dialog Box/// --}}
