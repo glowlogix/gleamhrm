@@ -42,7 +42,6 @@ class DashboardController extends Controller
     {
         return view('applicant.create')->with('jobs',Job::all());
     }
-
     /**
      * @param $id
      * @return $this
