@@ -20,7 +20,10 @@
                 {{--/////Second Start--}}
                 <li> <a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
-
+                @if (
+                    Auth::user()->isAllowed('ApplicantController:index') &&
+                    Auth::user()->isAllowed('JobsController:index')
+                )
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if(
@@ -35,6 +38,7 @@
                         @endif
                     </ul>
                 </li>
+                @endif
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
                 <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
@@ -105,6 +109,9 @@
                         <li><a href="#">Bill Payments</a></li>
                     </ul>
                 </li>
+                @if (
+                    Auth::user()->isAllowed('RolePermissionsController:index')
+                )
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
@@ -114,7 +121,8 @@
                         @endif
                     </ul>
                 </li>
-
+                @endif
+                
                 <li> <a class="" href="{{route('admin.help')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
                 </li>
 

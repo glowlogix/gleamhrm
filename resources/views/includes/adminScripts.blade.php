@@ -30,6 +30,12 @@
 <!-- ============================================================== -->
 <script src="{{asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
 <script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
-
+<script type="text/javascript">
+$(document).ready(function () {
+	// $( "ul#sidebarnav li" ).not(':has(ul)').remove();
+	// $( "ul#sidebarnav li ul" ).not(':has(li)');
+	// $( "li ul" ).not(':has(li)').remove();
+});
+</script>
 @yield('scripts')
 @stack('scripts')
