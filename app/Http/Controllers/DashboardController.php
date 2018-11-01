@@ -22,9 +22,9 @@ class DashboardController extends Controller
     public function index()
     {
        $this->meta['title'] = 'Applicants';
-       $applicants = Applicant::where('recruited', 0)->take(5)->get();
+       $applicants = Applicant::where('recruited', 0)->take(10)->get();
         
-        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::all());
+        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::take(5)->get()->sortByDesc("id"));
     }
 //    Help
     public function help()

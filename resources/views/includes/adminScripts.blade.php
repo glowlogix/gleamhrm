@@ -19,17 +19,17 @@
 <!-- This page plugins -->
 <!-- ============================================================== -->
 <!-- chartist chart -->
-<script src="{{asset('assets/plugins/chartist-js/dist/chartist.min.js') }}"></script>
-<script src="{{asset('assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js') }}../"></script>
 <!--c3 JavaScript -->
 <script src="{{asset('assets/plugins/d3/d3.min.js') }}"></script>
 <script src="{{asset('assets/plugins/c3-master/c3.min.js') }}"></script>
 <!-- Chart JS -->
 <script src="{{asset('js/dashboard1.js') }}"></script>
+<script src="{{asset('js/dashboard1.js') }}"></script>
 <!-- ============================================================== -->
 <!-- Style switcher -->
 <!-- ============================================================== -->
-
 <script src="{{asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
+<script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+
 @yield('scripts')
 @stack('scripts')

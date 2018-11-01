@@ -13,7 +13,7 @@
                         <div class="col-md-6">
                             <div class="form-group">
                                 <label class="control-label">Name</label>
-                                <input type="text" value="{{$document->name}}"  name="documentname" class="form-control" placeholder="Enter Title">
+                                <input type="text" value="{{$document->name}}"  name="document_name" class="form-control" placeholder="Enter Title">
                             </div>
                         </div>
                     </div>

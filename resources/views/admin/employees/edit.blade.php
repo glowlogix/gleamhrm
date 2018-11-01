@@ -255,18 +255,17 @@
                         </div>
                         <br>
                         <br>
-                        <div class="col-md-8">
+                        <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
-                                        <input type="hidden" name="invite_to_asana" value="0" />
-                                        &nbsp;&nbsp;&nbsp;&nbsp; <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
+                                        <input type="hidden" name="invite_to_asana" value="0" /><input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
                                         <label for="basic_checkbox_1">Asaana</label>
                                         <input type="hidden" name="invite_to_slack" value="0" />
                                         <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
                                         <label for="basic_checkbox_2">Slack</label>
                                         <input type="hidden" name="invite_to_zoho" value="0" />
-                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
+                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho " name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
                                         <label for="basic_checkbox_3">zoho</label>
                                     </div>
                                 </div>
@@ -305,22 +304,7 @@
                             </div>
                         </div>
                         <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
-                        <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                            <div class="modal-dialog">
-                                <div class="modal-content">
-                                    <div class="modal-header">
-                                        Are you sure you want to update Employee : {{ $employee->firstname }}?
-                                    </div>
-                                    <div class="modal-body">
-                                        <input onkeypress="if (event.keyCode == 13) {return false;}" type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
-                                    </div>
-                                    <div class="modal-footer">
-                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                        <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
+
                     </section>
                     {{--Section 4--}}
                     <h6>Change Password</h6>
@@ -339,10 +323,27 @@
                             </div>
                         </div>
                     </section>
+                    <div class="modal fade" id="confirm" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                        <div class="modal-dialog">
+                            <div class="modal-content">
+                                <div class="modal-header">
+                                    Are you sure you want to update Employee : {{ $employee->firstname }}?
+                                </div>
+                                <div class="modal-body">
+                                    <input onkeypress="if (event.keyCode == 13) {return false;}" type="password" id="confirm_pass" class="form-control" placeholder="Admin Password" name="old_password" required>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button class="btn btn-success" id="submit_update" type="submit"> Update</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
                 </form>
             </div>
         </div>
     </div>
+
 </div>
 @push('scripts')
 <script type="text/javascript">

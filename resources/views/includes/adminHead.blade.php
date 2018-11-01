@@ -33,4 +33,5 @@
     <link href="{{asset('assets/plugins/footable/css/footable.bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('assets/plugins/wizard/steps.css')}}" rel="stylesheet" type="text/css">
+    <link href="{{asset('assets/plugins/datatables/media/css/dataTables.bootstrap4.css')}}" rel="stylesheet">
 </head>
