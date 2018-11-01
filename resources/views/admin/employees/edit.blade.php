@@ -165,7 +165,6 @@
                         </div>
                         <!--/row-->
                         <br>
-                        <br>
                         <h4>Emergency Contact</h4>
                         <hr>
                         <div class="row">
@@ -191,11 +190,8 @@
                             </div>
                         </div>
                         <!--/row-->
-                        <br>
-                        <br>
                         <h4>Address  Details</h4>
                         <hr>
-
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="form-group row">
@@ -229,7 +225,6 @@
 
                     </section>
                     <br>
-                    <br>
                     <!-- Step 3 -->
                     <h6>Additional</h6>
                     <section>
@@ -254,13 +249,12 @@
                             </div>
                         </div>
                         <br>
-                        <br>
                         <div class="col-md-12">
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
                                         <input type="hidden" name="invite_to_asana" value="0" /><input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
-                                        <label for="basic_checkbox_1">Asaana</label>
+                                        <label for="basic_checkbox_1">Asana</label>
                                         <input type="hidden" name="invite_to_slack" value="0" />
                                         <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
                                         <label for="basic_checkbox_2">Slack</label>
@@ -272,23 +266,7 @@
                             </div>
                             <div id="asana_teams" class=""></div>
                         </div>
-
                         <hr>
-                        <div class="col-md-6">
-                            <div class="form-group row">
-                                <label class="control-label text-right col-md-3">Roles</label>
-                                <div class="col-md-9">
-                                    <select class="form-control custom-select" name="role_id" id="role">
-                                        <option value="">Select Role</option>
-                                        @if($roles->count() >0)
-                                            @foreach($roles as $role)
-                                                <option value="{{$role->id}}" @if($role->id == $employee_role_id)) selected @endif>{{$role->name}}</option>
-                                            @endforeach
-                                        @endif
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
                         <div class="col-md-6" id="permissions">
                             <div class="form-group row">
                                 <div class="card-body">
@@ -306,7 +284,26 @@
                         <button  class="btn btn-success" id="button"  data-toggle="modal" data-target="#confirm" hidden>Update Employee</button>
 
                     </section>
-                    {{--Section 4--}}
+                        {{--section 4--}}
+                    <h6>Roles</h6>
+                    <section>
+                        <div class="col-md-6">
+                            <div class="form-group row">
+                                <label class="control-label text-right col-md-3">Roles</label>
+                                <div class="col-md-9">
+                                    <select class="form-control custom-select" name="role_id" id="role">
+                                        <option value="">Select Role</option>
+                                        @if($roles->count() >0)
+                                            @foreach($roles as $role)
+                                                <option value="{{$role->id}}" @if($role->id == $employee_role_id)) selected @endif>{{$role->name}}</option>
+                                            @endforeach
+                                        @endif
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+                    </section>
+                    {{--Section 5--}}
                     <h6>Change Password</h6>
                     <section>
                         <div class="form-body">
@@ -316,7 +313,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">New Password</label>
                                         <div class="col-md-9">
-                                            <input type="text" id="password"  class="form-control" type="text" name="password" >
+                                            <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="off" >
                                         </div>
                                     </div>
                                 </div>
