@@ -8,6 +8,7 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use App\Document;
 
+
 class CompanyPoliciesMail extends Mailable
 {
     use Queueable, SerializesModels;

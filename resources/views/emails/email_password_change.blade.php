@@ -10,16 +10,16 @@
 <body>
     <b>Hi {{$employee->firstname}} {{$employee->lastname}}</b>,
     <br>
+
     <p>Your account has been created on 
         <a href="{{URL::to('/')}}">HR portal</a>
         Please login using the given email address and Password
     </p>
         Email:{{$employee->official_email}}
     <br>
-    <br> Password: {{$employee->official_email}}
+    <br> Password: {{$employee->password}}
     <br>
     Note: As soon as you log in change your password.
-
     <br> Best Luck,
 </body>
 

@@ -13,7 +13,7 @@
         <div class="col-lg-12">
             <div class="card card-outline-info">
                 <div style="margin-top: 10px;margin-right: 10px">
-                    <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('attendance')}}'">Back</button>
+                    <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('today_timeline')}}'">Back</button>
                 </div>
                 <div class="card-body">
                     <form   class="form-horizontal" action="{{route('attendance.store')}}" method='POST'>

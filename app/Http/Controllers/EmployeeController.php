@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\UpdateAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use App\Employee;
@@ -117,7 +118,7 @@ class EmployeeController extends Controller
 		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
-		$when = now()->addMinutes(1);
+		$when = now();
 		$l=8;
 		$password = bcrypt("123456");
 
@@ -198,7 +199,7 @@ class EmployeeController extends Controller
 			$arr[$leave_type->id] = array( 'count' => $leave_type->amount);
 		}
         $employee->leaveTypes()->sync($arr);
-		
+
 		//send message for password information and change password.
 		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
 		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee_id));
@@ -359,14 +360,13 @@ class EmployeeController extends Controller
 			$this->updateZohoAccount($params,$employee->account_id);    
 		}
 
-		$when = now()->addMinutes(1);
+		$when = now();
 
 		if($request->zoho){
 			$response = $this->updateZohoAccount( $params );
 
 			if($response->original){
 				// $this->addUserToTeam($request->teams,$request->official_email);
-
 				// $employee->zuid = $response->original->data->zuid;
 				// $employee->account_id = $response->original->data->accountId;
 				// $employee->save();
@@ -385,9 +385,8 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
-		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee->id));
-		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee->id));
-
+		Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id,$request->password));
+		Mail::to($request->personal_email)->later($when, new UpdateAccount($employee->id,$request->password));
 		if ($employee->roles->count() > 0) {
         	$old_role = $employee->roles[0];
         	$employee->removeRole($old_role);
