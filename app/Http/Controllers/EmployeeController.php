@@ -74,8 +74,11 @@ class EmployeeController extends Controller
 		->where('employment_status', '!=', 'terminated')
 		->get();
 		
+		$active_employees = Employee::where('status', 1)->count();
+		
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
+		->with('active_employees', $active_employees)	
 		->with('designations', $this->designations);
 	}
 

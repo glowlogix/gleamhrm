@@ -11,7 +11,7 @@
 @section('content')
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title"><?php  use App\Employee; $count=Employee::where('status','1')->get(); echo count($count)-1;?> Active / {{count($employees)}} Employees</h4>
+            <h4 class="card-title">{{$active_employees}} Active / {{$employees->count()}} Employees</h4>
             <div class="table-responsive m-t-40">
                 <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
