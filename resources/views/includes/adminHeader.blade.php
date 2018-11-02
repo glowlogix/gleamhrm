@@ -13,11 +13,14 @@
                     <img src="{{asset('assets/images/logo.png') }}" alt="homepage" class="light-logo" />
                 </b>
                 <!--End Logo icon -->
-                <!-- Logo text --><span>
-                         <!-- dark Logo text -->
-                         <img src="{{asset('assets/images/logo.png')}}" alt="homepage" class="dark-logo" />
+                <!-- Logo text -->
+                <span>
+                    <!-- dark Logo text -->
+                    <img src="{{asset('assets/images/logo.png')}}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo text -->
-                    <h3 class="light-logo">lowLogix</h3></span> </a>
+                    <h3 class="light-logo">lowLogix</h3>
+                </span> 
+            </a>
         </div>
         <!-- ============================================================== -->
         <!-- End Logo -->

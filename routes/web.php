@@ -29,6 +29,7 @@ Route::get('/error', function () {
 })->name('error');
 
 Route::get('/home', 'HomeController@index')->name('home');
+Route::Post('/slackbot', 'AttendanceController@slackbot')->name('slackbot');
 
 //Route::group(['middleware' => 'auth'], function (){
 Route::group(['middleware' => 'allowed_permission'], function (){
