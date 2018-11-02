@@ -1,6 +1,5 @@
 @extends('layouts.admin') @section('title') HRM|{{$title}} @endsection
 @section('Heading')
-
     <h3 class="text-themecolor">Attendance</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -9,10 +8,8 @@
     </ol>
 @stop
 @section('content')
-
     <div class="card">
         <div class="card-body">
-            <h4 class="card-title">Mark Attendance</h4>
             <div class="table-responsive m-t-40">
                 <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>

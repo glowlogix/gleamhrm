@@ -287,7 +287,7 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="col-md-12" id="permissions">
+                        <div class="col-md-12 demo-checkbox" id="permissions">
                             
                         </div>
                     </section>
@@ -328,7 +328,6 @@
             </div>
         </div>
     </div>
-
 </div>
 @push('scripts')
 <script type="text/javascript">
@@ -346,7 +345,7 @@
                     }
                 });
             });
-            
+
             var pass_flag = 0;
 
             $("#submit_update").click(function(){
@@ -382,8 +381,8 @@
                                 teams.append("<h3 class='head row'>Teams in Asana</h3>");
                                 res.data.forEach(function (item, index) {
                                     teams.append("<input name='teams[]' value='" +
-                                        item.id + "' type='checkbox'>"+"" +
-                                        "<lable class='teams row'>" + item.name +
+                                        item.id + "' type='checkbox' id='"+item.id+"' checked>"+"" +
+                                        "<lable class='teams row' for='"+item.id+"'>" + item.name +
                                     " </lable>"
                                     );
                                 });

@@ -9,10 +9,11 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Http\Request;
 use Illuminate\Contracts\Queue\ShouldQueue;
 
-class EmailPasswordChange extends Mailable
+class UpdateAccount extends Mailable
 {
     use Queueable, SerializesModels;
     private $employee_id;
+    private $password;
 
     /**
      * Create a new message instance.
@@ -21,9 +22,10 @@ class EmailPasswordChange extends Mailable
      * @param string $password
      * @param $type
      */
-    public function __construct($id)
+    public function __construct($id,$password='')
     {
         $this->employee_id = $id;
+        $this->password = $password;
     }
 
     /**
@@ -33,9 +35,8 @@ class EmailPasswordChange extends Mailable
      */
     public function build()
     {
-
         $employee = Employee::find($this->employee_id );
-        return $this->view('emails.email_password_change')
-        ->with('employee', $employee);
+        return $this->view('emails.updateaccount')
+            ->with('employee', $employee)->with('password',$this->password);
     }
 }
