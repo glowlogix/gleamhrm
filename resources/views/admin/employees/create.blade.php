@@ -240,7 +240,7 @@
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
-                                        &nbsp;&nbsp; 
+                                        &nbsp;&nbsp;
                                         <input type="hidden" name="invite_to_asana" value="0" />
                                         <input type="checkbox" id="basic_checkbox_1"  class="asana" name="invite_to_asana" value="1"/>
                                         <label for="basic_checkbox_1">Asana</label>
@@ -255,7 +255,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="asana_teams" class=" asana_teams col-md-12">
+                            <div id="asana_teams" class="">
                             </div>
                         </div>
                         <hr>
@@ -277,92 +277,89 @@
         </div>
     </div>
     @push('scripts')
-    <script type="text/javascript">
-        $(document).ready(function () {
+        <script type="text/javascript">
+            $(document).ready(function () {
+                $(function () {
+                    /*$('#date_of_birth').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                    });
+                    $('#exit_date').datetimepicker({
+                        format: 'YYYY-MM-DD',
+                    });*/
+
+                    $("#role").on("change",function() {
+                        var role_id = this.value;
+                        $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id);
+                    });
+                });
+
+                var pass_flag = 0;
+
+                $("#submit_update").click(function(){
+                    pass_flag = 1;
+                });
+
+                // console.log(pass_flag); here
+                $("#employee_form").submit(function(event){
+                    $('#confirm').modal('show');
+                    if (pass_flag != 1){
+                        event.preventDefault();
+                    }
+                });
+
+                var teams = $('#asana_teams');
+                var count = 0;
+                var orgId = '{{config('values.asanaWorkspaceId')}}';
+                var token = '{{config('values.asanaToken')}}';
+
+                $('.asana').bind('click', function () {
+                    if ($(this).is(':checked')) {
+
+                        $.ajax({
+                            url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
+                            type: 'GET',
+                            cache: false,
+                            dataType: 'json',
+                            beforeSend: function (xhr) {
+                                xhr.setRequestHeader('Authorization', 'Bearer ' + token);
+                            },
+                            success: function (res) {
+                                count++;
+                                if (count == 1) {
+                                    teams.append("<h3 class='head'>Teams in Asana</h3>");
+                                    res.data.forEach(function (item, index) {
+                                        teams.append("<div class='row'><input name='teams[]' value='" + item.id + "' type='checkbox' id='"+ item.name +"' >" +
+                                            "<lable class='teams' for='"+ item.name +"'>" + item.name +"</lable></div>"
+                                        );
+                                    });
+                                }
+                                teams.show();
+                            },
+                            error:function(err){
+                                console.log(err);
+                            }
+                        })
+                    } else {
+                        teams.hide();
+                    }
+                })
+            });
             $(function () {
                 /*$('#date_of_birth').datetimepicker({
                     format: 'YYYY-MM-DD',
-                });
-                $('#exit_date').datetimepicker({
-                    format: 'YYYY-MM-DD',
                 });*/
-
-                $("#role").on("change",function() {
-                    var role_id = this.value;
-                    $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id);
-                });
-            });
-
-            var pass_flag = 0;
-
-            $("#submit_update").click(function(){
-                pass_flag = 1;
-            });
-
-            // console.log(pass_flag); here
-            $("#employee_form").submit(function(event){
-                $('#confirm').modal('show');
-                if (pass_flag != 1){
-                    event.preventDefault();
-                }
-            });
-
-            var teams = $('#asana_teams');
-            var count = 0;
-            var orgId = '{{config('values.asanaWorkspaceId')}}';
-            var token = '{{config('values.asanaToken')}}';
-            
-            $('.asana').bind('click', function () {
-                if ($(this).is(':checked')) {
-
-                    $.ajax({
-                        url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
-                        type: 'GET',
-                        cache: false,
-                        dataType: 'json',
-                        beforeSend: function (xhr) {
-                            xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                        },
-                        success: function (res) {
-                            count++;
-                            if (count == 1) {
-                                teams.append("<h3 class='head'>Teams in Asana</h3>");
-                                res.data.forEach(function (item, index) {
-                                    teams.append("<li class='teams'>" + item.name +
-                                        " <input name='teams[]' value='" +
-                                        item.id + "' type='checkbox'></li>"
-                                    );
-                                });
-                            }
-                            teams.show();
-                        },
-                        error:function(err){
-                            console.log(err);
-                        }
-                    })
-                } else {
-                    teams.hide();
-                }
-            })
-        });
-
-        $(function () {
-            /*$('#date_of_birth').datetimepicker({
-                format: 'YYYY-MM-DD',
-            });*/
-
-            $(document).ready(function () {
-                $(function () {
-                    $("#check_all").on('click', function () {
-                        $('input:checkbox').not(this).prop('checked', this.checked);
-                    });
-                    $(".check_all_sub").click(function () {
-                        $('div.' + this.id + ' input:checkbox').prop('checked', this.checked);
+                $(document).ready(function () {
+                    $(function () {
+                        $("#check_all").on('click', function () {
+                            $('input:checkbox').not(this).prop('checked', this.checked);
+                        });
+                        $(".check_all_sub").click(function () {
+                            $('div.' + this.id + ' input:checkbox').prop('checked', this.checked);
+                        });
                     });
                 });
             });
-        });
-    </script>
+        </script>
         <script>
             $(document).ready(function(){
 // Prepare the preview for profile picture
@@ -387,6 +384,11 @@
                     e.preventDefault();
                     return false;
                 }
+            });
+
+            $('#asana_teams input[type="checkbox"]').each(function () {
+                var $checkbox = $(this);
+                $checkbox.checkbox();
             });
         </script>
     @endpush
