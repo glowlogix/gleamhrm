@@ -739,7 +739,7 @@ class AttendanceController extends Controller
         }
 
         if ($request['event']['channel'] != config('values.SlackChannel')) {
-            return $request->challenge;
+            return;
         }
 
         $employee = Employee::where('slack_id', $request['event']['user'])->first();
