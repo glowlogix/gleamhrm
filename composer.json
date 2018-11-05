@@ -6,6 +6,7 @@
     "type": "project",
     "require": {
         "php": ">=7.1.0",
+        "botman/driver-slack": "^2.1",
         "box/spout": "^2.7",
         "fideloper/proxy": "~4.0",
         "guzzlehttp/guzzle": "~5.3|~6.0",
