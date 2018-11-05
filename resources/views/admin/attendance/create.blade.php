@@ -54,7 +54,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Time In</label>
-                                        <div class="col-md-9 timepicker">
+                                        <div class="col-md-9">
                                             <input type="time" class="form-control" name="time_in" value="{{$current_time}}">
                                         </div>
                                     </div>
@@ -63,7 +63,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group row ">
                                         <label class="control-label text-right col-md-3">Time Out</label>
-                                        <div class="col-md-9 timepicker">
+                                        <div class="col-md-9">
                                             <input type="time" class="form-control" name="time_out" value="{{$current_time}}">
                                         </div>
                                     </div>
@@ -159,28 +159,19 @@
                                                                         <div>
                                                                             <label for="date">Select Date</label></br>
                                                                             <div class="input-group">
-                                                                                <input class="form-control date" name="date" value="{{$att->date}}" />
-                                                                                <span class="input-group-addon">
-                                                                <span class="glyphicon glyphicon-calendar"></span>
-                                                            </span>
+                                                                                <input type="date" class="form-control" name="date" value="{{$att->date}}" />
                                                                             </div>
                                                                         </div>
                                                                         <br>
 
                                                                         <label for="time">Time In</label>
-                                                                        <div class="input-group time_in timepicker">
-                                                                            <input class="form-control time_in tp" name="time_in" value="{{Carbon\Carbon::parse($att->time_in)->format('h:i a')}}" />
-                                                                            <span class="input-group-addon timepicker1">
-                                                            <i class="fa fa-clock-o" style="font-size:16px"></i>
-                                                        </span>
+                                                                        <div class="input-group">
+                                                                            <input type="time" class="form-control" name="time_in" value="{{$att->time_in}}" />
                                                                         </div>
 
                                                                         <label for="time">Time Out</label>
-                                                                        <div class="input-group time_out timepicker">
-                                                                            <input class="form-control time_out tp" name="time_out" value="{{Carbon\Carbon::parse($att->time_out)->format('h:i a')}}" />
-                                                                            <span class="input-group-addon timepicker1">
-                                                            <i class="fa fa-clock-o" style="font-size:16px"></i>
-                                                        </span>
+                                                                        <div class="input-group">
+                                                                            <input type="time" class="form-control" name="time_out" value="{{$att->time_out}}" />
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">

@@ -199,10 +199,18 @@ class AttendanceController extends Controller
         $ofc_in = Carbon::parse($office_location->timing_start);
         $emp_in = Carbon::parse($first_time_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
+        
+        $day = Carbon::parse($request->date)->format('l');
      
         $is_delay = 'no';
         if ($emp_in->gt($ofc_in) && $delay > 30) {
             $is_delay = 'yes';
+        }
+        if (
+            ($office_location->id == 1 && $day == 'Friday') ||
+            ($office_location->id == 2 && $day == 'Saturday')
+        ) {
+            $is_delay = 'No';
         }
 
         if (isset($attendance_summary->id)) {
@@ -726,27 +734,46 @@ class AttendanceController extends Controller
     }
 
     public function slackbot(Request $request){
-        $token = 'xoxp-8188862598-433759455604-469838755777-176dcc6dc09ab550ca9d783ccd519dd0';
-        $output = file_get_contents('https://slack.com/api/users.info?token='.$token.'&user='.$request['event']['user'].'&pretty=1');
-        $output = json_decode($output, true);
+        if (isset($request->challenge)) {
+            return $request->challenge;
+        }
 
-        $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+        if ($request['event']['channel'] != config('values.SlackChannel')) {
+            return $request->challenge;
+        }
+
+        $employee = Employee::where('slack_id', $request['event']['user'])->first();
+        if (!isset($employee->id)) {
+            $token = config('values.SlackToken');
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
+            $output = json_decode($output, true);
+            $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+        }
+
         $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
         $time = Carbon::createFromTimestamp($request['event_time'])->toTimeString(); 
 
         $text = $request['event']['text']; 
         
+        $attendance = [
+            'employee_id' => $employee->id,
+            'date' => $date,
+            'comment' => $text,
+        ];
+
+        /*$attendance = Attendance::where($attendance)->orderBy('time_in', 'desc')->first();
+        if (isset($attendance->id)) {
+            $botman->hears($text, function (SlackBot $bot, $message) {
+              $bot->reply("You have already did aoa today!");
+              $bot->reply("What do you want to do please reply below!");
+            });
+        }*/
+        
         $str = '';
         if (strtolower($text) == 'aoa') {
             $str = 'time_in';
         }
-        elseif (strtolower($text) == 'brb-namaz') {
-            $str = 'time_out';
-        }
-        elseif (strtolower($text) == 'brb-lunch') {
-            $str = 'time_out';
-        }
-        elseif (strtolower($text) == 'brb-dinner') {
+        elseif (strstr(strtolower($text), 'brb')) {
             $str = 'time_out';
         }
         elseif (strtolower($text) == 'back') {
@@ -760,11 +787,6 @@ class AttendanceController extends Controller
             return;
         }
 
-        $attendance = [
-            'employee_id' => $employee->id,
-            'date' => $date,
-        ];
-
         if ($str == 'time_in') {
             $attendance['time_in'] = $time;
             $attendance['time_out'] = '00:00:00';
@@ -775,8 +797,10 @@ class AttendanceController extends Controller
             $attendance->time_out = $time;
             $attendance->save();
         }
+
         $request->employee_id =  $employee->id;
         $request->date =  $date;
+
         $this->storeAttendaceSummary($request);
 
         // Log::emergency($request);
@@ -797,10 +821,19 @@ class AttendanceController extends Controller
             dd($payload);
         });
 
-        $botman->hears('convo', function($bot) {
-            $bot->startConversation(new ExampleConversation());
+        
+        $botman->hears('brb', function (SlackBot $bot, $message) {
+          $bot->reply("You have already did aoa today!");
+          $bot->reply("What do you want to do please reply below!");
         });
-
+        $botman->hears('aoa', function (SlackBot $bot, $message) {
+          $bot->reply("You have already did aoa today!");
+          $bot->reply("What do you want to do please reply below!");
+        });
+        $botman->hears('aoa', function (SlackBot $bot, $message) {
+          $bot->reply("You have already did aoa today!");
+          $bot->reply("What do you want to do please reply below!");
+        });
         $loop->run();*/
     }
 
@@ -812,7 +845,7 @@ class AttendanceController extends Controller
           'event' => array (
             'type' => 'message',
             'user' => 'UCRNBDDHS',
-            'text' => 'brb-namaz',
+            'text' => 'aoa',
             'client_msg_id' => '848720a1-f9c5-47e6-a1ff-6c79a0d8ff01',
             'ts' => '1541159562.016900',
             'channel' => 'C9B3A1N1L',
@@ -828,11 +861,69 @@ class AttendanceController extends Controller
           ),
         );
 
-        $token = 'xoxp-8188862598-433759455604-469838755777-176dcc6dc09ab550ca9d783ccd519dd0';
-        $output = file_get_contents('https://slack.com/api/users.info?token='.$token.'&user='.$request['event']['user'].'&pretty=1');
-        $output = json_decode($output, true);
+        $employee = Employee::where('slack_id', $request['event']['user'])->first();
+        if (!isset($employee->id)) {
+            $token = config('values.SlackToken');
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
+            $output = json_decode($output, true);
+            $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+        }
 
-        $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+        $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
+        $time = Carbon::createFromTimestamp($request['event_time'])->toTimeString(); 
+
+        $text = $request['event']['text']; 
+        
+        $attendance = [
+            'employee_id' => $employee->id,
+            'date' => $date,
+            'comment' => $text,
+        ];
+
+        /*$attendance = Attendance::where($attendance)->orderBy('time_in', 'desc')->first();
+        if (isset($attendance->id)) {
+            $botman->hears($text, function (SlackBot $bot, $message) {
+              $bot->reply("You have already did aoa today!");
+              $bot->reply("What do you want to do please reply below!");
+            });
+        }*/
+        
+        $str = '';
+        if (strtolower($text) == 'aoa') {
+            $str = 'time_in';
+        }
+        elseif (strstr(strtolower($text), 'brb')) {
+            $str = 'time_out';
+        }
+        elseif (strtolower($text) == 'back') {
+            $str = 'time_in';
+        }
+        elseif (strtolower($text) == 'ah') {
+            $str = 'time_out';
+        }
+
+        if ($str == '') {
+            return;
+        }
+
+        if ($str == 'time_in') {
+            $attendance['time_in'] = $time;
+            $attendance['time_out'] = '00:00:00';
+            $attendance = Attendance::create($attendance);
+        }
+        if ($str == 'time_out') {
+            $attendance = Attendance::where($attendance)->orderBy('time_in', 'desc')->first();
+            $attendance->time_out = $time;
+            $attendance->save();
+        }
+        
+        $employee = Employee::where('slack_id', $request['event']['user'])->first();
+        if (!isset($employee->id)) {
+            $token = config('values.SlackToken');
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
+            $output = json_decode($output, true);
+            $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+        }
         $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
         $time = Carbon::createFromTimestamp($request['event_time'])->toTimeString(); 
 
@@ -862,7 +953,8 @@ class AttendanceController extends Controller
             'employee_id' => $employee->id,
             'date' => $date,
         ];
-
+        // dump($text);
+        // dump($str);
         if ($str == 'time_in') {
             $attendance['time_in'] = $time;
             $attendance['time_out'] = '00:00:00';

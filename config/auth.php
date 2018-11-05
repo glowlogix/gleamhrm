@@ -15,7 +15,8 @@ return [
 
     'defaults' => [
         'guard' => 'web',
-        'passwords' => 'users',
+        // 'passwords' => 'users',
+        'passwords' => 'employees',
     ],
 
     /*
@@ -98,16 +99,16 @@ return [
     */
 
     'passwords' => [
-        'users' => [
+        /*'users' => [
             'provider' => 'users',
             'table' => 'password_resets',
             'expire' => 60,
-        ],
-        /*'employees' => [
+        ],*/
+        'employees' => [
             'provider' => 'employees',
             'table' => 'password_resets',
-            'expire' => 15,
-        ],*/
+            'expire' => 60,
+        ],
     ],
 
 ];

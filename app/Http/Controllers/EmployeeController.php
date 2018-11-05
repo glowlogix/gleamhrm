@@ -593,4 +593,28 @@ class EmployeeController extends Controller
 		$calendar = Calendar::addEvents($events);
 		return view('admin.employees.showAttendance',$this->metaResponse(),['data' => $data,'calendar' => $calendar]);
 	}
+
+	public function seedSlackId(){
+		$token = config('values.SlackToken');
+        $output = file_get_contents('https://slack.com/api/users.list?token='.$token.'&pretty=1');
+        $output = json_decode($output, true);
+        foreach ($output['members'] as $key => $member) {
+        	$employee = Employee::where('official_email', $member['profile']['email'])->first();
+        	if (isset($employee->id)) {
+	        	$employee = Employee::where('official_email', $member['profile']['email'])->first();
+	        	$employee->slack_id = $member['id'];
+	        	$employee->save();
+        	}
+        	else{
+        		$employee = Employee::create([
+        			'slack_id' => $member['id'],
+        			'official_email' => $member['profile']['email'],
+        			'firstname' => $member['profile']['first_name'],
+        			'lastname' => $member['profile']['last_name'],
+        			'contact_no' => $member['profile']['phone'],
+					'password' => bcrypt("123456"),
+        		]);
+        	}
+        }
+	}
 }

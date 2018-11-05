@@ -80,16 +80,6 @@
 <script type="text/javascript">
     $(document).ready(function() {
 
-        $(function () {
-            $('#checkindatetimepicker').datetimepicker({
-                date: $('#chkin').val()
-            });
-
-            $('#checkoutdatetimepicker').datetimepicker({
-                date: $('#chkout').val()
-            });
-
-        });
-    });
+   });
 </script>
 @stop
