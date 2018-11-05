@@ -631,7 +631,7 @@ class AttendanceController extends Controller
     }
 
     public function todayTimeline($id=0){
-        $this->slackbottest();
+        // $this->slackbottest();
 
         $this->meta['title'] = 'Show Attendance';
         
@@ -838,6 +838,12 @@ class AttendanceController extends Controller
     }
 
     public function slackbottest(){
+        dd(config('values.SlackToken'));
+        $output = file_get_contents('https://slack.com/api/conversations.list?token=xoxp-8188862598-433759455604-471090105424-ee6ca0777ad374dc314cddd0a19926cd&pretty=1');
+
+        $output = json_decode($output, true);
+        dd($output);
+
         $request = array (
           'token' => 'jpm2mgC6V5TfbLRu5FkmmKX7',
           'team_id' => 'T085JRCHL',
