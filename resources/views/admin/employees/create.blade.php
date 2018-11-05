@@ -255,7 +255,7 @@
                                     </div>
                                 </div>
                             </div>
-                            <div id="asana_teams" class="">
+                            <div id="asana_teams" class=" asana_teams col-md-12">
                             </div>
                         </div>
                         <hr>
@@ -328,8 +328,9 @@
                             if (count == 1) {
                                 teams.append("<h3 class='head'>Teams in Asana</h3>");
                                 res.data.forEach(function (item, index) {
-                                    teams.append("<div class='row'><input name='teams[]' value='" + item.id + "' type='checkbox' id='"+ item.name +"' >" +
-                                        "<lable class='teams' for='"+ item.name +"'>" + item.name +"</lable></div>"
+                                    teams.append("<li class='teams'>" + item.name +
+                                        " <input name='teams[]' value='" +
+                                        item.id + "' type='checkbox'></li>"
                                     );
                                 });
                             }
@@ -344,10 +345,12 @@
                 }
             })
         });
+
         $(function () {
             /*$('#date_of_birth').datetimepicker({
                 format: 'YYYY-MM-DD',
             });*/
+
             $(document).ready(function () {
                 $(function () {
                     $("#check_all").on('click', function () {
@@ -384,11 +387,6 @@
                     e.preventDefault();
                     return false;
                 }
-            });
-
-            $('#asana_teams input[type="checkbox"]').each(function () {
-                var $checkbox = $(this);
-                $checkbox.checkbox();
             });
         </script>
     @endpush

@@ -332,7 +332,6 @@
 @push('scripts')
 <script type="text/javascript">
     $(document).ready(function () {
-
             $(function () {
                 $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/{{$employee_role_id}}/{{$employee->id}}");
                 $("#role").on("change",function() {
@@ -382,18 +381,13 @@
                                 teams.append("<h3 class='head row'>Teams in Asana</h3>");
                                 res.data.forEach(function (item, index) {
                                     teams.append("<input name='teams[]' value='" +
-                                        item.id + "' type='checkbox' id='"+item.id+"'>"+"" +
+                                        item.id + "' type='checkbox' id='"+item.id+"' checked>"+"" +
                                         "<lable class='teams row' for='"+item.id+"'>" + item.name +
                                     " </lable>"
                                     );
                                 });
                             }
                             teams.show();
-
-                            $('#asana_teams input').each(function () {
-                                var $checkbox = $(this);
-                                $checkbox.checkbox();
-                            });
                         },
                         error:function(err){
                             console.log(err);
@@ -404,7 +398,6 @@
                 }
             })
     });
-
 
     $(function () {
         /*$('#date_of_birth').datetimepicker({
@@ -462,8 +455,6 @@
             $("#button").click();
         }
     });
-
-
 </script>
 @endpush
 @stop
