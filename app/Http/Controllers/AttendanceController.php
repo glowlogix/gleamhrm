@@ -744,13 +744,20 @@ class AttendanceController extends Controller
         }
 
         $employee = Employee::where('slack_id', $request['event']['user'])->first();
-        if (!isset($employee->id)) {
+        if (!isset($employee->id)) 
+        {
             $token = config('values.SlackToken');
-            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token.'&user='.$request['event']['user']);
             $output = json_decode($output, true);
+            if (!$output['ok']) {
+                Log::debug('no user info found.');
+                return 'no user info found.';
+            }
+
             $employee = Employee::where('official_email', $output['profile']['email'])->first();
-            // $employee->slack_id = $output[''];
-            // $employee->save();
+            $employee->slack_id = $request['event']['user'];
+            $employee->save();
+            dd('get and save Slack Id for employee.');
             Log::debug('get and save Slack Id for employee.');
         }
 
@@ -804,6 +811,7 @@ class AttendanceController extends Controller
             $attendance = Attendance::where($where)
             ->where('comment','like', $text)
             ->orderBy('time_in', 'desc')->first();
+            
             if(isset($attendance->id)){ //check if multiple aoa
                 Log::debug('multiple '.$text);
                 return 'multiple '.$text;
