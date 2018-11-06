@@ -747,7 +747,7 @@ class AttendanceController extends Controller
             $token = config('values.SlackToken');
             $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
             $output = json_decode($output, true);
-            $employee = Employee::where('official_email', $output['user']['profile']['email'])->first();
+            $employee = Employee::where('official_email', $output['profile']['email'])->first();
         }
 
         $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
@@ -918,6 +918,7 @@ class AttendanceController extends Controller
         }
 
         if ($str == '') {
+            Log::debug('null string');
             return;
         }
         if ($str == 'time_in') {

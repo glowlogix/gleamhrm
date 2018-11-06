@@ -30,7 +30,14 @@
                             <td>{{$employee['city']}}</td>
                             <td>{{isset($employee['branch']) ? $employee['branch']['name'] : ''}}</td>
                             <td>{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_time_in'])->format('h:i a') : ''}}</td>
-                            <td>{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a') : ''}}</td>
+                            <td>
+                                @if(
+                                    isset($employee['attendanceSummary'][0]) && 
+                                    $employee['attendanceSummary'][0]['last_time_out'] != '00:00:00'
+                                )
+                                {{Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a')}}
+                                @endif
+                            </td>
                             <td>{{isset($employee['attendanceSummary'][0]) ? number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') : ''}}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-info btn-sm" href="{{route('attendance.create', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
