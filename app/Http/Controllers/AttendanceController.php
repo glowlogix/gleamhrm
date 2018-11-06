@@ -631,7 +631,7 @@ class AttendanceController extends Controller
     }
 
     public function todayTimeline($id=0){
-        $this->slackbottest();
+        // $this->slackbottest();
 
         $this->meta['title'] = 'Show Attendance';
         
