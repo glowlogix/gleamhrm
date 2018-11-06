@@ -739,6 +739,7 @@ class AttendanceController extends Controller
         }
 
         if ($request['event']['channel'] != config('values.SlackChannel')) {
+            Log::debug('Accept from Slack Attendance Channel.');
             return;
         }
 
@@ -748,6 +749,9 @@ class AttendanceController extends Controller
             $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token);
             $output = json_decode($output, true);
             $employee = Employee::where('official_email', $output['profile']['email'])->first();
+            // $employee->slack_id = $output[''];
+            // $employee->save();
+            Log::debug('get and save Slack Id for employee.');
         }
 
         $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
@@ -801,6 +805,7 @@ class AttendanceController extends Controller
             ->where('comment','like', $text)
             ->orderBy('time_in', 'desc')->first();
             if(isset($attendance->id)){ //check if multiple aoa
+                Log::debug('multiple '.$text);
                 return 'multiple '.$text;
             }
 
@@ -808,6 +813,7 @@ class AttendanceController extends Controller
             ->where('comment','like', $othertext)
             ->orderBy('time_in', 'desc')->first();
             if(isset($attendance->id)){ //check if multiple aoa
+                Log::debug($othertext. ' after '.$text);
                 return $othertext. ' after '.$text;
             }
 
@@ -831,6 +837,7 @@ class AttendanceController extends Controller
         $request->date =  $date;
 
         $this->storeAttendaceSummary($request);
+        // Log::debug($othertext. ' after '.$text);
         return $attendance;
     }
 
