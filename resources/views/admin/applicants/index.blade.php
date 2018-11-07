@@ -6,8 +6,6 @@
 	<li class="breadcrumb-item active">Applicant</li>
 	</ol>
 @stop
-
-
 @section('content')
 	{{--//////startt--}}
 		<div class="col-12">
@@ -18,31 +16,32 @@
 						@if($applicants->count() > 0)
 						<thead>
 						<tr>
+							<th>Avatar</th>
 							<th>Name</th>
 							<th>City</th>
 							<th>Job Status</th>
 							<th>Applied For</th>
 							<th>CV</th>
-                        
 							<th>Actions</th>
 						</tr>
 						</thead>
 						<tbody>
 						@foreach($applicants as $applicant)
 						<tr>
+							<td><img src="{{asset($applicant->avatar)}}" alt="user" width="40" class="img-circle" /></td>
 							<td>
-								<a href="javascript:void(0)"><img src="/{{$applicant->avatar}}" alt="user" width="40" class="img-circle" />{{$applicant->name}}</a>
+								<a href="javascript:void(0)">{{$applicant->name}}</a>
 							</td>
 							<td>{{$applicant->city}}</td>
 							<td>{{$applicant->job_status}}</td>
-							<td>{{$applicant->job_id}}</td>
-							<td><a href="/{{$applicant->cv}}">
+							<td>{{$applicant->job->title}}</td>
+							<td><a href="{{asset($applicant->cv)}}">
 									<img src="{{asset('uploads/applicants/cv/cv_icon.jpg') }}" alt="" height="50px" width="50px">
 								</a>
 							</td>
 							<td class="text-nowrap">
-								<a href="{{route('applicant.hire',['id'=>$applicant->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-inverse m-r-10"></i></a>
-								<a href="{{route ('applicant.delete',['id' =>$applicant->id])}}" data-toggle="tooltip" data-original-title="Close"> <i class="fas fa-window-close text-danger"></i> </a>
+								<a href="{{route('applicant.hire',['id'=>$applicant->id])}}" data-toggle="tooltip"  data-original-title="Hire" class="btn btn-sm btn-info"> <i class="fas fa-pencil-alt "></i></a>
+								<a href="{{route ('applicant.delete',['id' =>$applicant->id])}}" data-toggle="tooltip"   data-original-title="Delete" class="btn btn-sm btn-danger"> <i class="fas fa-window-close"></i></a>
 							</td>
 						</tr>
 						@endforeach

@@ -21,8 +21,7 @@ class ApplicantController extends Controller
     public function index()
     {
         $this->meta['title'] = 'Applicants';
-        $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        
+        $applicants = Applicant::with('job')->where('recruited', 0)->take(10)->get();
         return view('admin.applicants.index',$this->metaResponse())->with('applicants',$applicants);
     }
 
@@ -52,7 +51,6 @@ class ApplicantController extends Controller
 
     public function store(Request $request)
     {
-        // dd($request);
     	$this->validate($request,[
     		'name' => 'required',
     		'fname' => 'required',
@@ -70,7 +68,7 @@ class ApplicantController extends Controller
         $cv_new_name=time().$cv->getClientOriginalName();
         $cv->move('uploads/applicants/cv', $cv_new_name);
 
-    	$applicant= Applicant::create([
+    	Applicant::create([
     		'name' => $request->name,
     		'fname' => $request->fname,
             'email' =>$request->email,
@@ -82,7 +80,7 @@ class ApplicantController extends Controller
             // 'job_position_id'=>$request->job_position_id,
             'recruited' => 0
     	]);
-                  
+
         /*Mail::to($request->email)->send(new Reminder);*/
         Session::flash('success','application is submitted succesfully');
         return redirect()->back();

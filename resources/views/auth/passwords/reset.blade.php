@@ -1,6 +1,6 @@
 @extends('layouts.app')
 @section('content')
-    <div class="login-box card">
+    <div class="login-box card ">
         <div class="card-body">
             <form class="form-horizontal form-material" id="loginform" method="post" action="{{ route('password.request') }}">
                 {{ csrf_field() }}

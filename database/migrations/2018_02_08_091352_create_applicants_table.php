@@ -23,7 +23,7 @@ class CreateApplicantsTable extends Migration
             $table->string('cv');
             $table->string('job_status');
             $table->boolean('recruited');
-            $table->integer('job_id');
+            $table->unsignedInteger('job_id');
             $table->integer('category_id');
             $table->softDeletes();
             $table->timestamps();
