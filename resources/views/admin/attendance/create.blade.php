@@ -140,7 +140,7 @@
                                                     {{ Carbon\Carbon::parse($att->time_in)->format('h:i a') }}
                                                 </td>
                                                 <td>
-                                                    @if ($att->time_out != '')
+                                                    @if ($att->time_out != '00:00:00')
                                                         {{ Carbon\Carbon::parse($att->time_out)->format('h:i a') }}
                                                     @endif
                                                 </td>

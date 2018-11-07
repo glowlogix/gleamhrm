@@ -158,6 +158,7 @@ class EmployeeController extends Controller
 		}
 		
 		$employee = Employee::create($arr);
+		// $this->storeEmployeeTimings($employee->id);
 
 		$params = [
 			'emailAddress'          => $request->official_email,
@@ -212,6 +213,18 @@ class EmployeeController extends Controller
 
 		return redirect()->route('employees')->with('success','Employee is created succesfully');      
 	} 
+
+	public function storeEmployeeTimings($employee){
+
+		$employee = [
+			'employee_id' => $employee_id,
+			'timing_start' => $employee->branch->timing_start,
+			'timing_off' => $employee->branch->timing_start,
+			'day' => 'Monday',
+		];
+
+		$employee = Employee::create($arr);
+	}
 
 	public function edit($id)
 	{
@@ -399,12 +412,14 @@ class EmployeeController extends Controller
 
         if ($request->permissions) {
             foreach ($request->permissions as $permission_id) {
-                if (in_array($permission_id, $request->permissions_checked)){
-                    $employee->givePermissionTo($permission_id);
-                }
-                else{
-                    $employee->revokePermissionTo($permission_id);
-                }
+                if (isset($request->permissions_checked)) {
+	                if (in_array($permission_id, $request->permissions_checked)){
+	                    $employee->givePermissionTo($permission_id);
+	                }
+	                else{
+	                    $employee->revokePermissionTo($permission_id);
+	                }
+	            }
             }
         }
 		$employee->save();
