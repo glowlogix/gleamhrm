@@ -21,6 +21,10 @@
 	<script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
 	<![endif]-->
 	<style>
+		hrml{
+
+
+		}
 		body{
 			overflow:hidden auto !important;
 			position: absolute !important;
@@ -35,10 +39,11 @@
 
 			width: 700px;
 		}
+
 	</style>
 </head>
 
-<body class="login-register" style="background-image:url({{ asset('assets/images/background/hiring.jpg') }});height: inherit; width: 100%">
+<body class="login-register" style="background-image:url({{ asset('assets/images/background/hiring.jpg') }});height: inherit; width:100%;background-size:cover;">
 <!-- ============================================================== -->
 <!-- Preloader - style you can find in spinners.css -->
 <!-- ============================================================== -->
@@ -46,6 +51,7 @@
 	<svg class="circular" viewBox="25 25 50 50">
 		<circle class="path" cx="50" cy="50" r="20" fill="none" stroke-width="2" stroke-miterlimit="10"></circle> </svg>
 </div>
+
 <!-- ============================================================== -->
 <!-- Main wrapper - style you can find in pages.scss -->
 <!-- ============================================================== -->

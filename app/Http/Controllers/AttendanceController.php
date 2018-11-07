@@ -780,8 +780,9 @@ class AttendanceController extends Controller
         ];
 
         $str = '';
-        if (strtolower($text) == 'aoa') {
+        if (strtolower($text) == 'aoa' || strtolower($text) == 'salam' || strtolower($text) == 'slaam'|| strtolower($text) == 'slam' || strtolower($text) == 'assalam-o-alaikum'||strtolower($text) == 'assalam o alaikum'|| strtolower($text) == 'assalamualaikum'){
             // $where['comment'] = 'aoa';
+            $text='aoa';
             $str = 'time_in';
         }
         elseif (strstr(strtolower($text), 'brb')) {
@@ -792,8 +793,9 @@ class AttendanceController extends Controller
             // $where['comment'] = 'back';
             $str = 'time_in';
         }
-        elseif (strtolower($text) == 'ah') {
+        elseif (strtolower($text) == 'ah' || strtolower($text) == 'Allah Hafiz' || strtolower($text) == 'AllahHafiz' || strtolower($text) == 'Allah Hafiz.') {
             // $where['comment'] = 'ah';
+            $text='ah';
             $str = 'time_out';
         }
 

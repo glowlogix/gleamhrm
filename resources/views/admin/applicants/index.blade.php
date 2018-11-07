@@ -1,5 +1,6 @@
 @extends('layouts.admin')
 @section('Heading')
+	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('applicants.hired')}}'"> Hired</button>
 	<h3 class="text-themecolor">Applicants</h3>
 	<ol class="breadcrumb">
 	<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -46,7 +47,7 @@
 						</tr>
 						@endforeach
 						@else
-							<p class="text-center" >No Applicant found.</p>
+							<p class="text-center" >No New Applicant found.</p>
 						@endif
 						</tbody>
 					</table>

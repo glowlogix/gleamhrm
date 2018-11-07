@@ -29,7 +29,7 @@
                         @if(
                         Auth::user()->isAllowed('ApplicantController:index')
                         )
-                        <li><a href="{{route('applicants')}}">Application</a></li>
+                        <li><a href="{{route('applicants')}}" >Application</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('JobsController:index')
