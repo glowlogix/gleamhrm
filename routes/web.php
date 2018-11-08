@@ -101,40 +101,40 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'uses' => 'ApplicantController@hiredApplicants',
 		'as' => 'applicants.hired'
 	]);
-	Route::Get('/user/create',[
-		'uses' => 'UsersController@create',
-		'as' => 'user.create'
-	]);
-	Route::Get('/users',[
-		'uses' => 'UsersController@index',
-		'as' => 'users'
-	]);
-	Route::Post('/user/store',[
-		'uses' => 'UsersController@store',
-		'as' => 'user.store'
-	]);
-	Route::post('/user/delete/{id}',[
-		'uses' => 'UsersController@delete',
-		'as' => 'user.delete'
-	]);
-	Route::Get('/user/admin/{id}',[
-		'uses' => 'UsersController@admin',
-		'as' => 'user.admin'
-	]);
-
-	Route::Get('/user/edit/{id}',[
-		'uses' => 'UsersController@edit',
-		'as' => 'user.edit'
-	]);
-	Route::Post('/user/update/{id}',[
-		'uses' => 'UsersController@update',
-		'as' => 'user.update'
-	]);
-
-	Route::Get('/user/not_admin/{id}',[
-		'uses' => 'UsersController@Not_Admin',
-		'as' => 'user.not_admin'
-	]);
+//	Route::Get('/user/create',[
+//		'uses' => 'UsersController@create',
+//		'as' => ''
+//	]);
+//	Route::Get('/users',[
+//		'uses' => 'UsersController@index',
+//		'as' => 'users'
+//	]);
+//	Route::Post('/user/store',[
+//		'uses' => 'UsersController@store',
+//		'as' => 'user.store'
+//	]);
+//	Route::post('/user/delete/{id}',[
+//		'uses' => 'UsersController@delete',
+//		'as' => 'user.delete'
+//	]);
+//	Route::Get('/user/admin/{id}',[
+//		'uses' => 'UsersController@admin',
+//		'as' => 'user.admin'
+//	]);
+//
+//	Route::Get('/user/edit/{id}',[
+//		'uses' => 'UsersController@edit',
+//		'as' => 'user.edit'
+//	]);
+//	Route::Post('/user/update/{id}',[
+//		'uses' => 'UsersController@update',
+//		'as' => 'user.update'
+//	]);
+//
+//	Route::Get('/user/not_admin/{id}',[
+//		'uses' => 'UsersController@Not_Admin',
+//		'as' => 'user.not_admin'
+//	]);
 
 	Route::resources([
 	    'organization_hierarchy' => 'OrganizationHierarchyController',
@@ -452,4 +452,4 @@ Route::any('/search',function(){
         return view('searchview')->withDetails($applicant)->withQuery ( $q );
     else return view ('searchview')->withMessage('No Details found. Try to search again !');
 });
-// Route::get('welcome-mail','UserController@welcomeMail');
+// Route::get('welcome-mail','@welcomeMail');

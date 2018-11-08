@@ -58,6 +58,7 @@ class EmployeeSeeder extends Seeder
             'city' => 'Islamabad',
             'branch_id' => '1',
             'status' => 1,
+            'employement_status' => 'permanent',
             'zuid' => '123',
             'account_id' => '123',
             'invite_to_zoho' => 0,
