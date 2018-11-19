@@ -41,7 +41,7 @@ class DocumentsController extends Controller
         if ($request->document != ""){
             $document_file = time().'_'.$request->document->getClientOriginalName();
             $request->document->move('storage/documents/', $document_file);
-            $document->url = $document_file;
+            $document->url ='storage/documents/'. $document_file;
         }
 
         $document->name = $request->document_name;
@@ -74,9 +74,9 @@ class DocumentsController extends Controller
         ];
 
         if($request->document != ""){
-            $document                    = time().'_'.$request->document->getClientOriginalName();
+            $document= time().'_'.$request->document->getClientOriginalName();
             $request->document->move('storage/documents/', $document);
-            $arr['url'] = $document;
+            $arr['url'] = 'storage/documents/'.$document;
         }
 
         Document::insert($arr);
