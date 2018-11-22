@@ -31,13 +31,14 @@
 						<tr>
 							<td><img src="{{asset($applicant->avatar)}}" alt="user" width="40" class="img-circle" /></td>
 							<td>
-								<a href="javascript:void(0)">{{$applicant->name}}</a>
+								<a>{{$applicant->name}}</a>
 							</td>
 							<td>{{$applicant->city}}</td>
 							<td>{{$applicant->job_status}}</td>
 							<td>{{$applicant->job->title}}</td>
-							<td><a href="{{asset($applicant->cv)}}">
+							<td><a target="_blank" href="{{asset($applicant->cv)}}">
 									<img src="{{asset('uploads/applicants/cv/cv_icon.jpg') }}" alt="" height="50px" width="50px">
+
 								</a>
 							</td>
 							<td class="text-nowrap">

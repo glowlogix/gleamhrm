@@ -16,7 +16,8 @@
         "maddhatter/laravel-fullcalendar": "^1.3",
         "nesbot/carbon": "^1.26",
         "spatie/laravel-permission": "^2.21",
-        "twbs/bootstrap": "^4.0"
+        "twbs/bootstrap": "^4.0",
+      "ext-json": "*"
     },
     "require-dev": {
         "filp/whoops": "~2.0",

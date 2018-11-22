@@ -17,7 +17,7 @@ class Employee extends Authenticatable
     protected $appends = ['full_name'];
     
     protected $fillable = [
-    	'firstname', 'lastname', 'contact_no', 'emergency_contact_relationship', 'emergency_contact', 'password', 'zuid', 'account_id', 'official_email', 'personal_email', 'designation', 'status', 'employment_status','picture', 'exit_date', 'total_salary', 'bonus', 'basic_salary', 'invite_to_zoho', 'invite_to_slack', 'invite_to_asana', 'cnic', 'date_of_birth', 'current_address', 'permanent_address', 'city', 'joining_date', 'exit_date', 'branch_id', 'deleted_at', 'created_at', 'updated_at'
+    	'firstname','department_id','lastname', 'contact_no', 'emergency_contact_relationship', 'emergency_contact', 'password', 'zuid', 'account_id', 'official_email', 'personal_email', 'designation', 'status', 'employment_status','picture', 'exit_date', 'total_salary', 'bonus', 'basic_salary', 'invite_to_zoho', 'invite_to_slack', 'invite_to_asana', 'cnic', 'date_of_birth', 'current_address', 'permanent_address', 'city', 'joining_date', 'exit_date', 'branch_id', 'deleted_at', 'created_at', 'updated_at'
     ];
 
 	public function getFullNameAttribute()
@@ -58,6 +58,9 @@ class Employee extends Authenticatable
         else{
             return 1;
         }*/
+    }
+    public function department(){
+        return $this->belongsTo('App\department', 'department_id');
     }
 
 }

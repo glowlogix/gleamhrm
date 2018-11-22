@@ -18,23 +18,23 @@
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
                 {{--/////Second Start--}}
-                <li> <a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
+                <li><a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
                 @if (
                     Auth::user()->isAllowed('ApplicantController:index') &&
                     Auth::user()->isAllowed('JobsController:index')
                 )
-                <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
+                <li> <a class="has-arrow waves-effect waves-dark" href="#"  aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if(
                         Auth::user()->isAllowed('ApplicantController:index')
                         )
-                        <li><a href="{{route('applicants')}}" >Application</a></li>
+                        <li><a href="{{route('applicants')}}" @if(request()->is('applicants/hired')) class="active" @endif>Application</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('JobsController:index')
                         )
-                        <li><a href="{{route('job.index')}}">Jobs</a></li>
+                        <li><a href="{{route('job.index')}}" @if(request()->is('job/create')) class="active" @endif>Jobs</a></li>
                         @endif
                     </ul>
                 </li>
@@ -46,16 +46,16 @@
                         @if (
                         Auth::user()->isAllowed('EmployeeController:index')
                         )
-                        <li><a href="{{route('employees')}}">Employees</a></li>
+                        <li><a href="{{route('employees')}}" @if(request()->is('employee/create')) class="active" @endif>Employees</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('OrganizationHierarchyController:index')
                         )
-                        <li><a href="{{route('organization_hierarchy.index')}}">Org Chart</a></li>
+                        <li><a href="{{route('organization_hierarchy.index')}}" @if(request()->is('organization_hierarchy/create')) class="active" @endif>Org Chart</a></li>
                         @endif
                         <li><a href="#">Teams</a></li>
                         <li><a href="#">Team Members</a></li>
-                        <li><a href="#">Vendors</a></li>
+                        <li><a href="{{route('vendors.index')}}">Vendors</a></li>
 
                     </ul>
                 </li>
@@ -64,13 +64,13 @@
                         @if (
                                 Auth::user()->isAllowed('AttendanceController:today_timeline')
                         )
-                        <li><a href="{{route('today_timeline')}}">Today</a></li>
+                        <li><a href="{{route('today_timeline')}}" >Today</a></li>
                         @endif
                         <li><a href="#">My Attendance</a></li>
                         @if (
                         Auth::user()->isAllowed('AttendanceController:timeline')
                         )
-                        <li><a href="{{route('timeline')}}">Timeline</a></li>
+                        <li><a href="{{route('timeline')}}" @if(request()->is('attendance/create')) class="active" @endif >Timeline</a></li>
                         @endif
                         <li><a href="#">History</a></li>
                         <li><a href="#">Incomplete</a></li>
@@ -79,7 +79,7 @@
                         )
                         <li><a href="{{route('employeeleaves')}}">Leaves</a></li>
                         @endif
-                        <li><a href="{{route('leave.index')}}">My Leaves</a></li>
+                        <li><a href="{{route('leave.index')}}" @if(request()->is('leave/create')) class="active" @endif >My Leaves</a></li>
                     </ul>
                 </li>
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
@@ -87,16 +87,16 @@
                         @if (
                         Auth::user()->isAllowed('DocumentsController:index')
                         )
-                        <li><a href="{{ route('documents') }}">Documents</a></li>
+                        <li><a href="{{ route('documents') }}" @if(request()->is('documents/create')) class="active" @endif >Documents</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('BranchController:index')
                         )
-                        <li><a href="{{ route('branch.index') }}">Branches</a></li>
+                        <li><a href="{{ route('branch.index') }}" @if(request()->is('branch/create')) class="active" @endif >Branches</a></li>
                         @endif
-                        <li><a href="#">Departments</a></li>
+                        <li><a href="{{route('departments.index')}}">Departments</a></li>
                         <li><a href="#">Designations</a></li>
-                        <li><a href="#">Vendor Categories</a></li>
+                        <li><a href="{{route('vendor_category.index')}}">Vendor Categories</a></li>
                         <li><a href="#">Leave Management</a></li>
                         <li><a href="#">Probident Fund</a></li>
                     </ul>

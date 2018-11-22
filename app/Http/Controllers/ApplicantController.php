@@ -62,18 +62,18 @@ class ApplicantController extends Controller
 
         $avatar = $request->avatar;
         $avatar_new_name = time().$avatar->getClientOriginalName();
-        $avatar->move('uploads/applicants/image', $avatar_new_name);
+        $avatar->move('storage/uploads/applicants/image', $avatar_new_name);
 
         $cv=$request->cv;
         $cv_new_name=time().$cv->getClientOriginalName();
-        $cv->move('uploads/applicants/cv', $cv_new_name);
+        $cv->move('storage/uploads/applicants/cv', $cv_new_name);
 
     	Applicant::create([
     		'name' => $request->name,
     		'fname' => $request->fname,
             'email' =>$request->email,
-    		'avatar' => 'uploads/applicants/image/' . $avatar_new_name,
-    		'cv' => 'uploads/applicants/cv/' . $cv_new_name,
+    		'avatar' => 'storage/uploads/applicants/image/' . $avatar_new_name,
+    		'cv' => 'storage/uploads/applicants/cv/' . $cv_new_name,
     		'city' =>$request->city,
     		'job_status' => $request->job_status,
             'job_id' => $request->job_id,

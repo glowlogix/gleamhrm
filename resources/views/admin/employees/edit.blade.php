@@ -23,7 +23,8 @@
                                     <input type="image"  src="{{asset($employee->picture)}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" onclick="document.getElementById('wizard-picture').click();"  width="150"/>
                                     <input  type="file" name="picture" id="wizard-picture" class="" hidden>
                                 @else
-                                    <input type="image" src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" height="150" />
+                                    <input type="image" src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" height="150" onclick="document.getElementById('wizard-picture').click();" />
+                                    <input  type="file" name="picture" id="wizard-picture" class="" hidden>
                                 @endif
                                 <h6 class="card-title m-t-10">Click On Image to Update  Picture</h6>
                             </center>
@@ -130,13 +131,30 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Department</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" name="department_id">
+                                                <option value="">Select Department</option>
+                                                @if($departments->count()>0)
+                                                @foreach($departments as $department)
+                                                    <option value="{{$department->id}}" @if($department->id == $employee->department_id) selected @endif>{{$department->department_name}}</option>
+                                                @endforeach
+                                                @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <!--/span-->
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Date OF Birth</label>
                                         <div class="col-md-9">
                                             <input type="date" class="form-control " id="date_of_birth" placeholder="1988-12-23" name="date_of_birth"  value="{{old('date_of_birth',$employee->date_of_birth)}}">
                                         </div>
                                     </div>
                                 </div>
-                                <!--/span-->
                             </div>
                         </section>
                         <!-- Step 2 -->
@@ -196,7 +214,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Current Address</label>
                                         <div class="col-md-9">
-                                            <textarea rows="4" class="form-control " placeholder="Enter Current Address" name="current_address" value="{{old('current_address',$employee->current_address)}}"></textarea>
+                                            <textarea rows="4" class="form-control " placeholder="Enter Current Address" name="current_address" value="{{old('current_address',$employee->current_address)}}">{{$employee->current_address}}</textarea>
                                         </div>
                                     </div>
                                 </div>
@@ -204,7 +222,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Permanent Address</label>
                                         <div class="col-md-9">
-                                            <textarea rows="4"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{old('permanent_address',$employee->permanent_address)}}" ></textarea>
+                                            <textarea rows="4"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{old('permanent_address',$employee->permanent_address)}}" >{{$employee->permanent_address}}</textarea>
                                         </div>
                                     </div>
                                 </div>

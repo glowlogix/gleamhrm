@@ -131,7 +131,21 @@
                                         </div>
                                     </div>
                                 </div>
-
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Department</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="department_id">
+                                            <option value="">Select Department</option>
+                                                @if($departments->count() > 0)
+                                                @foreach($departments as $department)
+                                                    <option value="{{$department->id}}">{{$department->department_name}}</option>
+                                                @endforeach
+                                                    @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                                 <!--/span-->
                             </div>
                         </div>
