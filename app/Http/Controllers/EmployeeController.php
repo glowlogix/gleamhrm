@@ -205,14 +205,21 @@ class EmployeeController extends Controller
         $employee->leaveTypes()->sync($arr);
 
 		//send message for password information and change password.
-		Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
-		Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee_id));
-		
-		//policies
-		Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
+        try{
+            Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
+            Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee_id));
 
-		//simsim
-		Mail::to($request->official_email)->later($when, new SimSimMail());
+            //policies
+            Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
+
+            //simsim
+            Mail::to($request->official_email)->later($when, new SimSimMail());
+        }
+
+        catch(\Exception $e){
+            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+        }
+
 
 		return redirect()->route('employees')->with('success','Employee is created succesfully');      
 	} 
@@ -410,7 +417,7 @@ class EmployeeController extends Controller
         }
 
         catch(\Exception $e){
-            Session::flash('error', 'Email Not Send Successfully ');
+            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
         }
 
 
