@@ -32,7 +32,7 @@ class EmployeeSeeder extends Seeder
             'designation' => 'admin',
             'city' => 'Islamabad',
             'branch_id' => '1',
-            'status' => 1,
+            'status' => 0,
 //            'employment_status' => 'permanent',
             'zuid' => '123',
             'account_id' => '123',

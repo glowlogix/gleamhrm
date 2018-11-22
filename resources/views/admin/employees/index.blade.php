@@ -16,6 +16,7 @@
                 <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
                     <tr>
+                        @if(count($employees) > 0)
                         <th>Name</th>
                         <th>Email</th>
                         <th>Mobile </th>
@@ -27,7 +28,7 @@
                     </tr>
                     </thead>
                     <tbody>
-                    @if(count($employees) > 0) @foreach($employees as $employee)
+                    @foreach($employees as $employee)
                     <tr>
                         <td>{{$employee->firstname}} {{$employee->lastname}}</td>
                         <td>{{$employee->official_email}}</td>
@@ -41,6 +42,48 @@
 
                             {{--///End Dialog Box///--}}
                             <a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
+                            <div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
+                                            {{ csrf_field() }}
+                                            <div class="modal-header">
+                                                Are you sure you want to delete Employee {{ $employee->firstname }}?
+                                            </div>
+                                            <div class="modal-body">
+                                                <label>Admin Password</label>
+                                                <div class="col-md-12 m-b-20">
+                                                    <input type="text" class="form-control" placeholder="Admin Password" name="password" required> </div>
+                                                <div class="card-body">
+                                                    <div class="demo-checkbox">
+                                                        <input type="hidden" name="invite_to_asana" value="0" />
+                                                        <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" {{($employee->invite_to_asana == 1) ? 'checked' : ''}}/>
+                                                        <label for="basic_checkbox_1">Asaana</label>
+                                                        <input type="hidden" class="form-control" name="asana_email" value="{{$employee->official_email}}">
+                                                        <input type="hidden" name="invite_to_slack" value="0" />
+                                                        <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" {{($employee->invite_to_slack == 1) ? 'checked' : ''}}/>
+                                                        <label for="basic_checkbox_2">Slack</label>
+                                                        <br>
+                                                        <input type="hidden" name="invite_to_zoho" value="0" />
+                                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}} />
+                                                        <label for="basic_checkbox_3">zoho</label>
+                                                        <div id="div_zoho_{{$employee->id}}"
+                                                             @if($employee->invite_to_zoho == 0)
+                                                             style="display: none;"
+                                                                @endif>
+                                                            <input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password">
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
                         </td>
                     </tr>
                     @endforeach @else
@@ -48,48 +91,6 @@
                     @endif
                     </tbody>
                 </table>
-            </div>
-        </div>
-        <div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
-                        {{ csrf_field() }}
-                        <div class="modal-header">
-                            Are you sure you want to delete Employee {{ $employee->firstname }}?
-                        </div>
-                        <div class="modal-body">
-                            <label>Admin Password</label>
-                            <div class="col-md-12 m-b-20">
-                                <input type="text" class="form-control" placeholder="Admin Password" name="password" required> </div>
-                            <div class="card-body">
-                                <div class="demo-checkbox">
-                                    <input type="hidden" name="invite_to_asana" value="0" />
-                                    <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" {{($employee->invite_to_asana == 1) ? 'checked' : ''}}/>
-                                    <label for="basic_checkbox_1">Asaana</label>
-                                    <input type="hidden" class="form-control" name="asana_email" value="{{$employee->official_email}}">
-                                    <input type="hidden" name="invite_to_slack" value="0" />
-                                    <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" {{($employee->invite_to_slack == 1) ? 'checked' : ''}}/>
-                                    <label for="basic_checkbox_2">Slack</label>
-                                    <br>
-                                    <input type="hidden" name="invite_to_zoho" value="0" />
-                                    <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}} />
-                                    <label for="basic_checkbox_3">zoho</label>
-                                    <div id="div_zoho_{{$employee->id}}"
-                                         @if($employee->invite_to_zoho == 0)
-                                         style="display: none;"
-                                            @endif>
-                                        <input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password">
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                            <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
-                        </div>
-                    </form>
-                </div>
             </div>
         </div>
     </div>
