@@ -101,6 +101,68 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'uses' => 'ApplicantController@hiredApplicants',
 		'as' => 'applicants.hired'
 	]);
+	//Department
+    Route::Get('/departments',[
+        'uses' => 'DepartmentController@index',
+        'as' => 'departments.index'
+    ]);
+    Route::post('/department/create',[
+        'uses' => 'DepartmentController@create',
+        'as' => 'department.create'
+    ]);
+    Route::post('/department/update/{id}',[
+        'uses' => 'DepartmentController@update',
+        'as' => 'department.update'
+    ]);
+
+    Route::post('/department/delete/{id}',[
+        'uses' => 'DepartmentController@delete',
+        'as' => 'department.delete'
+    ]);
+//Vendors
+    Route::Get('/vendors',[
+        'uses' => 'VendorController@index',
+        'as' => 'vendors.index'
+    ]);
+    Route::get('/vendor/create',[
+        'uses' => 'VendorController@create',
+        'as' => 'vendor.create'
+    ]);
+    Route::post('/vendor/store',[
+        'uses' => 'VendorController@store',
+        'as' => 'vendor.store'
+    ]);
+    Route::get('/vendor/edit/{id}',[
+        'uses' => 'VendorController@edit',
+        'as' => 'vendor.edit'
+    ]);
+    Route::post('/vendor/update/{id}',[
+        'uses' => 'VendorController@update',
+        'as' => 'vendor.update'
+    ]);
+    Route::post('/vendor/delete/{id}',[
+        'uses' => 'VendorController@delete',
+        'as' => 'vendor.delete'
+    ]);
+    //Vendor Category
+    Route::Get('/vendors/category',[
+        'uses' => 'VendorCategoryController@index',
+        'as' => 'vendor_category.index'
+    ]);
+    Route::post('/vendor/category/create',[
+        'uses' => 'VendorCategoryController@create',
+        'as' => 'vendor_category.create'
+    ]);
+    Route::post('/vendor/category/update/{id}',[
+        'uses' => 'VendorCategoryController@update',
+        'as' => 'vendor_category.update'
+    ]);
+
+    Route::post('/vendor/category/delete/{id}',[
+        'uses' => 'VendorCategoryController@delete',
+        'as' => 'vendor_category.delete'
+    ]);
+
 //	Route::Get('/user/create',[
 //		'uses' => 'UsersController@create',
 //		'as' => ''

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Department;
 use App\Mail\UpdateAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -70,18 +71,17 @@ class EmployeeController extends Controller
 
 	public function index()
 	{
-		$data = Employee::with('branch')
+		$data = Employee::with('branch','department')
 		->where('employment_status', '!=', 'resigned')
 		->where('employment_status', '!=', 'terminated')
 		->get();
 		
-		$active_employees = Employee::where('status', 1)->count();
+		$active_employees = Employee::where('status',1 )->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->count();
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('active_employees', $active_employees)	
 		->with('designations', $this->designations);
 	}
-
 
 	public function create()
 	{
@@ -93,6 +93,7 @@ class EmployeeController extends Controller
  
 		return view('admin.employees.create',['title' => 'Add Employee'])
 		->with('branches',Branch::all())
+        ->with('departments',Department::all())
 		->with('employment_statuses', $this->employment_statuses)
 		->with('designations', $this->designations);
 	}
@@ -133,6 +134,7 @@ class EmployeeController extends Controller
 			'status'        	=> 1,
 			'employment_status' => $request->employment_status,
 			'basic_salary'     	=> $request->salary,
+            'department_id'     => $request->department_id,
 			'designation'       => $request->designation,
             'type' 				=> $request->type,
             'cnic' 				=> $request->cnic,
@@ -252,6 +254,7 @@ class EmployeeController extends Controller
 		->with('employee',$employee)
 		->with('branches', Branch::all())
 		->with('designations', $this->designations)
+        ->with('departments', Department::all() )
 		->with('employment_statuses', $this->employment_statuses)
 		->with('employee_role_id', $employee_role_id)
 		->with('permissions', $permissions)
@@ -344,6 +347,7 @@ class EmployeeController extends Controller
 		$employee->current_address 	= $request->current_address;
 		$employee->permanent_address= $request->permanent_address;
 		$employee->city 			= $request->city;
+        $employee->department_id 			= $request->department_id;
 		
 		if (!empty($request->password)) {
 			$employee->password			= Hash::make($request->password);

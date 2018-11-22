@@ -22,7 +22,7 @@
 								<label class="control-label">Timing Start</label>
 								<input class="form-control" type="time" name="timing_start" placeholder="Enter Timing Start here"  id="timing_start" value="{{old('timing_start')}}">
 								<span class="input-group-addon timepicker">
-                        <i class="fa fa-clock-o" style="font-size:16px"></i>
+                        		<i class="fa fa-clock-o" style="font-size:16px"></i>
                     </span>
 							</div>
 						</div>

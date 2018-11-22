@@ -22,6 +22,7 @@
                         <th>Mobile </th>
                         <th>Designation</th>
                         <th>Office</th>
+                        <th>Department</th>
                         <th>Joining Date</th>
                         <th>Employment Status</th>
                         <th>Actions</th>
@@ -35,11 +36,11 @@
                         <td>{{$employee->contact_no}}</td>
                         <td>{{isset($designations[$employee->designation]) ? $designations[$employee->designation] : ''}}</td>
                         <td>{{isset($employee->branch) ? $employee->branch->name : ''}}</td>
+                        <td>{{isset($employee->department) ? $employee->department->department_name : ''}}</td>
                         <td>{{$employee->joining_date}}</td>
                         <td>{{$employee->employment_status}}</td>
                         <td class="text-nowrap">
                             {{--<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>--}}
-
                             {{--///End Dialog Box///--}}
                             <a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
                             <div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

@@ -55,7 +55,7 @@
                         @endif
                         <li><a href="#">Teams</a></li>
                         <li><a href="#">Team Members</a></li>
-                        <li><a href="#">Vendors</a></li>
+                        <li><a href="{{route('vendors.index')}}">Vendors</a></li>
 
                     </ul>
                 </li>
@@ -94,9 +94,9 @@
                         )
                         <li><a href="{{ route('branch.index') }}" @if(request()->is('branch/create')) class="active" @endif >Branches</a></li>
                         @endif
-                        <li><a href="#">Departments</a></li>
+                        <li><a href="{{route('departments.index')}}">Departments</a></li>
                         <li><a href="#">Designations</a></li>
-                        <li><a href="#">Vendor Categories</a></li>
+                        <li><a href="{{route('vendor_category.index')}}">Vendor Categories</a></li>
                         <li><a href="#">Leave Management</a></li>
                         <li><a href="#">Probident Fund</a></li>
                     </ul>

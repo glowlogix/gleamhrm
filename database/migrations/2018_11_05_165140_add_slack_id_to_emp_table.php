@@ -14,7 +14,7 @@ class AddSlackIdToEmpTable extends Migration
     public function up()
     {
         Schema::table('employees', function($table) {
-            $table->string('slack_id')->nullable()->after('account_id');
+            $table->string('slack_id')->nullable()->after('id');
         });
     }   
 
