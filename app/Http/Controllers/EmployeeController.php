@@ -28,6 +28,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Storage;
 use Spatie\Permission\Models\Role;
 use Spatie\Permission\Models\Permission;
+use Carbon\Carbon;
 
 class EmployeeController extends Controller
 {
@@ -118,7 +119,7 @@ class EmployeeController extends Controller
 		
 		//token get from values.php in config folder 
 		$token = config('values.SlackToken');      
-		$when = now();
+		$when = Carbon::now()->addMinutes(10);
 		$l=8;
 		$password = bcrypt("123456");
 
@@ -376,7 +377,7 @@ class EmployeeController extends Controller
 			$this->updateZohoAccount($params,$employee->account_id);    
 		}
 
-		$when = now();
+		$when = Carbon::now()->addMinutes(10);
 
 		if($request->zoho){
 			$response = $this->updateZohoAccount( $params );
