@@ -118,7 +118,8 @@ class EmployeeController extends Controller
 		}
 		
 		//token get from values.php in config folder 
-		$token = config('values.SlackToken');      
+		$token = config('values.SlackToken');
+
 		$when = Carbon::now()->addMinutes(10);
 		$l=8;
 		$password = bcrypt("123456");
@@ -376,6 +377,7 @@ class EmployeeController extends Controller
 			$employee->status  = 0;
 			$this->updateZohoAccount($params,$employee->account_id);    
 		}
+
 
 		$when = Carbon::now()->addMinutes(10);
 
