@@ -404,8 +404,15 @@ class EmployeeController extends Controller
 			Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
 		}*/
 
-		Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id,$request->password));
-		Mail::to($request->personal_email)->later($when, new UpdateAccount($employee->id,$request->password));
+        try{
+            Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id,$request->password));
+            Mail::to($request->personal_email)->later($when, new UpdateAccount($employee->id,$request->password));
+        }
+        catch(Exception $e){
+
+            Session::flash('error', 'Email Not Send Successfully ');
+        }
+
 		if ($employee->roles->count() > 0) {
         	$old_role = $employee->roles[0];
         	$employee->removeRole($old_role);
