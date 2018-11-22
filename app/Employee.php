@@ -60,7 +60,7 @@ class Employee extends Authenticatable
         }*/
     }
     public function department(){
-        return $this->belongsTo('App\department', 'department_id');
+        return $this->belongsTo('App\Department', 'department_id');
     }
 
 }
