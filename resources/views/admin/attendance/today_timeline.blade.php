@@ -61,7 +61,7 @@
                                                                 <label for="date">Today's Date</label></br>
                                                                 <div class="input-group date1">
                                                                     <input type="hidden" name="employee_id" value="{{$employee['id']}}"/>
-                                                                    <input type="date" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['date']: ''}}" disabled/>
+                                                                    <input type="date" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['date']: $today}}"/>
                                                                     <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                                         </span>
