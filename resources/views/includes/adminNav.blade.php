@@ -24,7 +24,7 @@
                     Auth::user()->isAllowed('ApplicantController:index') &&
                     Auth::user()->isAllowed('JobsController:index')
                 )
-                <li> <a class="has-arrow waves-effect waves-dark" href="#"  aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
+                <li @if(request()->is('applicants/hired') || request()->is('job/create')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="#"  aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if(
                         Auth::user()->isAllowed('ApplicantController:index')
@@ -41,58 +41,57 @@
                 @endif
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
-                <li> <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
+                <li @if(str_contains(Request::fullUrl(),'vendor')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('EmployeeController:index')
                         )
-                        <li><a href="{{route('employees')}}" @if(request()->is('employee/create')) class="active" @endif>Employees</a></li>
+                        <li><a href="{{route('employees')}}" @if(request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit')) class="active" @endif>Employees</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('OrganizationHierarchyController:index')
                         )
-                        <li><a href="{{route('organization_hierarchy.index')}}" @if(request()->is('organization_hierarchy/create')) class="active" @endif>Org Chart</a></li>
+                        <li><a href="{{route('organization_hierarchy.index')}}" @if(str_contains(Request::fullUrl(),'organization_hierarchy')) class="active" @endif>Org Chart</a></li>
                         @endif
                         <li><a href="#">Teams</a></li>
                         <li><a href="#">Team Members</a></li>
-                        <li><a href="{{route('vendors.index')}}">Vendors</a></li>
-
+                        <li><a href="{{route('vendors.index')}}" @if(str_contains(Request::fullUrl(),'vendor')) class="active" @endif >Vendors</a></li>
                     </ul>
                 </li>
-                <li> <a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
+                <li  @if(str_contains(Request::fullUrl(),'attendance') || request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                                 Auth::user()->isAllowed('AttendanceController:today_timeline')
                         )
-                        <li><a href="{{route('today_timeline')}}" >Today</a></li>
+                        <li><a href="{{route('today_timeline')}}" @if( str_contains(Request::fullUrl(),'attendance/create')) class="active" @endif>Today</a></li>
                         @endif
                         <li><a href="#">My Attendance</a></li>
                         @if (
                         Auth::user()->isAllowed('AttendanceController:timeline')
                         )
-                        <li><a href="{{route('timeline')}}" @if(request()->is('attendance/create')) class="active" @endif >Timeline</a></li>
+                        <li><a href="{{route('timeline')}}">Timeline</a></li>
                         @endif
                         <li><a href="#">History</a></li>
                         <li><a href="#">Incomplete</a></li>
                         @if (
                         Auth::user()->isAllowed('LeaveController:employeeleaves')
                         )
-                        <li><a href="{{route('employeeleaves')}}">Leaves</a></li>
+                        <li><a href="{{route('employeeleaves')}}" >Leaves</a></li>
                         @endif
-                        <li><a href="{{route('leave.index')}}" @if(request()->is('leave/create')) class="active" @endif >My Leaves</a></li>
+                        <li><a href="{{route('leave.index')}}" @if(request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit') || str_contains(Request::fullUrl(),'leave/show')) class="active" @endif >My Leaves</a></li>
                     </ul>
                 </li>
-                <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
+                <li  @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch')) class = "active" @endif  > <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('DocumentsController:index')
                         )
-                        <li><a href="{{ route('documents') }}" @if(request()->is('documents/create')) class="active" @endif >Documents</a></li>
+                        <li><a href="{{ route('documents') }}" @if(str_contains(Request::fullUrl(),'documents')) class="active" @endif >Documents</a></li>
                         @endif
                         @if (
                         Auth::user()->isAllowed('BranchController:index')
                         )
-                        <li><a href="{{ route('branch.index') }}" @if(request()->is('branch/create')) class="active" @endif >Branches</a></li>
+                        <li><a href="{{ route('branch.index') }}" @if(str_contains(Request::fullUrl(),'branch')) class="active" @endif >Branches</a></li>
                         @endif
                         <li><a href="{{route('departments.index')}}">Departments</a></li>
                         <li><a href="#">Designations</a></li>
@@ -112,12 +111,12 @@
                 @if (
                     Auth::user()->isAllowed('RolePermissionsController:index')
                 )
-                <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
+                <li @if(request()->is('rolespermissions/create')) class="active" @endif > <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('RolePermissionsController:index')
                         )
-                        <li><a href="{{route('roles_permissions')}}">Roles And Permissions</a></li>
+                        <li><a href="{{route('roles_permissions')}}" @if(request()->is('rolespermissions/create')) class="active" @endif  >Roles And Permissions</a></li>
                         @endif
                     </ul>
                 </li>

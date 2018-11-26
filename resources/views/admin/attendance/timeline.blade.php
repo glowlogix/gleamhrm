@@ -10,7 +10,6 @@
 @section('content')
 <div class="card">
     <div class="card-body">
-        <div class="panel-body">
             <span style="float: right;">
                 <select class="form-control" id="selectOffice">
                     <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
@@ -19,9 +18,9 @@
                     @endforeach
                 </select>
             </span>
-        </div>
-        
-        <div id="calendar">
+        <br>
+        <br>
+         <div id="calendar">
         </div>
     </div>
 </div>

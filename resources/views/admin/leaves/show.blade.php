@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('Heading')
-    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('attendance.create')}}'"><span class="fas fa-plus" ></span> Add Attendence</button>
     <h3 class="text-themecolor">Edit Leave</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -31,16 +30,25 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">From Date</label>
+                                        <label class="control-label text-right col-md-3">Leave Days</label>
                                         <div class="col-md-9">
-                                            {{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}
+                                            {{$leave_days}}
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                             </div>
                             <!--/row-->
+
                             <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">From Date</label>
+                                        <div class="col-md-9">
+                                            {{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">To Date</label>
@@ -49,14 +57,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Leave Days</label>
-                                        <div class="col-md-9">
-                                            {{$leave_days}}
-                                        </div>
-                                    </div>
-                                </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Line Manager</label>
@@ -65,6 +66,15 @@
                                                 {{$leave->lineManager->firstname}}
                                                 {{$leave->lineManager->lastname}}
                                             @endif
+                                        </div>
+                                    </div>
+
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">CC To</label>
+                                        <div class="col-md-9">
+                                            {{$leave->cc_to}}
                                         </div>
                                     </div>
                                 </div>
@@ -85,23 +95,16 @@
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">CC To</label>
+                                        <label class="control-label text-right col-md-3">Subject</label>
                                         <div class="col-md-9">
-                                            {{$leave->cc_to}}
+                                            {{$leave->subject}}
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                             </div>
                             <div class="row">
-                              <div class="col-md-6">
-                                  <div class="form-group row">
-                                      <label class="control-label text-right col-md-3">Subject</label>
-                                      <div class="col-md-9">
-                                        {{$leave->subject}}
-                                      </div>
-                                  </div>
-                              </div>
+
                               <!--/span-->
                               <div class="col-md-6">
                                   <div class="form-group row">
