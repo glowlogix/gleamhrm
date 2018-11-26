@@ -53,8 +53,8 @@
                         )
                         <li><a href="{{route('organization_hierarchy.index')}}" @if(str_contains(Request::fullUrl(),'organization_hierarchy')) class="active" @endif>Org Chart</a></li>
                         @endif
-                        <li><a href="#">Teams</a></li>
-                        <li><a href="#">Team Members</a></li>
+                        <li><a href="{{route('teams.index')}}">Teams</a></li>
+                        <li><a href="{{route('team_members.index')}}">Team Members</a></li>
                         <li><a href="{{route('vendors.index')}}" @if(str_contains(Request::fullUrl(),'vendor')) class="active" @endif >Vendors</a></li>
                     </ul>
                 </li>

@@ -163,7 +163,43 @@ Route::group(['middleware' => 'allowed_permission'], function (){
         'as' => 'vendor_category.delete'
     ]);
 
-//	Route::Get('/user/create',[
+    //Teams
+    Route::Get('/teams',[
+        'uses' => 'TeamController@index',
+        'as' => 'teams.index'
+    ]);
+    Route::post('/team/create',[
+        'uses' => 'TeamController@create',
+        'as' => 'team.create'
+    ]);
+    Route::post('/team/update/{id}',[
+        'uses' => 'TeamController@update',
+        'as' => 'team.update'
+    ]);
+
+    Route::post('/team/delete/{id}',[
+        'uses' => 'TeamController@delete',
+        'as' => 'team.delete'
+    ]);
+
+    //Team Members
+    Route::Get('/team_members',[
+        'uses' => 'TeamMembersController@index',
+        'as' => 'team_members.index'
+    ]);
+    Route::post('/team_member/add/',[
+        'uses' => 'TeamMembersController@create',
+        'as' => 'team_member.add'
+    ]);
+    Route::get('/team_member/edit/{id}',[
+        'uses' => 'TeamMembersController@edit',
+        'as' => 'team_member.edit'
+    ]);
+    Route::post('/team_member/delete/{id}',[
+        'uses' => 'TeamMembersController@delete',
+        'as' => 'team_member.delete'
+    ]);
+    //	Route::Get('/user/create',[
 //		'uses' => 'UsersController@create',
 //		'as' => ''
 //	]);
