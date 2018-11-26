@@ -18,9 +18,8 @@
                     @endforeach
                 </select>
             </span>
-        <br>
-        <br>
-         <div id="calendar">
+        <br><br>
+        <div id="calendar">
         </div>
     </div>
 </div>
