@@ -17,4 +17,7 @@ class Department extends Model
     public function team(){
         return $this->hasMany('App\Team');
     }
+    public function job(){
+        return $this->hasMany('App\Job');
+    }
 }

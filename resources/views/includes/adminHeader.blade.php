@@ -70,7 +70,7 @@
                 <!-- Profile -->
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="profile-pic" height="25" width="20" /></a>
+                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="profile-pic" height="30" width="50%"/></a>
                     <div class="dropdown-menu dropdown-menu-right scale-up">
                         <ul class="dropdown-user">
                             <li>
@@ -78,15 +78,14 @@
                                     <div class="u-img"><img  src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" width="30" height="80"></div>
                                     <div class="u-text">
                                         <h4>{{Auth::user()->firstname}}</h4>
-                                        <p class="text-muted" style="font-size:12px;">{{Auth::user()->official_email}}</p><a href="" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
+                                        <p class="text-muted" style="font-size:12px;">{{Auth::user()->official_email}}</p><a href="{{route('profile.index')}}" class="btn btn-rounded btn-danger btn-sm">View Profile</a>
                                     </div>
                                 </div>
                             </li>
                             <li role="separator" class="divider"></li>
-                            <li><a href="{{route('employee.profile')}}"><i class="ti-user"></i> My Profile</a></li>
-                            <li><a href="#"><i class="ti-email"></i> Inbox</a></li>
-                            <li role="separator" class="divider"></li>
-                            <li><a href="#"><i class="ti-settings"></i> Account Setting</a></li>
+                            {{--<li><a href="{{route('profile.edit')}}"><i class="ti-user"></i> My Profile</a></li>--}}
+                            {{--<li><a href="#"><i class="ti-email"></i> Inbox</a></li>--}}
+                            <li><a href="{{route('profile.index')}}"><i class="ti-settings"></i> Account Setting</a></li>
                             <li role="separator" class="divider"></li>
                             <li><a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('logout-form').submit();" class="link" data-toggle="tooltip" title="Logout"><i class="fa fa-power-off"></i> Logout</a></li>
                         </ul>

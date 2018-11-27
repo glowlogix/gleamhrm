@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Department;
+use App\Designation;
 use App\Mail\UpdateAccount;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
@@ -81,7 +82,7 @@ class EmployeeController extends Controller
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('active_employees', $active_employees)	
-		->with('designations', $this->designations);
+		->with('designations', Designation::all());
 	}
 
 	public function create()
@@ -96,7 +97,7 @@ class EmployeeController extends Controller
 		->with('branches',Branch::all())
         ->with('departments',Department::all())
 		->with('employment_statuses', $this->employment_statuses)
-		->with('designations', $this->designations);
+		->with('designations', Designation::all());
 	}
 
 
@@ -137,7 +138,7 @@ class EmployeeController extends Controller
 			'employment_status' => $request->employment_status,
 			'basic_salary'     	=> $request->salary,
             'department_id'     => $request->department_id,
-			'designation'       => $request->designation,
+			'designation'       => strtolower($request->designation),
             'type' 				=> $request->type,
             'cnic' 				=> $request->cnic,
             'date_of_birth' 	=> $request->date_of_birth,
@@ -262,7 +263,7 @@ class EmployeeController extends Controller
         return view('admin.employees.edit',['title' => 'Update Employee'])
 		->with('employee',$employee)
 		->with('branches', Branch::all())
-		->with('designations', $this->designations)
+		->with('designations', Designation::all())
         ->with('departments', Department::all() )
 		->with('employment_statuses', $this->employment_statuses)
 		->with('employee_role_id', $employee_role_id)
@@ -298,7 +299,7 @@ class EmployeeController extends Controller
 		->with('employee',$employee)
 		->with('branches', Branch::all())
 		->with('designations', $this->designations)
-		->with('employment_statuses', $this->employment_statuses)
+		->with('employment_statuses',Designation::all())
 		->with('employee_role_id', $employee_role_id)
 		->with('permissions', $permissions)
 		->with('employee_permissions', $employee_permissions)
@@ -345,7 +346,7 @@ class EmployeeController extends Controller
 		$employee->official_email 	= $request->official_email;
 		$employee->personal_email 	= $request->personal_email;
 		$employee->basic_salary 	= $request->salary;
-		$employee->designation 		= $request->designation;
+		$employee->designation 		= strtolower($request->designation);
 		$employee->employment_status= $request->employment_status;
 		$employee->type 			= $request->type;
 		if (!empty($request->branch_id)) {

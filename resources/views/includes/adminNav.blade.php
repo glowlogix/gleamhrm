@@ -4,7 +4,7 @@
         <!-- User profile -->
         <div class="user-profile" style="background: url({{asset('assets/images/background/user-info.jpg') }}) no-repeat;">
             <!-- User profile image -->
-            <div class="profile-img"> <img src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" height="55" width="50" /> </div>
+            <div class="profile-img"> <img src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" height="50" width="50%" /> </div>
             <!-- User profile text-->
             <div class="profile-text"> <a href="#" class="dropdown-toggle u-dropdown" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="true">{{Auth::user()->firstname}}</a>
             <div class="dropdown-menu animated flipInY"> <a href="#" class="dropdown-item"><i class="ti-user"></i> My Profile</a> <a href="#" class="dropdown-item"><i class="ti-email"></i> Inbox</a>
@@ -41,7 +41,7 @@
                 @endif
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
-                <li @if(str_contains(Request::fullUrl(),'vendor')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
+                <li @if(str_contains(Request::fullUrl(),'vendor')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('EmployeeController:index')
@@ -54,9 +54,10 @@
                         <li><a href="{{route('organization_hierarchy.index')}}" @if(str_contains(Request::fullUrl(),'organization_hierarchy')) class="active" @endif>Org Chart</a></li>
                         @endif
                         <li><a href="{{route('teams.index')}}">Teams</a></li>
-                        <li><a href="{{route('team_members.index')}}">Team Members</a></li>
+                        <li><a href="{{route('team_members.index')}}"  @if(str_contains(Request::fullUrl(),'team_member')) class="active" @endif >Team Members</a></li>
                         <li><a href="{{route('vendors.index')}}" @if(str_contains(Request::fullUrl(),'vendor')) class="active" @endif >Vendors</a></li>
                     </ul>
+
                 </li>
                 <li  @if(str_contains(Request::fullUrl(),'attendance') || request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
@@ -94,9 +95,9 @@
                         <li><a href="{{ route('branch.index') }}" @if(str_contains(Request::fullUrl(),'branch')) class="active" @endif >Branches</a></li>
                         @endif
                         <li><a href="{{route('departments.index')}}">Departments</a></li>
-                        <li><a href="#">Designations</a></li>
+                        <li><a href="{{route('designations.index')}}">Designations</a></li>
                         <li><a href="{{route('vendor_category.index')}}">Vendor Categories</a></li>
-                        <li><a href="#">Leave Management</a></li>
+                        <li><a href="{{route('leave_type.index')}}">Leave Management</a></li>
                         <li><a href="#">Probident Fund</a></li>
                     </ul>
                 </li>

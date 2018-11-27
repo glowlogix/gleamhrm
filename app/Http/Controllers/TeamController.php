@@ -29,7 +29,7 @@ class TeamController extends Controller
                 'name' => $request->team_name,
                 'department_id' => $request->department_id
             ]);
-            Session::flash('success','Team is created succesfully');
+            Session::flash('success','Team is created successfully');
             return redirect()->route('teams.index');
         }
         else
@@ -45,14 +45,14 @@ class TeamController extends Controller
         $team->department_id = $request->dept_id;
         $team->name = $request->name;
         $team->save();
-        Session::flash('success','Team is updated succesfully');
+        Session::flash('success','Team is updated successfully');
         return redirect()->route('teams.index');
     }
     public function delete(Request $request ,$id)
     {
         $team = Team::find($id);
         $team->delete();
-        Session::flash('success','Team deleted successfuly.');
+        Session::flash('success','Team deleted successfully.');
         return redirect()->route('teams.index');
     }
 }

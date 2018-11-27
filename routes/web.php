@@ -51,8 +51,9 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 	]);
 
 	Route::resources([
-	    'job' => 'JobsController',
-	]);
+        'job' => 'JobsController',
+    ]);
+
 
 	Route::Get('/applicant/create',[
 		'uses' =>'ApplicantController@create',
@@ -199,6 +200,62 @@ Route::group(['middleware' => 'allowed_permission'], function (){
         'uses' => 'TeamMembersController@delete',
         'as' => 'team_member.delete'
     ]);
+
+    //Designations
+    Route::Get('/designations',[
+        'uses' => 'DesignationController@index',
+        'as' => 'designations.index'
+    ]);
+    Route::post('/designation/create',[
+        'uses' => 'DesignationController@create',
+        'as' => 'designation.create'
+    ]);
+    Route::post('/designation/update/{id}',[
+        'uses' => 'DesignationController@update',
+        'as' => 'designation.update'
+    ]);
+
+    Route::post('/designation/delete/{id}',[
+        'uses' => 'DesignationController@delete',
+        'as' => 'designation.delete'
+    ]);
+    //Profile Update
+    Route::Get('/profile/index',[
+        'uses' => 'ProfileController@index',
+        'as' => 'profile.index'
+    ]);
+    Route::Post('/profile/update',[
+        'uses' => 'ProfileController@update',
+        'as' => 'password.update'
+    ]);
+    Route::Post('/profile_update/update',[
+        'uses' => 'ProfileController@updatePic',
+        'as' => 'profile_pic.update'
+    ]);
+
+
+    //Leave Types
+
+    Route::Get('/leave_types',[
+        'uses' => 'LeaveTypeController@index',
+        'as' => 'leave_type.index'
+    ]);
+    Route::post('/leave_type/create',[
+        'uses' => 'LeaveTypeController@create',
+        'as' => 'leave_type.create'
+    ]);
+    Route::post('/leave_type/update/{id}',[
+        'uses' => 'LeaveTypeController@update',
+        'as' => 'leave_type.update'
+    ]);
+
+    Route::post('/leave_type/delete/{id}',[
+        'uses' => 'LeaveTypeController@delete',
+        'as' => 'leave_type.delete'
+    ]);
+
+
+
     //	Route::Get('/user/create',[
 //		'uses' => 'UsersController@create',
 //		'as' => ''

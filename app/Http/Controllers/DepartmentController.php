@@ -9,18 +9,18 @@ class DepartmentController extends Controller
 {
 
     public function index()
-    {
-        $departments = Department::all();
+{
+    $departments = Department::all();
 
-        return view('admin.departments.index')->with('departments',$departments);
-    }
+    return view('admin.departments.index')->with('departments',$departments);
+}
 
     public function create(Request $request)
     {
         $this->validate($request,[
-        'department_name' => 'required',
-        'status' => 'required'
-    ]);
+            'department_name' => 'required',
+            'status' => 'required'
+        ]);
         $department_exist=Department::where('department_name',$request->department_name)->first();
         if($department_exist == null){
             $department = Department::create([

@@ -7,13 +7,21 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
 	protected $fillable=[
-		'title','description','city'
+		'title','description','branch_id','designation_id','department_id'
 	];
     public function applicant(){
         return $this->hasMany('App\Applicant');
     }
-	
-    /*public function applicant(){
-    	return $this->hasOne('App\Applicant');
-    }*/
+    public function department(){
+
+        return $this->belongsTo('App\Department', 'department_id');
+    }
+    public function designation(){
+
+        return $this->belongsTo('App\Designation', 'designation_id');
+    }
+    public function branch(){
+
+        return $this->belongsTo('App\branch', 'branch_id');
+    }
 }

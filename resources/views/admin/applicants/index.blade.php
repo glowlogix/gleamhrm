@@ -36,9 +36,7 @@
 							<td>{{$applicant->city}}</td>
 							<td>{{$applicant->job_status}}</td>
 							<td>{{$applicant->job->title}}</td>
-							<td><a target="_blank" href="{{asset($applicant->cv)}}">
-									<img src="{{asset('uploads/applicants/cv/cv_icon.jpg') }}" alt="" height="50px" width="50px">
-
+							<td><a target="_blank" href="{{asset($applicant->cv)}}" class="fas fa-file-alt text-inverse font-bold" data-toggle="tooltip"  data-original-title="Click To Open CV" style="font-size: 30px">
 								</a>
 							</td>
 							<td class="text-nowrap">

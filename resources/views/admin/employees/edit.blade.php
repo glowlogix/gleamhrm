@@ -75,8 +75,8 @@
                                         <label class="control-label text-right col-md-3">Designation</label>
                                         <div class="col-md-9">
                                             <select class="form-control custom-select" name="designation">
-                                                @foreach($designations as $k => $designation)
-                                                    <option value="{{$k}}" @if($employee->designation == $k) selected @endif>{{$designation}}</option>
+                                                @foreach($designations as  $designation)
+                                                    <option value="{{$designation->designation_name}}" @if($employee->designation == strtolower($designation->designation_name)) selected @endif>{{$designation->designation_name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -457,12 +457,6 @@
                     }
                     reader.readAsDataURL(input.files[0]);
                 }           }
-            $(".form-control").keypress(function(e) {
-                if (e.which == 13) {
-                    e.preventDefault();
-                    return false;
-                }
-            });
         </script>
         <script src="{{asset('assets/plugins/wizard/jquery.steps.min.js')}}"></script>
         <script>
@@ -480,8 +474,14 @@
                     $("#button").click();
                 }
             });
-
-
+        </script>
+        <script>
+            $(".form-control").keypress(function(e) {
+                if (e.which === 13) {
+                    e.preventDefault();
+                    return false;
+                }
+            });
         </script>
     @endpush
 @stop

@@ -39,3 +39,9 @@ $(document).ready(function () {
 </script>
 @yield('scripts')
 @stack('scripts')
+{{--<script src="{{asset('js/editor.js')}}"></script>--}}
+{{--<script>--}}
+    {{--$(document).ready(function() {--}}
+        {{--$("#txtEditor").Editor();--}}
+    {{--});--}}
+{{--</script>--}}

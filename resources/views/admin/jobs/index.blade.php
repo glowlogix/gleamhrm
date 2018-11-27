@@ -21,7 +21,9 @@
 							@if($jobs->count() > 0)
 							<tr>
 								<th> Title</th>
-								<th> City</th>
+								<th> Designation</th>
+								<th> Department</th>
+								<th> Branch</th>
 								@if (
 			                        Auth::user()->hasRole('admin') ||
 			                        Auth::user()->hasPermissionTo('EmployeeController:index')
@@ -35,7 +37,9 @@
 							 @foreach($jobs as $job)
 							<tr>
 								<td>{{$job->title}}</td>
-								<td>{{$job->city}}</td>
+								<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
+								<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
+								<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
 								<td class="text-nowrap">
 									@if (
 				                        Auth::user()->hasRole('admin') ||

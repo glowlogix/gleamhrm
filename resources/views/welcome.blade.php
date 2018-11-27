@@ -86,7 +86,7 @@
             </div>
 
             <div class="links">
-                <a href="{{route('applicant.apply')}}">Apply in HRM</a>
+                <a href="{{route('applicant.apply')}}">Apply For Job</a>
             </div>
         </div>
     </div>

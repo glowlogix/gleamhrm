@@ -3,52 +3,97 @@
 	<h3 class="text-themecolor">Update Job</h3>
 @stop
 @section('content')
-<div class="row">
-	<div class="col-lg-12">
-		<div class="card card-outline-info">
+	<div class="row">
+		<div class="col-lg-12">
+			<div class="card card-outline-info">
+				<div style="margin-top:10px; margin-right: 10px;">
+					<button type="button" onclick="window.location.href='{{route('job.index')}}'" class="btn btn-info float-right">Back</button>
+				</div>
+				<div class="card-body">
+					<form action="{{route('job.update',['id'=>$job->id])}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+						<input name="_method" type="hidden" value="PUT">
+						{{csrf_field()}}
+						<div class="form-body">
+							<hr class="m-t-0 m-b-40">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Job Title</label>
+										<div class="col-md-9">
+											<input type="text" value="{{$job->title}}" name="title" class="form-control" placeholder="Enter Title">
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Designation</label>
+										<div class="col-md-9">
+											<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="designation_id">
+												<option value="">Select Designation</option>
+												@foreach($designations as $designation)
+													<option value="{{$designation->id}}" @if($designation->id == $job->designation_id )selected @endif>{{$designation->designation_name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<!--/row-->
+							<!--/row-->
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Branch</label>
+										<div class="col-md-9">
+											<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="branch_id">
+												@foreach($branches as $branch)
+													<option value="{{$branch->id}}" @if(old("branch_id") == "remote") selected @endif>{{$branch->name}} ({{$branch->address}})</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Department</label>
+										<div class="col-md-9">
+											<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="department_id">
+												<option value="">Select Department</option>
+												@foreach($departments as $department)
+													<option value="{{$department->id}}" @if($department->id == $job->department_id )selected @endif>{{$department->department_name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
 
-			<div class="card-body">
-				<form action="{{route('job.update',['id'=>$job->id])}}" method="post" enctype="multipart/form-data">
-					<input name="_method" type="hidden" value="PUT">
-					{{csrf_field()}}
-					<div class="form-body">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="control-label">Title</label>
-								<input type="text" value="{{$job->title}}"  name="title" class="form-control" placeholder="Enter Title">
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Description</label>
+										<div class="col-md-9">
+											<textarea name="description"  rows="5" class="form-control " placeholder="Enter Description Here">{{$job->description}}</textarea>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-
-					</div>
-					<div class="form-body">
-
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="control-label">City</label>
-								<input type="text" value="{{$job->city}}"  name="city" class="form-control" placeholder="Enter City">
+						<hr>
+						<div class="form-actions">
+							<div class="row">
+								<div class="col-md-6">
+									<div class="row">
+										<div class="col-md-offset-3 col-md-9">
+											<button type="submit" class="btn btn-success">Update Job</button>
+											<button type="button" onclick="window.location.href='{{route('job.index')}}'" class="btn btn-inverse">Cancel</button>
+										</div>
+									</div>
+								</div>
 							</div>
 						</div>
-
-					</div>
-					<div class="form-body">
-						<div class="col-md-8" >
-							<div class="form-group">
-								<label class="control-label">Description</label>
-								<textarea name="description"  rows="5" class="form-control " placeholder="Enter Description Here">{{$job->description}}</textarea>
-							</div>
-						</div>
-
-					</div>
-
-					<div class="form-actions">
-						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Job</button>
-						<button type="button" onclick="window.location.href='{{route('job.index')}}'" class="btn btn-inverse">Cancel</button>
-					</div>
-				</form>
+					</form>
+				</div>
 			</div>
 		</div>
 	</div>
-
-</div>
 
 @stop

@@ -28,8 +28,8 @@
                                 <tr>
                                     <td>{{$team->name}}</td>
                                     <td class="text-nowrap">
-                                        <a class="btn btn-info btn-sm" href="{{route('team_member.edit',['id'=>$team->id])}}"  data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
-                                        <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#add{{$team->id}}"  data-original-title="Close"> <i class="fas fa-plus text-white"></i></a>
+                                        <span data-toggle="tooltip"  data-original-title="Click To Add Member To Team"><a class="btn btn-info btn-sm" data-toggle="modal" data-target="#add{{$team->id}}"> <i class="fas fa-plus text-white"></i></a></span>
+                                        <span data-toggle="tooltip"  data-original-title="Edit Team members"><a class="btn btn-info btn-sm" href="{{route('team_member.edit',['id'=>$team->id])}}" title="Edit Team" > <i class="fas fa-pencil-alt text-white"></i></a></span>
                                         <div class="modal fade" id="add{{$team->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">

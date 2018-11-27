@@ -27,11 +27,11 @@
     <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
     <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
     <![endif]-->
-    
     <link rel="stylesheet" href="{{asset('bootstrap/bootstrap-datetimepicker.min.css')}}">
     <link rel="stylesheet" href="{{asset('css/toastr.min.css')}}">
     <link href="{{asset('assets/plugins/footable/css/footable.bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('assets/plugins/wizard/steps.css')}}" rel="stylesheet" type="text/css">
     <link href="{{asset('assets/plugins/datatables/media/css/dataTables.bootstrap4.css')}}" rel="stylesheet">
+    {{--<link href="{{asset('css/editor.css')}}" type="text/css" rel="stylesheet"/>--}}
 </head>
