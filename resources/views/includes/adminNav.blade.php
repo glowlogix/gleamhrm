@@ -41,7 +41,7 @@
                 @endif
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
-                <li @if(str_contains(Request::fullUrl(),'vendor')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
+                <li @if(request()->is('vendor/create')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('EmployeeController:index')
@@ -54,8 +54,7 @@
                         <li><a href="{{route('organization_hierarchy.index')}}" @if(str_contains(Request::fullUrl(),'organization_hierarchy')) class="active" @endif>Org Chart</a></li>
                         @endif
                         <li><a href="{{route('teams.index')}}">Teams</a></li>
-                        <li><a href="{{route('team_members.index')}}"  @if(str_contains(Request::fullUrl(),'team_member')) class="active" @endif >Team Members</a></li>
-                        <li><a href="{{route('vendors.index')}}" @if(str_contains(Request::fullUrl(),'vendor')) class="active" @endif >Vendors</a></li>
+                        <li><a href="{{route('vendors.index')}}" @if(request()->is('vendor/create')) class="active" @endif> Vendors</a></li>
                     </ul>
 
                 </li>
@@ -98,6 +97,8 @@
                         <li><a href="{{route('designations.index')}}">Designations</a></li>
                         <li><a href="{{route('vendor_category.index')}}">Vendor Categories</a></li>
                         <li><a href="{{route('leave_type.index')}}">Leave Management</a></li>
+                        <li><a href="{{route('skill.index')}}">Skills</a></li>
+                        {{--<li><a href="{{route('sub_skill.index')}}">Sub Skill</a></li>--}}
                         <li><a href="#">Probident Fund</a></li>
                     </ul>
                 </li>

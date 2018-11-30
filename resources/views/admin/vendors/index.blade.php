@@ -68,7 +68,7 @@
                                         </td>
                                     </tr>
                                 @endforeach @else
-                                <tr> No Vendor found.</tr>
+                                <tr> No Vendor Found</tr>
                             @endif
                             </tbody>
                         </table>

@@ -82,7 +82,7 @@ class ApplicantController extends Controller
     	]);
 
         /*Mail::to($request->email)->send(new Reminder);*/
-        Session::flash('success','application is submitted succesfully');
+        Session::flash('success','application is submitted successfully');
         return redirect()->back();
     }
 
@@ -102,7 +102,7 @@ class ApplicantController extends Controller
     {
         $applicant=Applicant::find($id);
         $applicant->delete();
-        Session::flash('sucess','Applicant deleted successfuly.');
+        Session::flash('sucess','Applicant deleted successfully.');
         return redirect()->back();
     }
 
@@ -118,7 +118,7 @@ class ApplicantController extends Controller
         $applicant=Applicant::withTrashed()->where('id', $id)->first();
         $applicant->forceDelete();
 
-        Session::flash('success','Applicant Deleted permanently.');
+        Session::flash('success','Applicant deleted permanently.');
         return redirect()->back();
     }
 
@@ -126,7 +126,7 @@ class ApplicantController extends Controller
     {
         $applicant=Applicant::withTrashed()->where('id', $id)->first();
         $applicant->restore();
-        Session::flash('success','Seccessfuly Restored the applicant');
+        Session::flash('success','Successfully Restored the applicant');
         return redirect()->back();
     }
 

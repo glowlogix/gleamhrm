@@ -17,45 +17,42 @@ class LeaveTypeController extends Controller
     public function create(Request $request)
     {
         $this->validate($request,[
-            'short_name' => 'required',
             'name' => 'required',
-            'amount' => 'required',
+            'count' => 'required',
             'status' => 'required',
         ]);
-        $leave_exist=LeaveType::where('name',$request->name)->orwhere('short_name',$request->short_name)->first();
+        $leave_exist=LeaveType::where('name',$request->name)->first();
         if($leave_exist == null){
             LeaveType::create([
-                'short_name' => $request->short_name,
                 'name' => $request->name,
-                'amount' => $request->amount,
+                'count' => $request->count,
                  'status' => $request->status,
             ]);
-            Session::flash('success','Leave Type is created succesfully');
-            return redirect()->route('leave_type.index');
+            Session::flash('success','Leave type is created successfully');
+
         }
         else
         {
-            Session::flash('error','Leave Type with this name Already Exist');
-            return redirect()->route('leave_type.index');
+            Session::flash('error','Leave type with this name already exist');
         }
+        return redirect()->route('leave_type.index');
 
     }
     public function update (Request $request ,$id)
     {
         $leave_type=LeaveType::find($id);
-        $leave_type->short_name = $request->short_name;
         $leave_type->name = $request->name;
-        $leave_type->amount = $request->amount;
+        $leave_type->count = $request->count;
         $leave_type->status = $request->status;
         $leave_type->save();
-        Session::flash('success','Leave Type is updated Successfully');
+        Session::flash('success','Leave type is updated successfully');
         return redirect()->route('leave_type.index');
     }
     public function delete(Request $request ,$id)
     {
         $leave_type = LeaveType::find($id);
         $leave_type->delete();
-        Session::flash('success','Leave Type deleted successfully.');
+        Session::flash('success','Leave type deleted successfully.');
         return redirect()->route('leave_type.index');
     }
 

@@ -4,7 +4,7 @@
 	<h3 class="text-themecolor">Applicants</h3>
 	<ol class="breadcrumb">
 	<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-	<li class="breadcrumb-item active">Applicant</li>
+	<li class="breadcrumb-item active">Applicants</li>
 	</ol>
 @stop
 @section('content')
@@ -46,7 +46,7 @@
 						</tr>
 						@endforeach
 						@else
-							<p class="text-center" >No New Applicant found.</p>
+							<p class="text-center" >No New Applicant Found</p>
 						@endif
 						</tbody>
 					</table>

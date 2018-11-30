@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class Job extends Model
 {
 	protected $fillable=[
-		'title','description','branch_id','designation_id','department_id'
+		'title','description','branch_id','designation_id','department_id','skill'
 	];
     public function applicant(){
         return $this->hasMany('App\Applicant');

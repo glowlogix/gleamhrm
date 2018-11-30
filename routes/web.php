@@ -59,7 +59,7 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'uses' =>'ApplicantController@create',
 		'as' => 'applicant.create'
 	]);
-	Route::Get('/applicant/index',[
+	Route::Get('/applicant',[
 		'uses' =>'ApplicantController@index',
 		'as' => 'applicants'
 	]);
@@ -184,10 +184,6 @@ Route::group(['middleware' => 'allowed_permission'], function (){
     ]);
 
     //Team Members
-    Route::Get('/team_members',[
-        'uses' => 'TeamMembersController@index',
-        'as' => 'team_members.index'
-    ]);
     Route::post('/team_member/add/',[
         'uses' => 'TeamMembersController@create',
         'as' => 'team_member.add'
@@ -220,7 +216,7 @@ Route::group(['middleware' => 'allowed_permission'], function (){
         'as' => 'designation.delete'
     ]);
     //Profile Update
-    Route::Get('/profile/index',[
+    Route::Get('/personal_profile/',[
         'uses' => 'ProfileController@index',
         'as' => 'profile.index'
     ]);
@@ -253,7 +249,68 @@ Route::group(['middleware' => 'allowed_permission'], function (){
         'uses' => 'LeaveTypeController@delete',
         'as' => 'leave_type.delete'
     ]);
+//Skills
+    Route::Get('/skills',[
+        'uses' => 'SkillController@index',
+        'as' => 'skill.index'
+    ]);
+    Route::post('/skill/create',[
+        'uses' => 'SkillController@create',
+        'as' => 'skill.create'
+    ]);
+    Route::post('/skill/update/{id}',[
+        'uses' => 'SkillController@update',
+        'as' => 'skill.update'
+    ]);
 
+    Route::post('/skill/delete/{id}',[
+        'uses' => 'SkillController@delete',
+        'as' => 'skill.delete'
+    ]);
+
+    //Sub Skills
+    Route::Get('/Sub_skills',[
+        'uses' => 'SubSkillController@index',
+        'as' => 'sub_skill.index'
+    ]);
+    Route::post('/sub_skill/add/',[
+        'uses' => 'SubSkillController@create',
+        'as' => 'sub_skill.add'
+    ]);
+    Route::get('/sub_skill/edit/{id}',[
+        'uses' => 'SubSkillController@edit',
+        'as' => 'sub_skill.edit'
+    ]);
+    Route::post('/sub_skill/sub_edit/{id}',[
+        'uses' => 'SubSkillController@sub_edit',
+        'as' => 'sub_skill.sub_edit'
+    ]);
+    Route::post('/sub_skill/delete/{id}',[
+        'uses' => 'SubSkillController@delete',
+        'as' => 'sub_skill.delete'
+    ]);
+
+
+    //Assign Skills To Employees
+    Route::post('/assign_skill',[
+        'uses' => 'SkillController@assign',
+        'as' => 'skill.assign'
+    ]);
+    Route::get('/assign_skill/edit/{id}',[
+        'uses' => 'SkillController@assign_edit',
+        'as' => 'skill_assign.edit'
+    ]);
+    Route::post('/unassign_skill/employee/{id}',[
+        'uses' => 'SkillController@unassign',
+        'as' => 'skill.unassign'
+    ]);
+
+    //Help
+
+    Route::post('/contact_us',[
+        'uses' => 'DashboardController@contact_us',
+        'as' => 'contact_us'
+    ]);
 
 
     //	Route::Get('/user/create',[
@@ -337,6 +394,10 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'uses' => 'EmployeeController@index',
 		'as' => 'employees'
 	]);
+    Route::Get('/all_employees',[
+        'uses' => 'EmployeeController@all_employees',
+        'as' => 'all_employees'
+    ]);
 	Route::Get('/employee/create',[
 		'uses' => 'EmployeeController@create',
 		'as' => 'employee.create'
@@ -549,7 +610,7 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 	]);
 
 	//upload Docs
-	Route::get('/documents/index',[
+	Route::get('/documents',[
 		'as' => 'documents',
 		'uses' => 'DocumentsController@index'
 	]);

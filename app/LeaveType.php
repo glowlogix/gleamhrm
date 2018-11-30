@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class LeaveType extends Model
 {
     protected $fillable = [
-        'short_name', 'name', 'amount', 'status',
+        'name', 'amount', 'status',
     ];
 
     public function employees()

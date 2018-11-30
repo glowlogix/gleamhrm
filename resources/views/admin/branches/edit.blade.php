@@ -3,7 +3,8 @@
 	<h3 class="text-themecolor">Edit Branch</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Branches</li>
+		<li class="breadcrumb-item active">Settings</li>
+		<li class="breadcrumb-item active">Branch</li>
 		<li class="breadcrumb-item active">Edit</li>
 	</ol>
 @stop

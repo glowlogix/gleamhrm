@@ -53,7 +53,7 @@
 								</tr>
 							@endforeach
 							@else
-								<p class="text-center" >No New Applicant found.</p>
+								<p class="text-center" >No Hired Applicant Found</p>
 							@endif
 							</tbody>
 					</table>

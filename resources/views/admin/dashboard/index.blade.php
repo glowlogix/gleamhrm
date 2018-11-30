@@ -34,7 +34,7 @@
                                 <div class="round round-lg align-self-center round-danger"><i class="ti-server"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h3 class="m-b-0 font-lgiht">70</h3>
-                                    <h5 class="text-muted m-b-0">Payroll Processed</h5></div>
+                                    <h5 class="text-muted m-b-0">Payroll&nbspProcessed</h5></div>
                             </div>
                         </div>
                     </div>

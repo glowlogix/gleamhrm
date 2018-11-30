@@ -48,7 +48,7 @@ class DocumentsController extends Controller
         $document->status = $request->upload_status;
         $document->save();
         
-        Session::flash('success','Document is updated succesfully');            
+        Session::flash('success','Document is updated successfully');
         
         return redirect()->route('documents');
     }
@@ -56,7 +56,7 @@ class DocumentsController extends Controller
     public function deleteDocument(Request $request,$id){
         Document::find($id)->delete();
         
-        Session::flash('success','Document is deleted succesfully');            
+        Session::flash('success','Document is deleted successfully');
         
         return redirect()->back();
     }
@@ -81,7 +81,7 @@ class DocumentsController extends Controller
 
         Document::insert($arr);
 
-        Session::flash('success', 'File is upploaded succesfully');
+        Session::flash('success', 'File is uploaded successfully');
         return redirect()->route('documents');
     }
 }

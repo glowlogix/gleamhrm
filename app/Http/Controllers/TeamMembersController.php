@@ -27,14 +27,14 @@ class TeamMembersController extends Controller
                 'employee_id' => $request->team_member,
                 'team_id' =>    $request->team_id
             ]);
-            Session::flash('success','Member Added to Team succesfully');
-            return redirect()->route('team_members.index');
+            Session::flash('success','Member added to team successfully');
         }
         else
         {
-            Session::flash('error','This Employee Already Exist In This Team');
-            return redirect()->route('team_members.index');
+            Session::flash('error','This employee already exist in this team');
         }
+        return redirect()->route('teams.index');
+
     }
 
     public function edit($id)
@@ -48,7 +48,7 @@ class TeamMembersController extends Controller
     {
         $member_name=TeamMember::where('id',$id);
         $member_name->delete();
-        Session::flash('success','Employee Deleted From Team Successfully');
+        Session::flash('success','Employee deleted from team successfully');
         return redirect()->back();
     }
 }

@@ -19,9 +19,8 @@
                             <thead>
                             @if($leave_types->count() > 0)
                                 <tr>
-                                    <th> Short Name</th>
                                     <th> Name</th>
-                                    <th> Amount</th>
+                                    <th> Count</th>
                                     <th> Status</th>
                                     <th> Actions</th>
                                 </tr>
@@ -29,13 +28,12 @@
                             <tbody>
                             @foreach($leave_types as $leave_type)
                                 <tr>
-                                    <td>{{$leave_type->short_name}}</td>
                                     <td>{{$leave_type->name}}</td>
-                                    <td>{{$leave_type->amount}}</td>
+                                    <td>{{$leave_type->count}}</td>
                                     <td>@if($leave_type->status==1)
                                         Active
                                         @else
-                                            Un Active
+                                            InActive
                                         @endif
                                     </td>
                                     <td class="text-nowrap">
@@ -71,22 +69,18 @@
                                                     </div>
                                                     <div class="col-md-12">
                                                         <div class="form-group">
-                                                            <label class="control-label">Short Name</label>
-                                                            <input  type="text" name="short_name"  value="{{old('short_name',$leave_type->short_name)}}" placeholder="Enter Short Name Here" class="form-control">
-                                                        </div>
-                                                        <div class="form-group">
                                                             <label class="control-label">Name</label>
                                                             <input  type="text" name="name" value="{{old('name',$leave_type->name)}}" placeholder="Enter Name Here" class="form-control">
                                                         </div>
                                                         <div class="form-group">
-                                                            <label class="control-label">Amount</label>
-                                                            <input  type="number" name="amount" value="{{old('amount',$leave_type->amount)}}" placeholder="Enter Amount Here" class="form-control">
+                                                            <label class="control-label">Count</label>
+                                                            <input  type="number" name="count" value="{{old('count',$leave_type->count)}}" placeholder="Enter Amount Here" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label">Status</label>
                                                             <select  name="status"  class="form-control">
                                                                 <option value="1" @if($leave_type->status==1)Selected @endif>Active</option>
-                                                                <option value="0" @if($leave_type->status==0)Selected @endif>UnActive</option>
+                                                                <option value="0" @if($leave_type->status==0)Selected @endif>InActive</option>
                                                             </select>
                                                         </div>
                                                     </div>
@@ -100,7 +94,7 @@
                                     </div>
                                 </tr>
                             @endforeach @else
-                                <tr> No Department found.</tr>
+                                <tr> No Leave Type Found</tr>
                             @endif
                             </tbody>
                         </table>
@@ -119,16 +113,12 @@
                     </div>
                     <div class="col-md-12">
                         <div class="form-group">
-                            <label class="control-label">Short Name</label>
-                            <input  type="text" name="short_name" placeholder="Enter Short Name Here" class="form-control">
-                        </div>
-                        <div class="form-group">
                             <label class="control-label">Name</label>
                             <input  type="text" name="name" placeholder="Enter Name Here" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Amount</label>
-                            <input  type="number" name="amount" placeholder="Enter Amount Here" class="form-control">
+                            <label class="control-label">Count</label>
+                            <input  type="number" name="count" placeholder="Enter Amount Here" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="control-label">Status</label>

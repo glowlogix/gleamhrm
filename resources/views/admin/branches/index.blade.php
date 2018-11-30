@@ -1,9 +1,10 @@
 @extends('layouts.admin')
 @section('Heading')
 	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('branch.create')}}'"><span class="fas fa-plus" ></span> Add Branch</button>
-	<h3 class="text-themecolor">Branch</h3>
+	<h3 class="text-themecolor">Branches</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Settings</li>
 		<li class="breadcrumb-item active">Branches</li>
 	</ol>
 @stop
@@ -59,7 +60,7 @@
 
 									</tr>
 								@endforeach @else
-								<tr> No Office Location found.</tr>
+								<tr> No Branch Found</tr>
 							@endif
 							</tbody>
 						</table>

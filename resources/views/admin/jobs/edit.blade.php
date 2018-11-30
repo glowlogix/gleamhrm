@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 @section('Heading')
 	<h3 class="text-themecolor">Update Job</h3>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Hiring</li>
+		<li class="breadcrumb-item active">Job</li>
+		<li class="breadcrumb-item active">Update</li>
+	</ol>
 @stop
 @section('content')
 	<div class="row">
@@ -66,14 +72,23 @@
 										</div>
 									</div>
 								</div>
-
-								<div class="col-md-6">
-									<div class="form-group row">
-										<label class="control-label text-right col-md-3">Description</label>
-										<div class="col-md-9">
-											<textarea name="description"  rows="5" class="form-control " placeholder="Enter Description Here">{{$job->description}}</textarea>
-										</div>
-									</div>
+								{{--<div class="col-md-6">--}}
+									{{--<div class="form-group row">--}}
+										{{--<label class="control-label text-right col-md-3">Skills</label>--}}
+										{{--<div class="col-md-9">--}}
+											{{--<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="skills[]">--}}
+												{{--@foreach($skills as $skill)--}}
+													{{--<option value="{{$skill->skill_name}}" @if($skill->skill_name==$job->skill) selected @endif>{{$skill->skill_name}}</option>--}}
+												{{--@endforeach--}}
+											{{--</select>--}}
+										{{--</div>--}}
+									{{--</div>--}}
+								{{--</div>--}}
+							</div>
+							<div class="card-body row">
+								<label class="control-label  col-md-3"><bold>Description:</bold></label>
+								<div class="form-group col-md-12">
+									<textarea class="textarea_editor form-control" name="description" rows="15" placeholder="Enter text ...">{{$job->description}}</textarea>
 								</div>
 							</div>
 						</div>

@@ -4,7 +4,7 @@
 	<h3 class="text-themecolor">Permission And Roles</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Permission And Roles</li>
+		<li class="breadcrumb-item active">Roles Permission</li>
 		<li class="breadcrumb-item active">Roles</li>
 	</ol>
 @stop
@@ -54,7 +54,7 @@
 
 								</tr>
 							@endforeach @else
-								<tr> No Permission Found.</tr>
+								<tr> No Permission Found</tr>
 							@endif
 
 							</tbody>

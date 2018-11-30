@@ -62,7 +62,7 @@ class OfficeLocationController extends Controller
             'phone_number' => $request->phone_number,
         ]);
 
-        Session::flash('success','OfficeLocation is created succesfully');
+        Session::flash('success','OfficeLocation is created successfully');
         return redirect()->route('offices');
     }
 
@@ -118,7 +118,7 @@ class OfficeLocationController extends Controller
         
         $office_location->save();
 
-        Session::flash('success','Office location is updated succesfully');
+        Session::flash('success','Office location is updated successfully');
         return redirect()->route('offices');
     }
 
@@ -132,7 +132,7 @@ class OfficeLocationController extends Controller
     {
         $office_location=OfficeLocation::find($id);
         $office_location->delete();
-        Session::flash('success','OfficeLocation deleted successfuly.');
+        Session::flash('success','OfficeLocation deleted successfully.');
         return redirect()->back();
     }
 }

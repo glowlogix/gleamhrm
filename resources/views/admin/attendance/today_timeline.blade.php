@@ -4,7 +4,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
         <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">Today Attendance</li>
+        <li class="breadcrumb-item active">Today Attendance Timeline</li>
     </ol>
 @stop
 @section('content')
@@ -58,7 +58,7 @@
                                                     <div class="modal-body">
                                                         <div class="container-fluid">
                                                             <div class="col-md-14">
-                                                                <label for="date">Today's Date</label></br>
+                                                                <label for="date">Today's Date</label><br>
                                                                 <div class="input-group date1">
                                                                     <input type="hidden" name="employee_id" value="{{$employee['id']}}"/>
                                                                     <input type="date" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['date']: $today}}"/>

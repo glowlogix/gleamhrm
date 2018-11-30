@@ -4,7 +4,8 @@
 	<h3 class="text-themecolor">Documents</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Document</li>
+		<li class="breadcrumb-item active">Settings</li>
+		<li class="breadcrumb-item active">Documents</li>
 	</ol>
 @stop
 @section('content')
@@ -52,7 +53,7 @@
 								@endif
 							@endforeach
 							@else
-							<p class="text-center" style="margin-top:70px;" >No Documents Found</p>
+							<p class="text-center" style="margin-top:70px;" >No Document Found</p>
 							@endif
 							</tbody>
 						</table>

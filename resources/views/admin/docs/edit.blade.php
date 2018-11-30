@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 @section('Heading')
     <h3 class="text-themecolor">Update Document</h3>
+    <ol class="breadcrumb">
+        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+        <li class="breadcrumb-item active">Settings</li>
+        <li class="breadcrumb-item active">Document</li>
+        <li class="breadcrumb-item active">Edit</li>
+    </ol>
 @stop
 @section('content')
 <div class="row">
@@ -36,7 +42,7 @@
                     </div>
                     <div class="form-actions">
                         &nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Document </button>
-                        <button type="button" onclick="window.location.href='{{route('documents.upload')}}'" class="btn btn-inverse">Cancel</button>
+                        <button type="button" onclick="window.location.href='{{url('documents')}}'" class="btn btn-inverse">Cancel</button>
                     </div>
                 </form>
             </div>

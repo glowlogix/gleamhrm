@@ -112,7 +112,7 @@ class DashboardController extends Controller
     {
         $applicant=Applicant::find($id);
         $applicant->delete();
-        Session::flash('sucess','Applicant deleted successfuly.');
+        Session::flash('sucess','Applicant deleted successfully.');
         return redirect()->back();
     }
 
@@ -136,7 +136,7 @@ class DashboardController extends Controller
     {
         $applicant=Applicant::withTrashed()->where('id', $id)->first();
         $applicant->restore();
-        Session::flash('success','Seccessfuly Restored the applicant');
+        Session::flash('success','Successfully Restored the applicant');
         return redirect()->back();
     }
 
@@ -164,8 +164,13 @@ class DashboardController extends Controller
             return view('admin.applicants.hiredApplicants',$this->metaResponse())->with('applicants',$applicants);
         }
 
-
-
-
-
+        public function contact_us(Request $request){
+            $data = array('name'=>"$request->name",'messages'=>"$request->message",'email'=>"$request->email");
+                Mail::send('Help.mail', $data, function($message) use ($request) {
+                    $message->to('awaid.anjum@gmail.com')->subject($request->type);
+                    $message->from('noreply@glowlogix.com',"$request->email");
+                });
+                Session::flash('success','Email Sent To the HR');
+                return redirect()->back();
+            }
 }

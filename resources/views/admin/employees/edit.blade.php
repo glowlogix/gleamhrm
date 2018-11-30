@@ -123,7 +123,7 @@
                                         <div class="col-md-9">
                                             <select class="form-control custom-select" data-placeholder="Choose a Category" name="branch_id">
                                                 @foreach($branches as $branch)
-                                                    <option value="{{$branch->id}}" @if($branch->id == $employee->branch_id) selected @endif>{{$branch->name}} ({{$branch->address}})</option>
+                                                    <option value="{{$branch->id}}" @if($branch->id == $employee->branch_id) selected @endif>{{$branch->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -319,7 +319,7 @@
                                         <div class="form-group row">
                                             <label class="control-label text-right col-md-3">New Password</label>
                                             <div class="col-md-9">
-                                                <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="new-password" />
+                                                <input type="text" id="password"  class="form-control" type="text" name="password" autocomplete="new-password"/>
                                             </div>
                                         </div>
                                     </div>
@@ -378,7 +378,6 @@
                         event.preventDefault();
                     }
                 });
-
                 var teams = $('#asana_teams');
                 var count = 0;
                 var orgId = '{{config('values.asanaWorkspaceId')}}';
@@ -399,15 +398,11 @@
                                 if (count == 1) {
                                     teams.append("<h3 class='head row'>Teams in Asana</h3>");
                                     res.data.forEach(function (item, index) {
-                                        teams.append("<input name='teams[]' value='" +
-                                            item.id + "' type='checkbox' id='"+item.id+"'>"+"" +
-                                            "<lable class='teams row' for='"+item.id+"'>" + item.name +
-                                            " </lable>"
+                                        teams.append("<div class='row'><lable class='teams'><input style='position:unset;opacity:5' name='teams[]' value='" +item.id + "' type='checkbox' id='"+item.id+"'>"+item.name+"</lable><div>"
                                         );
                                     });
                                 }
                                 teams.show();
-
                                 $('#asana_teams input').each(function () {
                                     var $checkbox = $(this);
                                     $checkbox.checkbox();
@@ -470,9 +465,19 @@
                 labels: {
                     finish: "Update Employee"
                 },
+                onStepChanged: function (event, current, next) {
+                    if (current > 3) {
+                        $("#save").hide();
+                    }
+                    else if( current <=3)
+                    {
+                        $("#save").show();
+                    }
+
+                },
                 onFinished: function (event, currentIndex) {
                     $("#button").click();
-                }
+                },
             });
         </script>
         <script>
@@ -482,6 +487,14 @@
                     return false;
                 }
             });
+        </script>
+        <script>
+            $("input").attr('autocomplete', 'off');
+            var $input = $('<button id="save" class="btn text-white" style="margin:0px 0 0 5px;padding:8.2px 12px;background-color:#009efb">Update Employee</button>');
+            $input.appendTo($('ul[aria-label=Pagination]'));
+            $('#save').click(function(){
+                $("#button").click();
+            })
         </script>
     @endpush
 @stop

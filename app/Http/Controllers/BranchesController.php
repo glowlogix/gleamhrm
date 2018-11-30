@@ -62,7 +62,7 @@ class BranchesController extends Controller
             'phone_number' => $request->phone_number,
         ]);
 
-        Session::flash('success','Branch is created succesfully');
+        Session::flash('success','Branch is created successfully');
         return redirect()->route('branch.index');
     }
 
@@ -118,7 +118,7 @@ class BranchesController extends Controller
         
         $office_location->save();
 
-        Session::flash('success','Office location is updated succesfully');
+        Session::flash('success','Branch is updated successfully');
         return redirect()->route('branch.index');
     }
 
@@ -132,7 +132,7 @@ class BranchesController extends Controller
     {
         $branch = Branch::find($id);
         $branch->delete();
-        Session::flash('success','Branch deleted successfuly.');
+        Session::flash('success','Branch deleted successfully.');
         return redirect()->back();
     }
 }

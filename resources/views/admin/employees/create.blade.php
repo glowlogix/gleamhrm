@@ -125,7 +125,7 @@
                                         <div class="col-md-9">
                                             <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="branch_id">
                                                 @foreach($branches as $branch)
-                                                    <option value="{{$branch->id}}" @if(old("branch_id") == "remote") selected @endif>{{$branch->name}} ({{$branch->address}})</option>
+                                                    <option value="{{$branch->id}}" @if(old("branch_id") == "remote") selected @endif>{{$branch->name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
@@ -342,8 +342,7 @@
                                 if (count == 1) {
                                     teams.append("<h3 class='head'>Teams in Asana</h3>");
                                     res.data.forEach(function (item, index) {
-                                        teams.append("<div class='row'><input name='teams[]' value='" + item.id + "' type='checkbox' id='"+ item.name +"' >" +
-                                            "<lable class='teams' for='"+ item.name +"'>" + item.name +"</lable></div>"
+                                        teams.append("<div class='row'><lable class='teams'><input name='teams[]' value='" + item.id + "' style='position:unset;opacity:5' type='checkbox' id='"+ item.name +"' >"+ item.name +"</lable></div>"
                                         );
                                     });
                                 }

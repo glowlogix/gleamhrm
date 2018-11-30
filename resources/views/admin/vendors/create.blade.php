@@ -13,7 +13,7 @@
         <div class="col-lg-12">
             <div class="card card-outline-info">
                 <div class="card-body">
-                    <form  action="{{route('vendor.store')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                    <form  action="{{route('vendor.store')}}" method="post" class="form-horizontal" enctype="multipart/form-data" novalidate>
                         {{csrf_field()}}
                         <div class="form-body">
                             <h3 class="box-title">Vendor Information</h3>
@@ -22,8 +22,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Company Name</label>
-                                        <div class="col-md-9">
-                                            <input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
+                                        <div class="col-md-9 controls">
+                                            <input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}" required data-validation-required-message="This field is required">
                                         </div>
                                     </div>
                                 </div>
@@ -31,8 +31,8 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Email</label>
-                                        <div class="col-md-9">
-                                            <input type="email" name="email" class="form-control" placeholder="Enter Address here" value="{{old('email')}}">
+                                        <div class="col-md-9 controls">
+                                            <input type="email" name="email" class="form-control" placeholder="Enter Address here" value="{{old('email')}}" required data-validation-required-message="This field is required">
                                         </div>
                                     </div>
                                 </div>
@@ -40,10 +40,10 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Contact Title</label>
-                                        <div class="col-md-9">
-                                            <select class="form-control custom-select" name="contact_title">
+                                        <div class="col-md-9 controls">
+                                            <select class="form-control custom-select" name="contact_title" required data-validation-required-message="This field is required">
                                                 <option value="Mr">Mr</option>
-                                                <option value="Mam">Mam</option>
+                                                <option value="Mam">Mrs.</option>
                                             </select>
                                         </div>
                                     </div>
@@ -52,16 +52,17 @@
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Contact Name</label>
-                                        <div class="col-md-9">
-                                            <input  type="text" name="contact_name" placeholder="Enter name here" class="form-control" value="{{old('contact_name')}}">
+                                        <div class="col-md-9 controls">
+                                            <input  type="text" name="contact_name" placeholder="Enter name here" class="form-control" value="{{old('contact_name')}}" required data-validation-required-message="This field is required">
                                         </div>
                                     </div>
                                 </div>
+
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Vendor Category</label>
-                                        <div class="col-md-9">
-                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="vendor_category_id">
+                                        <div class="col-md-9 controls">
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="vendor_category_id" required data-validation-required-message="This field is required">
                                                 <option value="">Select Vendor Category</option>
                                                 @if($vendor_categories->count() > 0 )
                                                     @foreach($vendor_categories as $category)
@@ -106,12 +107,15 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Country</label>
                                         <div class="col-md-9">
-                                            <input type="text" name="country" class="form-control" placeholder="Enter Country here" value="{{old('country')}}">
+                                            <select  name="country" class="form-control">
+                                            @foreach($countries as $country)
+                                                <option value="{{$country->name}}">{{$country->name}}</option>
+                                            @endforeach
+                                            </select>
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
-
                                 <div class="col-md-6">
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">City</label>

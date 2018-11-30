@@ -15,6 +15,7 @@
 <script src="{{asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
 <!--Custom JavaScript -->
 <script src="{{asset('js/custom.min.js') }}"></script>
+
 <!-- ============================================================== -->
 <!-- This page plugins -->
 <!-- ============================================================== -->
@@ -25,23 +26,33 @@
 <!-- Chart JS -->
 <script src="{{asset('js/dashboard1.js') }}"></script>
 <script src="{{asset('js/dashboard1.js') }}"></script>
+
 <!-- ============================================================== -->
 <!-- Style switcher -->
 <!-- ============================================================== -->
 <script src="{{asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
 <script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
-<script type="text/javascript">
-$(document).ready(function () {
-	// $( "ul#sidebarnav li" ).not(':has(ul)').remove();
-	// $( "ul#sidebarnav li ul" ).not(':has(li)');
-	// $( "li ul" ).not(':has(li)').remove();
-});
-</script>
 @yield('scripts')
 @stack('scripts')
-{{--<script src="{{asset('js/editor.js')}}"></script>--}}
-{{--<script>--}}
-    {{--$(document).ready(function() {--}}
-        {{--$("#txtEditor").Editor();--}}
-    {{--});--}}
-{{--</script>--}}
+<script src="{{asset('assets/plugins/html5-editor/wysihtml5-0.3.0.js')}}"></script>
+<script src="{{asset('assets/plugins/html5-editor/bootstrap-wysihtml5.js')}}"></script>
+<script>
+    $(document).ready(function() {
+
+        $('.textarea_editor').wysihtml5();
+
+
+    });
+</script>
+<script src="{{asset('js/validation.js')}}"></script>
+<script>
+    ! function(window, document, $) {
+        "use strict";
+        $("input,select,textarea").not("[type=submit]").jqBootstrapValidation(),
+            $(".skin-square input").iCheck({
+                checkboxClass: "icheckbox_square-green",
+                radioClass: "iradio_square-green"
+            }),
+            $(".touchspin").TouchSpin(), $(".switchBootstrap").bootstrapSwitch();
+    }(window, document, jQuery);
+</script>

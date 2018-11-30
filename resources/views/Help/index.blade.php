@@ -11,28 +11,37 @@
         <div class="card card-body" style="margin-left:200px;">
             <div class="row">
                 <div class="col-sm-12 col-xs-12">
-                    <form>
-                        <div class="form-group">
-
-                            <input type="text" class="form-control"  placeholder="Enter Name Here" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="email" class="form-control"  placeholder="Enter email Here" required>
-                        </div>
-                        <div class="form-group">
-                            <input type="number" class="form-control"  pattern="[0-9]{11}" placeholder="Enter Phone Number Here">
-                        </div>
-                        <div class="form-group">
-                            <select class="form-control custom-select" required>
-                                <option>Feedback</option>
-                                <option>Others</option>
+                    <form action="{{route('contact_us')}}" method="post" novalidate>
+                        {{csrf_field()}}
+                        <div class="form-group ">
+                            <div class="controls">
+                            <input type="text" name="name" class="form-control"  placeholder="Enter Name Here" required data-validation-required-message="This field is required">
+                            </div>
+                            </div>
+                        <div class="form-group ">
+                            <div class="controls">
+                            <input type="email" name="email" class="form-control"  placeholder="Enter email Here" required data-validation-required-message="This field is required">
+                            </div>
+                            </div>
+                        <div class="form-group ">
+                            <div class="controls">
+                            <input type="number" name="number" class="form-control"  pattern="[0-9]{11}" placeholder="Enter Phone Number Here" required data-validation-required-message="This field is required">
+                            </div>
+                            </div>
+                        <div class="form-group ">
+                            <div class="controls">
+                            <select class="form-control custom-select" name="type" required data-validation-required-message="This field is required">
+                                <option value="Feedback">Feedback</option>
+                                <option value="Others">Others</option>
                             </select>
+                            </div>
                         </div>
                         <div class="form-group">
-                            <textarea class="form-control" rows="5" placeholder="Message"  required></textarea>
-                        </div>
+                            <div class="controls">
+                            <textarea name="message" class="form-control" rows="5" placeholder="Message"  required data-validation-required-message="This field is required"></textarea>
+                            </div>
+                            </div>
                         <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Send</button>
-                        <button onclick="window.location.href='{{route('admin.help')}}'" class="btn btn-inverse waves-effect waves-light">Cancel</button>
                     </form>
                 </div>
             </div>

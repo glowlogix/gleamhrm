@@ -25,14 +25,13 @@ class VendorCategoryController extends Controller
             $vendor_category = VendorCategory::create([
                 'category_name' => $request->category_name,
             ]);
-            Session::flash('success','Vendor Category is created successfully');
-            return redirect()->route('vendor_category.index');
+            Session::flash('success','Vendor category is created successfully');
         }
         else
         {
-            Session::flash('error','Vendor Category with this name Already Exist');
-            return redirect()->route('vendor_category.index');
+            Session::flash('error','Vendor category with this name already exist');
         }
+        return redirect()->route('vendor_category.index');
 
     }
     public function update (Request $request ,$id)
@@ -40,14 +39,14 @@ class VendorCategoryController extends Controller
         $vendor_category=VendorCategory::find($id);
         $vendor_category->category_name = $request->category_name;
         $vendor_category->save();
-        Session::flash('success','Vendor Category is updated successfully');
+        Session::flash('success','Vendor category is updated successfully');
         return redirect()->route('vendor_category.index');
     }
     public function delete(Request $request ,$id)
     {
         $vendor_category = VendorCategory::find($id);
         $vendor_category->delete();
-        Session::flash('success','Vendor Category deleted successfully.');
+        Session::flash('success','Vendor category deleted successfully.');
         return redirect()->route('vendor_category.index');
     }
 }

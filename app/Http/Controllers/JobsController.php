@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Branch;
 use App\Department;
 use App\Designation;
+use App\Skill;
 use Illuminate\Http\Request;
 use App\Job;
 use App\JobPosition;
@@ -24,28 +25,29 @@ class JobsController extends Controller
 
     public function create(){
         $this->meta['title'] = 'Create Job';                                                                
-    	return view('admin.jobs.create',$this->metaResponse())->with('designations',Designation::all())->with('departments',Department::all())->with('branches',Branch::all());
+    	return view('admin.jobs.create',$this->metaResponse())->with('designations',Designation::all())->with('departments',Department::all())->with('branches',Branch::all())->with('skills',Skill::all());
     }
 
     public function store(Request $request)
-    {        
+    {
         $this->validate($request,[
             'title' => 'required',
             'designation_id' => 'required',
             'branch_id' => 'required',
             'department_id' => 'required',
             'description' => 'required',
+//            'skills' => 'required',
         ]);
-        
-        $job=Job::create([
+        Job::create([
             'title' => $request->title,
             'branch_id' => $request->branch_id,
             'department_id' => $request->department_id,
             'designation_id' => $request->designation_id,
             'description' => $request->description,
+//            'skill' => json_encode($request->skills),
         ]);
 
-        Session::flash('success','job is created succesfully');
+        Session::flash('success','job is created successfully');
         return redirect()->route('job.index');
     }
 
@@ -53,7 +55,7 @@ class JobsController extends Controller
     {
         $this->meta['title'] = 'Update Job';                                                                        
         $job=Job::find($id);
-        return view('admin.jobs.edit',$this->metaResponse())->with('job',$job)->with('designations',Designation::all())->with('departments',Department::all())->with('branches',Branch::all());
+        return view('admin.jobs.edit',$this->metaResponse())->with('job',$job)->with('designations',Designation::all())->with('departments',Department::all())->with('branches',Branch::all())->with('skills',Skill::all());
     }
 
     public function update(Request $request,$id)
@@ -64,8 +66,9 @@ class JobsController extends Controller
         $job->department_id = $request->department_id;
         $job->designation_id = $request->designation_id;
         $job->description = $request->description;
+//        $job->skill = json_encode($request->skills);
         $job->save();
-        Session::flash('success','job is updated succesfully');
+        Session::flash('success','job is updated successfully');
         return redirect()->route('job.index');
     }
 
@@ -73,7 +76,7 @@ class JobsController extends Controller
     {
         $job = Job::where('id',$id)->first();
         $job->delete();
-        Session::flash('success','Job deleted successfuly.');
+        Session::flash('success','Job deleted successsfuly.');
         return redirect()->back();
     }
 }

@@ -75,7 +75,7 @@
 								</td>
 							</tr>
 							@endforeach @else
-								<p class="text-center"> No job found.</p>
+								<p class="text-center"> No Job Found</p>
 							@endif
 
 							</tbody>

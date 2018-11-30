@@ -1,6 +1,12 @@
 @extends('layouts.admin')
 @section('Heading')
 	<h3 class="text-themecolor">Create Office Location</h3>
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
+		<li class="breadcrumb-item active">Settings</li>
+		<li class="breadcrumb-item active">Branch</li>
+		<li class="breadcrumb-item active">Create</li>
+	</ol>
 @stop
 @section('content')
 <div class="row">

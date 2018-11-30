@@ -6,7 +6,6 @@
 		<li class="breadcrumb-item"><a href="javascript:void(0)"></a>Dashboard</li>
 		<li class="breadcrumb-item active">People-Management</li>
 		<li class="breadcrumb-item active">Org Chart</li>
-		<li class="breadcrumb-item active">index</li>
 	</ol>
 @stop
 @section('content')

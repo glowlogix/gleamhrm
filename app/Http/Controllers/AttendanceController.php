@@ -162,7 +162,7 @@ class AttendanceController extends Controller
         $this->storeAttendaceSummary($request);
 
         if($attendance){
-            return redirect()->back()->with('success','Attendance is created succesfully');
+            return redirect()->back()->with('success','Attendance is created successfully');
         }
         else{
             return redirect()->back()->with('error','Error while add attendance');
@@ -285,7 +285,7 @@ class AttendanceController extends Controller
             $attendance_summary = AttendanceSummary::create($arr);
         }
         if($attendance_summary){
-            return redirect()->back()->with('success','Attendance is created succesfully');
+            return redirect()->back()->with('success','Attendance is created successfully');
         }
         else{
             return redirect()->back()->with('error','Error while add attendance');
@@ -401,7 +401,7 @@ class AttendanceController extends Controller
 
         $this->storeAttendaceSummary($request);
         
-        return redirect()->back()->with('success','Attendance is updated succesfully');
+        return redirect()->back()->with('success','Attendance is updated successfully');
     }
 
 
@@ -702,7 +702,7 @@ class AttendanceController extends Controller
             $attendance->delete();
         }
         
-        return redirect()->back()->with('success','Attendance is deleted succesfully');
+        return redirect()->back()->with('success','Attendance is deleted successfully');
     }
 
     /**

@@ -27,15 +27,13 @@ class DepartmentController extends Controller
                 'department_name' => $request->department_name,
                 'status' => $request->status
             ]);
-            Session::flash('success','Department is created succesfully');
-            return redirect()->route('departments.index');
+            Session::flash('success','Department is created successfully');
         }
         else
         {
-            Session::flash('error','Department with this name Already Exist');
-            return redirect()->route('departments.index');
+            Session::flash('error','Department with this name already exist');
         }
-
+        return redirect()->route('departments.index');
     }
     public function update (Request $request ,$id)
     {
@@ -43,14 +41,14 @@ class DepartmentController extends Controller
         $department->department_name = $request->department_name;
         $department->status = $request->status;
         $department->save();
-        Session::flash('success','Department is updated succesfully');
+        Session::flash('success','Department is updated successfully');
         return redirect()->route('departments.index');
     }
     public function delete(Request $request ,$id)
     {
         $department = Department::find($id);
         $department->delete();
-        Session::flash('success','department deleted successfuly.');
+        Session::flash('success','Department deleted successfully.');
         return redirect()->route('departments.index');
     }
 }

@@ -20,12 +20,20 @@
                             @if($designations->count() > 0)
                                 <tr>
                                     <th> Designation Name</th>
+                                    <th> Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
                             @foreach($designations as $designation)
                                 <tr>
                                     <td>{{$designation->designation_name}}</td>
+                                    <td>@if($designation->status==1)
+                                        Enable
+                                            @else
+                                            Disable
+                                        @endif
+                                    </td>
                                     <td class="text-nowrap">
                                         <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit{{ $designation->id }}"   data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
                                         <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $designation->id }}"  data-original-title="Close"> <i class="fas fa-window-close text-white  "></i> </a>
@@ -63,6 +71,15 @@
                                                             <input  type="text" name="name" value="{{old('name',$designation->designation_name)}}" placeholder="Enter Designation Name Here" class="form-control">
                                                         </div>
                                                     </div>
+                                                    <div class="col-md-12">
+                                                        <div class="form-group">
+                                                            <label class="control-label">Status</label>
+                                                            <select name="status" class="form-control">
+                                                               <option value="1" @if($designation->status==1) selected @endif>Enable</option>
+                                                                <option value="0" @if($designation->status==0) selected @endif>Disable</option>
+                                                            </select>
+                                                        </div>
+                                                    </div>
                                                     <div class="modal-footer">
                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
                                                         <button  type="submit" class="btn btn-success btn-ok">Update Designation</button>
@@ -73,7 +90,7 @@
                                     </div>
                                 </tr>
                             @endforeach @else
-                                <tr> No Designation found.</tr>
+                                <tr> No Designation Found</tr>
                             @endif
                             </tbody>
                         </table>
@@ -94,6 +111,15 @@
                         <div class="form-group">
                             <label class="control-label">Team Name</label>
                             <input  type="text" name="designation_name" placeholder="Enter Designation Name Here" class="form-control">
+                        </div>
+                    </div>
+                    <div class="col-md-12">
+                        <div class="form-group">
+                            <label class="control-label">Status</label>
+                            <select name="status" class="form-control">
+                                <option value="1">Enable</option>
+                                <option value="0">Disable</option>
+                            </select>
                         </div>
                     </div>
                     <div class="modal-footer">

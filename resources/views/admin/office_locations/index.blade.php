@@ -41,7 +41,7 @@
 								</td>
 							</tr>
 								@endforeach @else
-								<tr> No Office Location found.</tr>
+								<tr> No Branch Found</tr>
 							@endif
 							</tbody>
 						</table>

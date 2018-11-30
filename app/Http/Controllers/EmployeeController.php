@@ -76,14 +76,23 @@ class EmployeeController extends Controller
 		$data = Employee::with('branch','department')
 		->where('employment_status', '!=', 'resigned')
 		->where('employment_status', '!=', 'terminated')
+        ->where('employment_status','!=','on_leave')
 		->get();
-		
-		$active_employees = Employee::where('status',1 )->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->count();
+		$active_employees = Employee::where('status',1 )->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->where('employment_status','!=','on_leave')->count();
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('active_employees', $active_employees)	
 		->with('designations', Designation::all());
 	}
+    public function all_employees()
+    {
+        $data = Employee::all();
+        $active_employees = Employee::where('status',1 )->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->where('employment_status','!=','on_leave')->count();
+        return view('admin.employees.index',['title' => 'All Employees'])
+            ->with('employees', $data)
+            ->with('active_employees', $active_employees)
+            ->with('designations', Designation::all());
+    }
 
 	public function create()
 	{

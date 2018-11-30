@@ -11,6 +11,21 @@
 @section('content')
     <div class="card">
         <div class="card-body">
+            <div class="float-right">
+                <div class="dropdown">
+                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                        @if(request()->is('employees'))
+                       Active Employees
+                        @elseif(request()->is('all_employees'))
+                        All Employees
+                        @endif
+                    </button>
+                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+                        <a class="dropdown-item"  href="{{url('employees')}}">Active Employees</a>
+                        <a class="dropdown-item" href="{{url('all_employees')}}">All Employees</a>
+                    </div>
+                </div>
+            </div>
             <h4 class="card-title"> {{$active_employees}}  Active / {{$employees->count()}} Employees</h4>
             <div class="table-responsive m-t-40">
                 <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
@@ -21,7 +36,7 @@
                         <th>Email</th>
                         <th>Mobile </th>
                         <th>Designation</th>
-                        <th>Office</th>
+                        <th>Branch</th>
                         <th>Department</th>
                         <th>Joining Date</th>
                         <th>Employment Status</th>
@@ -89,7 +104,7 @@
                         </td>
                     </tr>
                     @endforeach @else
-                        <tr> No Employee Found.</tr>
+                        <tr> No Employee Found</tr>
                     @endif
                     </tbody>
                 </table>

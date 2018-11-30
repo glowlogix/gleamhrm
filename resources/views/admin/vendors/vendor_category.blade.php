@@ -19,12 +19,15 @@
                             <thead>
                             @if($vendor_category->count() > 0)
                                 <tr>
+                                    <th>#</th>
                                     <th> Name</th>
+                                    <th> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($vendor_category as $category)
+                            @foreach($vendor_category as $key=>$category)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$category->category_name}}</td>
                                     <td class="text-nowrap">
                                         <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit{{ $category->id }}"   data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
@@ -73,7 +76,7 @@
                                     </div>
                                 </tr>
                             @endforeach @else
-                                <tr> No Vendor Category found.</tr>
+                                <tr> No Vendor Category Found</tr>
                             @endif
                             </tbody>
                         </table>

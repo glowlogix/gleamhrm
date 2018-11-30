@@ -4,7 +4,7 @@
     <h3 class="text-themecolor">Departments</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">Setting</li>
+        <li class="breadcrumb-item active">Settings</li>
         <li class="breadcrumb-item active">Departments</li>
     </ol>
 @stop
@@ -69,7 +69,7 @@
                                                                 <label class="control-label">status</label>
                                                                 <select  name="status"  class="form-control">
                                                                     <option value="Active" @if($department->status == 'Active') selected @endif>Active</option>
-                                                                    <option value="UnActive" @if($department->status == 'UnActive') selected @endif>UnActive</option>
+                                                                    <option value="InActive" @if($department->status == 'InActive') selected @endif>InActive</option>
                                                                 </select>
                                                             </div>
                                                         </div>
@@ -83,7 +83,7 @@
                                         </div>
                                     </tr>
                                 @endforeach @else
-                                <tr> No Department found.</tr>
+                                <tr> No Department Found</tr>
                             @endif
                             </tbody>
                         </table>
@@ -109,7 +109,7 @@
                             <label class="control-label">Name</label>
                             <select  name="status"  class="form-control">
                             <option value="Active">Active</option>
-                            <option value="UnActive">UnActive</option>
+                            <option value="InActive">InActive</option>
                             </select>
                         </div>
                     </div>

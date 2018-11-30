@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Country;
 use App\Vendor;
 use App\VendorCategory;
 use Illuminate\Http\Request;
@@ -17,7 +18,7 @@ class VendorController extends Controller
     public function create()
     {
         $vendor_categories = VendorCategory::all();
-        return view('admin.vendors.create')->with('vendor_categories',$vendor_categories);
+        return view('admin.vendors.create')->with('vendor_categories',$vendor_categories)->with('countries',Country::all());
     }
     public function store(Request $request)
     {
@@ -48,7 +49,7 @@ class VendorController extends Controller
                 'vendor_category_id' => $request->vendor_category_id,
 
             ]);
-            Session::flash('success','Vendor is created succesfully');
+            Session::flash('success','Vendor is created successfully');
             return redirect()->route('vendors.index');
 
     }
@@ -72,14 +73,14 @@ class VendorController extends Controller
         $vendor->fax = $request->fax;
         $vendor->vendor_category_id = $request->vendor_category_id;
         $vendor->save();
-        Session::flash('success','Vendor is updated succesfully');
+        Session::flash('success','Vendor is updated successfully');
         return redirect()->route('vendors.index');
     }
     public function delete(Request $request ,$id)
     {
         $vendor = Vendor::find($id);
         $vendor->delete();
-        Session::flash('success','Vendor deleted successfuly.');
+        Session::flash('success','Vendor deleted successfully.');
         return redirect()->route('vendors.index');
     }
 

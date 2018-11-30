@@ -117,7 +117,7 @@ class RolePermissionsController extends Controller
             }
         }
 
-        return redirect()->route('roles_permissions')->with('success','Role is created succesfully');      
+        return redirect()->route('roles_permissions')->with('success','Role is created successfully');
     }
 
     /**
@@ -239,7 +239,7 @@ class RolePermissionsController extends Controller
         }
         // dd('here');
 
-        return redirect()->route('roles_permissions')->with('success','Role is updated succesfully');      
+        return redirect()->route('roles_permissions')->with('success','Role is updated successfully');
     }
 
     /**

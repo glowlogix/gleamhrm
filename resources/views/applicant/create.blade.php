@@ -77,10 +77,10 @@
 					{{csrf_field()}}
 					<div class="row">
 						<div class="form-group col-md-12">
-							<label for="job_id">Select job</label>
+							<label for="job_id">Select Position</label>
 							<select name="job_id" id="job_id" type="select" class="job_id form-control">
 								@foreach($jobs as $j)
-									<option value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}</option>
+									<option value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}{{$j->title}}</option>
 								@endforeach
 							</select>
 						</div>

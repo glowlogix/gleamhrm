@@ -4,7 +4,7 @@
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
         <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">Leaves</li>
+        <li class="breadcrumb-item active">Employee Leaves</li>
     </ol>
 @stop
 @section('content')
@@ -70,7 +70,7 @@
                                     </td>
                                 </tr>
                             @endforeach @else
-                              <p style="text-align: center;">No leave found.</p> @endif
+                              <p style="text-align: center;">No Leave Found</p> @endif
 
                             </tbody>
                         </table>
