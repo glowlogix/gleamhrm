@@ -17,8 +17,7 @@ class DatabaseSeeder extends Seeder
         $this->call(LeaveTypeSeeder::class);
         $this->call(BranchSeeder::class);
         $this->call(EmployeeLeaveTypeSeeder::class);
-//        $this->call(DesignationSeeder::class);
-//       $this->call(EmployeeSlackIdSeeder::class);
+        $this->call(DesignationSeeder::class);
          $this->call(DepartmentSeeder::class);
         $this->call(CountrySeeder::class);
     }
