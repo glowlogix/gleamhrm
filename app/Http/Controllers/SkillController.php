@@ -94,4 +94,5 @@ class SkillController extends Controller
         Session::flash('success','Skill unassigned from employee successfully.');
         return redirect()->back();
     } //
+
 }

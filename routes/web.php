@@ -28,6 +28,11 @@ Route::get('/error', function () {
     return view('error');
 })->name('error');
 
+Route::get('/job/skill/{jobId}',[
+    'uses' =>'JobsController@getSkillsByJob',
+    'as' => 'job.skill'
+]);
+
 Route::get('/home', 'HomeController@index')->name('home');
 Route::Post('/slackbot', 'AttendanceController@slackbot')->name('slackbot');
 
@@ -53,7 +58,6 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 	Route::resources([
         'job' => 'JobsController',
     ]);
-
 
 	Route::Get('/applicant/create',[
 		'uses' =>'ApplicantController@create',

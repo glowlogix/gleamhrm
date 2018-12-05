@@ -71,18 +71,18 @@
 										</div>
 									</div>
 								</div>
-								{{--<div class="col-md-6">--}}
-									{{--<div class="form-group row">--}}
-										{{--<label class="control-label text-right col-md-3">Skills</label>--}}
-										{{--<div class="col-md-9">--}}
-											{{--<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="skills[]">--}}
-												{{--@foreach($skills as $skill)--}}
-													{{--<option value="{{$skill->skill_name}}">{{$skill->skill_name}}</option>--}}
-												{{--@endforeach--}}
-											{{--</select>--}}
-										{{--</div>--}}
-									{{--</div>--}}
-								{{--</div>--}}
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Skills</label>
+										<div class="col-md-9">
+											<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="skills[]">
+												@foreach($skills as $skill)
+													<option value="{{$skill->id}}">{{$skill->skill_name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
 								<br>
 							</div>
 							<div class="card-body row">
@@ -110,5 +110,4 @@
 			</div>
 		</div>
 	</div>
-
 @stop

@@ -9,6 +9,8 @@ use App\Skill;
 use Illuminate\Http\Request;
 use App\Job;
 use App\JobPosition;
+use PhpParser\JsonDecoder;
+use PhpParser\Node\Stmt\Foreach_;
 use Session;
 use App\Traits\MetaTrait;
 
@@ -20,7 +22,7 @@ class JobsController extends Controller
 
         $this->meta['title'] = 'Jobs';                                                        
         $jobs = Job::with('department','designation','branch')->get();
-        return view('admin.jobs.index',$this->metaResponse())->with('jobs',$jobs);
+        return view('admin.jobs.index',$this->metaResponse())->with('jobs',$jobs)->with('skills',Skill::all());
     }
 
     public function create(){
@@ -44,7 +46,7 @@ class JobsController extends Controller
             'department_id' => $request->department_id,
             'designation_id' => $request->designation_id,
             'description' => $request->description,
-//            'skill' => json_encode($request->skills),
+            'skill' => json_encode($request->skills),
         ]);
 
         Session::flash('success','job is created successfully');
@@ -66,7 +68,7 @@ class JobsController extends Controller
         $job->department_id = $request->department_id;
         $job->designation_id = $request->designation_id;
         $job->description = $request->description;
-//        $job->skill = json_encode($request->skills);
+        $job->skill = json_encode($request->skills);
         $job->save();
         Session::flash('success','job is updated successfully');
         return redirect()->route('job.index');
@@ -78,5 +80,12 @@ class JobsController extends Controller
         $job->delete();
         Session::flash('success','Job deleted successsfuly.');
         return redirect()->back();
+    }
+    public function getSkillsByJob($jobId){
+        $job=Job::where('id',$jobId)->first();
+        $skills=Skill::whereIn('id',json_decode($job->skill))->get()->pluck('skill_name');
+        return $skills->toJson();
+
+
     }
 }

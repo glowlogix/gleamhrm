@@ -20,8 +20,8 @@
                             @if($teams->count() > 0)
                                 <tr>
                                     <th>#</th>
-                                    <th> Team Name</th>
-                                    <th> Department Name</th>
+                                    <th>Team Name</th>
+                                    <th>Department Name</th>
                                     <th>Status</th>
                                     <th> Actions</th>
                                 </tr>

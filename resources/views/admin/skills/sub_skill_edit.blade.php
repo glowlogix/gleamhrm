@@ -7,7 +7,6 @@
         <li class="breadcrumb-item active">Settings</li>
         <li class="breadcrumb-item active">Sub Skills</li>
         <li class="breadcrumb-item active">Edit</li>
-
     </ol>
 @stop
 @section('content')

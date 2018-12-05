@@ -24,6 +24,7 @@
 								<th> Designation</th>
 								<th> Department</th>
 								<th> Branch</th>
+								<th>Skill Required</th>
 								@if (
 			                        Auth::user()->hasRole('admin') ||
 			                        Auth::user()->hasPermissionTo('EmployeeController:index')
@@ -32,7 +33,6 @@
 								@endif
 							</tr>
 							</thead>
-
 							<tbody>
 							 @foreach($jobs as $job)
 							<tr>
@@ -40,6 +40,8 @@
 								<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
 								<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
 								<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
+								<td>@foreach($skills as $skill)	@foreach(json_decode($job->skill) as $key) @if($skill->id==$key)<p class="btn btn-sm btn-success">{{$skill->skill_name}}</p>@endif
+										@endforeach @endforeach</td>
 								<td class="text-nowrap">
 									@if (
 				                        Auth::user()->hasRole('admin') ||

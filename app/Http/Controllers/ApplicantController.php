@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Skill;
 use Illuminate\Http\Request;
 use App\Applicant;
 use App\JobPosition;
@@ -30,7 +31,8 @@ class ApplicantController extends Controller
      */
     public function create()
     {
-        return view('applicant.create')->with('jobs',Job::all());
+        $Jobs=Job::with('designation')->get();
+        return view('applicant.create')->with('')->with('jobs',$Jobs)->with('skills',Skill::all());
     }
 
     /**
@@ -52,6 +54,7 @@ class ApplicantController extends Controller
     public function store(Request $request)
     {
     	$this->validate($request,[
+    	    'position'=>'required',
     		'name' => 'required',
     		'fname' => 'required',
     		'avatar' => 'required|image',
@@ -76,7 +79,7 @@ class ApplicantController extends Controller
     		'cv' => 'storage/uploads/applicants/cv/' . $cv_new_name,
     		'city' =>$request->city,
     		'job_status' => $request->job_status,
-            'job_id' => $request->job_id,
+            'job_id' => $request->position,
             // 'job_position_id'=>$request->job_position_id,
             'recruited' => 0
     	]);

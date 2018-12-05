@@ -21,6 +21,7 @@
                                 <tr>
                                     <th>#</th>
                                     <th> Skill Name</th>
+                                    <th>Description</th>
                                     <th> Status</th>
                                     <th> Actions</th>
                                 </tr>
@@ -30,6 +31,7 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$skill->skill_name}}</td>
+                                    <td>{{$skill->description}}</td>
                                     <td>@if($skill->status==1)
                                         Active
                                         @else

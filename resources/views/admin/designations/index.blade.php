@@ -19,14 +19,16 @@
                             <thead>
                             @if($designations->count() > 0)
                                 <tr>
-                                    <th> Designation Name</th>
-                                    <th> Status</th>
+                                    <th>#</th>
+                                    <th>Designation Name</th>
+                                    <th>Status</th>
                                     <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($designations as $designation)
+                            @foreach($designations as $key=>$designation)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$designation->designation_name}}</td>
                                     <td>@if($designation->status==1)
                                         Enable

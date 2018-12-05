@@ -19,14 +19,16 @@
                             <thead>
                             @if($departments->count() > 0)
                                 <tr>
+                                <td>#</td>
                                 <th> Name</th>
                                 <th> Status</th>
                                 <th> Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                @foreach($departments as $department)
+                                @foreach($departments as $key => $department)
                                     <tr>
+                                        <td>{{$key+1}}</td>
                                         <td>{{$department->department_name}}</td>
                                         <td>{{$department->status}}</td>
                                         <td class="text-nowrap">

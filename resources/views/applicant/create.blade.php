@@ -78,11 +78,19 @@
 					<div class="row">
 						<div class="form-group col-md-12">
 							<label for="job_id">Select Position</label>
-							<select name="job_id" id="job_id" type="select" class="job_id form-control">
-								@foreach($jobs as $j)
-									<option value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}{{$j->title}}</option>
+							<select name="position" id="job_id" type="select" class="job_id form-control select" >
+								<option value="">Select Position</option>
+							@foreach($jobs as $j)
+									<option  value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}&nbsp({{isset($j->designation) ? $j->designation->designation_name : ''}})</option>
 								@endforeach
 							</select>
+							<br>
+							<div class="show" style="display: none">
+								<br>
+								Skill Required For This Job: &nbsp &nbsp
+								<div  id="showSkills">
+								</div>
+							</div>
 						</div>
 					</div>
 					<div class="row">
@@ -189,5 +197,25 @@
 			});
 		});
 	});
+    jQuery(document).ready(function($) {
+
+        $(".select").on('change', function() {
+            $(".show").show();
+            $('#showSkills').html('');
+            var value = $(this).val();
+            if(value){
+                $.ajax ({
+                    type: 'get',
+                    url: "{{URL('/job/skill/')}}/"+value,
+					success:function(res){
+                        var obj = jQuery.parseJSON( res );
+                        $.each(obj,function( index, value ) {
+                            $('#showSkills').append('<div class="btn btn-success" style="margin: 2px">'+value+'</div>');
+                        });
+                    }
+                });
+            }
+        });
+    });
 </script>
 

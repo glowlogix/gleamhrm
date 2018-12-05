@@ -19,15 +19,17 @@
                             <thead>
                             @if($leave_types->count() > 0)
                                 <tr>
-                                    <th> Name</th>
-                                    <th> Count</th>
-                                    <th> Status</th>
-                                    <th> Actions</th>
+                                    <td>#</td>
+                                    <th>Name</th>
+                                    <th>Count</th>
+                                    <th>Status</th>
+                                    <th>Actions</th>
                                 </tr>
                             </thead>
                             <tbody>
-                            @foreach($leave_types as $leave_type)
+                            @foreach($leave_types as $key =>$leave_type)
                                 <tr>
+                                    <td>{{$key+1}}</td>
                                     <td>{{$leave_type->name}}</td>
                                     <td>{{$leave_type->count}}</td>
                                     <td>@if($leave_type->status==1)

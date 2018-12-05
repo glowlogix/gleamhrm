@@ -72,18 +72,19 @@
 										</div>
 									</div>
 								</div>
-								{{--<div class="col-md-6">--}}
-									{{--<div class="form-group row">--}}
-										{{--<label class="control-label text-right col-md-3">Skills</label>--}}
-										{{--<div class="col-md-9">--}}
-											{{--<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="skills[]">--}}
-												{{--@foreach($skills as $skill)--}}
-													{{--<option value="{{$skill->skill_name}}" @if($skill->skill_name==$job->skill) selected @endif>{{$skill->skill_name}}</option>--}}
-												{{--@endforeach--}}
-											{{--</select>--}}
-										{{--</div>--}}
-									{{--</div>--}}
-								{{--</div>--}}
+								<div class="col-md-6">
+									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Skills</label>
+										<div class="col-md-9">
+											<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="skills[]">
+												@foreach($skills as $skill)
+													<option value="{{$skill->id}}" 	@foreach(json_decode($job->skill) as $key) @if($skill->id==$key) selected @endif
+															@endforeach>{{$skill->skill_name}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								</div>
 							</div>
 							<div class="card-body row">
 								<label class="control-label  col-md-3"><bold>Description:</bold></label>
