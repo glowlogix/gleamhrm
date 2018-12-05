@@ -40,8 +40,7 @@
 								<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
 								<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
 								<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
-								<?php $decode=json_decode($job->skill)?>
-								<td>@foreach($decode as $key)@foreach($skills as $skill)@if($skill->id==$key) <p class="btn btn-sm btn-success">{{$skill->skill_name}}</p> @endif @endforeach @endforeach</td>
+								<td>@foreach(json_decode($job->skill,true) as $key)@foreach($skills as $skill)@if($skill->id==$key) <p class="btn btn-sm btn-success">{{$skill->skill_name}}</p> @endif @endforeach @endforeach</td>
 								<td class="text-nowrap">
 									@if (
 				                        Auth::user()->hasRole('admin') ||
