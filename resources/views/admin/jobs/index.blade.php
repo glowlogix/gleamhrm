@@ -40,7 +40,7 @@
 								<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
 								<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
 								<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
-								<td>@foreach(\GuzzleHttp\json_decode($job->skill) as $key)@foreach($skills as $skill)@if($skill->id==$key) <p class="btn btn-sm btn-success">{{$skill->skill_name}}</p> @endif @endforeach @endforeach</td>
+								<td>@foreach(json_decode($job->skill) as $key)@foreach($skills as $skill)@if($skill->id==$key) <p class="btn btn-sm btn-success">{{$skill->skill_name}}</p> @endif @endforeach @endforeach</td>
 								<td class="text-nowrap">
 									@if (
 				                        Auth::user()->hasRole('admin') ||
