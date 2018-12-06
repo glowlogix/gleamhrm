@@ -65,7 +65,7 @@
                         )
                         <li><a href="{{route('today_timeline')}}" @if( str_contains(Request::fullUrl(),'attendance/create')) class="active" @endif>Today</a></li>
                         @endif
-                        <li><a href="#">My Attendance</a></li>
+                        <li><a href="{{route('myAttendance')}}">My Attendance</a></li>
                         @if (
                         Auth::user()->isAllowed('AttendanceController:timeline')
                         )

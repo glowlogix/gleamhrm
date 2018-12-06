@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Designation;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Traits\MetaTrait;
@@ -14,28 +15,19 @@ class OrganizationHierarchyController extends Controller
     use MetaTrait;
     public $hierarchy = '';
     public $designations = [
-        "ceo" 						    => "CEO",
-        "project_coordinator" 			=> "Project Coordinator",
-        "web_developer" 				=> "Web Developer",
-        "junior_web_developer" 			=> "Junior Web Developer",
-        "front_end_developer" 			=> "Front-end Developer",
-        "account_sales_executive" 		=> "Account Sales Executive",
-        "sales_officer" 				=> "Sales Officer",
-        "digital_marketing_executive" 	=> "Digital Marketing Executive",
-        "content_writer" 				=> "Content Writer",
-        "digital_marketer" 				=> "Digital Marketer",
-        "web_designer_lead" 			=> "Web Designer Lead",
-        "junior_web_designer" 			=> "Junior Web Designer",
-        "hr_manager" 					=> "HR Manager",
-        "hr_officer" 					=> "HR Officer",
-        "admin" 						=> "Admin",
+
     ];
     /**
      * Display a listing of the resource.
      *
      * @return \Illuminate\Http\Response
      */
-
+    function __constructor(){
+        $designations=Designation::all();
+        foreach ($designations as $designation){
+         $this->designations[$designation->designation_name]=$designation->designation_name;
+        }
+    }
     function processHierarchy(){
         $hierarchy = $this->hierarchy();
 
@@ -82,7 +74,9 @@ class OrganizationHierarchyController extends Controller
                 "id": "'.$organization_hierarchy->id.'", 
                 "employee_id": "'.$organization_hierarchy->employee->id.'", 
                 "name": "'.$organization_hierarchy->employee->firstname.' '.$organization_hierarchy->employee->lastname.'", 
-                "title": "'.$this->designations[strtolower($organization_hierarchy->employee->designation)].'"'
+                "title": "'.$organization_hierarchy->employee->designation.'"'
+
+
                 ;
 
             if(count($organization_hierarchy->childs) > 0) {

@@ -532,6 +532,11 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'as' => 'attendance.export'
 	]);
 
+    Route::GET('/attendance/myAttendance',[
+        'uses' => 'AttendanceController@authUserTimeline',
+        'as' => 'myAttendance'
+    ]);
+
 	//Salary Show
 
 	Route::Get('/salary',[

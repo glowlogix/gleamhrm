@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use App\Traits\MetaTrait;
 use App\Attendance;
@@ -1000,5 +1001,81 @@ class AttendanceController extends Controller
         });
         $loop->run();*/
     }
+    public function authUserTimeline(){
 
+
+        $employees = Employee::where(['id' => Auth::user()->id])->get()->toJson();
+
+
+        $attendance_summaries = AttendanceSummary::all();
+        $events = array();
+        foreach ($attendance_summaries as $key => $value) {
+            $delays = '';
+            $color = '';
+            if($value->status == "Short Leave"){
+                $color = '#C24BFF';
+            }
+            if($value->status === "Full Leave"){
+                $color = 'red';
+            }
+            if($value->status === "Half Leave"){
+                $color = '#57BB8A';
+            }
+            if($value->status == "Paid Leave"){
+                $color = '#ADFF41';
+            }
+            if($value->status == "present"){
+                $color = 'green';
+            }
+
+            if($value->is_delay && $value->status=="present"){
+                $color = '#70AFDC';
+                $delays = $value->is_delay." delay";
+            }else{
+                $delays ="";
+            }
+            $time = Carbon::parse($value->first_time_in);
+            $total_time = number_format(($value->total_time / 60), 2, '.', '');
+
+            $events[] = [
+                "resourceId" => $value->employee_id,
+                "title" => $value->status."\n".$time."\n". $total_time." hrs"."\n",
+                "date" => $value->date,
+                "start" => $value->date .' '. $value->first_time_in,
+                "end" => $value->date .' '.$value->last_time_out,
+                "color" => $color,
+            ];
+        }
+        $leave = Leave::all();
+        foreach ($leave as $key => $value) {
+            $color = '';
+            if($value->leave_type == "Short Leave"){
+                $color = '#C24BFF';
+            }
+            if($value->leave_type === "Full Leave"){
+                $color = 'red';
+            }
+            if($value->leave_type === "Half Leave"){
+                $color = '#57BB8A';
+            }
+            if($value->leave_type == "Paid Leave"){
+                $color = '#ADFF41';
+            }
+
+            $events[] = [
+                "resourceId" => $value->employee_id,
+                "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                "date" => $value->datefrom,
+                "start" => Carbon::parse($value->datefrom)->toDateString(),
+                "end" => Carbon::parse($value->dateto)->toDateString(),
+                "color" => $color,
+            ];
+        }
+
+        $events = json_encode($events);
+        return view('admin.attendance.myattendance',$this->metaResponse(), [
+            'employees' => $employees,
+            'events' => $events
+        ]);
+    }
 }

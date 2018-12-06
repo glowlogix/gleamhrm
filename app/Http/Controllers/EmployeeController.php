@@ -355,7 +355,7 @@ class EmployeeController extends Controller
 		$employee->official_email 	= $request->official_email;
 		$employee->personal_email 	= $request->personal_email;
 		$employee->basic_salary 	= $request->salary;
-		$employee->designation 		= strtolower($request->designation);
+		$employee->designation 		= $request->designation;
 		$employee->employment_status= $request->employment_status;
 		$employee->type 			= $request->type;
 		if (!empty($request->branch_id)) {
