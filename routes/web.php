@@ -532,14 +532,7 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'as' => 'attendance.export'
 	]);
 
-    Route::GET('/attendance/myAttendance',[
-        'uses' => 'AttendanceController@authUserTimeline',
-        'as' => 'myAttendance'
-    ]);
-    Route::post('/attendance/correction_email',[
-        'uses' => 'AttendanceController@correctionEmail',
-        'as' => 'correction_email'
-    ]);
+
 
 	//Salary Show
 
@@ -653,6 +646,16 @@ Route::group(['middleware' => 'allowed_permission'], function (){
 		'uses' => 'DocumentsController@update'
 	]);
 });
+
+//My Attendance
+Route::GET('/attendance/myAttendance',[
+    'uses' => 'AttendanceController@authUserTimeline',
+    'as' => 'myAttendance'
+]);
+Route::post('/attendance/correction_email',[
+    'uses' => 'AttendanceController@correctionEmail',
+    'as' => 'correction_email'
+]);
 
 Route::Get('/applicant/apply',[
 	'uses' => 'ApplicantController@create',
