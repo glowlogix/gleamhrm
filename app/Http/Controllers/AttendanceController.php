@@ -1006,11 +1006,10 @@ class AttendanceController extends Controller
     }
     public function authUserTimeline(){
 
-
+        $currentMonth = date('m');
         $employees = Employee::where(['id' => Auth::user()->id])->get()->toJson();
 
-
-        $attendance_summaries = AttendanceSummary::all();
+        $attendance_summaries = AttendanceSummary::where('employee_id',Auth::user()->id)->whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
         $events = array();
         foreach ($attendance_summaries as $key => $value) {
             $delays = '';
@@ -1078,7 +1077,7 @@ class AttendanceController extends Controller
         $present = Attendance::where('employee_id', '=', Auth::user()->id)->where('status','present')->count();
         $absent= Attendance::where('employee_id', '=', Auth::user()->id)->where('status','absent')->count();
 
-        $currentMonth = date('m');
+
         //Average Arrivals
         $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in'))->avg('first_time_in');
         if($averageArrivals == null){
