@@ -19,11 +19,14 @@
                 </select>
             </span>
         <br><br>
-        <div id="calendar">
-        </div>
+            <div class="card">
+                <div class="card-body">
+                    <div id="calendar">
+                    </div>
+                </div>
+            </div>
     </div>
 </div>
-
 @push('scripts')
 <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
 <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
@@ -34,37 +37,38 @@
 <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
+            themeSystem: 'bootstrap4',
             defaultView: 'timelineMonth',
             weekends: 'Boolean',
+            displayEventTime: false,
             dow: [ 1, 2, 3, 4, 5 ],
             header: {
                 left: 'today prev,next',
                 center: 'title',
-                right: 'timelineDay,timelineWeek,timelineMonth'
+                right: 'timelineDay,timelineWeek,timelineMonth,timelineYear'
             },
-            slotWidth : 60,
+            slotWidth : 80,
             resourceColumns: [
                 {
                     labelText: 'Employees',
                     field: 'firstname',
                 },
             ],
-            "eventClick":function(event, jsEvent, view) {
-                if (event.title.search('Birthday') != -1) {
+            eventClick:function(event, jsEvent, view) {
+                if (event.title.search('Birthday') !== -1) {
                     // window.location = "{{route('employees')}}/"+event.resourceId + "/" + event.date;
                     // console.log('found');
                 }
                 if (event.title.search('present') !== -1) {
                     window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
                 }
-                if (event.title.search('leave') != -1) {
+                if (event.title.search('leave') !== -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
                 }
             },
             resources:{!! $employees !!},
             events:{!! $events !!}
         });
-
         $("#selectOffice").change(function(e){
             var url = "{{route('timeline')}}/" + $(this).val();
             

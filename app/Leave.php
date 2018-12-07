@@ -29,5 +29,4 @@ class Leave extends Model
     {
         return $this->belongsTo('App\Employee', 'line_manager', 'id');
     }
-
 }

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\OrganizationHierarchy;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -22,7 +23,8 @@ use DB;
 use Calendar;
 use DateTime;
 use Illuminate\Support\Facades\Log;
-
+use Mail;
+use App\Mail\Reminder;
 class AttendanceController extends Controller
 {
     use MetaTrait;
@@ -489,7 +491,7 @@ class AttendanceController extends Controller
                     }
 
                     if($value->is_delay && $value->status=="present"){
-                        $color = '#70AFDC';
+                        $color = '#43474a';
                         $delays = $value->is_delay." delay";
                     }
                     else{
@@ -577,24 +579,25 @@ class AttendanceController extends Controller
             }
 
             if($value->is_delay && $value->status=="present"){
-                $color = '#70AFDC';
+                $color = '#43474a';
                 $delays = $value->is_delay." delay";
             }else{
                 $delays ="";
             }
-            $time = Carbon::parse($value->first_time_in);
-            $total_time = number_format(($value->total_time / 60), 2, '.', ''); 
+            $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
+            $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
+            $total_time = number_format(($value->total_time / 60), 2, '.', '');
     
             $events[] = [
                 "resourceId" => $value->employee_id,
-                "title" => $value->status."\n".$time."\n". $total_time." hrs"."\n",
+                "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
                 "date" => $value->date,
                 "start" => $value->date .' '. $value->first_time_in,
                 "end" => $value->date .' '.$value->last_time_out,
                 "color" => $color,
             ];
         }
-        $leave = Leave::all();
+        $leave = Leave::with('leaveType')->get();
         foreach ($leave as $key => $value) {
           $color = '';
             if($value->leave_type == "Short Leave"){
@@ -612,7 +615,7 @@ class AttendanceController extends Controller
 
             $events[] = [
                 "resourceId" => $value->employee_id,
-                "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                "title" => $value->leaveType->name."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
                 "date" => $value->datefrom,
                 "start" => Carbon::parse($value->datefrom)->toDateString(),
                 "end" => Carbon::parse($value->dateto)->toDateString(),
@@ -1029,24 +1032,25 @@ class AttendanceController extends Controller
             }
 
             if($value->is_delay && $value->status=="present"){
-                $color = '#70AFDC';
+                $color = '#43474a';
                 $delays = $value->is_delay." delay";
             }else{
                 $delays ="";
             }
-            $time = Carbon::parse($value->first_time_in);
+            $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
+            $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
             $total_time = number_format(($value->total_time / 60), 2, '.', '');
 
             $events[] = [
                 "resourceId" => $value->employee_id,
-                "title" => $value->status."\n".$time."\n". $total_time." hrs"."\n",
+                "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
                 "date" => $value->date,
                 "start" => $value->date .' '. $value->first_time_in,
                 "end" => $value->date .' '.$value->last_time_out,
                 "color" => $color,
             ];
         }
-        $leave = Leave::all();
+        $leave = Leave::with('leaveType')->get();
         foreach ($leave as $key => $value) {
             $color = '';
             if($value->leave_type == "Short Leave"){
@@ -1061,10 +1065,9 @@ class AttendanceController extends Controller
             if($value->leave_type == "Paid Leave"){
                 $color = '#ADFF41';
             }
-
             $events[] = [
                 "resourceId" => $value->employee_id,
-                "title" => $value->leave_type."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                "title" => $value->leaveType->name."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
                 "date" => $value->datefrom,
                 "start" => Carbon::parse($value->datefrom)->toDateString(),
                 "end" => Carbon::parse($value->dateto)->toDateString(),
@@ -1072,10 +1075,51 @@ class AttendanceController extends Controller
             ];
         }
 
+        $present = Attendance::where('employee_id', '=', Auth::user()->id)->where('status','present')->count();
+        $absent= Attendance::where('employee_id', '=', Auth::user()->id)->where('status','absent')->count();
+
+        $currentMonth = date('m');
+        //Average Arrivals
+        $averageArrivals = Attendance::where('employee_id', '=', Auth::user()->id)->select(DB::raw('time_in  as average_arrival'))->avg('time_in');
+        $datetime = $averageArrivals;
+
+        //Average Attendance
+        $present=Attendance::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
+        $totalAttendance=Attendance::where('employee_id',Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
+        $averageAttendance=(($present/$totalAttendance))*100;
+
+        //Average Hours
+        $averageHours = Attendance::where('employee_id', '=', Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])
+        ->select(DB::raw('(time_out - time_in) as average_hour'))->get()->avg('average_hour');
+
+        //Line Manager
+        $linemanagers=OrganizationHierarchy::with('employees')->where('employee_id',Auth::user()->id)->get();
+
+
+
         $events = json_encode($events);
         return view('admin.attendance.myattendance',$this->metaResponse(), [
             'employees' => $employees,
             'events' => $events
-        ]);
+        ])->with('averageHours',$averageHours)->with('averageArrival',$datetime)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
+
+    public function correctionEmail(Request $request){
+
+        $data = array('name'=>Auth::user()->firstname,'messages'=>"$request->message",'email'=>Auth::user()->official_email,'date'=>"$request->date");
+        try {
+            Mail::send('emails.attendance_correction_email', $data, function ($message) use ($request) {
+                $message->to('awaid.anjum@gmail.com')->subject('Attendance Correction Request For Date ' . $request->date);
+                if ($request->line_manager_email != "") {
+                    $message->cc($request->line_manager_email);
+                }
+                $message->from('noreply@glowlogix.com', Auth::user()->official_email);
+            });
+        }  catch(\Exception $e) {
+            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+        }
+        Session::flash('success','Correction Email Sent To the HR');
+        return redirect()->back();
+    }
+
 }

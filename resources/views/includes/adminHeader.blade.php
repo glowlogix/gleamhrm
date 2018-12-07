@@ -8,17 +8,14 @@
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
-                    <img src="{{asset('assets/images/logo.png') }}" alt="homepage" class="dark-logo" />
+                    <img src="{{asset('assets/images/hrm-logo-03.png') }}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo icon -->
-                    <img src="{{asset('assets/images/logo.png') }}" alt="homepage" class="light-logo" />
+                    <img src="{{asset('assets/images/hrm-logo-03.png') }}" alt="homepage" class="light-logo" />
                 </b>
                 <!--End Logo icon -->
                 <!-- Logo text -->
                 <span>
-                    <!-- dark Logo text -->
-                    <img src="{{asset('assets/images/logo.png')}}" alt="homepage" class="dark-logo" />
-                    <!-- Light Logo text -->
-                    <h3 class="light-logo">lowLogix</h3>
+                    <h3 class="light-logo"> <img src="{{asset('assets/images/hrm-logo-02.png')}}"/></h3>
                 </span> 
             </a>
         </div>
@@ -100,6 +97,7 @@
                     {{--<a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"> <i class="flag-icon flag-icon-us"></i></a>--}}
                     {{--<div class="dropdown-menu dropdown-menu-right scale-up"> <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-in"></i> India</a> <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-fr"></i> French</a> <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-cn"></i> China</a> <a class="dropdown-item" href="#"><i class="flag-icon flag-icon-de"></i> Dutch</a> </div>--}}
                 {{--</li>--}}
+
             </ul>
         </div>
     </nav>

@@ -166,11 +166,16 @@ class DashboardController extends Controller
 
         public function contact_us(Request $request){
             $data = array('name'=>"$request->name",'messages'=>"$request->message",'email'=>"$request->email");
-                Mail::send('Help.mail', $data, function($message) use ($request) {
+            try {
+                Mail::send('Help.mail', $data, function ($message) use ($request) {
                     $message->to('awaid.anjum@gmail.com')->subject($request->type);
-                    $message->from('noreply@glowlogix.com',"$request->email");
+                    $message->from('noreply@glowlogix.com', "$request->email");
                 });
+            } catch(\Exception $e) {
+                Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+            }
                 Session::flash('success','Email Sent To the HR');
                 return redirect()->back();
+
             }
 }

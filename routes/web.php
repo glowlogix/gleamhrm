@@ -536,6 +536,10 @@ Route::group(['middleware' => 'allowed_permission'], function (){
         'uses' => 'AttendanceController@authUserTimeline',
         'as' => 'myAttendance'
     ]);
+    Route::post('/attendance/correction_email',[
+        'uses' => 'AttendanceController@correctionEmail',
+        'as' => 'correction_email'
+    ]);
 
 	//Salary Show
 
