@@ -1085,10 +1085,8 @@ class AttendanceController extends Controller
             $avgarival='00:00 ';
         }
         else{
-            $avgarival=Carbon::parse($averageArrivals)->toTimeString();
+            $avgarival= Carbon::createFromTimestamp($averageArrivals)->format('g:i A');
         }
-
-
 
         //Average Attendance
         $present=AttendanceSummary::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
@@ -1106,9 +1104,7 @@ class AttendanceController extends Controller
         ->select(DB::raw('(last_time_out - first_time_in) as average_hour'))->get()->avg('average_hour');
 
         //Line Manager
-        $linemanagers=OrganizationHierarchy::with('employees')->where('employee_id',Auth::user()->id)->get();
-
-
+        $linemanagers=OrganizationHierarchy::with('lineManager')->where('employee_id',Auth::user()->id)->get();
 
         $events = json_encode($events);
         return view('admin.attendance.myattendance',$this->metaResponse(), [

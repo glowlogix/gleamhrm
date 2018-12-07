@@ -95,7 +95,9 @@
                                         <label class="control-label">CC to Line Manager</label>
                                     <select class="form-control" name="line_manager_email">
                                         @foreach($linemanagers as $linemanager)
-                                        <option value="{{$linemanager->employees->official_email}}">{{$linemanager->employees->official_email}}</option>
+                                            @if($linemanager->line_manager_id!=null)
+                                                <option value="{{$linemanager->lineManager->official_email}}">{{$linemanager->lineManager->official_email}}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                     </div>
@@ -140,7 +142,7 @@
                     slotWidth :80,
 
                     eventClick:function(event, jsEvent, view) {
-                        if (event.title.search('present') !== -1){
+                        if (event.title.search('absent') !== -1){
                             $('#modalTitle').html(event.title);
                             $('#date').val(event.title);
                             $('#calendarModal').modal();
