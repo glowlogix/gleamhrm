@@ -1080,12 +1080,12 @@ class AttendanceController extends Controller
 
         $currentMonth = date('m');
         //Average Arrivals
-        $averageArrivals = Attendance::where('employee_id', '=', Auth::user()->id)->select(DB::raw('time_in  as average_arrival'))->avg('time_in');
+        $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in  as average_arrival'))->avg('first_time_in');
         $datetime = $averageArrivals;
 
         //Average Attendance
-        $present=Attendance::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
-        $totalAttendance=Attendance::where('employee_id',Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
+        $present=AttendanceSummary::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
+        $totalAttendance=AttendanceSummary::where('employee_id',Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
         if($totalAttendance!=0){
             $averageAttendance=(($present/$totalAttendance))*100;
         }
@@ -1095,8 +1095,8 @@ class AttendanceController extends Controller
 
 
         //Average Hours
-        $averageHours = Attendance::where('employee_id', '=', Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])
-        ->select(DB::raw('(time_out - time_in) as average_hour'))->get()->avg('average_hour');
+        $averageHours = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])
+        ->select(DB::raw('(last_time_out - first_time_in) as average_hour'))->get()->avg('average_hour');
 
         //Line Manager
         $linemanagers=OrganizationHierarchy::with('employees')->where('employee_id',Auth::user()->id)->get();
