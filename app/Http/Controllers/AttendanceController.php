@@ -1009,7 +1009,7 @@ class AttendanceController extends Controller
         $currentMonth = date('m');
         $employees = Employee::where(['id' => Auth::user()->id])->get()->toJson();
 
-        $attendance_summaries = AttendanceSummary::where('employee_id',Auth::user()->id)->whereRaw('MONTH(created_at) = ?',[$currentMonth])->get();
+        $attendance_summaries = AttendanceSummary::where('employee_id',Auth::user()->id)->get();
         $events = array();
         foreach ($attendance_summaries as $key => $value) {
             $delays = '';
