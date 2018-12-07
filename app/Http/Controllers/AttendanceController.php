@@ -1080,12 +1080,12 @@ class AttendanceController extends Controller
 
         $currentMonth = date('m');
         //Average Arrivals
-        $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in  as average_arrival'))->avg('first_time_in');
-        if($averageArrivals==null){
+        $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in'))->avg('first_time_in');
+        if($averageArrivals == null){
             $avgarival='00:00 ';
         }
         else{
-            $avgarival=Carbon::parse($averageArrivals)->format('g:i A');
+            $avgarival=Carbon::parse($averageArrivals)->toTimeString();
         }
 
 

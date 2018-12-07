@@ -254,7 +254,6 @@
                             <div class="form-group row">
                                 <div class="card-body">
                                     <div class="demo-checkbox">
-                                        &nbsp;&nbsp;
                                         <input type="hidden" name="invite_to_asana" value="0" />
                                         <input type="checkbox" id="basic_checkbox_1"  class="asana" name="invite_to_asana" value="1"/>
                                         <label for="basic_checkbox_1">Asana</label>
