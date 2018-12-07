@@ -1086,7 +1086,13 @@ class AttendanceController extends Controller
         //Average Attendance
         $present=Attendance::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
         $totalAttendance=Attendance::where('employee_id',Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
-        $averageAttendance=(($present/$totalAttendance))*100;
+        if($totalAttendance!=0){
+            $averageAttendance=(($present/$totalAttendance))*100;
+        }
+        else{
+            $averageAttendance=0;
+        }
+
 
         //Average Hours
         $averageHours = Attendance::where('employee_id', '=', Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])
