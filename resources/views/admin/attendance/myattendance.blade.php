@@ -135,7 +135,7 @@
                     header: {
                         left: 'today prev,next',
                         center: 'title',
-                        right: 'month,basicYear'
+                        right: 'month,timelineYear'
                     },
                     slotWidth :80,
 
