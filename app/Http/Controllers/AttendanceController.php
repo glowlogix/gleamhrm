@@ -1081,7 +1081,14 @@ class AttendanceController extends Controller
         $currentMonth = date('m');
         //Average Arrivals
         $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in  as average_arrival'))->avg('first_time_in');
-        $datetime = $averageArrivals;
+        if($averageArrivals==null){
+            $avgarival='00:00 ';
+        }
+        else{
+            $avgarival=Carbon::parse($averageArrivals)->format('g:i A');
+        }
+
+
 
         //Average Attendance
         $present=AttendanceSummary::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
@@ -1107,7 +1114,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.myattendance',$this->metaResponse(), [
             'employees' => $employees,
             'events' => $events
-        ])->with('averageHours',$averageHours)->with('averageArrival',$datetime)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
+        ])->with('averageHours',$averageHours)->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
 
     public function correctionEmail(Request $request){

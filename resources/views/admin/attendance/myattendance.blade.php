@@ -34,7 +34,7 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-md align-self-center round-danger"><i class="far fa-calendar-plus"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{Carbon\Carbon::parse($averageArrival)->format('g:i A')}}</h3>
+                                    <h3 class="m-b-0 font-light">{{$averageArrival}}</h3>
                                     <h5 class="text-muted m-b-0">Average&nbspArrival</h5></div>
                             </div>
                         </div>
