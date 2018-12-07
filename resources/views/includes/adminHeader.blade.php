@@ -8,14 +8,14 @@
                 <!-- Logo icon --><b>
                     <!--You can put here icon as well // <i class="wi wi-sunset"></i> //-->
                     <!-- Dark Logo icon -->
-                    <img src="{{asset('assets/images/hrm-logo-03.png') }}" alt="homepage" class="dark-logo" />
+                    <img src="{{asset('assets/images/hrm-white-logo-1.png') }}" alt="homepage" class="dark-logo" />
                     <!-- Light Logo icon -->
-                    <img src="{{asset('assets/images/hrm-logo-03.png') }}" alt="homepage" class="light-logo" />
+                    <img src="{{asset('assets/images/hrm-white-logo-1.png') }}" alt="homepage" class="light-logo" />
                 </b>
                 <!--End Logo icon -->
                 <!-- Logo text -->
                 <span>
-                    <h3 class="light-logo"> <img src="{{asset('assets/images/hrm-logo-02.png')}}"/></h3>
+                    <h3 class="light-logo"> <img src="{{asset('assets/images/hrm-white-logo-2.png')}}"/></h3>
                 </span> 
             </a>
         </div>
