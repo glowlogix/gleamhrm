@@ -797,7 +797,7 @@ class AttendanceController extends Controller
             // $where['comment'] = 'back';
             $str = 'time_in';
         }
-        elseif (strtolower($text) == 'ah' || strtolower($text) == 'Allah Hafiz' || strtolower($text) == 'AllahHafiz' || strtolower($text) == 'Allah Hafiz.') {
+        elseif (strtolower($text) == 'ah' || strtolower($text) == 'allah hafiz' || strtolower($text) == 'allahhafiz' || strtolower($text) == 'allah hafiz.' ||  strtolower($text) == 'bye') {
             // $where['comment'] = 'ah';
             $text='ah';
             $str = 'time_out';
@@ -1004,6 +1004,7 @@ class AttendanceController extends Controller
         });
         $loop->run();*/
     }
+
     public function authUserTimeline(){
 
         $currentMonth = date('m');
@@ -1048,7 +1049,6 @@ class AttendanceController extends Controller
                 "color" => $color,
             ];
         }
-
         $leave = Leave::with('leaveType')->where('employee_id',Auth::user()->id)->get();
         foreach ($leave as $key => $value) {
             $color = '';
