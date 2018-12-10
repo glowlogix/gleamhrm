@@ -586,7 +586,7 @@ class AttendanceController extends Controller
             }
             $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
             $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
-            $total_time = Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in))/60;
+            $total_time = floor(Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in))/60);
     
             $events[] = [
                 "resourceId" => $value->employee_id,
@@ -1039,7 +1039,7 @@ class AttendanceController extends Controller
             }
             $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
             $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
-            $total_time = (Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in)))/60;
+            $total_time = floor((Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in)))/60);
             $events[] = [
                 "resourceId" => $value->employee_id,
                 "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
@@ -1103,7 +1103,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.myattendance',$this->metaResponse(), [
             'employees' => $employees,
             'events' => $events
-        ])->with('averageHours',$averageHours)->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
+        ])->with('averageHours',floor($averageHours))->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
 
     public function correctionEmail(Request $request){
