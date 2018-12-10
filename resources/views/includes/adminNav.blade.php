@@ -71,8 +71,8 @@
                         )
                         <li><a href="{{route('timeline')}}">Timeline</a></li>
                         @endif
-                        <li><a href="#">History</a></li>
-                        <li><a href="#">Incomplete</a></li>
+                       {{-- <li><a href="#">History</a></li>
+                        <li><a href="#">Incomplete</a></li>--}}
                         @if (
                         Auth::user()->isAllowed('LeaveController:employeeleaves')
                         )

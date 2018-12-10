@@ -48,7 +48,7 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-md align-self-center round-warning"><i class="far fa-clock"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{$averageHours/10000}} HRS</h3>
+                                    <h3 class="m-b-0 font-light">{{$averageHours}} HRS</h3>
                                     <h5 class="text-muted m-b-0">Average Hour</h5></div>
                             </div>
                         </div>
@@ -129,9 +129,12 @@
         <script src="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
         <script type="text/javascript">
             $(document).ready(function () {
+
                 $('#calendar').fullCalendar({
+
                     themeSystem: 'bootstrap4',
                     defaultView: 'month',
+                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                     displayEventTime: false,
                     dow: [ 1, 2, 3, 4, 5 ],
                     header: {
@@ -139,7 +142,9 @@
                         center: 'title',
                         right: 'month,timelineYear'
                     },
+                    firstDay: 1,
                     slotWidth :80,
+
 
                     eventClick:function(event, jsEvent, view) {
                         if (event.title.search('absent') !== -1){
@@ -151,6 +156,7 @@
 
                     events:{!! $events !!}
                 });
+
 
                 $("#selectOffice").change(function(e){
                     var url = "{{route('timeline')}}/" + $(this).val();

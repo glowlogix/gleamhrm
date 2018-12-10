@@ -40,6 +40,7 @@
             themeSystem: 'bootstrap4',
             defaultView: 'timelineMonth',
             weekends: 'Boolean',
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
             displayEventTime: false,
             dow: [ 1, 2, 3, 4, 5 ],
             header: {
@@ -47,6 +48,7 @@
                 center: 'title',
                 right: 'timelineDay,timelineWeek,timelineMonth,timelineYear'
             },
+            firstDay: 1,
             slotWidth : 80,
             resourceColumns: [
                 {
