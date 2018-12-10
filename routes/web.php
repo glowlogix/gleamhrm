@@ -50,6 +50,7 @@ Route::group(['middleware' => 'auth'], function () {
             'branch' => 'BranchesController',
         ]);
 
+
         Route::resources([
             'job' => 'JobsController',
         ]);
@@ -74,12 +75,10 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'ApplicantController@destroy',
             'as' => 'applicant.delete'
         ]);
-
         Route::Get('/applicant/trashed', [
             'uses' => 'ApplicantController@trashed',
             'as' => 'applicant.trashed'
         ]);
-
         Route::Get('/applicant/kill/{id}', [
             'uses' => 'ApplicantController@kill',
             'as' => 'applicant.kill'
@@ -96,7 +95,6 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'ApplicantController@retire',
             'as' => 'applicant.retire'
         ]);
-
         Route::Get('/applicants/hired', [
             'uses' => 'ApplicantController@hiredApplicants',
             'as' => 'applicants.hired'
@@ -302,13 +300,6 @@ Route::group(['middleware' => 'auth'], function () {
         Route::post('/unassign_skill/employee/{id}', [
             'uses' => 'SkillController@unassign',
             'as' => 'skill.unassign'
-        ]);
-
-        //Help
-
-        Route::post('/contact_us', [
-            'uses' => 'DashboardController@contact_us',
-            'as' => 'contact_us'
         ]);
 
 
@@ -639,7 +630,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'documents.update',
             'uses' => 'DocumentsController@update'
         ]);
-    });
+});
 
 //My Attendance
     Route::GET('/attendance/myAttendance', [
@@ -650,14 +641,20 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'AttendanceController@correctionEmail',
         'as' => 'correction_email'
     ]);
-
-
 //	Help
     Route::get('/help', [
         'uses' => 'DashboardController@help',
         'as' => 'admin.help'
     ]);
+    Route::post('/contact_us', [
+        'uses' => 'DashboardController@contact_us',
+        'as' => 'contact_us'
+    ]);
+
+
+
 });
+
 Route::Get('/applicant/apply', [
     'uses' => 'ApplicantController@create',
     'as' => 'applicant.apply'

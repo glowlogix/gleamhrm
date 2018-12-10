@@ -499,7 +499,7 @@ class AttendanceController extends Controller
                     }
                     $time = date("g:i A",strtotime($value->first_time_in));
                     // $time2= date("g:i A",strtotime($value->checkouttime));
-                    $total_time = number_format(($value->total_time / 60), 2, '.', ''); 
+                    $total_time = number_format(($value->total_time / 60), 2, '.', '');
                     $events[] = [
                         "resourceId" => $value->employee_id,
                         "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". $total_time." hrs"."\n",
@@ -1038,7 +1038,7 @@ class AttendanceController extends Controller
             }
             $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
             $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
-            $total_time = Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in))/60;
+            $total_time = (Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in)))/60;
             $events[] = [
                 "resourceId" => $value->employee_id,
                 "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
@@ -1048,6 +1048,7 @@ class AttendanceController extends Controller
                 "color" => $color,
             ];
         }
+
         $leave = Leave::with('leaveType')->where('employee_id',Auth::user()->id)->get();
         foreach ($leave as $key => $value) {
             $color = '';
@@ -1073,10 +1074,6 @@ class AttendanceController extends Controller
             ];
         }
 
-        $presents = Attendance::where('employee_id', '=', Auth::user()->id)->where('status','present')->count();
-        $absent= Attendance::where('employee_id', '=', Auth::user()->id)->where('status','absent')->count();
-
-
         //Average Arrivals
         $averageArrivals = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->select(DB::raw('first_time_in'))->avg('first_time_in');
         if($averageArrivals == null){
@@ -1087,6 +1084,7 @@ class AttendanceController extends Controller
         }
 
         //Average Attendance
+        $absent= AttendanceSummary::where('employee_id', '=', Auth::user()->id)->where('status','absent')->count();
         $present=AttendanceSummary::where('employee_id',Auth::user()->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
         $totalAttendance=AttendanceSummary::where('employee_id',Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
         if($totalAttendance!=0){
@@ -1095,8 +1093,6 @@ class AttendanceController extends Controller
         else{
             $averageAttendance=0;
         }
-
-
         //Average Hours
         $averageHours = AttendanceSummary::where('employee_id', '=', Auth::user()->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->avg('total_time')/60;
 
@@ -1107,7 +1103,7 @@ class AttendanceController extends Controller
         return view('admin.attendance.myattendance',$this->metaResponse(), [
             'employees' => $employees,
             'events' => $events
-        ])->with('averageHours',$averageHours)->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$presents)->with('absent',$absent);
+        ])->with('averageHours',$averageHours)->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
 
     public function correctionEmail(Request $request){

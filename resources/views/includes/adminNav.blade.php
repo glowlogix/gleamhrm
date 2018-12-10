@@ -41,6 +41,7 @@
                 @endif
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
+                @if (Auth::user()->isAllowed('EmployeeController:index') || Auth::user()->isAllowed('OrganizationHierarchyController:index') || Auth::user()->isAllowed('TeamController:index') || Auth::user()->isAllowed('VendorController:index'))
                 <li @if(request()->is('vendor/create')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
@@ -53,11 +54,20 @@
                         )
                         <li><a href="{{route('organization_hierarchy.index')}}" @if(str_contains(Request::fullUrl(),'organization_hierarchy')) class="active" @endif>Org Chart</a></li>
                         @endif
+                            @if (
+                       Auth::user()->isAllowed('TeamController:index')
+                       )
                         <li><a href="{{route('teams.index')}}">Teams</a></li>
+                        @endif
+                            @if (
+                       Auth::user()->isAllowed('VendorController:index')
+                       )
                         <li><a href="{{route('vendors.index')}}" @if(request()->is('vendor/create')) class="active" @endif> Vendors</a></li>
+                            @endif
                     </ul>
 
                 </li>
+                @endif
                 <li  @if(str_contains(Request::fullUrl(),'attendance') || request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
@@ -93,13 +103,34 @@
                         )
                         <li><a href="{{ route('branch.index') }}" @if(str_contains(Request::fullUrl(),'branch')) class="active" @endif >Branches</a></li>
                         @endif
+                            @if (
+                      Auth::user()->isAllowed('DepartmentController:index')
+                      )
                         <li><a href="{{route('departments.index')}}">Departments</a></li>
+                        @endif
+                            @if (
+                          Auth::user()->isAllowed('DesignationController:index')
+                          )
                         <li><a href="{{route('designations.index')}}">Designations</a></li>
+                            @endif
+                            @if (
+                         Auth::user()->isAllowed('VendorCategoryController:index')
+                         )
                         <li><a href="{{route('vendor_category.index')}}">Vendor Categories</a></li>
+                            @endif
+                            @if (
+                       Auth::user()->isAllowed('LeaveTypeController:index')
+                       )
                         <li><a href="{{route('leave_type.index')}}">Leave Management</a></li>
+                            @endif
+                            @if (
+                           Auth::user()->isAllowed('SkillController:index')
+                           )
                         <li><a href="{{route('skill.index')}}">Skills</a></li>
+                            @endif
+
                         {{--<li><a href="{{route('sub_skill.index')}}">Sub Skill</a></li>--}}
-                        <li><a href="#">Probident Fund</a></li>
+                        <li><a href="#">Provident Fund</a></li>
                     </ul>
                 </li>
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>

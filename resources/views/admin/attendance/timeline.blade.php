@@ -10,6 +10,7 @@
 @section('content')
 <div class="card">
     <div class="card-body">
+        <span style="float: left;"><input id="myTextBox" value="{{ Carbon\Carbon::now()->toDateString()}}" class="form-control" type="date" name="date"></span>
             <span style="float: right;">
                 <select class="form-control" id="selectOffice">
                     <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
@@ -79,6 +80,9 @@
             }
             return false;
         });
+    });
+    $("#myTextBox").on("change paste keyup", function() {
+        $('#calendar').fullCalendar('gotoDate', $(this).val());
     });
 </script>
 @endpush
