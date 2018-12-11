@@ -136,7 +136,7 @@
                     defaultView: 'month',
                     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                     displayEventTime: false,
-                    dow: [ 1, 2, 3, 4, 5 ],
+                    dow: [1,2,3,4,5],
                     header: {
                         left: 'today prev,next',
                         center: 'title',
@@ -144,7 +144,6 @@
                     },
                     firstDay: 1,
                     slotWidth :80,
-
 
                     eventClick:function(event, jsEvent, view) {
                         if (event.title.search('absent') !== -1){
@@ -155,10 +154,9 @@
                         },
 
                     events:{!! $events !!}
+
                 });
-
-
-                $("#selectOffice").change(function(e){
+                      $("#selectOffice").change(function(e){
                     var url = "{{route('timeline')}}/" + $(this).val();
 
                     if (url) {

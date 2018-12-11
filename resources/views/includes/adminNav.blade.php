@@ -91,6 +91,9 @@
                         <li><a href="{{route('leave.index')}}" @if(request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit') || str_contains(Request::fullUrl(),'leave/show')) class="active" @endif >My Leaves</a></li>
                     </ul>
                 </li>
+                @if (
+               Auth::user()->isAllowed('DocumentsController:index') || Auth::user()->isAllowed('BranchController:index') || Auth::user()->isAllowed('DepartmentController:index') || Auth::user()->isAllowed('DesignationController:index') || Auth::user()->isAllowed('VendorCategoryController:index') || Auth::user()->isAllowed('LeaveTypeController:index') || Auth::user()->isAllowed('SkillController:index')
+               )
                 <li  @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch')) class = "active" @endif  > <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
@@ -130,9 +133,10 @@
                             @endif
 
                         {{--<li><a href="{{route('sub_skill.index')}}">Sub Skill</a></li>--}}
-                        <li><a href="#">Provident Fund</a></li>
+                        {{--<li><a href="#">Provident Fund</a></li>--}}
                     </ul>
                 </li>
+                @endif
                 <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>
                     <ul aria-expanded="false" class="collapse">
                         <li><a href="{{route('salary.show')}}">Salary</a></li>
@@ -154,7 +158,7 @@
                     </ul>
                 </li>
                 @endif
-                
+
                 <li> <a class="" href="{{route('admin.help')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
                 </li>
 

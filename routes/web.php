@@ -565,10 +565,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'leaves.store'
         ]);
 
-        Route::Get('/my_leaves', [
-            'uses' => 'LeaveController@index',
-            'as' => 'leave.index'
-        ]);
+
 
         Route::Get('/employee_leaves', [
             'uses' => 'LeaveController@employeeleaves',
@@ -654,6 +651,10 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 });
+Route::Get('/my_leaves', [
+    'uses' => 'LeaveController@index',
+    'as' => 'leave.index'
+]);
 
 Route::Get('/applicant/apply', [
     'uses' => 'ApplicantController@create',
