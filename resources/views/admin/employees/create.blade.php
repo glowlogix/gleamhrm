@@ -25,7 +25,7 @@
                         {{csrf_field()}}
                         <div class="form-body">
                             <center >
-                                <input type="image"  src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" />
+                                <input type="image"  src="{{asset('public/assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" />
                                 <input type="file"  name="picture" id="wizard-picture" class="" hidden>
                                 <h6 class="card-title m-t-10">Click On Image to Add Picture</h6>
                             </center>
