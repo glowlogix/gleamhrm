@@ -81,7 +81,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_out">Time Out</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input type="time" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['last_time_out']: ''}}" />
+                                                                        <input type="time" class="form-control" name="time_out" value="" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>

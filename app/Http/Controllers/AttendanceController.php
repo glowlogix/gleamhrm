@@ -1066,21 +1066,22 @@ class AttendanceController extends Controller
             unset($dow[$days[$day]]);
         };
         $dow=implode(',',$dow);
-
         //For Absent Event
         $till_date = new DateTime();
+        $absent=array();
         for($i=1;$i<= $till_date->format('d');$i++){
             $now = Carbon::now();
             $date=Carbon::parse($i."-". $now->month."-".$now->year)->toDateString();
             if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),$branchWeekend)==false){
                 $events[] = [
                     "resourceId" => $value->employee_id,
-                    "title" => "Absent  ",
+                    "title" => "Absent",
                     "date" => Carbon::parse($date)->toDateString(),
                     "color" => "red",
                 ];
-                $absent[]="absent";
+                $absent[]="";
             }
+
         }
         $AbsentCount=count($absent);
         $leave = Leave::with('leaveType')->where('employee_id',Auth::user()->id)->get();
