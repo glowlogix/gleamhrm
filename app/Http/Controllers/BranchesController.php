@@ -17,6 +17,16 @@ class BranchesController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
+    public $weekDays = [
+        "Monday" 	    => "Monday",
+        "Tuesday" 	    => "Tuesday",
+        "Wednesday" 	=> "Wednesday",
+        "Thursday" 		=> "Thursday",
+        "Friday" 		=> "Friday",
+        "Saturday" 	    => "Saturday",
+        "Sunday" 		=> "Sunday",
+    ];
+
     public function index()
     {
         $this->meta['title'] = 'Branches';
@@ -33,7 +43,7 @@ class BranchesController extends Controller
     public function create()
     {
         $this->meta['title'] = 'Create Branch';                                                                
-        return view('admin.branches.create',$this->metaResponse());
+        return view('admin.branches.create',$this->metaResponse())->with('weekDays',$this->weekDays);
     }
 
     /**
@@ -53,13 +63,14 @@ class BranchesController extends Controller
             'phone_number' => 'required',
         ]);
         
-        $office_location = Branch::create([
+        Branch::create([
             'name' => $request->name,
             // 'status' => $request->status,
             'timing_start' => Carbon::parse($request->timing_start),
             'timing_off' => Carbon::parse($request->timing_off),
             'address' => $request->address,
             'phone_number' => $request->phone_number,
+            'weekend'       => json_encode($request->weekend)
         ]);
 
         Session::flash('success','Branch is created successfully');
@@ -83,11 +94,13 @@ class BranchesController extends Controller
      * @param  \App\Branch  $officeLocation
      * @return \Illuminate\Http\Response
      */
+
     public function edit($id)
     {
+
         $this->meta['title'] = 'Update Branch';                                                                        
         $office_location = Branch::find($id);
-        return view('admin.branches.edit',$this->metaResponse())->with('office_location',$office_location);
+        return view('admin.branches.edit',$this->metaResponse())->with('office_location',$office_location)->with('weekDays',$this->weekDays);
     }
 
     /**
@@ -115,6 +128,7 @@ class BranchesController extends Controller
         $office_location->timing_off= Carbon::parse($request->timing_off);
         $office_location->address=$request->address;
         $office_location->phone_number= $request->phone_number;
+        $office_location->weekend= json_encode($request->weekend);
         
         $office_location->save();
 

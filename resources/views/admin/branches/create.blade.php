@@ -57,7 +57,18 @@
 								<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number')}}">
 							</div>
 						</div>
+							<div class="col-md-6">
+							<div class="form-group">
+								<label class="control-label">Weekend Days</label>
+								<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="weekend[]">
+								@foreach($weekDays as $weekday)
+									<option value="{{$weekday}}">{{$weekday}}</option>
+									@endforeach
+								</select>
+							</div>
+						</div>
 					</div>
+
 					</div>
 					<hr>
 					<div class="form-actions">

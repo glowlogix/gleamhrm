@@ -131,12 +131,15 @@
             $(document).ready(function () {
 
                 $('#calendar').fullCalendar({
-
                     themeSystem: 'bootstrap4',
                     defaultView: 'month',
                     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
                     displayEventTime: false,
-                    dow: [1,2,3,4,5],
+                    businessHours: {
+                        // days of week. an array of zero-based day of week integers (0=Sunday)
+                        dow: [{{ $dow }}],
+                    },
+                    showNonCurrentDates: false,
                     header: {
                         left: 'today prev,next',
                         center: 'title',
@@ -146,9 +149,10 @@
                     slotWidth :80,
 
                     eventClick:function(event, jsEvent, view) {
-                        if (event.title.search('absent') !== -1){
-                            $('#modalTitle').html(event.title);
-                            $('#date').val(event.title);
+                        if (event.title.search('Absent') !== -1){
+                            $('#modalTitle').html(event.title)
+                            $('#modalTitle').append(event.date);
+                            $('#date').val(event.date);
                             $('#calendarModal').modal();
                         }
                         },
@@ -165,6 +169,7 @@
                     return false;
                 });
             });
+                $('.fc-other-month').html('');
         </script>
     @endpush
 @stop

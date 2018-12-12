@@ -50,7 +50,7 @@
                 right: 'timelineDay,timelineWeek,timelineMonth,timelineYear'
             },
             firstDay: 1,
-            slotWidth : 80,
+            slotWidth : 100,
             resourceColumns: [
                 {
                     labelText: 'Employees',
@@ -84,6 +84,8 @@
     $("#myTextBox").on("change paste keyup", function() {
         $('#calendar').fullCalendar('gotoDate', $(this).val());
     });
+    {{}}
+
 </script>
 @endpush
 @stop
