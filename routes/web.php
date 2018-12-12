@@ -554,16 +554,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'salary.export'
         ]);
 
-        //Leaves
-        Route::Get('/leave/create', [
-            'uses' => 'LeaveController@create',
-            'as' => 'leaves'
-        ]);
 
-        Route::Post('/leave/store', [
-            'uses' => 'LeaveController@store',
-            'as' => 'leaves.store'
-        ]);
 
 
 
@@ -654,6 +645,16 @@ Route::group(['middleware' => 'auth'], function () {
 Route::Get('/my_leaves', [
     'uses' => 'LeaveController@index',
     'as' => 'leave.index'
+]);
+//Leaves
+Route::Get('/leave/create', [
+    'uses' => 'LeaveController@create',
+    'as' => 'leaves'
+]);
+
+Route::Post('/leave/store', [
+    'uses' => 'LeaveController@store',
+    'as' => 'leaves.store'
 ]);
 
 Route::Get('/applicant/apply', [

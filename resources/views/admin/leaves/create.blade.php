@@ -1,6 +1,5 @@
 @extends('layouts.admin')
 @section('Heading')
-	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('attendance.create')}}'"><span class="fas fa-plus" ></span> Add Attendence</button>
 	<h3 class="text-themecolor">Add Leave</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
