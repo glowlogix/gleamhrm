@@ -55,7 +55,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Time In</label>
                                         <div class="col-md-9">
-                                            <input type="time" class="form-control" name="time_in" value="{{$current_time}}">
+                                            <input type="time"  class="form-control" name="time_in" value="{{$current_time}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +64,7 @@
                                     <div class="form-group row ">
                                         <label class="control-label text-right col-md-3">Time Out</label>
                                         <div class="col-md-9">
-                                            <input type="time" class="form-control" name="time_out" value="{{$current_time}}">
+                                            <input type="time" class="form-control" name="time_out" value="">
                                         </div>
                                     </div>
                                 </div>
@@ -129,6 +129,7 @@
                                             <tr>
                                                 <th>Time In</th>
                                                 <th>Time Out</th>
+                                                <th>Comment</th>
                                                 <th>Actions</th>
                                             </tr>
                                         </thead>
@@ -140,10 +141,11 @@
                                                     {{ Carbon\Carbon::parse($att->time_in)->format('h:i a') }}
                                                 </td>
                                                 <td>
-                                                    @if ($att->time_out != '00:00:00')
+                                                    @if ($att->time_out !='')
                                                         {{ Carbon\Carbon::parse($att->time_out)->format('h:i a') }}
                                                     @endif
                                                 </td>
+                                                <td>{{$att->comment}}</td>
                                                 <td class="text-nowrap">
                                                     <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit{{ $att->id }}"> <i class="fas fa-pencil-alt text-white "></i></a>
                                                     <div class="modal fade" id="edit{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
@@ -166,12 +168,12 @@
 
                                                                         <label for="time">Time In</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="time_in" value="{{$att->time_in}}" />
+                                                                            <input type="time" class="form-control" name="time_in"  value="{{\Carbon\Carbon::parse($att->time_in)->toTimeString()}}" />
                                                                         </div>
 
                                                                         <label for="time">Time Out</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="time_out" value="{{$att->time_out}}" />
+                                                                            <input type="time" class="form-control" name="time_out" @if($att->time_out!=null)value="{{\Carbon\Carbon::parse($att->time_out)->toTimeString()}}" @endif />
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -192,7 +194,7 @@
                                                                     {{ csrf_field() }}
                                                                     <div class="modal-header">
                                                                         Are you sure you want to delete this <strong>
-                                                                            check {{ $att->in_out }} on {{Carbon\Carbon::parse($att->date .' '.$att->time_in)->format('Y-m-d h:i a')}} ?
+                                                                            check {{ $att->in_out }} on {{Carbon\Carbon::parse($att->time_in)->format('Y-m-d h:i a')}} ?
                                                                         </strong>
                                                                     </div>
                                                                     <div class="modal-footer">

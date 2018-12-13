@@ -33,12 +33,20 @@
                             <td>
                                 @if(
                                     isset($employee['attendanceSummary'][0]) && 
-                                    $employee['attendanceSummary'][0]['last_time_out'] != '00:00:00'
+                                    $employee['attendanceSummary'][0]['last_time_out'] != ''
                                 )
                                 {{Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->format('h:i a')}}
                                 @endif
                             </td>
-                            <td>{{isset($employee['attendanceSummary'][0]) ? number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') : ''}}</td>
+
+                            <td>
+                                @if(
+                                   isset($employee['attendanceSummary'][0]) &&
+                                   $employee['attendanceSummary'][0]['last_time_out'] != ''
+                               )
+                                    {{isset($employee['attendanceSummary'][0]) ? number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') : ''}}
+                            @endif
+                            </td>
                             <td class="text-nowrap">
                                 <a class="btn btn-info btn-sm" href="{{route('attendance.create', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
                                 <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
@@ -72,7 +80,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_in">Time In</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input type="time" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['first_time_in']: ''}}" />
+                                                                        <input type="time" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? \Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_time_in'])->toTimeString(): ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>
@@ -81,7 +89,7 @@
                                                                 <div class="col-md-6">
                                                                     <label for="time_out">Time Out</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input type="time" class="form-control" name="time_out" value="" />
+                                                                        <input type="time" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) && $employee['attendanceSummary'][0]['last_time_out']!=""  ? \Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_time_out'])->toTimeString(): ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>

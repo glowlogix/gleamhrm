@@ -621,7 +621,7 @@ Route::group(['middleware' => 'auth'], function () {
 });
 
 //My Attendance
-    Route::GET('/attendance/myAttendance', [
+    Route::GET('/attendance/myAttendance/{id?}', [
         'uses' => 'AttendanceController@authUserTimeline',
         'as' => 'myAttendance'
     ]);

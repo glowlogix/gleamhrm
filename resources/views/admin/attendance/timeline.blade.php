@@ -49,6 +49,7 @@
                 center: 'title',
                 right: 'timelineDay,timelineWeek,timelineMonth,timelineYear'
             },
+            contentHeight:500,
             firstDay: 1,
             slotWidth : 100,
             resourceColumns: [
@@ -74,9 +75,9 @@
         });
         $("#selectOffice").change(function(e){
             var url = "{{route('timeline')}}/" + $(this).val();
-            
+
             if (url) {
-                window.location = url; 
+                window.location = url;
             }
             return false;
         });

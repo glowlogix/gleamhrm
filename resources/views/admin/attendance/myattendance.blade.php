@@ -71,6 +71,17 @@
         </div>
     <div class="card">
         <div class="card-body">
+                        <span style="float: right;">
+                        @if(
+                        Auth::user()->isAllowed('AttendanceController:showTimeline')
+                        )
+                        <select class="form-control" id="employee">
+                            @foreach($employees as $employee)
+                            <option value="{{$employee->id}}" @if($employeeId==$employee->id) Selected @endif>{{$employee->firstname}}</option>
+                            @endforeach
+                        </select>
+                        @endif
+                        </span>
             <div id="calendar">
             </div>
             <div id="calendarModal" class="modal fade">
@@ -93,7 +104,8 @@
                                 </div>
                                     <div class="form-group">
                                         <label class="control-label">CC to Line Manager</label>
-                                    <select class="form-control" name="line_manager_email">
+
+                                    <select class="form-control" name="line_manager_email" @foreach($linemanagers as $linemanager) @if($linemanager->line_manager_id == null) disabled @endif @endforeach>
                                         @foreach($linemanagers as $linemanager)
                                             @if($linemanager->line_manager_id!=null)
                                                 <option value="{{$linemanager->lineManager->official_email}}">{{$linemanager->lineManager->official_email}}</option>
@@ -141,9 +153,9 @@
                     },
                     showNonCurrentDates: false,
                     header: {
-                        left: 'today prev,next',
-                        center: 'title',
-                        right: 'month,timelineYear'
+                        left:   'title',
+                        center: '',
+                        right:  'today '
                     },
                     firstDay: 1,
                     slotWidth :80,
@@ -160,8 +172,8 @@
                     events:{!! $events !!}
 
                 });
-                      $("#selectOffice").change(function(e){
-                    var url = "{{route('timeline')}}/" + $(this).val();
+                $("#employee").change(function(e){
+                    var url = "{{route('myAttendance')}}/" + $(this).val();
 
                     if (url) {
                         window.location = url;
