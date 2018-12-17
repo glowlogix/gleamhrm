@@ -29,8 +29,14 @@
                             <td>{{$employee['firstname']}} {{$employee['lastname']}}</td>
                             <td>{{$employee['city']}}</td>
                             <td>{{isset($employee['branch']) ? $employee['branch']['name'] : ''}}</td>
-                            <td>{{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_timestamp_in'])->format('h:i a') : ''}}</td>
                             <td>
+                                @if(
+                               isset($employee['attendanceSummary'][0]) &&
+                               $employee['attendanceSummary'][0]['first_timestamp_in'] != ''
+                           )
+                                {{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_timestamp_in'])->format('h:i a') : ''}}</td>
+                            @endif
+                                <td>
                                 @if(
                                     isset($employee['attendanceSummary'][0]) && 
                                     $employee['attendanceSummary'][0]['last_timestamp_out'] != ''
