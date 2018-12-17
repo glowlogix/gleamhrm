@@ -72,11 +72,11 @@ class AttendanceController extends Controller
         $current_time = $datetime->format('h:m');
 
         $selected_in_out = '';
-        $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->first();
+        $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_in', 'asc')->first();
         
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
         
-        $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
+        $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_in', 'asc')->get();
         
         return view('admin.attendance.create',$this->metaResponse(),[
             'employees'         => $employees, 
@@ -107,14 +107,14 @@ class AttendanceController extends Controller
         $current_time = $datetime->toTimeString();
 
         $selected_in_out = '';
-        $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->first();
+        $attendance = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_in', 'asc')->first();
         /*dd($attendance);
         if (isset($attendance->time_out) && empty($attendance->time_out)) {
             $selected_in_out = 'out';
         }*/
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
         
-        $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('time_in', 'asc')->get();
+        $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_in', 'asc')->get();
         // dd($attendance);
         
         return view('admin.attendance.createByAjax')
@@ -146,19 +146,19 @@ class AttendanceController extends Controller
 
         $time = Carbon::parse($request->time);                           
         
-        $key = 'time_in';
+        $key = 'timestamp_in';
         if ($request->in_out == 'out') {
-            $key = 'time_out';
+            $key = 'timestamp_out';
         }
         $attendance = [
             'employee_id' => $request->employee_id,
             'date' => $request->date,
             'time' => $time->toTimeString(),
-            'time_in' => !empty($request->time_in) ? Carbon::parse($request->time_in) : '',
+            'timestamp_in' => !empty($request->time_in) ? Carbon::parse($request->time_in) : '',
         ];
         
         if (!empty($request->time_out)) {
-            $attendance['time_out'] = Carbon::parse($request->time_out);
+            $attendance['timestamp_out'] = Carbon::parse($request->time_out);
         }
         $attendance = Attendance::create($attendance);
         
@@ -174,17 +174,17 @@ class AttendanceController extends Controller
 
     public function storeAttendaceSummary(Request $request)
     {
-        $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->orderBy('time_in', 'asc')->get();
+        $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->orderBy('timestamp_in', 'asc')->get();
         // dump($attendance);
-        $first_time_in = $attendance->first()->time_in;
+        $first_timestamp_in = $attendance->first()->timestamp_in;
         // dump($first_time_in);
-        $last_time_out = $attendance->last()->time_out;
+        $last_timestamp_out = $attendance->last()->timestamp_out;
         // dump($last_time_out);
         $totaltime = 0;
-        if($last_time_out!=""){
+        if($last_timestamp_out!=""){
             foreach ($attendance as $i => $row) {
-                $in = Carbon::parse($row->time_in);
-                $out = Carbon::parse($row->time_out);
+                $in = Carbon::parse($row->timestamp_in);
+                $out = Carbon::parse($row->timestamp_out);
                 $totaltime += $out->diffInMinutes($in);
             }
         }
@@ -200,7 +200,7 @@ class AttendanceController extends Controller
         
         $office_location = Branch::find($employee->branch_id);
         $ofc_in = Carbon::parse($office_location->timing_start);
-        $emp_in = Carbon::parse($first_time_in);
+        $emp_in = Carbon::parse($first_timestamp_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
         
         $day = Carbon::parse($request->date)->format('l');
@@ -217,8 +217,8 @@ class AttendanceController extends Controller
         }
 
         if (isset($attendance_summary->id)) {
-            $attendance_summary->first_time_in = $first_time_in;
-            $attendance_summary->last_time_out = $last_time_out;
+            $attendance_summary->first_timestamp_in = $first_timestamp_in;
+            $attendance_summary->last_timestamp_out = $last_timestamp_out;
             $attendance_summary->total_time = $totaltime;
             $attendance_summary->date = $request->date;
             $attendance_summary->is_delay = $is_delay;
@@ -227,8 +227,8 @@ class AttendanceController extends Controller
         else{
             $arr= [
                 'employee_id' => $request->employee_id,
-                'first_time_in' => $first_time_in,
-                'last_time_out' => $last_time_out,
+                'first_timestamp_in' => $first_timestamp_in,
+                'last_timestamp_out' => $last_timestamp_out,
                 'total_time' => $totaltime,
                 'is_delay' => $is_delay,
                 'date' => $request->date,
@@ -268,8 +268,8 @@ class AttendanceController extends Controller
         $totaltime = $out->diffInMinutes($in);
 
         if (isset($attendance_summary->id)) {
-            $attendance_summary->first_time_in  = $in;
-            $attendance_summary->last_time_out  = $out;
+            $attendance_summary->first_timestamp_in  = $in;
+            $attendance_summary->last_timestamp_out  = $out;
             $attendance_summary->total_time     = $totaltime;
             $attendance_summary->date           = $request->date;
             $attendance_summary->is_delay       = $is_delay;
@@ -278,8 +278,8 @@ class AttendanceController extends Controller
         else{
             $arr= [
                 'employee_id'   => $request->employee_id,
-                'first_time_in' => $in,
-                'last_time_out' => $out,
+                'first_timestamp_in' => $in,
+                'last_timestamp_out' => $out,
                 'total_time'    => $totaltime,
                 'is_delay'      => $is_delay,
                 'date'          => $request->date,
@@ -396,8 +396,8 @@ class AttendanceController extends Controller
 
         if (isset($attendance->id) != '') {
             $attendance->date = Carbon::parse($request->date);
-            $attendance->time_in = Carbon::parse($request->time_in);
-            $attendance->time_out = Carbon::parse($request->time_out);
+            $attendance->timestamp_in = Carbon::parse($request->time_in);
+            $attendance->timestamp_out = Carbon::parse($request->time_out);
             // dd($attendance);
             $attendance->save();
         }
@@ -419,8 +419,8 @@ class AttendanceController extends Controller
         ])->first();
 
         if($attendance){
-            $attendance->first_time_in = date('g:i A',strtotime($attendance->first_time_in));
-            $attendance->last_time_out = date('g:i A',strtotime($attendance->last_time_out));
+            $attendance->first_timestamp_in = date('g:i A',strtotime($attendance->first_timestamp_in));
+            $attendance->last_timestamp_out = date('g:i A',strtotime($attendance->last_timestamp_out));
             return response()->json([$attendance,'successAttendance']);   
         }
         else{
@@ -487,7 +487,7 @@ class AttendanceController extends Controller
                         $color = '#ADFF41'; 
                     }
                     if($value->status == "present"){
-                        $color = 'green';
+                        $color = '#00a560';
                     }
 
                     if($value->is_delay && $value->status=="present"){
@@ -497,20 +497,20 @@ class AttendanceController extends Controller
                     else{
                         $delays ="";
                     }
-                    $time = date("g:i A",strtotime($value->first_time_in));
+                    $time = date("g:i A",strtotime($value->first_timestamp_in));
                     // $time2= date("g:i A",strtotime($value->checkouttime));
                     $total_time = number_format(($value->total_time / 60), 2, '.', '');
                     $events[] = [
                         "resourceId" => $value->employee_id,
                         "title" => $value->status."\n".$employee->firstname.' '. $employee->lastname."\n".$time."\n". $total_time." hrs"."\n",
                         "date" => $value->date,
-                        "start" => $value->date .' '.Carbon::parse($value->first_time_in)->toTimeString(),
-                        "end" => $value->date .' '.Carbon::parse($value->first_time_in)->toTimeString(),
+                        "start" => $value->date .' '.Carbon::parse($value->first_timestemp_in)->toTimeString(),
+                        "end" => Carbon::parse($value->last_timestemp_out)->toTimeString(),
                         "color" => 'blue',
                     ];
                 }
 
-                $leave = Leave::where('employee_id', $employee_id)->get(); 
+                $leave = Leave::where('employee_id', $employee_id)->get();
                 
                 foreach ($leave as $key => $value) {
                   $color = '';
@@ -551,48 +551,48 @@ class AttendanceController extends Controller
         $this->meta['title'] = 'Show Attendance';
 
         if ($id == 0) {
-            $employees = Employee::all()->toJson();
+            $employees = Employee::where('type','!=','remote')->get()->toJson();
         }
         else{
-            $employees = Employee::where(['branch_id' => $id])->get()->toJson();
+            $employees = Employee::where(['branch_id' => $id])->where('type','!=','remote')->get()->toJson();
         }
-        $attendance_summaries = AttendanceSummary::all();
+        $attendance_summaries =AttendanceSummary::where('first_timestamp_in','!=','')->get();
         $events = array();
         foreach ($attendance_summaries as $key => $value) {
-            $delays = '';
-            $color = '';
-            if($value->status == "Short Leave"){
-                $color = '#C24BFF';
-            }
-            if($value->status === "Full Leave"){
-                $color = 'red';
-            }
-            if($value->status === "Half Leave"){
-                $color = '#57BB8A';
-            }
-            if($value->status == "Paid Leave"){
-                $color = '#ADFF41';
-            }
-            if($value->status == "present"){
-                $color = 'green';
-            }
-            if($value->is_delay && $value->status=="present"){
-                $color = '#43474a';
-                $delays = $value->is_delay." delay";
-            }else{
-                $delays ="";
-            }
-            $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
-            $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
-            $total_time = floor(Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in))/60);
-            $events[] = [
-                "resourceId" => $value->employee_id,
-                "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
-                "date" => $value->date,
-                "start" => $value->date .' '. $value->first_time_in,
-                "end" => $value->date .' '.$value->last_time_out,
-                "color" => $color,
-            ];
+                $delays = '';
+                $color = '';
+                if ($value->status == "Short Leave") {
+                    $color = '#C24BFF';
+                }
+                if ($value->status === "Full Leave") {
+                    $color = 'red';
+                }
+                if ($value->status === "Half Leave") {
+                    $color = '#57BB8A';
+                }
+                if ($value->status == "Paid Leave") {
+                    $color = '#ADFF41';
+                }
+                if ($value->status == "present") {
+                    $color = '#00a560';
+                }
+                if ($value->is_delay && $value->status == "present") {
+                    $color = '#43474a';
+                    $delays = $value->is_delay . " delay";
+                } else {
+                    $delays = "";
+                }
+                $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
+                $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
+                $total_time = round(Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)) / 60, '2');
+                $events[] = [
+                    "resourceId" => $value->employee_id,
+                    "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
+                    "date" => $value->date,
+                    "start" => $value->first_timestamp_in,
+                    "end" => $value->last_timestamp_out,
+                    "color" => $color,
+                ];
         }
         $leave = Leave::with('leaveType')->get();
         foreach ($leave as $key => $value) {
@@ -653,7 +653,7 @@ class AttendanceController extends Controller
             'attendanceSummary' => function($join) use($today) {
                 $join->where('date', $today);
             }
-        ],'branch')->where('designation','!=','CEO')->get();
+        ],'branch')->where('designation','!=','CEO')->where('type','!=','remote')->get();
         // dd($employees);
         $active_employees = Employee::where('status','1')->get()->count();
 
@@ -776,7 +776,7 @@ class AttendanceController extends Controller
             'employee_id' => $employee->id,
             'date' => $date,
         ];
-        $checkInText= array("aoa","salam","slaam","slam","assalam-o-alaikum","assalam o alaikum","assalamualaikum",'asslam o alaikum','assalamu-alaeikum','morning','asslam o alikum','assalamu-aleikum');
+        $checkInText= array("aoa","salam","slaam","slam","assalam-o-alaikum","assalam o alaikum","assalamualaikum",'asslam o alaikum','assalamu-alaeikum','morning','asslam o alikum','assalamu-aleikum','assalamu alaikum','allah haffiz');
         $checkOutText= array("ah","allah hafiz","allahhafiz","allah hafiz.","bye","allah-hafiz");
         $str = '';
         if (in_array(strtolower($text), $checkInText)== true){
@@ -810,7 +810,7 @@ class AttendanceController extends Controller
             
             $attendance = Attendance::where($where)
             ->where('comment','like', $text)
-            ->orderBy('time_in', 'desc')->first();
+            ->orderBy('timestamp_in', 'desc')->first();
             
             if(isset($attendance->id)){ //check if multiple aoa
                 Log::debug('multiple '.$text);
@@ -819,7 +819,7 @@ class AttendanceController extends Controller
 
             $attendance = Attendance::where($where)
             ->where('comment','like', $othertext)
-            ->orderBy('time_in', 'desc')->first();
+            ->orderBy('timestamp_in', 'desc')->first();
             if(isset($attendance->id)){ //check if multiple aoa
                 Log::debug($othertext. ' after '.$text);
                 return $othertext. ' after '.$text;
@@ -828,14 +828,14 @@ class AttendanceController extends Controller
             $attendance = Attendance::create([
                 'employee_id' => $employee->id,
                 'date' => $date,
-                'time_in' => $time,
-                'time_out' => '00:00:00',
+                'timestamp_in' => $time,
+                'timestamp_out' => '00:00:00',
                 'comment' => $text,
             ]);
             // return $attendance;
         }
         if ($str == 'time_out') {
-            $attendance = Attendance::where($where)->orderBy('time_in', 'desc')->first();
+            $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
             $attendance->time_out = $time;
             $attendance->save();
@@ -938,7 +938,7 @@ class AttendanceController extends Controller
         }
         if ($str == 'time_in') {
             if ($text == 'aoa') {
-                $attendance = Attendance::where($where)->where('comment','like', 'aoa')->orderBy('time_in', 'desc')->first();
+                $attendance = Attendance::where($where)->where('comment','like', 'aoa')->orderBy('timestamp_in', 'desc')->first();
                 if(isset($attendance->id)){ //check if multiple aoa
                     return 'multiple aoa';
                 }
@@ -946,14 +946,14 @@ class AttendanceController extends Controller
             $attendance = Attendance::create([
                 'employee_id' => $employee->id,
                 'date' => $date,
-                'time_in' => $time,
+                'timestamp_in' => $time,
                 'time_out' => '00:00:00',
                 'comment' => $text,
             ]);
             // return $attendance;
         }
         if ($str == 'time_out') {
-            $attendance = Attendance::where($where)->orderBy('time_in', 'desc')->first();
+            $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
             $attendance->time_out = $time;
             $attendance->save();
@@ -1000,7 +1000,7 @@ class AttendanceController extends Controller
     }
 
     public function authUserTimeline($id=""){
-        $employees=Employee::all();
+        $employees=Employee::where('type','!=','remote')->get();
         $days=[
             'Sunday'    =>  0,
             'Monday'    =>  1,
@@ -1018,47 +1018,50 @@ class AttendanceController extends Controller
             $employeeId=Auth::user()->id;
             $employee = Employee::where(['id' => Auth::user()->id])->first();
             $attendance_summaries = AttendanceSummary::where('employee_id',Auth::user()->id)->get();
-        }
+         }
         $currentMonth = date('m');
         $events = array();
         $presentDate=array();
         foreach ($attendance_summaries as $key => $value) {
-            $delays = '';
-            $color = '';
-            if($value->status == "Short Leave"){
-                $color = '#C24BFF';
-            }
-            if($value->status === "Full Leave"){
-                $color = 'red';
-            }
-            if($value->status === "Half Leave"){
-                $color = '#57BB8A';
-            }
-            if($value->status == "Paid Leave"){
-                $color = '#ADFF41';
-            }
-            if($value->status == "present"){
-                $color = 'green';
+            if ($value->first_timestamp_in!=""){
+                $delays = '';
+                $color = '';
+                if($value->status == "Short Leave"){
+                    $color = '#C24BFF';
+                }
+                if($value->status === "Full Leave"){
+                    $color = 'red';
+                }
+                if($value->status === "Half Leave"){
+                    $color = '#57BB8A';
+                }
+                if($value->status == "Paid Leave"){
+                    $color = '#ADFF41';
+                }
+                if($value->status == "present"){
+                    $color = '#00a560';
+                }
+
+                if($value->is_delay && $value->status=="present"){
+                    $color = '#43474a';
+                    $delays = $value->is_delay." delay";
+                }else{
+                    $delays ="";
+                }
+                $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
+                $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
+                $total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)))/60,'2');
+                $events[] = [
+                    "resourceId" => $value->employee_id,
+                    "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
+                    "date" => Carbon::parse($value->date)->toDateString(),
+                    "start" =>$value->first_timestamp_in,
+                    "end" =>$value->last_timestamp_out,
+                    "color" => $color,
+                ];
+                $presentDate[]=$value->date;
             }
 
-            if($value->is_delay && $value->status=="present"){
-                $color = '#43474a';
-                $delays = $value->is_delay." delay";
-            }else{
-                $delays ="";
-            }
-            $timeIn = Carbon::parse($value->first_time_in)->format('g:i A');
-            $timeOut = Carbon::parse($value->last_time_out)->format('g:i A');
-            $total_time = floor((Carbon::parse($value->last_time_out)->diffInMinutes(Carbon::parse($value->first_time_in)))/60);
-            $events[] = [
-                "resourceId" => $value->employee_id,
-                "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
-                "date" => $value->date,
-                "start" => $value->date .' '. $value->first_time_in,
-                "end" => $value->date .' '.$value->last_time_out,
-                "color" => $color,
-            ];
-            $presentDate[]=$value->date;
         }
 
         //For Dow
@@ -1077,7 +1080,7 @@ class AttendanceController extends Controller
             if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),$branchWeekend)==false){
                 $events[] = [
                     "resourceId" => $value->employee_id,
-                    "title" => "Absent",
+                    "title" => "Absent   ",
                     "date" => Carbon::parse($date)->toDateString(),
                     "color" => "red",
                 ];
@@ -1111,17 +1114,17 @@ class AttendanceController extends Controller
         }
 
         //Average Arrivals
-        $averageArrivals =round(AttendanceSummary::where('employee_id', '=',$employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->select(DB::raw('first_time_in'))->avg('first_time_in'));
+        $averageArrivals =round(AttendanceSummary::where('employee_id', '=',$employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->select(DB::raw('first_timestamp_in'))->avg('first_timestamp_in'));
         if($averageArrivals == null){
             $avgarival='00:00 ';
         }
         else{
-            $avgarival= Carbon::createFromTimestamp($averageArrivals)->format('g:i A');
+            $avgarival= Carbon::createFromTimestampUTC($averageArrivals)->format('g:i a');
         }
 
         //Average Attendance
         $absent= $AbsentCount;
-        $present=AttendanceSummary::where('employee_id',$employee->id)->where('status','present')->whereRaw('MONTH(date) = ?',[$currentMonth])->count();
+        $present=AttendanceSummary::where('employee_id',$employee->id)->where('status','present')->whereRaw('MONTH(first_timestamp_in) = ?',[$currentMonth])->count();
         $totalAttendance=AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->count()+$absent;
         if($totalAttendance!=0){
             $averageAttendance=round(($present/$totalAttendance)*100,2);
@@ -1130,7 +1133,7 @@ class AttendanceController extends Controller
             $averageAttendance=0;
         }
         //Average Hours
-        $averageHours = AttendanceSummary::where('employee_id', '=', $employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->avg('total_time')/60;
+        $averageHours = AttendanceSummary::where('employee_id', '=', $employee->id)->whereRaw('MONTH(first_timestamp_in) = ?',[$currentMonth])->avg('total_time')/60;
 
         //Line Manager
         $linemanagers=OrganizationHierarchy::with('lineManager')->where('employee_id',$employee->id)->get();
@@ -1139,7 +1142,6 @@ class AttendanceController extends Controller
             'events' => $events
         ])->with('employeeId',$employeeId)->with('employees',$employees)->with('dow',$dow)->with('averageHours',floor($averageHours))->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
-
     public function correctionEmail(Request $request){
         $data = array('name'=>Auth::user()->firstname,'messages'=>"$request->message",'email'=>Auth::user()->official_email,'date'=>"$request->date");
         try {

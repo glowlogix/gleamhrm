@@ -138,11 +138,11 @@
                                         @foreach($attendances as $att)
                                             <tr>
                                                 <td>
-                                                    {{ Carbon\Carbon::parse($att->time_in)->format('h:i a') }}
+                                                    {{ Carbon\Carbon::parse($att->timestamp_in)->format('h:i a') }}
                                                 </td>
                                                 <td>
-                                                    @if ($att->time_out !='')
-                                                        {{ Carbon\Carbon::parse($att->time_out)->format('h:i a') }}
+                                                    @if ($att->timestamp_out !='')
+                                                        {{ Carbon\Carbon::parse($att->timestamp_out)->format('h:i a') }}
                                                     @endif
                                                 </td>
                                                 <td>{{$att->comment}}</td>
@@ -168,12 +168,12 @@
 
                                                                         <label for="time">Time In</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="time_in"  value="{{\Carbon\Carbon::parse($att->time_in)->toTimeString()}}" />
+                                                                            <input type="time" class="form-control" name="time_in"  value="{{\Carbon\Carbon::parse($att->timestamp_in)->toTimeString()}}" />
                                                                         </div>
 
                                                                         <label for="time">Time Out</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="time_out" @if($att->time_out!=null)value="{{\Carbon\Carbon::parse($att->time_out)->toTimeString()}}" @endif />
+                                                                            <input type="time" class="form-control" name="time_out" @if($att->timestamp_out!=null)value="{{\Carbon\Carbon::parse($att->timestamp_out)->toTimeString()}}" @endif />
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -193,9 +193,11 @@
                                                                 <form action="{{ route('attendance.deletechecktime' , ['id' => $att->id] )}}" method="post">
                                                                     {{ csrf_field() }}
                                                                     <div class="modal-header">
-                                                                        Are you sure you want to delete this <strong>
-                                                                            check {{ $att->in_out }} on {{Carbon\Carbon::parse($att->time_in)->format('Y-m-d h:i a')}} ?
-                                                                        </strong>
+                                                                        Are you sure you want to delete this check
+
+                                                                    </div>
+                                                                    <div class="modal-content">
+                                                                        <strong>{{ $att->in_out }} on {{Carbon\Carbon::parse($att->timestamp_in)->format('Y-m-d h:i a')}} ?</strong>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

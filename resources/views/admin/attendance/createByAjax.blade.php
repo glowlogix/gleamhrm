@@ -81,11 +81,11 @@
                     @if($attendances->count() > 0) @foreach($attendances as $att)
                     <tr>
                         <td>
-                            {{ Carbon\Carbon::parse($att->time_in)->format('h:i a') }}
+                            {{ Carbon\Carbon::parse($att->timestamp_in)->format('h:i a') }}
                         </td>
                         <td>
                             @if ($att->time_out != '')
-                            {{ Carbon\Carbon::parse($att->time_out)->format('h:i a') }}
+                            {{ Carbon\Carbon::parse($att->timestamp_out)->format('h:i a') }}
                             @endif
                         </td>
                         <td>
@@ -114,7 +114,7 @@
 
                                                 <label for="time">Time In</label>
                                                 <div class="input-group time_in timepicker">
-                                                    <input class="form-control time_in tp" name="time_in" value="{{Carbon\Carbon::parse($att->time_in)->format('h:i a')}}" />
+                                                    <input class="form-control time_in tp" name="time_in" value="{{Carbon\Carbon::parse($att->timestamp_in)->format('h:i a')}}" />
                                                     <span class="input-group-addon timepicker1">
                                                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                     </span>
@@ -122,7 +122,7 @@
 
                                                 <label for="time">Time Out</label>
                                                 <div class="input-group time_out timepicker">
-                                                    <input class="form-control time_out tp" name="time_out" value="{{Carbon\Carbon::parse($att->time_out)->format('h:i a')}}" />
+                                                    <input class="form-control time_out tp" name="time_out" value="{{Carbon\Carbon::parse($att->timestamp_out)->format('h:i a')}}" />
                                                     <span class="input-group-addon timepicker1">
                                                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                     </span>
