@@ -33,9 +33,9 @@
                                 @if(
                                isset($employee['attendanceSummary'][0]) &&
                                $employee['attendanceSummary'][0]['first_timestamp_in'] != ''
-                           )
+                                    )
                                 {{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_timestamp_in'])->format('h:i a') : ''}}</td>
-                            @endif
+                                @endif
                                 <td>
                                 @if(
                                     isset($employee['attendanceSummary'][0]) && 
