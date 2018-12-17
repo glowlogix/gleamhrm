@@ -782,25 +782,25 @@ class AttendanceController extends Controller
         if (in_array(strtolower($text), $checkInText)== true){
             // $where['comment'] = 'aoa';
             $text='aoa';
-            $str = 'time_in';
+            $str = 'timestamp_in';
         }
         elseif (strstr(strtolower($text), 'brb')) {
             // $where['comment'] = 'brb';
-            $str = 'time_out';
+            $str = 'timestamp_out';
         }
         elseif (strtolower($text) == 'back') {
             // $where['comment'] = 'back';
-            $str = 'time_in';
+            $str = 'timestamp_in';
         }
         elseif (in_array(strtolower($text), $checkOutText)== true) {
             // $where['comment'] = 'ah';
             $text='ah';
-            $str = 'time_out';
+            $str = 'timestamp_out';
         }
         if ($str == '') {
             return;
         }
-        if ($str == 'time_in') {
+        if ($str == 'timestamp_in') {
             if ($text == 'aoa') {
                 $othertext = 'back';
             }
@@ -917,26 +917,26 @@ class AttendanceController extends Controller
         $str = '';
         if (strtolower($text) == 'aoa') {
             // $where['comment'] = 'aoa';
-            $str = 'time_in';
+            $str = 'timestamp_in';
         }
         elseif (strstr(strtolower($text), 'brb')) {
             // $where['comment'] = 'brb';
-            $str = 'time_out';
+            $str = 'timestamp_out';
         }
         elseif (strtolower($text) == 'back') {
             // $where['comment'] = 'back';
-            $str = 'time_in';
+            $str = 'timestamp_in';
         }
         elseif (strtolower($text) == 'ah') {
             // $where['comment'] = 'ah';
-            $str = 'time_out';
+            $str = 'timestamp_out';
         }
 
         if ($str == '') {
             Log::debug('null string');
             return;
         }
-        if ($str == 'time_in') {
+        if ($str == 'timestamp_in') {
             if ($text == 'aoa') {
                 $attendance = Attendance::where($where)->where('comment','like', 'aoa')->orderBy('timestamp_in', 'desc')->first();
                 if(isset($attendance->id)){ //check if multiple aoa
@@ -947,12 +947,12 @@ class AttendanceController extends Controller
                 'employee_id' => $employee->id,
                 'date' => $date,
                 'timestamp_in' => $time,
-                'time_out' => '00:00:00',
+                'timestamp_out' => '00:00:00',
                 'comment' => $text,
             ]);
             // return $attendance;
         }
-        if ($str == 'time_out') {
+        if ($str == 'timestamp_out') {
             $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
             $attendance->time_out = $time;
