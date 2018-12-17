@@ -759,8 +759,8 @@ class AttendanceController extends Controller
             Log::debug('get and save Slack Id for employee.');
         }
 
-        $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
-        $time = Carbon::createFromTimestamp($request['event_time'])->toTimeString(); 
+        $date = Carbon::createFromTimestamp($request['event_time'])->toDateString();
+        $time = Carbon::createFromTimestamp($request['event_time'])->toDateTimeString();
 
         $text = $request['event']['text']; 
         
@@ -782,25 +782,25 @@ class AttendanceController extends Controller
         if (in_array(strtolower($text), $checkInText)== true){
             // $where['comment'] = 'aoa';
             $text='aoa';
-            $str = 'timestamp_in';
+            $str = 'time_in';
         }
         elseif (strstr(strtolower($text), 'brb')) {
             // $where['comment'] = 'brb';
-            $str = 'timestamp_out';
+            $str = 'time_out';
         }
         elseif (strtolower($text) == 'back') {
             // $where['comment'] = 'back';
-            $str = 'timestamp_in';
+            $str = 'time_in';
         }
         elseif (in_array(strtolower($text), $checkOutText)== true) {
             // $where['comment'] = 'ah';
             $text='ah';
-            $str = 'timestamp_out';
+            $str = 'time_out';
         }
         if ($str == '') {
             return;
         }
-        if ($str == 'timestamp_in') {
+        if ($str == 'time_in') {
             if ($text == 'aoa') {
                 $othertext = 'back';
             }
@@ -834,10 +834,10 @@ class AttendanceController extends Controller
             ]);
             // return $attendance;
         }
-        if ($str == 'timestamp_out') {
+        if ($str == 'time_out') {
             $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
-            $attendance->time_out = $time;
+            $attendance->timestamp_out = $time;
             $attendance->save();
         }
 
@@ -897,7 +897,7 @@ class AttendanceController extends Controller
         }
 
         $date = Carbon::createFromTimestamp($request['event_time'])->toDateString(); 
-        $time = Carbon::createFromTimestamp($request['event_time'])->toTimeString(); 
+        $time = Carbon::createFromTimestamp($request['event_time'])->toDateTimeString();
 
         $text = $request['event']['text']; 
         
@@ -917,26 +917,26 @@ class AttendanceController extends Controller
         $str = '';
         if (strtolower($text) == 'aoa') {
             // $where['comment'] = 'aoa';
-            $str = 'timestamp_in';
+            $str = 'time_in';
         }
         elseif (strstr(strtolower($text), 'brb')) {
             // $where['comment'] = 'brb';
-            $str = 'timestamp_out';
+            $str = 'time_out';
         }
         elseif (strtolower($text) == 'back') {
             // $where['comment'] = 'back';
-            $str = 'timestamp_in';
+            $str = 'time_in';
         }
         elseif (strtolower($text) == 'ah') {
             // $where['comment'] = 'ah';
-            $str = 'timestamp_out';
+            $str = 'time_out';
         }
 
         if ($str == '') {
             Log::debug('null string');
             return;
         }
-        if ($str == 'timestamp_in') {
+        if ($str == 'time_in') {
             if ($text == 'aoa') {
                 $attendance = Attendance::where($where)->where('comment','like', 'aoa')->orderBy('timestamp_in', 'desc')->first();
                 if(isset($attendance->id)){ //check if multiple aoa
@@ -955,7 +955,7 @@ class AttendanceController extends Controller
         if ($str == 'timestamp_out') {
             $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
-            $attendance->time_out = $time;
+            $attendance->timestamp_out = $time;
             $attendance->save();
         }
 
