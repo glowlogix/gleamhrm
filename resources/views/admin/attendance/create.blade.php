@@ -138,10 +138,12 @@
                                         @foreach($attendances as $att)
                                             <tr>
                                                 <td>
-                                                    {{ Carbon\Carbon::parse($att->timestamp_in)->format('h:i a') }}
+                                                    @if($att->timestamp_in != '')
+                                                    {{ Carbon\Carbon::parse($att->timestamp_in)->format('h:i a')}}
+                                                    @endif
                                                 </td>
                                                 <td>
-                                                    @if ($att->timestamp_out !='')
+                                                    @if ($att->timestamp_out != '')
                                                         {{ Carbon\Carbon::parse($att->timestamp_out)->format('h:i a') }}
                                                     @endif
                                                 </td>

@@ -834,7 +834,7 @@ class AttendanceController extends Controller
             ]);
             // return $attendance;
         }
-        if ($str == 'time_out') {
+        if ($str == 'timestamp_out') {
             $attendance = Attendance::where($where)->orderBy('timestamp_in', 'desc')->first();
             $attendance->comment .= ' ' . $text;
             $attendance->time_out = $time;
