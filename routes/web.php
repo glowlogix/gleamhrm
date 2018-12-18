@@ -35,7 +35,7 @@ Route::get('/job/skill/{jobId}',[
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::Post('/slackbot', 'AttendanceController@newSlackbot')->name('slackbot');
+Route::post('/slackbot', 'AttendanceController@newSlackbot')->name('slackbot');
 
 //Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
 

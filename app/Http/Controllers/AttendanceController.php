@@ -1074,12 +1074,10 @@ class AttendanceController extends Controller
         if (isset($request->challenge)) {
             return $request->challenge;
         }
-
         if ($request['event']['channel'] != config('values.SlackChannel')) {
             Log::debug('Accept from Slack Attendance Channel.');
             return;
         }
-
         $employee = Employee::where('slack_id', $request['event']['user'])->first();
         if (!isset($employee->id)) {
             $token = config('values.SlackToken');
@@ -1119,6 +1117,7 @@ class AttendanceController extends Controller
                     'employee_id' => $employee->id,
                     'first_timestamp_in' => $time,
                     'date' => $date,
+                    'total_time' => 0,
                 ];
                 AttendanceSummary::create($data);
             }
@@ -1128,6 +1127,7 @@ class AttendanceController extends Controller
                 'timestamp_break_start' => $time,
                 'comment' => $text,
                 'date' => $date,
+                'total_time' => 0,
             ];
             AttendanceBreak::create($data);
         } elseif (strtolower($text) == 'back') {
@@ -1135,7 +1135,6 @@ class AttendanceController extends Controller
             if ($attendanceCheck != null) {
                 $attendanceCheck->timestamp_break_end = $time;
                 $attendanceCheck->save();
-
                 $request->employee_id = $employee->id;
                 $request->date = $attendanceCheck->date;
                 $this->updateTotalTime($request);
