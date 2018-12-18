@@ -17,7 +17,7 @@ class CreateAttendanceBreaksTable extends Migration
             $table->increments('id');
             $table->integer('employee_id');
             $table->dateTime('timestamp_break_start');
-            $table->dateTime('timestamp_break_end');
+            $table->dateTime('timestamp_break_end')->nullable();
             $table->date('date');
             $table->string('comment')->nullable();
             $table->string('status')->default('present');
