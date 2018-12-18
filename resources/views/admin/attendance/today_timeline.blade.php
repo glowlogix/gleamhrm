@@ -54,7 +54,7 @@
                             @endif
                             </td>
                             <td class="text-nowrap">
-                                <a class="btn btn-info btn-sm" href="{{route('attendance.create', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
+                                <a class="btn btn-info btn-sm" href="{{route('attendance.createBreak', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
                                 <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>
                                 {{--///Dialog Box/// --}}
                                     <div class="modal fade" id="popup{{ $employee['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

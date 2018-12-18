@@ -34,7 +34,10 @@ Route::get('/job/skill/{jobId}',[
 ]);
 
 Route::get('/home', 'HomeController@index')->name('home');
-Route::Post('/slackbot', 'AttendanceController@slackbot')->name('slackbot');
+
+//Route::Post('/slackbot', 'AttendanceController@slackbot')->name('slackbot');
+
+Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'allowed_permission'], function () {
@@ -487,6 +490,10 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'AttendanceController@store',
             'as' => 'attendance.store'
         ]);
+        Route::Post('/attendance/store_break', [
+            'uses' => 'AttendanceController@storeBreak',
+            'as' => 'attendance.storeBreak'
+        ]);
 
 
         Route::Get('/attendance/show/{id}', [
@@ -517,7 +524,22 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'AttendanceController@exportAttendance',
             'as' => 'attendance.export'
         ]);
+//Attendance Break
 
+        Route::Get('/attendance/create_break/{id?}/{date?}/', [
+            'uses' => 'AttendanceController@createBreak', //show Attendance
+            'as' => 'attendance.createBreak'
+        ]);
+
+        Route::Post('/attendance/deletebreakchecktime', [
+            'uses' => 'AttendanceController@deleteBreakChecktime',
+            'as' => 'attendance.deleteBreakChecktime'
+        ]);
+
+        Route::Post('/attendance/update_break', [
+            'uses' => 'AttendanceController@updateBreak',
+            'as' => 'attendance.updateBreak'
+        ]);
 
         //Salary Show
 
@@ -652,9 +674,18 @@ Route::Get('/leave/create', [
     'as' => 'leaves'
 ]);
 
+Route::Get('/leave/admin_create/{id?}', [
+    'uses' => 'LeaveController@adminCreate',
+    'as' => 'admin.createLeave'
+]);
+
 Route::Post('/leave/store', [
     'uses' => 'LeaveController@store',
     'as' => 'leaves.store'
+]);
+Route::Post('/leave/admin_store', [
+    'uses' => 'LeaveController@adminStore',
+    'as' => 'leaves.adminStore'
 ]);
 
 Route::Get('/applicant/apply', [

@@ -130,6 +130,26 @@ class LeaveController extends Controller
             'leave_types' => LeaveType::all(),
         ]);
     }
+    public function adminCreate($id="")
+    {
+        if($id!=""){
+            $employee_id=$id;
+        }
+        else{
+            $employee_id=Auth::user()->id;
+        }
+        $this->meta['title'] = 'Create Leave';
+        $OrganizationHierarchy = OrganizationHierarchy::where('employee_id',$employee_id)->with('lineManager')->first();
+        $employees = Employee::all();
+        $selectedEmployee=Employee::where('id',$employee_id)->first();
+        $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
+        return view('admin.leaves.admincreateleave',$this->metaResponse(),[
+            'employees' => $employees,
+            'line_manager' => $line_manager,
+            'leave_types' => LeaveType::all(),
+            'selectedEmployee'=>$selectedEmployee,
+        ]);
+    }
 
     public function EmployeeCreate()
     {
@@ -144,13 +164,60 @@ class LeaveController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
+
+    public function adminStore(Request $request)
+    {
+        $this->validate($request,[
+            'datefrom' => 'required',
+            'dateto' => 'required|after_or_equal:datefrom',
+        ]);
+        $employee_id = $request->employee;
+        $leave_type = $request->leave_type;
+
+        $dateFromTime = Carbon::parse($request->datefrom);
+        $dateToTime = Carbon::parse($request->dateto);
+
+        $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
+
+        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+            ->whereDate('date', '>=', $dateFromTime->toDateString())
+            ->whereDate('date', '<=', $dateToTime->toDateString())
+            ->get();
+
+        if($attendance_summaries->count() > 0){
+            $msg = '';
+            foreach ($attendance_summaries as $key => $attendance_summary) {
+                $msg .= ' '. $attendance_summary->date;
+            }
+            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+        }
+
+        $leave = Leave::create([
+            'employee_id' => $employee_id,
+            'leave_type' => $leave_type,
+            'datefrom' => $dateFromTime,
+            'dateto' => $dateToTime,
+            'subject' => $request->subject,
+            'description' => $request->description,
+            'point_of_contact' => $request->point_of_contact,
+            'line_manager' => $request->line_manager,
+            'cc_to' => $request->cc_to,
+            'status' => 'pending',
+        ]);
+
+        // $this->sendEmail($leave);
+
+        if ($leave){
+            return redirect()->route('employeeleaves')->with('success','Leave for Employee is created successfully');
+        }
+    }
+
     public function store(Request $request)
     {
         $this->validate($request,[
             'datefrom' => 'required',
             'dateto' => 'required|after_or_equal:datefrom',
         ]);
-
         $employee_id = Auth::User()->id;
         $leave_type = $request->leave_type;
         
@@ -192,7 +259,7 @@ class LeaveController extends Controller
         }
     }
 
-    public function sendEmail($leave)
+    public function sendEmail($leave,Request $request)
     {
         Mail::raw($leave->description, function($message) use ($leave)
         {

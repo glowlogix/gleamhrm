@@ -1,5 +1,8 @@
 @extends('layouts.admin')
 @section('Heading')
+    @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
+    <button type="button"  onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Employee Leave</button>
+   @endif
     <h3 class="text-themecolor">Employee Leaves</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
