@@ -35,9 +35,9 @@ Route::get('/job/skill/{jobId}',[
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-//Route::Post('/slackbot', 'AttendanceController@slackbot')->name('slackbot');
+Route::Post('/slackbot', 'AttendanceController@newSlackbot')->name('slackbot');
 
-Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
+//Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
 
 Route::group(['middleware' => 'auth'], function () {
     Route::group(['middleware' => 'allowed_permission'], function () {
