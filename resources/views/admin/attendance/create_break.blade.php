@@ -1,11 +1,11 @@
 @extends('layouts.admin')
 @section('Heading')
     <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('leaves')}}'"><span class="fas fa-plus" ></span> Add Leave</button>
-    <h3 class="text-themecolor">Add BRB's</h3>
+    <h3 class="text-themecolor">Add Attendance</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
         <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">Add BRB's</li>
+        <li class="breadcrumb-item active">Add Attendance</li>
     </ol>
 @endsection
 @section('content')
@@ -16,10 +16,10 @@
                     <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('today_timeline')}}'">Back</button>
                 </div>
                 <div class="card-body">
-                    <form   class="form-horizontal" action="{{route('attendance.storeBreak')}}" method='POST'>
+                    <form   class="form-horizontal" action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
                         {{csrf_field()}}
                         <div class="form-body">
-                            <h3 class="box-title">Create Attendance Breaks</h3>
+                            <h3 class="box-title">Create CheckIn/CheckOut</h3>
                             <hr class="m-t-0 m-b-40">
                             <div class="row">
                                 <div class="col-md-6">
@@ -53,18 +53,18 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Break Start</label>
+                                        <label class="control-label text-right col-md-3">Time In</label>
                                         <div class="col-md-9">
-                                            <input type="time"  class="form-control" name="break_start" value="{{$current_time}}">
+                                            <input type="datetime-local"  class="form-control" name="time_in" value="{{isset($AttendanceSummaryEmployees['attendanceSummary'][0]) ? date('Y-m-d\TH:i',strtotime($AttendanceSummaryEmployees['attendanceSummary'][0]['first_timestamp_in'])): ''}}">
                                         </div>
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-md-6">
                                     <div class="form-group row ">
-                                        <label class="control-label text-right col-md-3">Break End</label>
+                                        <label class="control-label text-right col-md-3">Time Out</label>
                                         <div class="col-md-9">
-                                            <input type="time" class="form-control" name="break_end" value="">
+                                            <input type="datetime-local" class="form-control" name="time_out" value="{{isset($AttendanceSummaryEmployees['attendanceSummary'][0]) && $AttendanceSummaryEmployees['attendanceSummary'][0]['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($AttendanceSummaryEmployees['attendanceSummary'][0]['last_timestamp_out'])): '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -96,6 +96,7 @@
                                 </div>
                             </div>
                         </div>
+
                         <!--/span-->
                         <div class="col-md-4">
                             <div class="form-group row ">
@@ -116,10 +117,64 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
-
-                    <div class="row">
+                    <h3 class="box-title">Breaks</h3>
+                    <hr>
+                    <a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#popup" data-original-title="Edit"> <i class="fas fa-plus text-white"></i> Add Break</a>
+<br>
+                    {{--///Dialog Box/// --}}
+                <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{{route('attendance.storeBreak')}}" method='POST'>
+                                {{ csrf_field() }}
+                                <div class="modal-header" style="margin-right: 20px;">
+                                    Add Break
+                                </div>
+                                <div class="modal-body">
+                                    <div class="container-fluid">
+                                        <div class="col-md-14">
+                                            <label for="date">Employee</label><br>
+                                            <div class="input-group date1">
+                                                <select class="form-control custom-select" name="employee_id">
+                                                    <option value="0">Select Employee</option>
+                                                    @foreach($employees as $emp)
+                                                        <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
+                                                    @endforeach
+                                                </select>
+                                            </div>
+                                        </div>
+                                        <div class="col-md-14">
+                                            <label for="date">Today's Date</label><br>
+                                            <div class="input-group date1">
+                                                <input type="date" class="form-control date" name="date" value="{{$current_date}}">
+                                            </div>
+                                        </div>
+                                        <div class="row">
+                                            <div class="col-md-12">
+                                                <label for="time_in">Break Start</label>
+                                                <div class="input-group timepicker">
+                                                    <input type="datetime-local"  class="form-control" name="break_start" value="{{$current_time}}">
+                                                </div>
+                                            </div>
+                                            <div class="col-md-12">
+                                                <label for="time_out">Break End</label>
+                                                <div class="input-group timepicker">
+                                                    <input type="datetime-local" class="form-control" name="break_end" value="">
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button type="submit" class="btn btn-success create-btn" id="add-btn" >Add Break</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                    <div class="col-md-12">
                         <div class="col-12">
                             <div class="card-body">
                                 <div class="table">
@@ -170,12 +225,12 @@
 
                                                                         <label for="time">Break Start</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="break_start"  value="{{\Carbon\Carbon::parse($att->timestamp_break_start)->toTimeString()}}" />
+                                                                            <input type="datetime-local" class="form-control" name="break_start"  value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_start))}}" />
                                                                         </div>
 
                                                                         <label for="time">Break End</label>
                                                                         <div class="input-group">
-                                                                            <input type="time" class="form-control" name="break_end" @if($att->timestamp_break_end!=null)value="{{\Carbon\Carbon::parse($att->timestamp_break_end)->toTimeString()}}" @endif />
+                                                                            <input type="datetime-local" class="form-control" name="break_end" @if($att->timestamp_break_end!=null) value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_end))}}" @endif />
                                                                         </div>
                                                                     </div>
                                                                     <div class="modal-footer">
@@ -253,6 +308,13 @@
                     window.location = url;
                 }
                 return false;
+            });
+        });
+    </script>
+    <script type="text/javascript">
+        $(function () {
+            $('#datetimepicker2').datetimepicker({
+                locale: 'ru'
             });
         });
     </script>

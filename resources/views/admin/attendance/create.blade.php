@@ -16,7 +16,7 @@
                     <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('today_timeline')}}'">Back</button>
                 </div>
                 <div class="card-body">
-                    <form   class="form-horizontal" action="{{route('attendance.store')}}" method='POST'>
+                    <form   class="form-horizontal" action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
                         {{csrf_field()}}
                         <div class="form-body">
                             <h3 class="box-title">Create Attendance</h3>

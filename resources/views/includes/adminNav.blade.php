@@ -18,13 +18,13 @@
         <nav class="sidebar-nav">
             <ul id="sidebarnav">
                 {{--/////Second Start--}}
-                <li><a class="" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
+                <li @if(request()->is('dashboard')) class="active" @endif ><a class="waves-effect waves-dark" href="{{route('admin.dashboard')}}" aria-expanded="false"><i class="mdi mdi-gauge"></i><span class="hide-menu">Dashboard </span></a>
                 </li>
                 @if (
                     Auth::user()->isAllowed('ApplicantController:index') &&
                     Auth::user()->isAllowed('JobsController:index')
                 )
-                <li @if(request()->is('applicants/hired') || request()->is('job/create')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="#"  aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
+                <li @if(request()->is('applicants/hired') || request()->is('job') || request()->is('applicant') || request()->is('job/create')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark"  aria-expanded="false"><i class="mdi mdi-laptop-windows"></i><span class="hide-menu">Hiring</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if(
                         Auth::user()->isAllowed('ApplicantController:index')
@@ -42,7 +42,7 @@
                 {{--<li> <a class="" href="{{route('users')}}" aria-expanded="false"><i class="mdi mdi-account-circle"></i><span class="hide-menu">Users</span></a>--}}
                 {{--</li>--}}
                 @if (Auth::user()->isAllowed('EmployeeController:index') || Auth::user()->isAllowed('OrganizationHierarchyController:index') || Auth::user()->isAllowed('TeamController:index') || Auth::user()->isAllowed('VendorController:index'))
-                <li @if(request()->is('vendor/create')  || str_contains(Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
+                <li @if( request()->is('employees')  || request()->is('teams') || request()->is('vendors') || request()->is('vendor/create')  || str_contains( Request::fullUrl(),'organization_hierarchy') || request()->is('employee/create') || str_contains(Request::fullUrl(),'employee/edit') || str_contains(Request::fullUrl(),'team_member')) class = "active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-account"></i><span class="hide-menu">People Mgmt</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('EmployeeController:index')
@@ -68,7 +68,7 @@
 
                 </li>
                 @endif
-                <li  @if(str_contains(Request::fullUrl(),'attendance') || request()->is('leave/create') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
+                <li  @if(str_contains(Request::fullUrl(),'attendance') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class = "active" @endif ><a class="has-arrow waves-effect waves-dark" href="{{route('attendance')}}"><i class="mdi mdi-alarm-check"></i><span class="hide-menu">Attendance</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                                 Auth::user()->isAllowed('AttendanceController:today_timeline')
@@ -94,7 +94,7 @@
                 @if (
                Auth::user()->isAllowed('DocumentsController:index') || Auth::user()->isAllowed('BranchController:index') || Auth::user()->isAllowed('DepartmentController:index') || Auth::user()->isAllowed('DesignationController:index') || Auth::user()->isAllowed('VendorCategoryController:index') || Auth::user()->isAllowed('LeaveTypeController:index') || Auth::user()->isAllowed('SkillController:index')
                )
-                <li  @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch')) class = "active" @endif  > <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
+                <li  @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('vendors/category') ) class="active" @endif><a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-settings"></i><span class="hide-menu">Settings</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('DocumentsController:index')
@@ -137,18 +137,18 @@
                     </ul>
                 </li>
                 @endif
-                <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>
-                    <ul aria-expanded="false" class="collapse">
-                        <li><a href="{{route('salary.show')}}">Salary</a></li>
-                        <li><a href="#">Payroll Payments</a></li>
-                        <li><a href="#">Vendor Payments</a></li>
-                        <li><a href="#">Bill Payments</a></li>
-                    </ul>
-                </li>
+                {{--<li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>--}}
+                    {{--<ul aria-expanded="false" class="collapse">--}}
+                        {{--<li><a href="{{route('salary.show')}}">Salary</a></li>--}}
+                        {{--<li><a href="#">Payroll Payments</a></li>--}}
+                        {{--<li><a href="#">Vendor Payments</a></li>--}}
+                        {{--<li><a href="#">Bill Payments</a></li>--}}
+                    {{--</ul>--}}
+                {{--</li>--}}
                 @if (
                     Auth::user()->isAllowed('RolePermissionsController:index')
                 )
-                <li @if(request()->is('rolespermissions/create')) class="active" @endif > <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
+                <li @if(request()->is('rolespermissions/create') ||request()->is('rolespermissions')) class="active" @endif > <a class="has-arrow waves-effect waves-dark" href="#" aria-expanded="false"><i class="mdi mdi-apps"></i><span class="hide-menu">Manage Roles</span></a>
                     <ul aria-expanded="false" class="collapse">
                         @if (
                         Auth::user()->isAllowed('RolePermissionsController:index')
@@ -159,7 +159,7 @@
                 </li>
                 @endif
 
-                <li> <a class="" href="{{route('admin.help')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
+                <li @if(request()->is('help')) class="active" @endif> <a class="waves-effect waves-dark" href="{{route('admin.help')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
                 </li>
 
                 {{--///////// Second End--}}

@@ -83,19 +83,20 @@
                                                             </div>
                                                             <br>
                                                             <div class="row">
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-12">
                                                                     <label for="time_in">Time In</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input type="time" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? \Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_timestamp_in'])->toTimeString(): ''}}" />
+                                                                        <input type="datetime-local" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? date('Y-m-d\TH:i',strtotime($employee['attendanceSummary'][0]['first_timestamp_in'])) : ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>
                                                                     </div>
                                                                 </div>
-                                                                <div class="col-md-6">
+                                                                <div class="col-md-12">
+                                                                    <br>
                                                                     <label for="time_out">Time Out</label>
                                                                     <div class="input-group timepicker">
-                                                                        <input type="time" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) && $employee['attendanceSummary'][0]['last_timestamp_out']!=""  ? \Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_timestamp_out'])->toTimeString(): ''}}" />
+                                                                        <input type="datetime-local" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) && $employee['attendanceSummary'][0]['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($employee['attendanceSummary'][0]['last_timestamp_out'])) : ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                                         </span>

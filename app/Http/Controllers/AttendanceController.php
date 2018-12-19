@@ -79,7 +79,8 @@ class AttendanceController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create($emp_id = '', $date = '')
+//Old
+   public function create($emp_id = '', $date = '')
     {
         $this->meta['title'] = 'Create Attendance';
         $employees = Employee::all();
@@ -111,12 +112,18 @@ class AttendanceController extends Controller
             'emp_id' => $emp_id,
         ]);
     }
-//Old
+//New
     public function createBreak($emp_id = '', $date = '')
     {
         $this->meta['title'] = 'Create Attendance';
         $employees = Employee::all();
+        $today = Carbon::now()->toDateString();
 
+        $AttendanceSummaryEmployees = Employee::with([
+            'attendanceSummary' => function ($join) use ($today) {
+                $join->where('date', $today);
+            }
+        ], 'branch')->where('id',$emp_id)->first();
         if ($date == '') {
             $datetime = Carbon::now();
         } else {
@@ -143,9 +150,43 @@ class AttendanceController extends Controller
             'current_time' => $current_time,
             'selected_in_out' => $selected_in_out,
             'emp_id' => $emp_id,
+            'AttendanceSummaryEmployees'=> $AttendanceSummaryEmployees,
+            'today'=>$today
         ]);
     }
-//New
+
+    public function todayTimeline($id = 0)
+    {
+        // $this->slackbottest();
+
+        $this->meta['title'] = 'Show Attendance';
+
+        $today = Carbon::now()->toDateString();
+
+        $employees = Employee::with([
+            'attendanceSummary' => function ($join) use ($today) {
+                $join->where('date', $today);
+            }
+        ], 'branch')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
+        // dd($employees);
+        $active_employees = Employee::where('status', '1')->get()->count();
+
+        // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
+        // if ($id == 0) {
+        //     $employees = Employee::with('attendanceSummary', 'branch')->get();
+        // }
+        // else{
+        //     $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
+        // }
+
+        return view('admin.attendance.today_timeline', $this->metaResponse(), [
+            'active_employees' => $active_employees,
+            'employees' => $employees,
+            'today' => $today,
+            'branch_id' => $id,
+        ]);
+    }
+
 
     public function createByAjax($emp_id = '', $date = '')
     {
@@ -369,25 +410,27 @@ class AttendanceController extends Controller
         ) {
             $is_delay = 'No';
         }
+        if ($attendance_summary!=null) {
+            $in = Carbon::parse($attendance_summary->first_timestamp_in);
+            if ($attendance_summary->last_timestamp_out != '') {
+                $out = Carbon::parse($attendance_summary->last_timestamp_out);
+                $totaltime = $out->diffInMinutes($in);
+                $totaltime = $totaltime - $totalbreaktime;
+            } else {
+                $totaltime = 0;
+            }
 
-        $in = Carbon::parse($attendance_summary->first_timestamp_in);
-        if ($attendance_summary->last_timestamp_out != '') {
-            $out = Carbon::parse($attendance_summary->last_timestamp_out);
-            $totaltime = $out->diffInMinutes($in);
-            $totaltime = $totaltime - $totalbreaktime;
-        } else {
-            $totaltime = 0;
-        }
-
-        if (isset($attendance_summary->id)) {
-            $attendance_summary->total_time = $totaltime;
-            $attendance_summary->is_delay = $is_delay;
-            $attendance_summary->save();
+            if (isset($attendance_summary->id)) {
+                $attendance_summary->total_time = $totaltime;
+                $attendance_summary->is_delay = $is_delay;
+                $attendance_summary->save();
+            }
         }
     }
-/////
     public function storeAttendanceSummaryToday(Request $request)
     {
+
+       Carbon::parse($request->time_in);
         $attendance_summary = AttendanceSummary::where([
             'employee_id' => $request->employee_id,
             'date' => $request->date,
@@ -818,51 +861,6 @@ class AttendanceController extends Controller
         ]);
     }
 
-    public function todayTimeline($id = 0)
-    {
-        // $this->slackbottest();
-
-        $this->meta['title'] = 'Show Attendance';
-
-        $today = Carbon::now()->toDateString();
-        // $today = Carbon::parse('2018-10-22')->toDateString();
-
-        /*$employees = Employee::leftJoin('attendance_summaries', function($join) {
-            $join->on('employees.id', '=', 'attendance_summaries.employee_id');
-            $join->where('attendance_summaries.employee_id', '2018-10-22');
-        })
-        ->get([
-            'employees.*',
-            'attendance_summaries.date',
-            'attendance_summaries.first_time_in',
-            'attendance_summaries.last_time_out',
-            'attendance_summaries.total_time',
-        ])->toArray();
-        dd($employees);*/
-
-        $employees = Employee::with([
-            'attendanceSummary' => function ($join) use ($today) {
-                $join->where('date', $today);
-            }
-        ], 'branch')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
-        // dd($employees);
-        $active_employees = Employee::where('status', '1')->get()->count();
-
-        // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
-        // if ($id == 0) {
-        //     $employees = Employee::with('attendanceSummary', 'branch')->get();
-        // }
-        // else{
-        //     $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
-        // }
-
-        return view('admin.attendance.today_timeline', $this->metaResponse(), [
-            'active_employees' => $active_employees,
-            'employees' => $employees,
-            'today' => $today,
-            'branch_id' => $id,
-        ]);
-    }
 
 ///OLD
     public function deleteChecktime(Request $request)
@@ -1001,7 +999,7 @@ class AttendanceController extends Controller
             'date' => $date,
         ];
         $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'allah haffiz');
-        $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz");
+        $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz,allah haffiz");
         $str = '';
         if (in_array(strtolower($text), $checkInText) == true) {
             // $where['comment'] = 'aoa';
@@ -1010,7 +1008,7 @@ class AttendanceController extends Controller
         } elseif (strstr(strtolower($text), 'brb')) {
             // $where['comment'] = 'brb';
             $str = 'time_out';
-        } elseif (strtolower($text) == 'back') {
+        } elseif (strstr(strtolower($text), 'back')) {
             // $where['comment'] = 'back';
             $str = 'time_in';
         } elseif (in_array(strtolower($text), $checkOutText) == true) {
@@ -1049,7 +1047,9 @@ class AttendanceController extends Controller
                 'employee_id' => $employee->id,
                 'date' => $date,
                 'timestamp_in' => $time,
-//                'timestamp_out' => '',
+
+
+//              'timestamp_out' => '',
                 'comment' => $text,
             ]);
             // return $attendance;
@@ -1122,15 +1122,17 @@ class AttendanceController extends Controller
                 AttendanceSummary::create($data);
             }
         } elseif (strstr(strtolower($text), 'brb')) {
+            $clean = array("_",".", "-", "brb");
+            $comment = str_replace($clean, '', $text);
             $data = [
                 'employee_id' => $employee->id,
                 'timestamp_break_start' => $time,
-                'comment' => $text,
+                'comment' => $comment,
                 'date' => $date,
                 'total_time' => 0,
             ];
             AttendanceBreak::create($data);
-        } elseif (strtolower($text) == 'back') {
+        } elseif (strstr(strtolower($text), 'back')) {
             $attendanceCheck = AttendanceBreak::where('employee_id', $employee->id)->orderBy('timestamp_break_start', 'desc')->first();
             if ($attendanceCheck != null) {
                 $attendanceCheck->timestamp_break_end = $time;
