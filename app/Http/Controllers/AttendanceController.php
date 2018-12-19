@@ -1330,52 +1330,54 @@ class AttendanceController extends Controller
             $employeeId=Auth::user()->id;
             $employee = Employee::where(['id' => Auth::user()->id])->first();
             $attendance_summaries = AttendanceSummary::where('employee_id',Auth::user()->id)->get();
-         }
+        }
+//        dd($attendance_summaries);
         $currentMonth = date('m');
         $events = array();
         $presentDate=array();
-        foreach ($attendance_summaries as $key => $value) {
-            if ($value->first_timestamp_in!=""){
-                $delays = '';
-                $color = '';
-                if($value->status == "Short Leave"){
-                    $color = '#C24BFF';
-                }
-                if($value->status === "Full Leave"){
-                    $color = 'red';
-                }
-                if($value->status === "Half Leave"){
-                    $color = '#57BB8A';
-                }
-                if($value->status == "Paid Leave"){
-                    $color = '#ADFF41';
-                }
-                if($value->status == "present"){
-                    $color = '#00a560';
+        if ($attendance_summaries->count()> 0) {
+            foreach ($attendance_summaries as $key => $value) {
+                if ($value->first_timestamp_in != "") {
+                    $delays = '';
+                    $color = '';
+                    if ($value->status == "Short Leave") {
+                        $color = '#C24BFF';
+                    }
+                    if ($value->status === "Full Leave") {
+                        $color = 'red';
+                    }
+                    if ($value->status === "Half Leave") {
+                        $color = '#57BB8A';
+                    }
+                    if ($value->status == "Paid Leave") {
+                        $color = '#ADFF41';
+                    }
+                    if ($value->status == "present") {
+                        $color = '#00a560';
+                    }
+
+                    if ($value->is_delay && $value->status == "present") {
+                        $color = '#43474a';
+                        $delays = $value->is_delay . " delay";
+                    } else {
+                        $delays = "";
+                    }
+                    $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
+                    $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
+                    $total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in))) / 60, '2');
+                    $events[] = [
+                        "resourceId" => $value->employee_id,
+                        "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
+                        "date" => Carbon::parse($value->date)->toDateString(),
+                        "start" => $value->first_timestamp_in,
+                        "end" => $value->last_timestamp_out,
+                        "color" => $color,
+                    ];
+                    $presentDate[] = $value->date;
                 }
 
-                if($value->is_delay && $value->status=="present"){
-                    $color = '#43474a';
-                    $delays = $value->is_delay." delay";
-                }else{
-                    $delays ="";
-                }
-                $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
-                $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
-                $total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)))/60,'2');
-                $events[] = [
-                    "resourceId" => $value->employee_id,
-                    "title" => $value->status."\n".$timeIn." - ".$timeOut."\n". $total_time." hrs"."\n",
-                    "date" => Carbon::parse($value->date)->toDateString(),
-                    "start" =>$value->first_timestamp_in,
-                    "end" =>$value->last_timestamp_out,
-                    "color" => $color,
-                ];
-                $presentDate[]=$value->date;
             }
-
         }
-
         //For Dow
         $branchWeekend=json_decode(Branch::find($employee->branch_id)->weekend);
         $dow = [0,1,2,3,4,5,6];
@@ -1391,7 +1393,6 @@ class AttendanceController extends Controller
             $date=Carbon::parse($i."-". $now->month."-".$now->year)->toDateString();
             if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),$branchWeekend)==false){
                 $events[] = [
-                    "resourceId" => $value->employee_id,
                     "title" => "Absent   ",
                     "date" => Carbon::parse($date)->toDateString(),
                     "color" => "red",
@@ -1450,9 +1451,9 @@ class AttendanceController extends Controller
         //Line Manager
         $linemanagers=OrganizationHierarchy::with('lineManager')->where('employee_id',$employee->id)->get();
         $events = json_encode($events);
-        return view('admin.attendance.myattendance',$this->metaResponse(), [
-            'events' => $events
-        ])->with('employeeId',$employeeId)->with('employees',$employees)->with('dow',$dow)->with('averageHours',floor($averageHours))->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
+            return view('admin.attendance.myattendance',$this->metaResponse(), [
+                'events' => $events
+            ])->with('employeeId',$employeeId)->with('employees',$employees)->with('dow',$dow)->with('averageHours',floor($averageHours))->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
     }
     public function correctionEmail(Request $request){
         $data = array('name'=>Auth::user()->firstname,'messages'=>"$request->message",'email'=>Auth::user()->official_email,'date'=>"$request->date");
