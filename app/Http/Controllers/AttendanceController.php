@@ -1428,7 +1428,7 @@ class AttendanceController extends Controller
         //Average Arrivals
         $averageArrivals =round(AttendanceSummary::where('employee_id', '=',$employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->select(DB::raw('first_timestamp_in'))->avg('first_timestamp_in'));
         if($averageArrivals == null){
-            $avgarival='00:00 ';
+            $avgarival='00:00';
         }
         else{
             $avgarival= Carbon::createFromTimestampUTC($averageArrivals)->format('g:i a');

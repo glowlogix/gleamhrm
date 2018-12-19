@@ -18,6 +18,7 @@ class BranchSeeder extends Seeder
             'address' => 'Islamabad',
             'timing_start' => '14:00:00', 
             'timing_off' => '22:00:00',
+            'weekend'=> '["Saturday","Sunday"]',
         ]);
 
         $branch = Branch::create([
@@ -26,6 +27,7 @@ class BranchSeeder extends Seeder
             'address' => 'Gujrat',
             'timing_start' => '09:00:00', 
             'timing_off' => '18:00:00',
+            'weekend' => '["Sunday"]',
         ]);
     }
 }
