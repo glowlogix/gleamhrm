@@ -64,7 +64,7 @@
                     // console.log('found');
                 }
                 if (event.title.search('present') !== -1) {
-                    window.location = "{{route('attendance.create')}}/"+event.resourceId + "/" + event.date;
+                    window.location = "{{route('attendance.createBreak')}}/"+event.resourceId + "/" + event.date;
                 }
                 if (event.title.search('leave') !== -1) {
                     window.location = "{{route('leaves')}}/show/"+event.resourceId;
