@@ -293,12 +293,6 @@
         <script type="text/javascript">
             $(document).ready(function () {
                 $(function () {
-                    /*$('#date_of_birth').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                    });
-                    $('#exit_date').datetimepicker({
-                        format: 'YYYY-MM-DD',
-                    });*/
 
                     $("#role").on("change",function() {
                         var role_id = this.value;
@@ -357,9 +351,7 @@
                 })
             });
             $(function () {
-                /*$('#date_of_birth').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                });*/
+
                 $(document).ready(function () {
                     $(function () {
                         $("#check_all").on('click', function () {

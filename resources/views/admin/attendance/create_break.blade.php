@@ -1,6 +1,8 @@
 @extends('layouts.admin')
 @section('Heading')
-    <button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('leaves')}}'"><span class="fas fa-plus" ></span> Add Leave</button>
+    @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
+        <button type="button"  onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Employee Leave</button>
+    @endif
     <h3 class="text-themecolor">Add Attendance</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
@@ -55,7 +57,7 @@
                                     <div class="form-group row">
                                         <label class="control-label text-right col-md-3">Time In</label>
                                         <div class="col-md-9">
-                                            <input type="datetime-local"  class="form-control" name="time_in" value="{{isset($AttendanceSummaryEmployees['attendanceSummary'][0]) ? date('Y-m-d\TH:i',strtotime($AttendanceSummaryEmployees['attendanceSummary'][0]['first_timestamp_in'])): ''}}">
+                                            <input type="datetime-local"  class="form-control" name="time_in" value="{{isset($attendance_summary['first_timestamp_in']) ? date('Y-m-d\TH:i',strtotime($attendance_summary['first_timestamp_in'])): ''}}">
                                         </div>
                                     </div>
                                 </div>
@@ -64,7 +66,7 @@
                                     <div class="form-group row ">
                                         <label class="control-label text-right col-md-3">Time Out</label>
                                         <div class="col-md-9">
-                                            <input type="datetime-local" class="form-control" name="time_out" value="{{isset($AttendanceSummaryEmployees['attendanceSummary'][0]) && $AttendanceSummaryEmployees['attendanceSummary'][0]['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($AttendanceSummaryEmployees['attendanceSummary'][0]['last_timestamp_out'])): '' }}">
+                                            <input type="datetime-local" class="form-control" name="time_out" value="{{isset($attendance_summary['last_timestamp_out']) && $attendance_summary['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($attendance_summary['last_timestamp_out'])): '' }}">
                                         </div>
                                     </div>
                                 </div>
@@ -118,10 +120,10 @@
                             </div>
                         </div>
                     </div>
-                    <h3 class="box-title">Breaks</h3>
+                    <br>
+                    <h3 class="box-title">Breaks<a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#popup" data-original-title="Edit"> <i class="fas fa-plus text-white"></i> Add Break</a>
+                    </h3>
                     <hr>
-                    <a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#popup" data-original-title="Edit"> <i class="fas fa-plus text-white"></i> Add Break</a>
-<br>
                     {{--///Dialog Box/// --}}
                 <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                     <div class="modal-dialog">
@@ -133,19 +135,14 @@
                                 </div>
                                 <div class="modal-body">
                                     <div class="container-fluid">
-                                        <div class="col-md-14">
-                                            <label for="date">Employee</label><br>
-                                            <div class="input-group date1">
-                                                <select class="form-control custom-select" name="employee_id">
+                                                <select class="form-control custom-select" name="employee_id" hidden>
                                                     <option value="0">Select Employee</option>
                                                     @foreach($employees as $emp)
                                                         <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
                                                     @endforeach
                                                 </select>
-                                            </div>
-                                        </div>
                                         <div class="col-md-14">
-                                            <label for="date">Today's Date</label><br>
+                                            <label for="date">Date</label><br>
                                             <div class="input-group date1">
                                                 <input type="date" class="form-control date" name="date" value="{{$current_date}}">
                                             </div>
@@ -163,6 +160,12 @@
                                                     <input type="datetime-local" class="form-control" name="break_end" value="">
                                                 </div>
                                             </div>
+                                            <div class="col-md-12">
+                                                <label for="time_out">Comment</label>
+                                                <div class="input-group timepicker">
+                                                    <input type="text" class="form-control" name="comment" value="">
+                                                </div>
+                                            </div>
                                         </div>
                                     </div>
                                 </div>
@@ -174,9 +177,7 @@
                         </div>
                     </div>
                 </div>
-                    <div class="col-md-12">
-                        <div class="col-12">
-                            <div class="card-body">
+                    <div class="col-md-push-12">
                                 <div class="table">
                                     <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
                                         <thead>
@@ -211,17 +212,16 @@
                                                                 <form action="{{ route('attendance.updateBreak' , ['id'=>$att->id] )}}" method="post">
                                                                     {{ csrf_field() }}
                                                                     <div class="modal-header">
-                                                                        Edit Attendance
+                                                                        Edit Break
                                                                     </div>
                                                                     <div class="modal-body">
 
                                                                         <div>
-                                                                            <label for="date">Select Date</label></br>
+                                                                            <label for="date">Date</label></br>
                                                                             <div class="input-group">
                                                                                 <input type="date" class="form-control" name="date" value="{{$att->date}}" />
                                                                             </div>
                                                                         </div>
-                                                                        <br>
 
                                                                         <label for="time">Break Start</label>
                                                                         <div class="input-group">
@@ -232,6 +232,9 @@
                                                                         <div class="input-group">
                                                                             <input type="datetime-local" class="form-control" name="break_end" @if($att->timestamp_break_end!=null) value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_end))}}" @endif />
                                                                         </div>
+                                                                        <label for="time">Comment</label>
+                                                                        <div class="input-group">
+                                                                            <input type="text" class="form-control" name="comment" value="{{$att->comment}}">                                                                        </div>
                                                                     </div>
                                                                     <div class="modal-footer">
                                                                         <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
@@ -276,12 +279,9 @@
                                         </tbody>
                                     </table>
                                 </div>
-                            </div>
                         </div>
                     </div>
                 </div>
-
-            </div>
         </div>
     </div>
     @push('scripts')

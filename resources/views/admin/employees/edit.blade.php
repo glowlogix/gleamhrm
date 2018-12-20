@@ -420,9 +420,6 @@
 
 
             $(function () {
-                /*$('#date_of_birth').datetimepicker({
-                    format: 'YYYY-MM-DD',
-                });*/
 
                 $(document).ready(function () {
                     $(function () {

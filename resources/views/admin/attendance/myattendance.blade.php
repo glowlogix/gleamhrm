@@ -9,7 +9,7 @@
     </ol>
 @stop
 @section('content')
-    <div class="col-md-12">
+    <div class="row">
         <div class="col-md-12 col-xlg-12">
             <!-- Row -->
             <div class="row">

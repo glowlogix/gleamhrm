@@ -27,7 +27,7 @@
                 </div>
                 <div class="col-md-6">
                     <label for="time_in">Time In</label>
-                    <div class="input-group timepicker">
+                    <div class="input-group">
                         <input class="form-control" name="time_in" value="{{$current_time}}" />
                         <span class="input-group-addon">
                             <i class="fa fa-clock-o" style="font-size:16px"></i>
@@ -37,7 +37,7 @@
 
                 <div class="col-md-6">
                     <label for="time_out">Time Out</label>
-                    <div class="input-group timepicker">
+                    <div class="input-group">
                         <input class="form-control" name="time_out" value="{{$current_time}}" />
                         <span class="input-group-addon">
                             <i class="fa fa-clock-o" style="font-size:16px"></i>
@@ -113,17 +113,17 @@
                                                 <br>
 
                                                 <label for="time">Time In</label>
-                                                <div class="input-group time_in timepicker">
+                                                <div class="input-group time_in">
                                                     <input class="form-control time_in tp" name="time_in" value="{{Carbon\Carbon::parse($att->timestamp_in)->format('h:i a')}}" />
-                                                    <span class="input-group-addon timepicker1">
+                                                    <span class="input-group-addon">
                                                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                     </span>
                                                 </div>
 
                                                 <label for="time">Time Out</label>
-                                                <div class="input-group time_out timepicker">
+                                                <div class="input-group time_out">
                                                     <input class="form-control time_out tp" name="time_out" value="{{Carbon\Carbon::parse($att->timestamp_out)->format('h:i a')}}" />
-                                                    <span class="input-group-addon timepicker1">
+                                                    <span class="input-group-addon">
                                                         <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                     </span>
                                                 </div>

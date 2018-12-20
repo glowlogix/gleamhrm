@@ -43,9 +43,9 @@
                     </div>
                     <div class="col-md-6">
                         <label for="time">Time at</label>
-                        <div class="input-group time timepicker">
+                        <div class="input-group time ">
                             <input class="form-control time tp" name="time" value="{{$current_time}}" />
-                            <span class="input-group-addon timepicker1">
+                            <span class="input-group-addon">
                                 <i class="fa fa-clock-o" style="font-size:16px"></i>
                             </span>
                         </div>
@@ -118,9 +118,9 @@
                                                     </select>
 
                                                     <label for="time">Time at</label>
-                                                    <div class="input-group time timepicker">
+                                                    <div class="input-group time">
                                                         <input class="form-control time tp" name="time" value="{{Carbon\Carbon::parse($att->time)->format('h:i a')}}" />
-                                                        <span class="input-group-addon timepicker1">
+                                                        <span class="input-group-addon">
                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
                                                         </span>
                                                     </div>
@@ -171,14 +171,6 @@
             $(document).ready(function () {
                 // $('#totalhours').hide();
                 $('#delay').hide();
-  
-                $('input.tp').datetimepicker({
-                    format: "LT",
-                    icons: {
-                        up: "fa fa-chevron-up",
-                        down: "fa fa-chevron-down"
-                    }
-                });
 
                 $('#date').on('change', function (e) { 
                     console.log(e);
@@ -189,16 +181,6 @@
                     return false;
                   });
 
-
-                $('.timepicker1').click(function(){
-                    $(this).parent().datetimepicker({
-                        format: "LT",
-                        icons: {
-                            up: "fa fa-chevron-up",
-                            down: "fa fa-chevron-down"
-                        }
-                    });
-                });
             });
            
             $(document).ready(function(){

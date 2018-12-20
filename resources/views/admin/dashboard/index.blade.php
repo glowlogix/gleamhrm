@@ -156,7 +156,7 @@
                         @foreach($employee as $employees)
                             @if($employees->id!='1')
                         <tr>
-                            <td style="width:40px"><img src="{{asset($employees->picture)}}" onerror="if (this.src !== '{{$employees->picture}}' ) this.src ='{{asset('assets/images/default.png')}}';" width="55" height="60" class="img-circle" alt="logo"></td>
+                            <td style="width:40px"><img src="{{asset($employees->picture)}}" onerror="this.src='{{asset('assets/images/default.png')}}';" width="55" height="60" class="img-circle" alt="picture"></td>
                             <td>{{$employees->firstname}}</td>
                             <td align="right"><span class="label label-light-danger">{{ $diff = Carbon\Carbon::parse($employees->created_at)->subMonth()->diffForHumans()}}</span></td>
                         </tr>
@@ -321,7 +321,7 @@
                     labels: ['Project Co-originator', 'Web Developer','Junior WebDeveloper','Front End Developer',
                         'Sales Officers','Sales Executives','Web Designer Lead']
                     , series: [
-                        [1, 10,20,50,10,6,70]
+                        [1,10,20,50,10,6,70]
                     ]
                 }, {
                     high: 100

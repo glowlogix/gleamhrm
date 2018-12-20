@@ -130,14 +130,6 @@
             }
             return false;
         });
-
-        $(function () {
-            $('#datefrompicker').datetimepicker({
-            });
-            $('#datetopicker').datetimepicker({
-            });
-
-        });
     });
 
 </script>

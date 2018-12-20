@@ -8,8 +8,53 @@
     </ol>
 @stop
 @section('content')
+    <div class="row">
+        <div class="col-md-12 col-xlg-12">
+            <!-- Row -->
+            <div class="row">
+                <!-- Column -->
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row">
+                                <div class="round round-lg align-self-center round-primary"><i class="far fa-calendar-check"></i></div>
+                                <div class="m-l-10 align-self-center">
+                                    <h5 class="m-b-0 font-light">{{$present}}</h5>
+                                    <h5 class="m-b-0">Present</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row">
+                                <div class="round round-lg align-self-center round-danger"><i class="far fa-calendar-check"></i></div>
+                                <div class="m-l-10 align-self-center">
+                                    <h5 class="m-b-0 font-light"> {{$absent}}</h5>
+                                    <h5 class="m-b-0">Absent</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row">
+                                <div class="round round-lg align-self-center round-warning"><i class="far fa-clock"></i></div>
+                                <div class="m-l-10 align-self-center">
+                                    <h3 class="m-b-0 font-light">{{$delays}}</h3>
+                                    <h5 class="text-muted m-b-0">Delays</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="card">
         <div class="card-body">
+            <span style="float: left;"><input id="selectDate" value="{{$today}}" class="form-control" type="date" name="date"></span>
             <div class="table-responsive m-t-40">
                 <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
                     <thead>
@@ -85,7 +130,7 @@
                                                             <div class="row">
                                                                 <div class="col-md-12">
                                                                     <label for="time_in">Time In</label>
-                                                                    <div class="input-group timepicker">
+                                                                    <div class="input-group">
                                                                         <input type="datetime-local" class="form-control" name="time_in" value="{{isset($employee['attendanceSummary'][0]) ? date('Y-m-d\TH:i',strtotime($employee['attendanceSummary'][0]['first_timestamp_in'])) : ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
@@ -95,7 +140,7 @@
                                                                 <div class="col-md-12">
                                                                     <br>
                                                                     <label for="time_out">Time Out</label>
-                                                                    <div class="input-group timepicker">
+                                                                    <div class="input-group">
                                                                         <input type="datetime-local" class="form-control" name="time_out" value="{{isset($employee['attendanceSummary'][0]) && $employee['attendanceSummary'][0]['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($employee['attendanceSummary'][0]['last_timestamp_out'])) : ''}}" />
                                                                         <span class="input-group-addon">
                                                                             <i class="fa fa-clock-o" style="font-size:16px"></i>
@@ -185,6 +230,16 @@ $("input.zoho").click(function (event) {
                 }
             });
         });
+    });
+    $(document).ready(function () {
+    $("#selectDate").change(function(e){
+        var url = "{{route('today_timeline')}}/" + $(this).val();
+
+        if (url) {
+            window.location = url;
+        }
+        return false;
+    });
     });
 </script>
 <script src="{{asset('assets/plugins/moment/moment.js')}}"></script>

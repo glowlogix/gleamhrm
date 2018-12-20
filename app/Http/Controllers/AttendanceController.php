@@ -118,12 +118,6 @@ class AttendanceController extends Controller
         $this->meta['title'] = 'Create Attendance';
         $employees = Employee::all();
         $today = Carbon::now()->toDateString();
-
-        $AttendanceSummaryEmployees = Employee::with([
-            'attendanceSummary' => function ($join) use ($today) {
-                $join->where('date', $today);
-            }
-        ], 'branch')->where('id',$emp_id)->first();
         if ($date == '') {
             $datetime = Carbon::now();
         } else {
@@ -150,26 +144,30 @@ class AttendanceController extends Controller
             'current_time' => $current_time,
             'selected_in_out' => $selected_in_out,
             'emp_id' => $emp_id,
-            'AttendanceSummaryEmployees'=> $AttendanceSummaryEmployees,
             'today'=>$today
         ]);
     }
 
-    public function todayTimeline($id = 0)
+    public function todayTimeline($id="")
     {
-        // $this->slackbottest();
-
         $this->meta['title'] = 'Show Attendance';
 
-        $today = Carbon::now()->toDateString();
-
+        if($id==""){
+            $today = Carbon::now()->toDateString();
+        }
+        else{
+            $today = ($id);
+        }
         $employees = Employee::with([
             'attendanceSummary' => function ($join) use ($today) {
                 $join->where('date', $today);
             }
         ], 'branch')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
-        // dd($employees);
-        $active_employees = Employee::where('status', '1')->get()->count();
+        $present=AttendanceSummary:: whereRaw('MONTH(first_timestamp_in) = ?',[$today])->count();
+        $employeeCount=Employee::where('type','office')->count();
+        $absent=$employeeCount-$present;
+        $delays=AttendanceSummary::whereRaw('MONTH(first_timestamp_in) = ?',[$today])->where('is_delay','yes')->count();
+
 
         // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
         // if ($id == 0) {
@@ -180,10 +178,13 @@ class AttendanceController extends Controller
         // }
 
         return view('admin.attendance.today_timeline', $this->metaResponse(), [
-            'active_employees' => $active_employees,
             'employees' => $employees,
             'today' => $today,
             'branch_id' => $id,
+            'today'=>$today,
+            'present'=>$present,
+            'absent'=>$absent,
+            'delays'=>$delays
         ]);
     }
 
@@ -285,6 +286,7 @@ class AttendanceController extends Controller
             'date' => $request->date,
             'time' => $time->toTimeString(),
             'timestamp_break_start' => !empty($request->break_start) ? Carbon::parse($request->break_start) : '',
+            'comment'=>$request->comment,
         ];
 
         if (!empty($request->break_end)) {
@@ -632,6 +634,7 @@ class AttendanceController extends Controller
             $attendance->date = Carbon::parse($request->date);
             $attendance->timestamp_break_start = Carbon::parse($request->break_start);
             $attendance->timestamp_break_end = Carbon::parse($request->break_end);
+            $attendance->comment =$request->comment;
             // dd($attendance);
             $attendance->save();
         }
@@ -983,11 +986,6 @@ class AttendanceController extends Controller
 
         $text = $request['event']['text'];
 
-        $where = [
-            'employee_id' => $employee->id,
-            'date' => $date,
-        ];
-
         $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'allah haffiz');
         $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz",'allah haffiz');
         $str = '';
@@ -1078,7 +1076,7 @@ class AttendanceController extends Controller
     }
 
     public function authUserTimeline($id=""){
-        $employees=Employee::where('type','!=','remote')->get();
+        $employees=Employee::where('type','!=','remote')->orderBy('firstname')->get();
         $days=[
             'Sunday'    =>  0,
             'Monday'    =>  1,
@@ -1101,6 +1099,7 @@ class AttendanceController extends Controller
         $currentMonth = date('m');
         $events = array();
         $presentDate=array();
+        //For Dow
         if ($attendance_summaries->count()> 0) {
             foreach ($attendance_summaries as $key => $value) {
                 if ($value->first_timestamp_in != "") {
@@ -1144,7 +1143,19 @@ class AttendanceController extends Controller
 
             }
         }
-        //For Dow
+//Leave Days
+        $leaveDate=array();
+        $periods=array();
+        $leaves=Leave::where('employee_id',$employee->id)->whereRaw('MONTH(datefrom) = ?',[$currentMonth])->whereRaw('MONTH(dateto) = ?',[$currentMonth])->get();
+        foreach ($leaves as $leave){
+            $periods[]= CarbonPeriod::create($leave->datefrom, $leave->dateto);
+        }
+        foreach ($periods as $period) {
+            foreach ($period as $dates){
+                $leaveDate[]=$dates->format('Y-m-d');
+            }
+        }
+//Leave DaysEnd
         $branchWeekend=json_decode(Branch::find($employee->branch_id)->weekend);
         $dow = [0,1,2,3,4,5,6];
         foreach ($branchWeekend as $day){
@@ -1157,7 +1168,7 @@ class AttendanceController extends Controller
         for($i=1;$i<= $till_date->format('d');$i++){
             $now = Carbon::now();
             $date=Carbon::parse($i."-". $now->month."-".$now->year)->toDateString();
-            if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),$branchWeekend)==false){
+            if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),$branchWeekend)==false && in_array(Carbon::parse($date)->toDateString(),$leaveDate)==false ){
                 $events[] = [
                     "title" => "Absent   ",
                     "date" => Carbon::parse($date)->toDateString(),

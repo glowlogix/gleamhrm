@@ -12,19 +12,27 @@
     <div class="card">
         <div class="card-body">
             <div class="float-right">
-                <div class="dropdown">
-                    <button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                        @if(request()->is('employees'))
-                       Active Employees
-                        @elseif(request()->is('all_employees'))
-                        All Employees
-                        @endif
-                    </button>
-                    <div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
-                        <a class="dropdown-item"  href="{{url('employees')}}">Active Employees</a>
-                        <a class="dropdown-item" href="{{url('all_employees')}}">All Employees</a>
-                    </div>
-                </div>
+                {{--<div class="dropdown">--}}
+                    {{--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
+                        {{--@if(request()->is('employees'))--}}
+                       {{--Active Employees--}}
+                        {{--@elseif(request()->is('all_employees'))--}}
+                        {{--All Employees--}}
+                        {{--@endif--}}
+                    {{--</button>--}}
+                    {{--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">--}}
+                        {{--<a class="dropdown-item"  href="{{url('employees')}}">Active Employees</a>--}}
+                        {{--<a class="dropdown-item" href="{{url('all_employees')}}">All Employees</a>--}}
+                    {{--</div>--}}
+                {{--</div>--}}
+                <select class="form-control" id="filter">
+                    @if(request()->is('employees'))
+                    <option selected>Select Employees</option>
+                    @endif
+                    @foreach($filters as $filter)
+                    <option value="{{$filter}}" @if($filter==$selectedFilter) selected @endif>{{ucfirst(trans($filter))}}</option>
+                    @endforeach
+                </select>
             </div>
             <h4 class="card-title"> {{$active_employees}}  Active / {{$employees->count()}} Employees</h4>
             <div class="table-responsive m-t-40">
@@ -56,51 +64,7 @@
                         <td>{{$employee->joining_date}}</td>
                         <td>{{$employee->employment_status}}</td>
                         <td class="text-nowrap">
-                            {{--<a class="btn btn-danger btn-sm"  data-toggle="modal" data-target="#confirm-delete{{ $employee->id }}"> <i class="fas fa-window-close text-white"></i></a>--}}
-                            {{--///End Dialog Box///--}}
                             <a class="btn btn-info btn-sm" href="{{route('employee.edit',['id'=>$employee->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
-                            <div class="modal fade" id="confirm-delete{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                <div class="modal-dialog">
-                                    <div class="modal-content">
-                                        <form action="{{ route('employee.destroy' , $employee->id )}}" method="post">
-                                            {{ csrf_field() }}
-                                            <div class="modal-header">
-                                                Are you sure you want to delete Employee {{ $employee->firstname }}?
-                                            </div>
-                                            <div class="modal-body">
-                                                <label>Admin Password</label>
-                                                <div class="col-md-12 m-b-20">
-                                                    <input type="text" class="form-control" placeholder="Admin Password" name="password" required> </div>
-                                                <div class="card-body">
-                                                    <div class="demo-checkbox">
-                                                        <input type="hidden" name="invite_to_asana" value="0" />
-                                                        <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" {{($employee->invite_to_asana == 1) ? 'checked' : ''}}/>
-                                                        <label for="basic_checkbox_1">Asaana</label>
-                                                        <input type="hidden" class="form-control" name="asana_email" value="{{$employee->official_email}}">
-                                                        <input type="hidden" name="invite_to_slack" value="0" />
-                                                        <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" {{($employee->invite_to_slack == 1) ? 'checked' : ''}}/>
-                                                        <label for="basic_checkbox_2">Slack</label>
-                                                        <br>
-                                                        <input type="hidden" name="invite_to_zoho" value="0" />
-                                                        <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho" name="invite_to_zoho" value="1" {{($employee->invite_to_zoho == 1) ? 'checked' : ''}} />
-                                                        <label for="basic_checkbox_3">zoho</label>
-                                                        <div id="div_zoho_{{$employee->id}}"
-                                                             @if($employee->invite_to_zoho == 0)
-                                                             style="display: none;"
-                                                                @endif>
-                                                            <input type="password" class="form-control" placeholder="Enter Zoho Password" name="zoho_password">
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            <div class="modal-footer">
-                                                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
-                                            </div>
-                                        </form>
-                                    </div>
-                                </div>
-                            </div>
                         </td>
                     </tr>
                     @endforeach @else
@@ -112,6 +76,18 @@
         </div>
     </div>
 @push('scripts')
+    <script type="text/javascript">
+        $(document).ready(function () {
+            $("#filter").change(function(e){
+                var url = "{{route('employees')}}/" + $(this).val();
+
+                if (url) {
+                    window.location = url;
+                }
+                return false;
+            });
+        });
+    </script>
 <script type="text/javascript">
 $("input.zoho").click(function (event) {
     if ($(this).is(":checked")) {

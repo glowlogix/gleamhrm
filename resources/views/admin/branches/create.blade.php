@@ -27,7 +27,7 @@
 							<div class="form-group">
 								<label class="control-label">Timing Start</label>
 								<input class="form-control" type="time" name="timing_start" placeholder="Enter Timing Start here"  id="timing_start" value="{{old('timing_start')}}">
-								<span class="input-group-addon timepicker">
+								<span class="input-group-addon">
                         		<i class="fa fa-clock-o" style="font-size:16px"></i>
                     </span>
 							</div>
@@ -38,7 +38,7 @@
 							<div class="form-group">
 								<label class="control-label">Timing OFF</label>
 								<input class="form-control" type="time" name="timing_off" placeholder="Enter Timing Off here"  id="timing_off" value="{{old('timing_off')}}" />
-								<span class="input-group-addon timepicker">
+								<span class="input-group-addon">
                         <i class="fa fa-clock-o" style="font-size:16px"></i>
 								</span>
 						</div>
@@ -80,23 +80,4 @@
 		</div>
 	</div>
 </div>
-@push('scripts')
-<script type="text/javascript">
-    $(document).ready(function () {
-        $(function () {
-            $("div.timepicker").on("click", function () {
-                $(this).datetimepicker({
-                    format: "LT",
-                    icons: {
-                        up: "fa fa-chevron-up",
-                        down: "fa fa-chevron-down"
-                    }
-                });
-                console.log("O.K.");
-            });
-
-        });
-    });
-</script>
-@endpush
 @stop

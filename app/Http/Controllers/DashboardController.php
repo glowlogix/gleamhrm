@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\AttendanceSummary;
 use App\Employee;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Applicant;
 use App\JobPosition;
@@ -22,9 +24,12 @@ class DashboardController extends Controller
     public function index()
     {
        $this->meta['title'] = 'Applicants';
+        $dates=array();
        $applicants = Applicant::where('recruited', 0)->take(10)->get();
-        
-        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::take(5)->get()->sortByDesc("id"))->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get());
+//       $currentMonth = date('m');
+//       $attendance=AttendanceSummary::whereRaw('MONTH(date) = ?',[$currentMonth])->get();
+//       $months= ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
+        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::orderBy('joining_date')->take(5)->get())->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get());
     }
 //    Help
     public function help()

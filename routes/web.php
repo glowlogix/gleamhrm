@@ -383,7 +383,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'roles_permissions.delete'
         ]);
 
-        Route::Get('/employees', [
+        Route::Get('/employees/{id?}', [
             'uses' => 'EmployeeController@index',
             'as' => 'employees'
         ]);

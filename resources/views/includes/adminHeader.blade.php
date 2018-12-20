@@ -67,12 +67,12 @@
                 <!-- Profile -->
                 <!-- ============================================================== -->
                 <li class="nav-item dropdown">
-                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="profile-pic" height="30" width="50%"/></a>
+                    <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="profile-pic" height="30" width="50%"/></a>
                     <div class="dropdown-menu dropdown-menu-right scale-up">
                         <ul class="dropdown-user">
                             <li>
                                 <div class="dw-user-box">
-                                    <div class="u-img"><img  src="{{Auth::user()->picture}}" onerror="if (this.src !== '{{Auth::user()->picture }}' ) this.src ='{{asset('assets/images/default.png')}}';" alt="user" width="30" height="80"></div>
+                                    <div class="u-img"><img  src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" width="30" height="80"></div>
                                     <div class="u-text">
                                         <h4>{{Auth::user()->firstname}}</h4>
                                         <p class="text-muted" style="font-size:12px;">{{Auth::user()->official_email}}</p><a href="{{route('profile.index')}}" class="btn btn-rounded btn-danger btn-sm">View Profile</a>

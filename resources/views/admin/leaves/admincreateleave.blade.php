@@ -82,7 +82,7 @@
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">From Date</label>
 										<div class="col-md-9">
-											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}"  min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
+											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}">
 										</div>
 									</div>
 								</div>
@@ -90,7 +90,7 @@
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">To Date</label>
 										<div class="col-md-9">
-											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}" min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
+											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}">
 										</div>
 									</div>
 								</div>
@@ -109,15 +109,25 @@
 								<!--/span-->
 								<div class="col-md-6">
 									<div class="form-group row">
+										<label class="control-label text-right col-md-3">Status</label>
+										<div class="col-md-9">
+											<select class="form-control custom-select" name="status">
+												<option value="pending">Pending</option>
+												<option value="Approved">Approved</option>
+											</select>
+										</div>
+									</div>
+								</div>
+							</div>
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group row">
 										<label class="control-label text-right col-md-3">Subject</label>
 										<div class="col-md-9">
 											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{old('subject')}}">
 										</div>
 									</div>
 								</div>
-							</div>
-							<div class="row">
-
 								<div class="col-md-6">
 									<div class="form-group row">
 										<label class="control-label text-right col-md-3">Description</label>

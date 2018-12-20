@@ -140,7 +140,7 @@ class LeaveController extends Controller
         }
         $this->meta['title'] = 'Create Leave';
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id',$employee_id)->with('lineManager')->first();
-        $employees = Employee::all();
+        $employees = Employee::orderBy('firstname')->get();
         $selectedEmployee=Employee::where('id',$employee_id)->first();
         $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         return view('admin.leaves.admincreateleave',$this->metaResponse(),[
@@ -202,7 +202,7 @@ class LeaveController extends Controller
             'point_of_contact' => $request->point_of_contact,
             'line_manager' => $request->line_manager,
             'cc_to' => $request->cc_to,
-            'status' => 'pending',
+            'status' => $request->status,
         ]);
 
         // $this->sendEmail($leave);
