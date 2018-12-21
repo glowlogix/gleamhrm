@@ -144,7 +144,7 @@
 								<div class="col-md-6">
 									<div class="row">
 										<div class="col-md-offset-3 col-md-9">
-											<button type="submit" class="btn btn-success">Apply</button>
+											<button type="submit" class="btn btn-success">Add</button>
 											<a href="{{route('employeeleaves')}}" class="btn btn-inverse">Cancel</a>
 										</div>
 									</div>

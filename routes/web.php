@@ -580,7 +580,7 @@ Route::group(['middleware' => 'auth'], function () {
 
 
 
-        Route::Get('/employee_leaves', [
+        Route::Get('/employee_leaves/{id?}', [
             'uses' => 'LeaveController@employeeleaves',
             'as' => 'employeeleaves'
         ]);

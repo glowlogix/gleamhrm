@@ -161,21 +161,35 @@ class AttendanceController extends Controller
         $employees = Employee::with([
             'attendanceSummary' => function ($join) use ($today) {
                 $join->where('date', $today);
+            },
+        ], 'branch','leaves')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
+//Leaves Count
+        $currentMonth =date('m', strtotime($today));
+        $leaveDate=array();
+        $periods=array();
+        $leaves=Leave::all();
+        foreach ($leaves as $leave){
+            $periods[]= CarbonPeriod::create($leave->datefrom, $leave->dateto);
+        }
+        foreach ($periods as $period) {
+            foreach ($period as $dates){
+                $leaveDate[]=$dates->format('Y-m-d');
             }
-        ], 'branch')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
-        $present=AttendanceSummary:: whereRaw('MONTH(first_timestamp_in) = ?',[$today])->count();
+        }
+        $leavesCount=0;
+        foreach ($leaveDate as $leave){
+
+            if($leave==$today){
+                $leavesCount=$leavesCount+1;
+            }
+        }
+//leaves Count
+
+
+        $present=AttendanceSummary:: where('date' ,$today)->count();
         $employeeCount=Employee::where('type','office')->count();
         $absent=$employeeCount-$present;
-        $delays=AttendanceSummary::whereRaw('MONTH(first_timestamp_in) = ?',[$today])->where('is_delay','yes')->count();
-
-
-        // $employees = Employee::with('attendance_summaries', 'branch')->where('attendance_summaries.date', '2018-10-23')->get();
-        // if ($id == 0) {
-        //     $employees = Employee::with('attendanceSummary', 'branch')->get();
-        // }
-        // else{
-        //     $employees = Employee::where(['branch_id' => $id])->with('attendanceSummary', 'branch')->get();
-        // }
+        $delays=AttendanceSummary::whereRaw('date' ,$today)->where('is_delay','yes')->count();
 
         return view('admin.attendance.today_timeline', $this->metaResponse(), [
             'employees' => $employees,
@@ -184,7 +198,8 @@ class AttendanceController extends Controller
             'today'=>$today,
             'present'=>$present,
             'absent'=>$absent,
-            'delays'=>$delays
+            'delays'=>$delays,
+            'leavesCount'=>$leavesCount
         ]);
     }
 

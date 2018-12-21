@@ -64,15 +64,22 @@ class LeaveController extends Controller
         ]);
     }
 
-    public function employeeleaves()
+    public function employeeleaves($id="")
     {
         $this->meta['title'] = 'Show Employee Leaves';  
         $user = Auth::user()->id;
         if ($user == 1) {
-            $leaves = Leave::leftJoin('employees', function($join) {
-                $join->on('employees.id', '=', 'leaves.employee_id');
-                // $join->whereIn('leaves.status', ['', 'Pending']);
-            });
+            if($id=='Approved' || $id=='Declined'){
+                $leaves = Leave::leftJoin('employees', function($join) {
+                    $join->on('employees.id', '=', 'leaves.employee_id');
+                    // $join->whereIn('leaves.status', ['', 'Pending']);
+                })->where('leaves.status',$id);
+            }
+            else{
+                $leaves = Leave::leftJoin('employees', function($join) {
+                    $join->on('employees.id', '=', 'leaves.employee_id');
+                });
+            }
         }
         else{
             $leaves = Leave::leftJoin('employees', function($join) use ($user) {
@@ -84,24 +91,20 @@ class LeaveController extends Controller
                 });
             });
         }
-        
         $leaves = $leaves->with('leaveType')->get([
             'employees.*',
             'leaves.id AS leave_id',
             'leaves.leave_type AS leave_type',
-            'leaves.datefrom AS leave_from',
-            'leaves.dateto AS leave_dateto',
+            'leaves.datefrom AS datefrom',
+            'leaves.dateto AS dateto',
             'leaves.subject AS leave_subject',
             'leaves.line_manager AS line_manager',
             'leaves.point_of_contact AS point_of_contact',
             'leaves.status AS leave_status',
         ]);
-
-        // dd($leaves->toArray());
-
         return view('admin.leaves.employeeleaves',$this->metaResponse(),[
             'employees' => $leaves,
-        ]);
+        ])->with('id',$id);
     }
 
     public function indexEmployee($id)

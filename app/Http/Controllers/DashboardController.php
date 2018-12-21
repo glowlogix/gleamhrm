@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\AttendanceSummary;
+use App\Designation;
 use App\Employee;
+use App\EmployeeSkill;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use App\Applicant;
@@ -26,10 +28,18 @@ class DashboardController extends Controller
        $this->meta['title'] = 'Applicants';
         $dates=array();
        $applicants = Applicant::where('recruited', 0)->take(10)->get();
-//       $currentMonth = date('m');
-//       $attendance=AttendanceSummary::whereRaw('MONTH(date) = ?',[$currentMonth])->get();
-//       $months= ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
-        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::orderBy('joining_date')->take(5)->get())->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get());
+        $Designations=Designation::all();
+        $chartEmployee=array();
+        $DesignationName=array();
+        foreach ($Designations as $Designation){
+            $chartEmployee[]=Employee::where('designation',$Designation->designation_name)->count();
+            $DesignationName[]=$Designation->designation_name;
+        }
+        $replace=['[',']'];
+        $DesignationName=str_replace($replace,'',json_encode($DesignationName));
+        $designationSeries=implode(',',$chartEmployee);
+
+        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::orderBy('joining_date')->take(5)->get())->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get())->with('designationSeries',$designationSeries)->with('DesignationName',$DesignationName);
     }
 //    Help
     public function help()

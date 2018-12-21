@@ -12,19 +12,6 @@
     <div class="card">
         <div class="card-body">
             <div class="float-right">
-                {{--<div class="dropdown">--}}
-                    {{--<button class="btn btn-secondary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">--}}
-                        {{--@if(request()->is('employees'))--}}
-                       {{--Active Employees--}}
-                        {{--@elseif(request()->is('all_employees'))--}}
-                        {{--All Employees--}}
-                        {{--@endif--}}
-                    {{--</button>--}}
-                    {{--<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">--}}
-                        {{--<a class="dropdown-item"  href="{{url('employees')}}">Active Employees</a>--}}
-                        {{--<a class="dropdown-item" href="{{url('all_employees')}}">All Employees</a>--}}
-                    {{--</div>--}}
-                {{--</div>--}}
                 <select class="form-control" id="filter">
                     @if(request()->is('employees'))
                     <option selected>Select Employees</option>

@@ -63,5 +63,9 @@ class Employee extends Authenticatable
 
 	    return $this->belongsTo('App\Department', 'department_id');
     }
+    public function leaves(){
+
+        return $this->hasMany('App\Leave', 'employee_id');
+    }
 
 }

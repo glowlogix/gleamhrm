@@ -13,7 +13,7 @@
             <!-- Row -->
             <div class="row">
                 <!-- Column -->
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
@@ -25,11 +25,11 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
-                                <div class="round round-lg align-self-center round-danger"><i class="far fa-calendar-check"></i></div>
+                                <div class="round round-lg align-self-center round-danger"><i class="far fa-calendar-times"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h5 class="m-b-0 font-light"> {{$absent}}</h5>
                                     <h5 class="m-b-0">Absent</h5></div>
@@ -37,7 +37,7 @@
                         </div>
                     </div>
                 </div>
-                <div class="col-md-4">
+                <div class="col-md-3">
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
@@ -45,6 +45,18 @@
                                 <div class="m-l-10 align-self-center">
                                     <h3 class="m-b-0 font-light">{{$delays}}</h3>
                                     <h5 class="text-muted m-b-0">Delays</h5></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-3">
+                    <div class="card">
+                        <div class="card-body">
+                            <div class="d-flex flex-row">
+                                <div class="round round-lg align-self-center round-success"><i class="fas fa-calendar-times"></i></div>
+                                <div class="m-l-10 align-self-center">
+                                    <h3 class="m-b-0 font-light">{{$leavesCount}}</h3>
+                                    <h5 class="text-muted m-b-0">Leaves</h5></div>
                             </div>
                         </div>
                     </div>
@@ -70,6 +82,7 @@
                     </thead>
                     <tbody>
                     @if(count($employees) > 0) @foreach($employees as $employee)
+
                         <tr>
                             <td>{{$employee['firstname']}} {{$employee['lastname']}}</td>
                             <td>{{$employee['city']}}</td>
@@ -120,7 +133,7 @@
                                                                 <label for="date">Today's Date</label><br>
                                                                 <div class="input-group date1">
                                                                     <input type="hidden" name="employee_id" value="{{$employee['id']}}"/>
-                                                                    <input type="date" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['date']: $today}}"/>
+                                                                    <input type="date" id="selectCurrentDate" class="form-control" name="date" value="{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['date']: $today}}"/>
                                                                     <span class="input-group-addon">
                                                                             <span class="glyphicon glyphicon-calendar"></span>
                                                                         </span>
@@ -240,6 +253,16 @@ $("input.zoho").click(function (event) {
         }
         return false;
     });
+    });
+    $(document).ready(function () {
+        $("#selectCurrentDate").change(function(e){
+            var url = "{{route('today_timeline')}}/" + $(this).val();
+
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
     });
 </script>
 <script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
