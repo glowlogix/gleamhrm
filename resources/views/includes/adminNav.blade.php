@@ -137,14 +137,14 @@
                     </ul>
                 </li>
                 @endif
-                {{--<li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>--}}
-                    {{--<ul aria-expanded="false" class="collapse">--}}
-                        {{--<li><a href="{{route('salary.show')}}">Salary</a></li>--}}
-                        {{--<li><a href="#">Payroll Payments</a></li>--}}
-                        {{--<li><a href="#">Vendor Payments</a></li>--}}
-                        {{--<li><a href="#">Bill Payments</a></li>--}}
-                    {{--</ul>--}}
-                {{--</li>--}}
+                <li> <a class="has-arrow" href="#" aria-expanded="false"><i class="mdi mdi-database"></i><span class="hide-menu">Payments</span></a>
+                    <ul aria-expanded="false" class="collapse">
+                        <li><a href="{{route('salary.show')}}">Salary</a></li>
+                        <li><a href="#">Payroll Payments</a></li>
+                        <li><a href="#">Vendor Payments</a></li>
+                        <li><a href="#">Bill Payments</a></li>
+                    </ul>
+                </li>
                 @if (
                     Auth::user()->isAllowed('RolePermissionsController:index')
                 )

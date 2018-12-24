@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\AttendanceSummary;
+use App\Branch;
 use App\Designation;
 use App\Employee;
 use App\EmployeeSkill;
@@ -27,7 +28,53 @@ class DashboardController extends Controller
     {
        $this->meta['title'] = 'Applicants';
         $dates=array();
-       $applicants = Applicant::where('recruited', 0)->take(10)->get();
+       $applicants = Applicant::where('recruited', 0)->count();
+       $male=Employee::where('gender','Male')->count();
+       $female=Employee::where('gender','Female')->count();
+        $months = array('January'=>'1','February'=>'2','March'=>'3','April'=>'4','May'=>'5','June'=>'6','July'=>'7','August'=>'8','September'=>'9','October'=>'10','November'=>'11','December'=>'12');
+        $attArr=array();
+        $counts = array();
+//        foreach ($months as $month){
+//            foreach(Employee::all() as $employee){
+//                $count[$month] += AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',$month)->count();
+////                $attArr[$month]=AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',$month)->get();
+//            }
+////            $finalcount[]=$count;
+//        }
+
+        foreach ($months as $month){
+
+            foreach(Employee::where('branch_id','2')->get() as $employee){
+                $weekend=Branch::where('id',$employee->branch_id)->first();
+                $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, Carbon::now()->year);
+                $days=0;
+                for($i=1;$i<= $numberOfDays;$i++) {
+                    $now = Carbon::now();
+                    $date=Carbon::parse($i."-". $month."-".$now->year)->toDateString();
+                    if(in_array(Carbon::parse($date)->format('l'),json_decode($weekend->weekend))==false){
+                        $days+=1;
+                    }
+
+                }
+                $counts[$month][$employee->id]=(AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',$month)->whereRaw('YEAR(date) = ?',date('Y'))->count()/$days)*100;
+            }
+        }
+
+     $averageAttendance= array();
+     foreach($counts as $date => $array){
+         $employeesCount=Employee::all()->count();
+         $averageAttendance[]=round((array_sum($array)/$employeesCount),2);
+     }
+
+
+        $averageAttendance=json_encode($averageAttendance);
+        $Chartmonths= array('January','February','March','April','May','June','July','August','September','October','November','December');
+        $chartMonths=json_encode($Chartmonths);
+
+
+
+
+
         $Designations=Designation::all();
         $chartEmployee=array();
         $DesignationName=array();
@@ -38,9 +85,19 @@ class DashboardController extends Controller
         $replace=['[',']'];
         $DesignationName=str_replace($replace,'',json_encode($DesignationName));
         $designationSeries=implode(',',$chartEmployee);
+        return view('admin.dashboard.index',$this->metaResponse())
+            ->with('employee',Employee::orderBy('joining_date')->take(5)->get())
+            ->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get())
+            ->with('designationSeries',$designationSeries)
+            ->with('DesignationName',$DesignationName)
+            ->with('averageAttendance',$averageAttendance)
+            ->with('chartMonths',$chartMonths)
+            ->with('male',$male)
+            ->with('female',$female)
+            ->with('applicants',$applicants);
 
-        return view('admin.dashboard.index',$this->metaResponse())->with('employee',Employee::orderBy('joining_date')->take(5)->get())->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get())->with('designationSeries',$designationSeries)->with('DesignationName',$DesignationName);
     }
+
 //    Help
     public function help()
     {

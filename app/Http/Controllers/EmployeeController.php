@@ -125,7 +125,9 @@ class EmployeeController extends Controller
 			'official_email' => 'required|email|unique:employees',
 			'personal_email' => 'required|email|unique:employees',
 			'contact_no' => 'required|unique:employees|size:11',
-			// 'cnic' => 'size:13',
+            'gender' => 'required',
+
+            // 'cnic' => 'size:13',
 		]);
 
 		if(!strstr(strtolower($request->official_email), 'glowlogix.com')) {
@@ -164,6 +166,7 @@ class EmployeeController extends Controller
 			'invite_to_slack' 	=> $request->invite_to_slack,
 			'invite_to_asana' 	=> $request->invite_to_asana,
 			'joining_date' 		=> $request->joining_date,
+            'gender'           => $request->gender,
 		];
 
 		if (!empty($request->branch_id)) {
@@ -373,7 +376,8 @@ class EmployeeController extends Controller
 		$employee->permanent_address= $request->permanent_address;
 		$employee->city 			= $request->city;
         $employee->department_id 			= $request->department_id;
-		
+		$employee->gender 			= $request->gender;
+
 		if (!empty($request->password)) {
 			$employee->password			= Hash::make($request->password);
 		}

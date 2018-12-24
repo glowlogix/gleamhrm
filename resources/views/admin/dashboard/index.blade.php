@@ -33,7 +33,7 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-lg align-self-center round-danger"><i class="ti-server"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">70</h3>
+                                    <h3 class="m-b-0 font-light">0</h3>
                                     <h5 class="text-muted m-b-0">Payroll&nbspProc</h5></div>
                             </div>
                         </div>
@@ -47,8 +47,8 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-lg align-self-center round-warning"><i class="mdi mdi-laptop"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">100</h3>
-                                    <h5 class="text-muted m-b-0">Hiring Applicants</h5></div>
+                                    <h3 class="m-b-0 font-light">{{$applicants}}</h3>
+                                    <h5 class="text-muted m-b-0">Applicants</h5></div>
                             </div>
                         </div>
                     </div>
@@ -115,7 +115,8 @@
             </div>
 
         </div>
-        <div class="card col-md-4">
+        <div class="col-md-4">
+        <div class="card earning-widget">
             <div class="card-header">
                 <div class="card-actions">
                     <a class="" data-action="collapse"><i class="ti-minus"></i></a>
@@ -139,6 +140,7 @@
                 </div>
             </div>
         </div>
+        </div>
     </div>
         @push('scripts')
         <!--stickey kit -->
@@ -161,8 +163,8 @@
                 bindto: '#visitors',
                 data: {
                     columns: [
-                        ['Male', 30],
-                        ['Female', 10],
+                        ['Male', {!! $male !!}],
+                        ['Female', {!! $female !!}],
 
                     ],
 
@@ -200,9 +202,9 @@
                 // Total revenue chart
                 // ==============================================================
                 new Chartist.Bar('.attendance', {
-                    labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sept','Oct','Nov','Dec']
+                    labels: {!! $chartMonths !!}
                     , series: [
-                        [1,10 , 20, 30, 40, 50, 60, 70, 80,90,95,100]
+                        {!! $averageAttendance !!}
                     ]
                 }, {
                     high: 100

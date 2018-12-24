@@ -155,6 +155,18 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Gender</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="gender">
+                                                <option value="">Select Gender</option>
+                                                <option value="Male" @if($employee->gender=="Male") selected @endif >Male</option>
+                                                <option value="Female"  @if($employee->gender=="Female") selected @endif>Female</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </section>
                         <!-- Step 2 -->

@@ -25,7 +25,7 @@
                         {{csrf_field()}}
                         <div class="form-body">
                             <center >
-                                <input type="image"  src="{{asset('public/assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" />
+                                <input type="image"  src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="150" />
                                 <input type="file"  name="picture" id="wizard-picture" class="" hidden>
                                 <h6 class="card-title m-t-10">Click On Image to Add Picture</h6>
                             </center>
@@ -142,6 +142,18 @@
                                                     <option value="{{$department->id}}">{{$department->department_name}}</option>
                                                 @endforeach
                                                     @endif
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Gender</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="gender">
+                                                <option value="">Select Gender</option>
+                                                <option value="Male">Male</option>
+                                                <option value="Female">Female</option>
                                             </select>
                                         </div>
                                     </div>
