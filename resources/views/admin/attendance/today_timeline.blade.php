@@ -96,7 +96,7 @@
                                 @endif
                                 <td>
                                 @if(
-                                    isset($employee['attendanceSummary'][0]) && 
+                                    isset($employee['attendanceSummary'][0]) &&
                                     $employee['attendanceSummary'][0]['last_timestamp_out'] != ''
                                 )
                                 {{Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_timestamp_out'])->format('h:i a')}}
@@ -108,7 +108,7 @@
                                    isset($employee['attendanceSummary'][0]) &&
                                    $employee['attendanceSummary'][0]['last_timestamp_out'] != ''
                                )
-                                    {{isset($employee['attendanceSummary'][0]) ? gmdate('H:i:s', floor(number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') * 3600))  : ''}}
+                                    {{isset($employee['attendanceSummary'][0]) ? gmdate('H:i', floor(number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') * 3600))  : ''}}
                             @endif
                             </td>
                             <td class="text-nowrap">

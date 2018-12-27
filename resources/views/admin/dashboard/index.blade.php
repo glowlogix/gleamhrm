@@ -101,13 +101,11 @@
                     <table class="table v-middle no-border">
                         <tbody>
                         @foreach($employee as $employees)
-                            @if($employees->id!='1')
                                 <tr>
                                     <td style="width:40px"><img src="{{asset($employees->picture)}}" onerror="this.src='{{asset('assets/images/default.png')}}';" width="55" height="60" class="img-circle" alt="picture"></td>
                                     <td>{{$employees->firstname}}</td>
                                     <td align="right"><span class="label label-light-danger">{{ $diff = Carbon\Carbon::parse($employees->joining_date)->subMonth()->diffForHumans()}}</span></td>
                                 </tr>
-                            @endif
                         @endforeach
                         </tbody>
                     </table>

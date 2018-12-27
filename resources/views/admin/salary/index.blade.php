@@ -34,7 +34,7 @@
 					<tbody>
 					@foreach($employees as $employee)
 						<tr>
-						<td>{{$employee->firstname}}{{$employee->lastname}}</td>
+						<td>{{$employee->firstname}} {{$employee->lastname}}</td>
 						<td>{{$employee->basic_salary}}</td>
 						<td>{{$employee->bonus}}</td>
 						@foreach($ApprovedCount as $key=>$cnt)

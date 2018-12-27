@@ -43,7 +43,6 @@ class DashboardController extends Controller
 //        }
 
         foreach ($months as $month){
-
             foreach(Employee::all() as $employee){
                 $weekend=Branch::where('id',$employee->branch_id)->first();
                 $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, Carbon::now()->year);
@@ -79,14 +78,17 @@ class DashboardController extends Controller
         $chartEmployee=array();
         $DesignationName=array();
         foreach ($Designations as $Designation){
-            $chartEmployee[]=Employee::where('designation',$Designation->designation_name)->count();
-            $DesignationName[]=$Designation->designation_name;
+            $chartEmp=Employee::where('designation',$Designation->designation_name)->count();
+            if ($chartEmp>0){
+                $chartEmployee[]=$chartEmp;
+                $DesignationName[]=$Designation->designation_name;
+            }
         }
         $replace=['[',']'];
         $DesignationName=str_replace($replace,'',json_encode($DesignationName));
         $designationSeries=implode(',',$chartEmployee);
         return view('admin.dashboard.index',$this->metaResponse())
-            ->with('employee',Employee::orderBy('joining_date')->take(5)->get())
+            ->with('employee',Employee::orderBy('joining_date','Desc')->take(5)->get())
             ->with('totalemployees',Employee::where('employment_status','permanent')->orwhere('employment_status','probation')->get())
             ->with('designationSeries',$designationSeries)
             ->with('DesignationName',$DesignationName)
@@ -95,7 +97,6 @@ class DashboardController extends Controller
             ->with('male',$male)
             ->with('female',$female)
             ->with('applicants',$applicants);
-
     }
 
 //    Help
@@ -250,4 +251,6 @@ class DashboardController extends Controller
                 return redirect()->back();
 
             }
+
+
 }

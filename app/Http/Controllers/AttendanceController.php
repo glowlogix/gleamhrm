@@ -163,8 +163,8 @@ class AttendanceController extends Controller
                 $join->where('date', $today);
             },
         ], 'branch','leaves')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->get();
+
 //Leaves Count
-        $currentMonth =date('m', strtotime($today));
         $leaveDate=array();
         $periods=array();
         $leaves=Leave::where('status','Approved')->get();
@@ -184,8 +184,6 @@ class AttendanceController extends Controller
             }
         }
 //leaves Count
-
-
         $present=AttendanceSummary:: where('date' ,$today)->count();
         $employeeCount=Employee::where('type','office')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->count();
         $absent=$employeeCount-$present-$leavesCount;
