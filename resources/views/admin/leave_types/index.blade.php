@@ -31,7 +31,7 @@
                                 <tr>
                                     <td>{{$key+1}}</td>
                                     <td>{{$leave_type->name}}</td>
-                                    <td>{{$leave_type->count}}</td>
+                                    <td>{{$leave_type->amount}}</td>
                                     <td>@if($leave_type->status==1)
                                         Active
                                         @else
@@ -76,7 +76,7 @@
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label">Count</label>
-                                                            <input  type="number" name="count" value="{{old('count',$leave_type->count)}}" placeholder="Enter Amount Here" class="form-control">
+                                                            <input  type="number" name="amount" value="{{old('count',$leave_type->amount)}}" placeholder="Enter Amount Here" class="form-control">
                                                         </div>
                                                         <div class="form-group">
                                                             <label class="control-label">Status</label>
@@ -120,7 +120,7 @@
                         </div>
                         <div class="form-group">
                             <label class="control-label">Count</label>
-                            <input  type="number" name="count" placeholder="Enter Amount Here" class="form-control">
+                            <input  type="number" name="amount" placeholder="Enter Amount Here" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="control-label">Status</label>

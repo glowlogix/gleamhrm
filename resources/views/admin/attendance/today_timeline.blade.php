@@ -17,7 +17,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
-                                <div class="round round-lg align-self-center round-primary"><i class="far fa-calendar-check"></i></div>
+                                <div class="round round-md align-self-center round-primary"><i class="far fa-calendar-check"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h5 class="m-b-0 font-light">{{$present}}</h5>
                                     <h5 class="m-b-0">Present</h5></div>
@@ -29,7 +29,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
-                                <div class="round round-lg align-self-center round-danger"><i class="far fa-calendar-times"></i></div>
+                                <div class="round round-md align-self-center round-danger"><i class="far fa-calendar-times"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h5 class="m-b-0 font-light"> {{$absent}}</h5>
                                     <h5 class="m-b-0">Absent</h5></div>
@@ -41,7 +41,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
-                                <div class="round round-lg align-self-center round-warning"><i class="far fa-clock"></i></div>
+                                <div class="round round-md align-self-center round-warning"><i class="far fa-clock"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h3 class="m-b-0 font-light">{{$delays}}</h3>
                                     <h5 class="text-muted m-b-0">Delays</h5></div>
@@ -53,7 +53,7 @@
                     <div class="card">
                         <div class="card-body">
                             <div class="d-flex flex-row">
-                                <div class="round round-lg align-self-center round-success"><i class="fas fa-calendar-times"></i></div>
+                                <div class="round round-md align-self-center round-success"><i class="fas fa-calendar-times"></i></div>
                                 <div class="m-l-10 align-self-center">
                                     <h3 class="m-b-0 font-light">{{$leavesCount}}</h3>
                                     <h5 class="text-muted m-b-0">Leaves</h5></div>
@@ -108,7 +108,7 @@
                                    isset($employee['attendanceSummary'][0]) &&
                                    $employee['attendanceSummary'][0]['last_timestamp_out'] != ''
                                )
-                                    {{isset($employee['attendanceSummary'][0]) ? number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') : ''}}
+                                    {{isset($employee['attendanceSummary'][0]) ? gmdate('H:i:s', floor(number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') * 3600))  : ''}}
                             @endif
                             </td>
                             <td class="text-nowrap">

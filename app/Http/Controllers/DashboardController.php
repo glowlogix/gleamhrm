@@ -44,7 +44,7 @@ class DashboardController extends Controller
 
         foreach ($months as $month){
 
-            foreach(Employee::where('branch_id','2')->get() as $employee){
+            foreach(Employee::all() as $employee){
                 $weekend=Branch::where('id',$employee->branch_id)->first();
                 $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, Carbon::now()->year);
                 $days=0;

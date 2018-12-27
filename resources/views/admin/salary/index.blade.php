@@ -3,160 +3,193 @@
 	<h3 class="text-themecolor">Salary</h3>
 	<ol class="breadcrumb">
 		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Attendance</li>
+		<li class="breadcrumb-item active">Payments</li>
 		<li class="breadcrumb-item active">Salary</li>
 	</ol>
 @stop
 @section('content')
-
-<div class="panel panel-default">
-
-	<div class="panel-heading text-center">
-			<span style="float: right;">
-					<a href="{{route('employee.create')}}" class="btn btn-info btn-xs" align="left">
-						<span class="glyphicon glyphicon-plus"></span> Export Salary
-					</a>
-			</span>
-			<b style="text-align: center;">All Salaries</b>
-	</div>
-	<div class="row">
-
-		<div class="col-md-6" style="padding-top:20px;">
-			<form action="{{route('salary.processed')}}" method="post">
-					{{csrf_field()}}
-					<div class="form-group">
-						<div class="col-md-6">
-							<label for="start_date">Choose Month:</label>
-							<div class='input-group date' id='month' name="month">
-								<input type='text' class="form-control" name="month" />
-								<span class="input-group-addon">
-									<span class="glyphicon glyphicon-calendar"></span>
-								</span>
-							</div>
-							<br>
-							<button class="btn btn-info" type="submit">Process Salary</button>
-							<br>
-						</div>
-					</div>
-			</form>
-{{-- 				
-			<form action="{{route('salary.export')}}" method="post">
-				{{csrf_field()}}
-				<div class="form-group">
-					<div class="col-md-6">
-						<label for="start_date">Start Date</label>
-						<div class='input-group date' id='start_date' name="start_date">
-							<input type='text' class="form-control" name="start_date" />
-							<span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
-						</div>
-						<br>
-					</div>
-					<div class="col-md-6">
-						<label for="end_date">End Date</label>
-						<div class='input-group date' id='end_date' name="end_date">
-							<input type='text' class="form-control" name="end_date" />
-							<span class="input-group-addon">
-								<span class="glyphicon glyphicon-calendar"></span>
-							</span>
-						</div>
-						<br>
-						<button class="btn btn-info" type="submit">Export Salary</button>
-
-					</div>
-
-				</div>
-
-
-			</form> --}}
-		</div>
-		<div class="panel-body">
-				<div class="modal fade" id="myModal" tabindex="-1" role="dialog">
-                        <div class="modal-dialog" role="document">
-                          <div class="modal-content">
-                            <div class="modal-header">
-                              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                              <h4 class="modal-title">Manage Attendance</h4>
-                            </div>
-                            <div class="modal-body">
-                                <label>Enter value:</label>
-                              <input type="text" id="attendance">
-                            </div>
-                            <div class="modal-footer">
-                              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                              <button type="button" id="update" class="btn btn-primary">Save changes</button>
-                              <button type="button" id="del" class="btn btn-danger">Delete</button>
-                              
-                            </div>
-                          </div>
-                        </div>
-                </div>
-			<table class="table">
-				<tr>
-					<th>Name</th>
-					<th>Salary</th>
-					<th>Add Bonus</th>
-				</tr>
-
-				@foreach($employees as $employee)
-				
-				<tbody class="table-bordered table-hover table-striped">	
-
+	<div class="card">
+		<div class="card-body">
+			<div class="float-right">
+				<input id="month" class="form-control" value="{{$month}}" type="month">
+			</div>
+			<h4 class="card-title">Salaries</h4>
+			<h6 class="card-subtitle">Employee Salaries</h6>
+			<div class="table-responsive m-t-40">
+				<table id="myTable" class="table table-bordered table-striped">
+					<thead>
+					@if(count($employees) > 0)
 					<tr>
-						<td>
-							{{$employee->firstname}}
-						</td>
-						<td>
-							@if(isset($salaries[$employee->id]))
-							{{$salaries[$employee->id]->basic_salary}}
+						<th>Employee Name</th>
+						<th>Basic Salary</th>
+						<th>Bonus</th>
+						<th>Approved Leaves</th>
+						<th>UnApproved Leaves</th>
+						<th>Absent</th>
+						<th>Present</th>
+						<th>Net Payable</th>
+						<th> Actions </th>
+					</tr>
+					</thead>
+					<tbody>
+					@foreach($employees as $employee)
+						<tr>
+						<td>{{$employee->firstname}}{{$employee->lastname}}</td>
+						<td>{{$employee->basic_salary}}</td>
+						<td>{{$employee->bonus}}</td>
+						@foreach($ApprovedCount as $key=>$cnt)
+							@if($key==$employee->id)
+									<td>{{$cnt}}</td>
+								@endif
+							@endforeach
+							@foreach($unApprovedCount as $key=>$cnt)
+							@if($key==$employee->id)
+									<td>{{$cnt}}</td>
 							@endif
-						</td>
+							@endforeach
+							@foreach($AbsentCounts as $key=>$AbsentCount)
+								@if($key==$employee->id)
+									<td>{{$AbsentCount}}</td>
+								@endif
+							@endforeach
+							@foreach($presents as $key=>$present)
+								@if($key==$employee->id)
+									<td>{{$present}}</td>
+								@endif
+							@endforeach
+							@foreach($netPayables as $key=>$netPayable)
+							@if($key==$employee->id)
+								@if($netPayable < 1)
+									<td>0</td>
+									@else
+										<td>{{$netPayable}}</td>
+									@endif
+								@endif
+							@endforeach
 						<td>
-							<div class="col-sm-2">
-									
-								<form action="{{ route('salary.bonus' , $employee->id )}}" method="post">
-									{{ csrf_field() }}
-									<button class="btn btn-success btn-xs">
-										Add Bonus
-									</button>
-								</form>
+							<a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit{{ $employee->id }}"   data-original-title="Add Bonus"> <i class="fas fa-pencil-alt text-white"></i></a>
+							<div class="modal fade" id="edit{{ $employee->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+								<div class="modal-dialog">
+									<div class="modal-content">
+										<form action="{{route('salary.bonus',['id'=>$employee->id])}}" method="post">
+											{{ csrf_field() }}
+											<div class="modal-header">
+												 Add Bonus For Employee :  {{$employee->firstname}}
+											</div>
+											<div class="col-md-12">
+												<div class="form-group">
+													<label class="control-label">Bonus Amount</label>
+													<input  type="number" name="bonus" value="{{old('bonus',$employee->bonus)}}" placeholder="Enter Amount Here" class="form-control">
+												</div>
+											</div>
+											<div class="modal-footer">
+												<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+												<button  type="submit" class="btn btn-success btn-ok">Save</button>
+											</div>
+										</form>
+									</div>
+								</div>
 							</div>
 						</td>
-						
-
-					</tr>
-
-
-				</tbody>
-				@endforeach
-				
-			</table>
+						</tr>
+					@endforeach
+					@else
+						<p style="text-align: center;">No Employees Found</p> @endif
+					</tbody>
+				</table>
+			</div>
 		</div>
 	</div>
-	<script type="text/javascript">
-		$(document).ready(function () {
+@push('scripts')
+	<!-- This is data table -->
+	<script src="{{asset('assets/plugins/datatables/datatables.min.js')}}"></script>
+	<!-- start - This is for export functionality only -->
+	<script src="https://cdn.datatables.net/buttons/1.2.2/js/dataTables.buttons.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.flash.min.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/jszip/2.5.0/jszip.min.js"></script>
+	<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/pdfmake.min.js"></script>
+	<script src="https://cdn.rawgit.com/bpampuch/pdfmake/0.1.18/build/vfs_fonts.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.html5.min.js"></script>
+	<script src="https://cdn.datatables.net/buttons/1.2.2/js/buttons.print.min.js"></script>
+	<!-- end - This is for export functionality only -->
+	<script>
+        $(document).ready(function() {
+            $('#myTable').DataTable();
+            $(document).ready(function() {
+                var table = $('#example').DataTable({
+                    "columnDefs": [{
+                        "visible": false,
+                        "targets": 2
+                    }],
+                    "order": [
+                        [2, 'asc']
+                    ],
+                    "displayLength": 25,
+                    "drawCallback": function(settings) {
+                        var api = this.api();
+                        var rows = api.rows({
+                            page: 'current'
+                        }).nodes();
+                        var last = null;
+                        api.column(2, {
+                            page: 'current'
+                        }).data().each(function(group, i) {
+                            if (last !== group) {
+                                $(rows).eq(i).before('<tr class="group"><td colspan="5">' + group + '</td></tr>');
+                                last = group;
+                            }
+                        });
+                    }
+                });
+                // Order by the grouping
+                $('#example tbody').on('click', 'tr.group', function() {
+                    var currentOrder = table.order()[0];
+                    if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
+                        table.order([2, 'desc']).draw();
+                    } else {
+                        table.order([2, 'asc']).draw();
+                    }
+                });
+            });
+        });
+        $('#myTable').DataTable({
+            dom: 'Bfrtip',
+            buttons: [
+                {
+                    extend: 'copyHtml5',
+                    exportOptions: {
+                        columns: [ 0, 1, 2,3,4,5,6,7]
+                    }
+                },
+                {
+                    extend: 'excelHtml5',
+                    exportOptions: {
+                        columns: [ 0, 1, 2,3,4,5,6,7]
+                    }
+                },
+                {
+                    extend: 'pdfHtml5',
+                    exportOptions: {
+                        columns: [ 0, 1, 2,3,4,5,6,7]
+                    }
+                }, {
+                    extend: 'csvHtml5',
+                    exportOptions: {
+                        columns: [ 0, 1, 2,3,4,5,6,7]
+                    }
+                },
+            ]
+        });
+        $(document).ready(function () {
+            $("#month").change(function(e){
+                var url = "{{route('salary.show')}}/" + $(this).val();
 
-			$(function () {
-
-				$('#myModal').on('click',function(){
-					
-				})
-
-				$('#month').datetimepicker({
-					format: 'MM-YYYY'
-				});
-				// $('#start_date').datetimepicker({
-				// 	viewMode: 'years',
-				// 	format: 'YYYY/MM/DD'
-				// });
-				// $('#end_date').datetimepicker({
-				// 	viewMode: 'years',
-				// 	format: 'YYYY/MM/DD'
-				// });
-			});
-		});
+                if (url) {
+                    window.location = url;
+                }
+                return false;
+            });
+        });
 	</script>
-</div>
-
+	@endpush
 @stop

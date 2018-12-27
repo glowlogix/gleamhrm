@@ -162,12 +162,12 @@ class AttendanceController extends Controller
             'attendanceSummary' => function ($join) use ($today) {
                 $join->where('date', $today);
             },
-        ], 'branch','leaves')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->get();
+        ], 'branch','leaves')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->get();
 //Leaves Count
         $currentMonth =date('m', strtotime($today));
         $leaveDate=array();
         $periods=array();
-        $leaves=Leave::all();
+        $leaves=Leave::where('status','Approved')->get();
         foreach ($leaves as $leave){
             $periods[]= CarbonPeriod::create($leave->datefrom, $leave->dateto);
         }
@@ -187,8 +187,8 @@ class AttendanceController extends Controller
 
 
         $present=AttendanceSummary:: where('date' ,$today)->count();
-        $employeeCount=Employee::where('type','office')->count();
-        $absent=$employeeCount-$present;
+        $employeeCount=Employee::where('type','office')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->count();
+        $absent=$employeeCount-$present-$leavesCount;
         $delays=AttendanceSummary::whereRaw('date' ,$today)->where('is_delay','yes')->count();
 
         return view('admin.attendance.today_timeline', $this->metaResponse(), [
@@ -429,7 +429,7 @@ class AttendanceController extends Controller
         }
         if ($attendance_summary!=null) {
             $in = Carbon::parse($attendance_summary->first_timestamp_in);
-            if ($attendance_summary->last_timestamp_out != '') {
+            if ($attendance_summary->last_timestamp_out != null) {
                 $out = Carbon::parse($attendance_summary->last_timestamp_out);
                 $totaltime = $out->diffInMinutes($in);
                 $totaltime = $totaltime - $totalbreaktime;
@@ -516,6 +516,92 @@ class AttendanceController extends Controller
         } else {
             return redirect()->back()->with('error', 'Error while add attendance');
         }
+    }
+
+    public function newSlackbot(Request $request)
+    {
+        if (isset($request->challenge)) {
+            return $request->challenge;
+        }
+        if ($request['event']['channel'] != config('values.SlackChannel')) {
+            Log::debug('Accept from Slack Attendance Channel.');
+            return;
+        }
+        $employee = Employee::where('slack_id', $request['event']['user'])->first();
+        if (!isset($employee->id)) {
+            $token = config('values.SlackToken');
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token=' . $token . '&user=' . $request['event']['user']);
+            $output = json_decode($output, true);
+            if (!$output['ok']) {
+                Log::debug('no user info found.');
+                return 'no user info found.';
+            }
+
+            $employee = Employee::where('official_email', $output['profile']['email'])->first();
+            $employee->slack_id = $request['event']['user'];
+            $employee->save();
+            dd('get and save Slack Id for employee.');
+            Log::debug('get and save Slack Id for employee.');
+        }
+
+        $date = Carbon::createFromTimestamp($request['event_time'])->toDateString();
+        $time = Carbon::createFromTimestamp($request['event_time'])->toDateTimeString();
+
+        $text = $request['event']['text'];
+
+        $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'allah haffiz');
+        $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz",'allah haffiz');
+        $str = '';
+
+        if (in_array(strtolower($text), $checkInText) == true) {
+            $text = 'aoa';
+            $attendanceSummarycheck = AttendanceSummary::where('employee_id', $employee->id)->where('date', $date)->first();
+            if ($attendanceSummarycheck == null) {
+                $data = [
+                    'employee_id' => $employee->id,
+                    'first_timestamp_in' => $time,
+                    'date' => $date,
+                    'total_time' => 0,
+                ];
+                AttendanceSummary::create($data);
+            }
+        } elseif (strstr(strtolower($text), 'brb')) {
+            $clean = array("_",".", "-", "brb");
+            $comment = str_replace($clean, '', $text);
+            $data = [
+                'employee_id' => $employee->id,
+                'timestamp_break_start' => $time,
+                'comment' => $comment,
+                'date' => $date,
+                'total_time' => 0,
+            ];
+            AttendanceBreak::create($data);
+        } elseif (strstr(strtolower($text), 'back')) {
+            $attendanceCheck = AttendanceBreak::where('employee_id', $employee->id)->orderBy('timestamp_break_start', 'desc')->first();
+            if ($attendanceCheck != null) {
+                $attendanceCheck->timestamp_break_end = $time;
+                $attendanceCheck->save();
+                $request->employee_id = $employee->id;
+                $request->date = $attendanceCheck->date;
+                $this->updateTotalTime($request);
+            }
+        } elseif (in_array(strtolower($text), $checkOutText) == true) {
+            $text = 'ah';
+            $data = [
+                'employee_id' => $employee->id,
+                'last_timestamp_out' => $time,
+            ];
+            $attendanceSummary = AttendanceSummary::where('employee_id', $employee->id)->orderBy('date', 'desc')->first();
+            $attendanceSummary->last_timestamp_out = $time;
+            $request->employee_id = $employee->id;
+            $request->date = $attendanceSummary->date;
+            $attendanceSummary->save();
+            $this->updateTotalTime($request);
+        }
+        if ($str == '') {
+            return;
+        }
+        return;
     }
 
     /**
@@ -970,92 +1056,7 @@ class AttendanceController extends Controller
         return response()->json('success');
     }
 
-    public function newSlackbot(Request $request)
-    {
-        if (isset($request->challenge)) {
-            return $request->challenge;
-        }
-        if ($request['event']['channel'] != config('values.SlackChannel')) {
-            Log::debug('Accept from Slack Attendance Channel.');
-            return;
-        }
-        $employee = Employee::where('slack_id', $request['event']['user'])->first();
-        if (!isset($employee->id)) {
-            $token = config('values.SlackToken');
-            $output = file_get_contents('https://slack.com/api/users.profile.get?token=' . $token . '&user=' . $request['event']['user']);
-            $output = json_decode($output, true);
-            if (!$output['ok']) {
-                Log::debug('no user info found.');
-                return 'no user info found.';
-            }
 
-            $employee = Employee::where('official_email', $output['profile']['email'])->first();
-            $employee->slack_id = $request['event']['user'];
-            $employee->save();
-            dd('get and save Slack Id for employee.');
-            Log::debug('get and save Slack Id for employee.');
-        }
-
-        $date = Carbon::createFromTimestamp($request['event_time'])->toDateString();
-        $time = Carbon::createFromTimestamp($request['event_time'])->toDateTimeString();
-
-        $text = $request['event']['text'];
-
-        $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'allah haffiz');
-        $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz",'allah haffiz');
-        $str = '';
-
-        if (in_array(strtolower($text), $checkInText) == true) {
-            $text = 'aoa';
-            $attendanceSummarycheck = AttendanceSummary::where('employee_id', $employee->id)->where('date', $date)->first();
-            if ($attendanceSummarycheck == null) {
-                $data = [
-                    'employee_id' => $employee->id,
-                    'first_timestamp_in' => $time,
-                    'date' => $date,
-                    'total_time' => 0,
-                ];
-                AttendanceSummary::create($data);
-            }
-        } elseif (strstr(strtolower($text), 'brb')) {
-            $clean = array("_",".", "-", "brb");
-            $comment = str_replace($clean, '', $text);
-            $data = [
-                'employee_id' => $employee->id,
-                'timestamp_break_start' => $time,
-                'comment' => $comment,
-                'date' => $date,
-                'total_time' => 0,
-            ];
-            AttendanceBreak::create($data);
-        } elseif (strstr(strtolower($text), 'back')) {
-            $attendanceCheck = AttendanceBreak::where('employee_id', $employee->id)->orderBy('timestamp_break_start', 'desc')->first();
-            if ($attendanceCheck != null) {
-                $attendanceCheck->timestamp_break_end = $time;
-                $attendanceCheck->save();
-                $request->employee_id = $employee->id;
-                $request->date = $attendanceCheck->date;
-                $this->updateTotalTime($request);
-            }
-        } elseif (in_array(strtolower($text), $checkOutText) == true) {
-            $text = 'ah';
-            $data = [
-                'employee_id' => $employee->id,
-                'last_timestamp_out' => $time,
-            ];
-            $attendanceSummary = AttendanceSummary::where('employee_id', $employee->id)->orderBy('date', 'desc')->first();
-            $attendanceSummary->last_timestamp_out = $time;
-            $attendanceSummary->save();
-
-            $request->employee_id = $employee->id;
-            $request->date = $attendanceSummary->date;
-            $this->updateTotalTime($request);
-        }
-        if ($str == '') {
-            return;
-        }
-        return;
-    }
 
     public function mybot(){
 
@@ -1114,6 +1115,7 @@ class AttendanceController extends Controller
         $currentMonth = date('m');
         $events = array();
         $presentDate=array();
+        $branchWeekend=json_decode(Branch::find($employee->branch_id)->weekend);
         //For Dow
         if ($attendance_summaries->count()> 0) {
             foreach ($attendance_summaries as $key => $value) {
@@ -1167,17 +1169,24 @@ class AttendanceController extends Controller
         }
         foreach ($periods as $period) {
             foreach ($period as $dates){
-                $leaveDate[]=$dates->format('Y-m-d');
+                    $leaveDate[] = $dates->format('Y-m-d');
             }
         }
+
 //Leave DaysEnd
-        $branchWeekend=json_decode(Branch::find($employee->branch_id)->weekend);
         $dow = [0,1,2,3,4,5,6];
         foreach ($branchWeekend as $day){
             unset($dow[$days[$day]]);
         };
         $dow=implode(',',$dow);
-        //For Absent Event
+
+        $leaveCount=array();
+        foreach ($leaveDate as $leavecnt){
+            if( date('m', strtotime($leavecnt))== $currentMonth && in_array(Carbon::parse($leavecnt)->format('l'),$branchWeekend )==false) {
+                $leaveCount[]=$leavecnt;
+            }
+        }
+//For Absent Event
         $till_date = new DateTime();
         $absent=array();
         for($i=1;$i<= $till_date->format('d');$i++){
@@ -1209,15 +1218,13 @@ class AttendanceController extends Controller
                 $color = '#ADFF41';
             }
             $events[] = [
-                "resourceId" => $value->employee_id,
-                "title" => $value->leaveType->name."\n"."Reason:".$value->reason."\n"."Status:".$value->status,
+                "title" => $value->leaveType->name."\n"."Status:".$value->status,
                 "date" => $value->datefrom,
-                "start" => Carbon::parse($value->datefrom)->toDateString(),
-                "end" => Carbon::parse($value->dateto)->toDateString(),
-                "color" => $color,
+                "start" => Carbon::parse($value->datefrom)->toIso8601String(),
+                "end" => date('Y-m-d', strtotime($value->dateto .' +1 day')),
+                "color" => $color
             ];
         }
-
         //Average Arrivals
         $averageArrivals =round(AttendanceSummary::where('employee_id', '=',$employee->id)->whereRaw('MONTH(date) = ?',[$currentMonth])->select(DB::raw('first_timestamp_in'))->avg('first_timestamp_in'));
         if($averageArrivals == null){
@@ -1245,7 +1252,16 @@ class AttendanceController extends Controller
         $events = json_encode($events);
             return view('admin.attendance.myattendance',$this->metaResponse(), [
                 'events' => $events
-            ])->with('employeeId',$employeeId)->with('employees',$employees)->with('dow',$dow)->with('averageHours',floor($averageHours))->with('averageArrival',$avgarival)->with('averageAttendance',$averageAttendance)->with('linemanagers',$linemanagers)->with('present',$present)->with('absent',$absent);
+            ])->with('employeeId',$employeeId)
+              ->with('employees',$employees)
+              ->with('dow',$dow)
+              ->with('averageHours',floor($averageHours))
+              ->with('averageArrival',$avgarival)
+              ->with('averageAttendance',$averageAttendance)
+              ->with('linemanagers',$linemanagers)
+              ->with('present',$present)
+              ->with('absent',$absent)
+              ->with('leaveCount',count($leaveCount));
     }
     public function correctionEmail(Request $request){
         $data = array('name'=>Auth::user()->firstname,'messages'=>"$request->message",'email'=>Auth::user()->official_email,'date'=>"$request->date");

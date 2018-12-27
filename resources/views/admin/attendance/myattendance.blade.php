@@ -60,8 +60,9 @@
                             <div class="d-flex flex-row">
                                 <div class="round round-md align-self-center round-primary"><i class="far fa-calendar-check"></i></div>
                                 <div class="m-l-10 align-self-center">
-                                    <h5 class="m-b-0 font-light">{{$present}}&nbspPresent</h5>
-                                    <h5 class="m-b-0"> {{$absent}}&nbspAbsent</h5></div>
+                                    <h5 class="m-b-0 ">{{$present}}&nbsp Present</h5>
+                                    <h5 class="m-b-0 ">{{$leaveCount}}&nbsp Leaves</h5>
+                                    <h5 class="m-b-0"> {{$absent}}&nbsp Absent</h5></div>
                             </div>
                         </div>
                     </div>
@@ -143,6 +144,7 @@
             $(document).ready(function () {
 
                 $('#calendar').fullCalendar({
+
                     themeSystem: 'bootstrap4',
                     defaultView: 'month',
                     schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',

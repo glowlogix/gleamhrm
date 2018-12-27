@@ -543,7 +543,7 @@ Route::group(['middleware' => 'auth'], function () {
 
         //Salary Show
 
-        Route::Get('/salary', [
+        Route::Get('/salary/{id?}', [
             'uses' => 'SalariesController@index',
             'as' => 'salary.show'
         ]);
@@ -575,10 +575,6 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'SalariesController@export',
             'as' => 'salary.export'
         ]);
-
-
-
-
 
         Route::Get('/employee_leaves/{id?}', [
             'uses' => 'LeaveController@employeeleaves',

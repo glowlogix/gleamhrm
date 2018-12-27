@@ -33,6 +33,10 @@ class Employee extends Authenticatable
         return $this->hasMany('App\AttendanceSummary')->latest();
     }
 
+    public function attendanceSummaries(){
+        return $this->hasMany('App\AttendanceSummary');
+    }
+
     public function leaveTypes()
     {
         return $this->belongsToMany('App\LeaveType')

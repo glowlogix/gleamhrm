@@ -11,6 +11,7 @@
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap Core CSS -->
     <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+
     <!-- chartist CSS -->
     <link href="{{asset('assets/plugins/chartist-js/dist/chartist.min.css') }}" rel="stylesheet">
     <link href="{{asset('assets/plugins/chartist-js/dist/chartist-init.css') }}" rel="stylesheet">
@@ -18,6 +19,7 @@
     <!--This page css - Morris CSS -->
     <link href="{{asset('assets/plugins/c3-master/c3.min.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
+
     <link href="{{asset('css/style.css') }}" rel="stylesheet">
     <!-- You can change the theme colors from here -->
     <link href="{{asset('css/colors/blue.css') }}" id="theme" rel="stylesheet">

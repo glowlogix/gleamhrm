@@ -2,37 +2,167 @@
 
 namespace App\Http\Controllers;
 
+use App\AttendanceSummary;
+use App\Branch;
 use App\Salaries;
+use Carbon\Carbon;
+use Carbon\CarbonPeriod;
+use DateTime;
 use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
 use App\Employee;
 use DB;
+use Session;
 use App\Salary;
 use App\MonthlySalary;
 use App\Leave;
 use Box\Spout\Reader\ReaderFactory;
 use Box\Spout\Writer\WriterFactory;
 use Box\Spout\Common\Type;
+use vendor\project\StatusTest;
 
 class SalariesController extends Controller
 {
     use MetaTrait;
-    
-    public function index(){
+    public function index($id=""){
+        if($id==""){
+
+            $id=Carbon::now()->format('Y-m');
+        }
 
         $this->meta['title'] = 'All Salaries';
-        $employees = Employee::all();
-        foreach($employees as $employee){
-            $id = $employee->id;
-            $salaries[$employee->id] = Salary::where('employee_id',$employee->id)->first();
-        }
-        return view('admin.salary.index',$this->metaResponse(),['employees' => $employees,'salaries'=>$salaries]);
+        $currentMonth=Carbon::parse($id)->format('m');
+        $UnApprovedCount=array();
+        $approvedCount=array();
+        $absentDeduction=array();
+        $leavesDeduction=array();
+        $netPayables=array();
+        $employeeApprovedLeaves=array();
+        $salaryEmployees= Employee::where('employment_status','!=','resigned')->get();
 
+        foreach ($salaryEmployees as $employee)
+        {
+            $weekend=Branch::where('id',$employee->branch_id)->first();
+//Present Dates
+            $attendance_summaries = AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(first_timestamp_in) = ?',[$currentMonth])->get();
+            $presentDate=array();
+            if ($attendance_summaries->count()> 0) {
+                foreach ($attendance_summaries as $key => $value) {
+                    $presentDate[] = $value->date;
+                }
+            }
+
+           $present[$employee->id]=AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(first_timestamp_in) = ?',[$currentMonth])->count();
+///////////
+///Un Approved Leaves
+            $unApprovedLeaveDate=array();
+            $unApprovedPeriods=array();
+            $unAapprovedLeaves = Leave::where('employee_id',$employee->id)->where('status','Declined')->whereRaw('MONTH(datefrom) = ?',$currentMonth)->get();
+
+            foreach ($unAapprovedLeaves as $unApprovedLeave){
+                $approvedPeriods[]= CarbonPeriod::create($unApprovedLeave->datefrom, $unApprovedLeave->dateto);
+            }
+            foreach ($unApprovedPeriods as $unApprovedPeriod) {
+                foreach ($unApprovedPeriod as $unApprovedDates){
+                    $unApprovedLeaveDate[] = $unApprovedDates->format('Y-m-d');
+                }
+            }
+
+            $unApproved=array();
+            foreach ($unApprovedLeaveDate as $unLeaveDate){
+                if( date('m', strtotime($unLeaveDate))== $currentMonth && in_array(Carbon::parse($unLeaveDate)->format('l'),json_decode($weekend->weekend))==false){
+                    $unApproved[]=$unLeaveDate;
+                }
+            }
+            $employeeUnApprovedLeaves[$employee->id]=count($unApproved);
+
+
+/////////
+
+/*Approved Leaves*/
+            $approvedLeaveDate=array();
+            $approvedPeriods=array();
+            $approvedLeaves = Leave::where('employee_id',$employee->id)->where('status','Approved')->whereRaw('MONTH(datefrom) = ?',$currentMonth)->get();
+
+            foreach ($approvedLeaves as $approvedLeave){
+                $approvedPeriods[]= CarbonPeriod::create($approvedLeave->datefrom, $approvedLeave->dateto);
+            }
+            foreach ($approvedPeriods as $approvedPeriod) {
+                foreach ($approvedPeriod as $approvedDates){
+                    $approvedLeaveDate[] = $approvedDates->format('Y-m-d');
+                }
+            }
+
+            $Approved=array();
+            foreach ($approvedLeaveDate as $leaveDate){
+                if( date('m', strtotime($leaveDate))== $currentMonth && in_array(Carbon::parse($leaveDate)->format('l'),json_decode($weekend->weekend))==false){
+                    $Approved[]=$leaveDate;
+                }
+            }
+            $employeeApprovedLeaves[$employee->id]=count($Approved);
+
+
+/////////
+                $numberOfDays = cal_days_in_month(CAL_GREGORIAN,$currentMonth , Carbon::parse($id)->year);
+                $workingDays=0;
+                $mothDays=0;
+                for($i=1;$i<= $numberOfDays;$i++) {
+                    $date=Carbon::parse($i."-".$currentMonth."-".Carbon::parse($id)->year)->toDateString();
+                    $mothDays+=1;
+                    if(in_array(Carbon::parse($date)->format('l'),json_decode($weekend->weekend))==false){
+                        $workingDays += 1;
+                    }
+                }
+
+/////Absents
+            $absent=array();
+            for($i=1;$i<=$mothDays;$i++){
+                $date=Carbon::parse($i."-".$currentMonth."-".Carbon::parse($id)->format('Y'))->toDateString();
+                if(!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'),json_decode($weekend->weekend))==false && in_array(Carbon::parse($date)->toDateString(),$Approved)==false && in_array(Carbon::parse($date)->toDateString(),$unApproved)==false ){
+                    $absent[]="";
+                }
+            }
+                $AbsentCount[$employee->id]=count($absent);
+                $approvedCount[$employee->id]=$employeeApprovedLeaves[$employee->id];
+                $unApprovedCount[$employee->id]=$employeeUnApprovedLeaves[$employee->id];
+
+                if($employee->emloyment_status !='probation') {
+                    if ($approvedCount[$employee->id] > 1) {
+                        $approvedDeduction = (($employee->basic_salary / $workingDays) * (($approvedCount[$employee->id])- 1));
+                    } else {
+                        $approvedDeduction = 0;
+
+                    }
+                }
+                else if($employee->emloyment_status == 'probation'){
+
+                    $approvedDeduction=$approvedCount[$employee->id];
+
+                }
+                $absentDeduction[$employee->id]=($employee->basic_salary/$workingDays)*$AbsentCount[$employee->id]*2;
+                $netPayables[$employee->id]=round(($employee->basic_salary-($employeeUnApprovedLeaves[$employee->id]*2)-$approvedDeduction-$absentDeduction[$employee->id])+($employee->bonus));
+
+
+//            $unApprovedCount[$employee->id]=$employeeUnApprovedLeaves[$employee->id];
+//            $approvedCount[$employee->id]=$employeeApprovedLeaves[$employee->id];
+//            $leavesDeduction[$employee->id]=(($employee->basic_salary/$workingDays)* $approvedCount[$employee->id])*2;
+//            $absentDeduction[$employee->id]=($employee->basic_salary/$workingDays)* $AbsentCount[$employee->id]*2;
+//            $netPayables[$employee->id]=($employee->basic_salary- $leavesDeduction[$employee->id]-$absentDeduction[$employee->id])+($employee->bonus);
+        }
+        $employees = Employee::where('employment_status','!=','resigned')->get();
+        return view('admin.salary.index')->with('month',$id)->with('employees', $employees)->with('ApprovedCount',$approvedCount)->with('unApprovedCount',$unApprovedCount)->with('netPayables',$netPayables)->with('AbsentCounts',$AbsentCount)->with('presents',$present);
     }
+
 
     public function addBonus(Request $request,$id){
-
+        $bonus=Employee::find($id);
+        $bonus->bonus = $request->bonus;
+        $bonus->save();
+        Session::flash('success','Bonus Added Successfully');
+        return redirect()->route('salary.show');
     }
+
+
 
 
     public function export(Request $request){

@@ -18,14 +18,14 @@ class LeaveTypeController extends Controller
     {
         $this->validate($request,[
             'name' => 'required',
-            'count' => 'required',
+            'amount' => 'required',
             'status' => 'required',
         ]);
         $leave_exist=LeaveType::where('name',$request->name)->first();
         if($leave_exist == null){
             LeaveType::create([
                 'name' => $request->name,
-                'count' => $request->count,
+                'amount' => $request->amount,
                  'status' => $request->status,
             ]);
             Session::flash('success','Leave type is created successfully');
@@ -42,7 +42,7 @@ class LeaveTypeController extends Controller
     {
         $leave_type=LeaveType::find($id);
         $leave_type->name = $request->name;
-        $leave_type->count = $request->count;
+        $leave_type->amount = $request->amount;
         $leave_type->status = $request->status;
         $leave_type->save();
         Session::flash('success','Leave type is updated successfully');

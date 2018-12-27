@@ -130,7 +130,7 @@ class LeaveController extends Controller
         return view('admin.leaves.create',$this->metaResponse(),[
             'employees' => $employees,
             'line_manager' => $line_manager,
-            'leave_types' => LeaveType::all(),
+            'leave_types' => LeaveType::where('status','1')->get(),
         ]);
     }
     public function adminCreate($id="")
@@ -149,7 +149,7 @@ class LeaveController extends Controller
         return view('admin.leaves.admincreateleave',$this->metaResponse(),[
             'employees' => $employees,
             'line_manager' => $line_manager,
-            'leave_types' => LeaveType::all(),
+            'leave_types' => LeaveType::where('status','1')->get(),
             'selectedEmployee'=>$selectedEmployee,
         ]);
     }
