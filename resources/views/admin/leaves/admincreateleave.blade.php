@@ -30,7 +30,7 @@
 										<div class="col-md-9">
 											<select class="form-control custom-select" id="employee" name="employee">
 												@foreach($employees as $employee)
-													<option value="{{$employee->id}}" @if($selectedEmployee->id==$employee->id) selected @endif>{{$employee->firstname}}</option>
+													<option value="{{$employee->id}}" @if($selectedEmployee->id==$employee->id) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
 												@endforeach
 											</select>
 										</div>

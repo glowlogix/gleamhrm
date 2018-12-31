@@ -31,7 +31,7 @@
                             @foreach($team_members as $key=>$team_member)
                                 <tr>
                                     <td>{{$key+1}}</td>
-                                    <td> {{isset($team_member->id) ? $team_member->employee->firstname : ''}}</td>
+                                    <td> {{isset($team_member->id) ? $team_member->employee->firstname . $team_member->employee->lastname : ''}}</td>
                                     <td class="text-nowrap">
                                         <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $team_member->id }}"  data-original-title="Close"> <i class="fas fa-window-close text-white  "></i> </a>
                                         <div class="modal fade" id="confirm-delete{{ $team_member->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">

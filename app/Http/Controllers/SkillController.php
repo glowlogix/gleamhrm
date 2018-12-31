@@ -12,7 +12,7 @@ class SkillController extends Controller
     public function index()
     {
         $skills = Skill::all();
-        $employees = Employee::all();
+        $employees = Employee::where('status','!=','0')->get();
         return view('admin.skills.index')->with('skills',$skills)->with('employees',$employees);
     }
 

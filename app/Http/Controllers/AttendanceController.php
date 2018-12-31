@@ -162,7 +162,7 @@ class AttendanceController extends Controller
             'attendanceSummary' => function ($join) use ($today) {
                 $join->where('date', $today);
             },
-        ], 'branch','leaves')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->get();
+        ], 'branch','leaves')->where('status', '!=', '0')->get();
 
 //Leaves Count
         $leaveDate=array();
@@ -185,7 +185,7 @@ class AttendanceController extends Controller
         }
 //leaves Count
         $present=AttendanceSummary:: where('date' ,$today)->count();
-        $employeeCount=Employee::where('type','office')->where('designation', '!=', 'CEO')->where('type', '!=', 'remote')->where('employment_status','!=','resigned')->count();
+        $employeeCount=Employee::where('type','office')->where('status','!=','0')->count();
         $absent=$employeeCount-$present-$leavesCount;
         $delays=AttendanceSummary::whereRaw('date' ,$today)->where('is_delay','yes')->count();
 
@@ -781,9 +781,9 @@ class AttendanceController extends Controller
         $this->meta['title'] = 'Show Attendance';
 
         if ($id == 0) {
-            $data = Employee::get();
+            $data = Employee::where('status','!=','0')->get();
         } else {
-            $data = Employee::where(['branch_id' => $id])->get();
+            $data = Employee::where(['branch_id' => $id])->where('status','!=','0')->get();
         }
         $events = [];
 
@@ -889,9 +889,9 @@ class AttendanceController extends Controller
         if ($id == 0) {
             $employees = Employee::where('type', '!=', 'remote')->get()->toJson();
         } else {
-            $employees = Employee::where(['branch_id' => $id])->where('type', '!=', 'remote')->get()->toJson();
+            $employees = Employee::where(['branch_id' => $id])->where('type', '!=', 'remote')->where('status','!=','0')->get()->toJson();
         }
-        $attendance_summaries = AttendanceSummary::where('first_timestamp_in', '!=', '')->get();
+        $attendance_summaries = AttendanceSummary::where('date', '!=', '')->get();
         $events = array();
         foreach ($attendance_summaries as $key => $value) {
             $delays = '';
@@ -920,12 +920,12 @@ class AttendanceController extends Controller
             $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
             $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
             $total_time = round(Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)) / 60, '2');
-            $events[] = [
+            $events[]=[
                 "resourceId" => $value->employee_id,
                 "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
                 "date" => $value->date,
-                "start" => $value->first_timestamp_in,
-                "end" => $value->last_timestamp_out,
+                "start" => $value->date,
+                "end" => $value->date,
                 "color" => $color,
             ];
         }
@@ -953,6 +953,7 @@ class AttendanceController extends Controller
                 "color" => $color,
             ];
         }
+
         $events = json_encode($events);
         $office_locations = Branch::all();
         return view('admin.attendance.timeline', $this->metaResponse(), [
@@ -1090,7 +1091,8 @@ class AttendanceController extends Controller
     }
 
     public function authUserTimeline($id=""){
-        $employees=Employee::where('type','!=','remote')->orderBy('firstname')->get();
+
+        $employees=Employee::where('type','!=','remote')->where('status','!=','0')->orderBy('firstname')->get();
         $days=[
             'Sunday'    =>  0,
             'Monday'    =>  1,

@@ -13,7 +13,7 @@ class TeamMembersController extends Controller
     public function index()
     {
         $teams=Team::with('department')->get();
-        $employees=Employee::all();
+        $employees=Employee::where('status','!=','0')->get();
         return view('admin.teams.team_member')->with('teams',$teams)->with('employees',$employees);
     }
     public function create(Request $request)

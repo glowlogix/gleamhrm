@@ -15,7 +15,7 @@ class TeamController extends Controller
     {
         $departments = Department::where('status','Active')->get();
         $teams=Team::with('department')->get();
-        $employees=Employee::all();
+        $employees=Employee::where('status','!=','0')->get();
         return view('admin.teams.index')->with('departments',$departments)->with('teams',$teams)->with('employees',$employees);
     }
 

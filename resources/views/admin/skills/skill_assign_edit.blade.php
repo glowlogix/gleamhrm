@@ -44,7 +44,7 @@
                                                             Are you sure you want to Un-Assigned this Skill <br>Form Employee ?
                                                         </div>
                                                         <div class="modal-header">
-                                                            <h4>{{isset($team_member->id) ? $team_member->employee->firstname : ''}}</h4>
+                                                            <h4>{{isset($team_member->id) ? $team_member->employee->firstname . $team_member->employee->lastname: ''}}</h4>
                                                         </div>
                                                         <div class="modal-footer">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>

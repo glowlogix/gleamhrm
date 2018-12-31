@@ -50,15 +50,29 @@
                                 @if(
                                     ($employee->leave_status == 'Pending' && $employee->leave_status == '')
                                 )
-                                    <form action="{{ route('leave.destroy' , $employee->employee_id )}}" method="post">
-                                        {{ csrf_field() }}
-                                        <button class=" btn btn-danger btn-sm " type="submit"><i class="fas fa-window-close text-white "></i></button>
-                                    </form>
-                                    &nbsp;
-                                    <a class="btn btn-info btn-sm" href="{{route('leave.edit',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
                                 @endif
-                                &nbsp;
-                                <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Show"> <i class="fas fa-eye text-white "></i></a>
+                                    &nbsp <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Show"> <i class="fas fa-eye text-white "></i></a>
+                                    &nbsp
+                                    <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{$employee->leave_id }}"  data-original-title="Close"><i class="fas fa-window-close text-white"></i></a>
+                                    <div class="modal fade" id="confirm-delete{{$employee->leave_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                        <div class="modal-dialog">
+                                            <div class="modal-content">
+                                                <form action="{{ route('leave.delete' , $employee->leave_id)}}" method="post">
+                                                    {{ csrf_field() }}
+                                                    <div class="modal-header">
+                                                        Are you sure you want to delete this Leaves?
+                                                    </div>
+                                                    <div class="modal-header">
+                                                        <h4>{{$employee->firstname}} {{$employee->lastname}}</h4>
+                                                    </div>
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                                        <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
                             </td>
                             <td>
                                 @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
@@ -104,16 +118,12 @@
             });
         </script>
         <script>
-            $(function () {
-                $('#myTable').DataTable(
-                    {
-
-                        info: false,
-                        ordering:false
-
-                    }
-                );
-
+            $(document).ready(function() {
+                $('#myTable').DataTable({
+                    stateSave: true,
+                    info: false,
+                    ordering:false
+                });
             });
         </script>
     @endpush

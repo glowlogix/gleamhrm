@@ -13,9 +13,7 @@
         <div class="card-body">
             <div class="float-right">
                 <select class="form-control" id="filter">
-                    @if(request()->is('employees'))
-                    <option selected>Select Employees</option>
-                    @endif
+                    <option value="select">Select Employees</option>
                     @foreach($filters as $filter)
                     <option value="{{$filter}}" @if($filter==$selectedFilter) selected @endif>{{ucfirst(trans($filter))}}</option>
                     @endforeach
@@ -66,7 +64,13 @@
     <script type="text/javascript">
         $(document).ready(function () {
             $("#filter").change(function(e){
-                var url = "{{route('employees')}}/" + $(this).val();
+                if ($(this).val()=== "select" ){
+
+                    var url = "{{route('employees')}}/"
+                }
+                else{
+                    var url = "{{route('employees')}}/" + $(this).val();
+                }
 
                 if (url) {
                     window.location = url;
@@ -96,43 +100,9 @@ $("input.zoho").click(function (event) {
     });
 </script>
 <script>
-    $(function () {
-        $('#myTable').DataTable();
-        $(function () {
-            var table = $('#example').DataTable({
-                "columnDefs": [{
-                    "visible": false,
-                    "targets": 2
-                }],
-                "order": [
-                    [2, 'asc']
-                ],
-                "displayLength": 25,
-                "drawCallback": function (settings) {
-                    var api = this.api();
-                    var rows = api.rows({
-                        page: 'current'
-                    }).nodes();
-                    var last = null;
-                    api.column(2, {
-                        page: 'current'
-                    }).data().each(function (group, i) {
-                        if (last !== group) {
-                            $(rows).eq(i).before('<tr class="group"><td colspan="5">' + group + '</td></tr>');
-                            last = group;
-                        }
-                    });
-                }
-            });
-            // Order by the grouping
-            $('#example tbody').on('click', 'tr.group', function () {
-                var currentOrder = table.order()[0];
-                if (currentOrder[0] === 2 && currentOrder[1] === 'asc') {
-                    table.order([2, 'desc']).draw();
-                } else {
-                    table.order([2, 'asc']).draw();
-                }
-            });
+    $(document).ready(function() {
+        $('#myTable').DataTable({
+            stateSave: true,
         });
     });
 </script>

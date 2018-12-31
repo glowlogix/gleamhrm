@@ -65,7 +65,6 @@ class EmployeeController extends Controller
 		"on_leave" 		=> "On Leave",
 	];
     public $filters = [
-        "active" 		=> "active",
         "all" 		=>  "all",
         "contractual" 	=> "contractual",
         "intern" 		=> "intern",
@@ -87,14 +86,14 @@ class EmployeeController extends Controller
 	    if($id=='all'){
             $data = Employee::with('branch','department')->get();
         }
-        elseif ($id=="active"|| $id==""){
-            $data = Employee::with('branch','department')->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->where('employment_status','!=','on_leave')->get();
+        elseif ($id==""){
+            $data = Employee::with('branch','department')->where('status','!=','0')->get();
         }else{
             $data = Employee::with('branch','department')
                 ->where('employment_status', $id )
                 ->get();
         }
-		$active_employees = Employee::where('status',1 )->where('employment_status', '!=', 'resigned')->where('employment_status', '!=', 'terminated')->where('employment_status','!=','on_leave')->count();
+		$active_employees = Employee::where('status','1' )->count();
 		return view('admin.employees.index',['title' => 'All Employees'])
 		->with('employees', $data)	
 		->with('active_employees', $active_employees)	
@@ -377,6 +376,7 @@ class EmployeeController extends Controller
 		$employee->city 			= $request->city;
         $employee->department_id 			= $request->department_id;
 		$employee->gender 			= $request->gender;
+		$employee->status 			= $request->status;
 
 		if (!empty($request->password)) {
 			$employee->password			= Hash::make($request->password);

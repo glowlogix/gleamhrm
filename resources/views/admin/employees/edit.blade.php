@@ -274,6 +274,17 @@
                                         </div>
                                     </div>
                                 </div>
+                                <div class="col-md-6">
+                                    <div class="form-group row">
+                                        <label class="control-label text-right col-md-3">Status</label>
+                                        <div class="col-md-9">
+                                            <select class="form-control custom-select" name="status">
+                                                <option value="0" @if($employee->status0 == "0") selected @endif>InActive</option>
+                                                <option value="1" @if($employee->status == "1") selected @endif>Active</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                             <br>
                             <div class="col-md-12">

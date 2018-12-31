@@ -116,7 +116,7 @@
                                                             <label class="control-label">Employee</label>
                                                             <select  name="team_member"  class="form-control">
                                                                 @foreach($employees as $employee)
-                                                                    <option value="{{$employee->id}}">{{$employee->firstname}}</option>
+                                                                    <option value="{{$employee->id}}">{{$employee->firstname}} {{$employee->lastname}}</option>
                                                                 @endforeach
                                                             </select>
                                                         </div>

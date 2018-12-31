@@ -101,6 +101,7 @@ class LeaveController extends Controller
             'leaves.line_manager AS line_manager',
             'leaves.point_of_contact AS point_of_contact',
             'leaves.status AS leave_status',
+            'leaves.id AS leave_id'
         ]);
         return view('admin.leaves.employeeleaves',$this->metaResponse(),[
             'employees' => $leaves,
@@ -143,7 +144,7 @@ class LeaveController extends Controller
         }
         $this->meta['title'] = 'Create Leave';
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id',$employee_id)->with('lineManager')->first();
-        $employees = Employee::orderBy('firstname')->get();
+        $employees = Employee::where('status','!=','0')->orderBy('firstname')->get();
         $selectedEmployee=Employee::where('id',$employee_id)->first();
         $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
         return view('admin.leaves.admincreateleave',$this->metaResponse(),[
@@ -171,6 +172,7 @@ class LeaveController extends Controller
     public function adminStore(Request $request)
     {
         $this->validate($request,[
+            'leave_type' => 'required',
             'datefrom' => 'required',
             'dateto' => 'required|after_or_equal:datefrom',
         ]);
@@ -431,7 +433,7 @@ class LeaveController extends Controller
         $leave->status = $status;
         $leave->save();
 
-        return redirect()->back()->with('success','Leave status is updated succesfully');   
+        return redirect()->back()->with('success','Leave status is updated successfully');
     }
 
     /**
@@ -444,7 +446,13 @@ class LeaveController extends Controller
     {
         $leave = Leave::where('employee_id',$id)->first();
         $leave->delete();
-        return redirect()->back()->with('success','Leave is deleted succesfully');   
+        return redirect()->back()->with('success','Leave is deleted successfully');
+    }
+    public function leaveDelete($id)
+    {
+        $leave = Leave::where('id',$id)->first();
+        $leave->delete();
+        return redirect()->back()->with('success','Leave is deleted successfully');
     }
 
 }

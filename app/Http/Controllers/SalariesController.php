@@ -38,7 +38,7 @@ class SalariesController extends Controller
         $leavesDeduction=array();
         $netPayables=array();
         $employeeApprovedLeaves=array();
-        $salaryEmployees= Employee::where('employment_status','!=','resigned')->get();
+        $salaryEmployees= Employee::where('status','!=','0')->get();
 
         foreach ($salaryEmployees as $employee)
         {
@@ -149,7 +149,7 @@ class SalariesController extends Controller
 //            $absentDeduction[$employee->id]=($employee->basic_salary/$workingDays)* $AbsentCount[$employee->id]*2;
 //            $netPayables[$employee->id]=($employee->basic_salary- $leavesDeduction[$employee->id]-$absentDeduction[$employee->id])+($employee->bonus);
         }
-        $employees = Employee::where('employment_status','!=','resigned')->get();
+        $employees = Employee::where('status','!=','0')->get();
         return view('admin.salary.index')->with('month',$id)->with('employees', $employees)->with('ApprovedCount',$approvedCount)->with('unApprovedCount',$unApprovedCount)->with('netPayables',$netPayables)->with('AbsentCounts',$AbsentCount)->with('presents',$present);
     }
 

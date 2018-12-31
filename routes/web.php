@@ -606,6 +606,11 @@ Route::group(['middleware' => 'auth'], function () {
             'as' => 'leave.destroy'
         ]);
 
+        Route::Post('/leave/delete/{id}', [
+            'uses' => 'LeaveController@leaveDelete',
+            'as' => 'leave.delete'
+        ]);
+
         //upload Docs
         Route::get('/documents', [
             'as' => 'documents',
