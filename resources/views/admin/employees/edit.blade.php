@@ -76,7 +76,7 @@
                                         <div class="col-md-9">
                                             <select class="form-control custom-select" name="designation">
                                                 @foreach($designations as  $designation)
-                                                    <option value="{{$designation->designation_name}}" @if($employee->designation == strtolower($designation->designation_name)) selected @endif>{{$designation->designation_name}}</option>
+                                                    <option value="{{$designation->designation_name}}" @if($employee->designation ==$designation->designation_name) selected @endif>{{$designation->designation_name}}</option>
                                                 @endforeach
                                             </select>
                                         </div>
