@@ -58,7 +58,7 @@
                     field: 'firstname',
                 },
             ],
-            eventClick:function(event, jsEvent, view) {
+                    eventClick:function(event, jsEvent, view) {
                 if (event.title.search('Birthday') !== -1) {
                     // window.location = "{{route('employees')}}/"+event.resourceId + "/" + event.date;
                     // console.log('found');
@@ -85,7 +85,6 @@
     $("#myTextBox").on("change paste keyup", function() {
         $('#calendar').fullCalendar('gotoDate', $(this).val());
     });
-
 </script>
 @endpush
 @stop

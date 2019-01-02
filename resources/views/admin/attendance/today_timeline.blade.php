@@ -72,7 +72,7 @@
                     <thead>
                     <tr>
                         <th>Name</th>
-                        <th>City</th>
+                        <th>Designation</th>
                         <th>Branch</th>
                         <th>Time in</th>
                         <th>Time Out</th>
@@ -85,7 +85,7 @@
 
                         <tr>
                             <td>{{$employee['firstname']}} {{$employee['lastname']}}</td>
-                            <td>{{$employee['city']}}</td>
+                            <td>{{$employee['designation']}}</td>
                             <td>{{isset($employee['branch']) ? $employee['branch']['name'] : ''}}</td>
                             <td>
                                 @if(

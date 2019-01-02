@@ -77,12 +77,14 @@
                         Auth::user()->isAllowed('AttendanceController:showTimeline')
                         )
                         <select class="form-control" id="employee">
+                            <option value={{Auth::user()->id}} @if(Auth::user()->type=='remote')Selected @endif>Select Employee</option>
                             @foreach($employees as $employee)
-                            <option value="{{$employee->id}}" @if($employeeId==$employee->id) Selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
+                            <option value="{{$employee->id}}"  @if($employeeId==$employee->id) Selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
                             @endforeach
                         </select>
                         @endif
                         </span>
+            <br></br>
             <div id="calendar">
             </div>
             <div id="calendarModal" class="modal fade">
@@ -154,11 +156,7 @@
                         dow: [{{ $dow }}],
                     },
                     showNonCurrentDates: false,
-                    header: {
-                        left:   'title',
-                        center: '',
-                        right:  'today '
-                    },
+
                     firstDay: 1,
                     slotWidth :80,
 

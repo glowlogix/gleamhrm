@@ -114,6 +114,7 @@
 											<select class="form-control custom-select" name="status">
 												<option value="pending">Pending</option>
 												<option value="Approved">Approved</option>
+												<option value="Approved">Declined</option>
 											</select>
 										</div>
 									</div>
