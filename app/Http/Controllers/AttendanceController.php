@@ -383,13 +383,12 @@ class AttendanceController extends Controller
     public function updateTotalTime(Request $request)
     {
         $attendance = AttendanceBreak::where(['date' => $request->date, 'employee_id' => $request->employee_id])->orderBy('timestamp_break_start', 'asc')->get();
-        // dump($attendance);
-        $first_timestamp_in = $attendance->first()->timestamp_in;
-        // dump($first_time_in);
-        $last_timestamp_out = $attendance->last()->timestamp_out;
-        // dump($last_time_out);
+
+        $attendanceSummaryTime=AttendanceSummary::where(['date' => $request->date, 'employee_id' => $request->employee_id])->first();
+        $first_timestamp_in = $attendanceSummaryTime->first_timestamp_in;
+
         $totalbreaktime = 0;
-        if($attendance!=null){
+        if($attendance->count()>0){
         foreach ($attendance as $i => $row) {
             $in = Carbon::parse($row->timestamp_break_start);
             $out = Carbon::parse($row->timestamp_break_end);
