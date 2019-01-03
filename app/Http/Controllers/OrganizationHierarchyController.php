@@ -98,7 +98,7 @@ class OrganizationHierarchyController extends Controller
         $this->meta['title'] = 'Create Role';
         $all_controllers = [];
         
-        $employees = Employee::all();
+        $employees = Employee::where('status','!=','0')->get();
         $OrganizationHierarchyCnt = OrganizationHierarchy::all()->count();
         return view('admin.organization_hierarchy.create',$this->metaResponse())->with([
             'employees' => $employees,

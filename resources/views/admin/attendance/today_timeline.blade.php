@@ -77,6 +77,7 @@
                         <th>Time in</th>
                         <th>Time Out</th>
                         <th>Total Time</th>
+                        <th>Delay</th>
                         <th>Actions</th>
                     </tr>
                     </thead>
@@ -100,6 +101,12 @@
                                     $employee['attendanceSummary'][0]['last_timestamp_out'] != ''
                                 )
                                 {{Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_timestamp_out'])->format('h:i a')}}
+                                    @else
+                                        @foreach($employeeLeave as $key=>$leave)
+                                            @if($employee->id==$key)
+                                              <p class="text-white badge badge-danger badge-warning font-weight-bold">On Leave</p>
+                                            @endif
+                                        @endforeach
                                 @endif
                             </td>
 
@@ -111,6 +118,7 @@
                                     {{isset($employee['attendanceSummary'][0]) ? gmdate('H:i', floor(number_format(($employee['attendanceSummary'][0]['total_time'] / 60), 2, '.', '') * 3600))  : ''}}
                             @endif
                             </td>
+                            <td>{{isset($employee['attendanceSummary'][0]) ? $employee['attendanceSummary'][0]['is_delay'] : ''}}</td>
                             <td class="text-nowrap">
                                 <a class="btn btn-info btn-sm" href="{{route('attendance.createBreak', $employee['id'])}}/{{$today}}" data-original-title="Add"> <i class="fas fa-plus text-white"></i></a>
                                 <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white"></i></a>

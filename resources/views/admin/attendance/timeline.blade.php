@@ -52,10 +52,14 @@
             contentHeight:500,
             firstDay: 1,
             slotWidth : 100,
+            resourceAreaWidth:300,
             resourceColumns: [
                 {
                     labelText: 'Employees',
                     field: 'firstname',
+                },
+                {
+                    field: 'lastname',
                 },
             ],
                     eventClick:function(event, jsEvent, view) {
