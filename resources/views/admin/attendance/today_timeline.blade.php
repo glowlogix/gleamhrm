@@ -104,9 +104,12 @@
                                     @else
                                         @foreach($employeeLeave as $key=>$leave)
                                             @if($employee->id==$key)
-                                              <p class="text-white badge badge-danger badge-warning font-weight-bold">On Leave</p>
+                                              <p class="text-white badge badge-warning  font-weight-bold">On Leave</p>
+                                            @else
+                                                <p class="text-white badge badge-danger badge-warning font-weight-bold">Absent</p>
                                             @endif
                                         @endforeach
+
                                 @endif
                             </td>
 

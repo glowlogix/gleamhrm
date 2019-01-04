@@ -545,8 +545,8 @@ class AttendanceController extends Controller
 
         $text = $request['event']['text'];
 
-        $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'allah haffiz','Assalam o Alikum','Asslamo Alaikum');
-        $checkOutText = array("ah", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz",'allah haffiz');
+        $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum','Assalam o Alikum','Asslamo Alaikum');
+        $checkOutText = array("ah", "allah haffiz","allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz",'allah haffiz');
 
         if (in_array(strtolower($text), $checkInText) == true) {
             $text = 'aoa';
