@@ -55,3 +55,17 @@ Once done migrating and seeding you will have default user:
 
     email: admin@glowlogix.com
     password: admin   
+
+## Docker installation
+
+1. Install Docker and Docker Compose for the operating system of your choice.
+2. Get into your project directory (`cd hrm`)
+3. Build the docker containers using `docker-compose build --no-cache --pull --force-rm`
+4. Run the containers using `docker-compose up -d`
+5. Access the PHP container using `docker exec -it hrm_phpfpm_1 bash`
+6. Run `composer install` to install of the composer dependencies.
+7. Rename the docker example `.env` file using `cp .env.docker.example .env`
+8. Run `php artisan key:generate` to generate an application key (APP_KEY)
+9. Run `php artisan migrate` to run all of the migration
+10. Add `127.0.0.1 hrm.local:8080` to your `/etc/hosts` file
+11. Access the site using `hrm.local:8080` in your browser
