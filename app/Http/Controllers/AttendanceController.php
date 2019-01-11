@@ -180,11 +180,11 @@ class AttendanceController extends Controller
         foreach ($leaveDate as $key=>$leave){
             if(in_array($today,$leave)){
                 $leavesCount=$leavesCount+1;
-                $employeeLeave[$key]=$leave;
+                $employeeLeave[$key]=$key;
             }
         }
 //leaves Count
-        $present=AttendanceSummary::join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type','office')->where('employees.status','!=','0')->where('date' ,$today)->count();
+        $present=AttendanceSummary::with('branch')->join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type','office')->where('employees.status','!=','0')->where('date' ,$today)->count();
         $employeeCount=Employee::where('type','office')->where('status','!=','0')->count();
         $absent=$employeeCount-$present-$leavesCount;
         $delays=AttendanceSummary::join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type','office')->where('employees.status','!=','0')->where('date' ,$today)->where('is_delay','yes')->count();
@@ -906,7 +906,8 @@ class AttendanceController extends Controller
             }
             $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
             $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
-            $total_time = round(Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)) / 60, '2');
+//            $total_time = round(Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)) / 60, '2');
+            $total_time=gmdate('H:i', floor(number_format(($value->total_time/60), 2, '.', '') * 3600));
             $events[]=[
                 "resourceId" => $value->employee_id,
                 "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",

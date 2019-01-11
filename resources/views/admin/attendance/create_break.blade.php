@@ -105,7 +105,7 @@
                                 <label class="control-label text-right col-md-6">Total Hours:</label>
                                 <div class="col-md-3 ">
                                     @if(isset($attendance_summary->total_time))
-                                        {{ number_format((($attendance_summary->total_time)/60), 2, '.', '')}}
+                                        {{gmdate('H:i', floor(number_format(($attendance_summary->total_time/60), 2, '.', '') * 3600))}}
                                     @endif
                                 </div>
                             </div>

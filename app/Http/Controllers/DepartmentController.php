@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Department;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Session;
 class DepartmentController extends Controller
 {

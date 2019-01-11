@@ -95,6 +95,14 @@
                                     )
                                 {{isset($employee['attendanceSummary'][0]) ? Carbon\Carbon::parse($employee['attendanceSummary'][0]['first_timestamp_in'])->format('h:i a') : ''}}</td>
                                 @endif
+                                @foreach($employeeLeave as $key=>$leave)
+                                @if( $employee->id==$key)
+                                    <p class="text-white badge badge-warning  font-weight-bold">On Leave</p>
+                                    @endif
+                                @endforeach
+                            @if(!isset($employee['attendanceSummary'][0]) && !in_array($employee->id,$employeeLeave))
+                                <p class="text-white badge badge-danger  font-weight-bold">Absent</p>
+                            @endif
                                 <td>
                                 @if(
                                     isset($employee['attendanceSummary'][0]) &&
@@ -102,15 +110,7 @@
                                 )
                                 {{Carbon\Carbon::parse($employee['attendanceSummary'][0]['last_timestamp_out'])->format('h:i a')}}
                                     @else
-                                        @foreach($employeeLeave as $key=>$leave)
-                                            @if($employee->id==$key)
-                                              <p class="text-white badge badge-warning  font-weight-bold">On Leave</p>
-                                            @else
-                                                <p class="text-white badge badge-danger badge-warning font-weight-bold">Absent</p>
-                                            @endif
-                                        @endforeach
-
-                                @endif
+                                 @endif
                             </td>
 
                             <td>
