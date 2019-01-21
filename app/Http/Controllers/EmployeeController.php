@@ -125,6 +125,7 @@ class EmployeeController extends Controller
 			'personal_email' => 'required|email|unique:employees',
 			'contact_no' => 'required|unique:employees|size:11',
             'gender' => 'required',
+            'picture'=>'max:1000'
 
             // 'cnic' => 'size:13',
 		]);
@@ -337,7 +338,7 @@ class EmployeeController extends Controller
 			'official_email' => 'required|email|unique:employees,official_email,'.$id,
 			'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
 			'contact_no' 	 => 'required|size:11|unique:employees,contact_no,'.$id,
-            'picture' 		 => 'image|mimes:jpg,png,jpeg,gif,svg|max:2048',
+            'picture' 		 => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
 			// 'cnic' => 'size:13',
 		]);
 

@@ -905,8 +905,13 @@ class AttendanceController extends Controller
                 $delays = "";
             }
             $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
-            $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
-//            $total_time = round(Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in)) / 60, '2');
+
+            if($value->last_timestamp_out!=''){
+                $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
+            }
+            else{
+                $timeOut=0;
+            }
             $total_time=gmdate('H:i', floor(number_format(($value->total_time/60), 2, '.', '') * 3600));
             $events[]=[
                 "resourceId" => $value->employee_id,
@@ -935,7 +940,7 @@ class AttendanceController extends Controller
                 "title" => $value->leaveType->name . "\n" . "Reason:" . $value->reason . "\n" . "Status:" . $value->status,
                 "date" => $value->datefrom,
                 "start" => Carbon::parse($value->datefrom)->toDateString(),
-                "end" => Carbon::parse($value->dateto)->toDateString(),
+                "end" => date('Y-m-d', strtotime($value->dateto .' +1 day')),
                 "color" => $color,
             ];
         }
@@ -1130,8 +1135,13 @@ class AttendanceController extends Controller
                         $delays = "";
                     }
                     $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
-                    $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
-                    $total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in))) / 60, '2');
+                    if ($value->last_timestamp_out!=""){
+
+                        $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
+                    }
+                    else{
+                        $timeOut=0;
+                    }$total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in))) / 60, '2');
                     $events[] = [
                         "resourceId" => $value->employee_id,
                         "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
