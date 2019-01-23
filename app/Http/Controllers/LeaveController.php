@@ -21,7 +21,7 @@ use Mail;
 class LeaveController extends Controller
 {
     use MetaTrait;
-    
+
     public $leave_types = [
         "unpaid_leave" => "Unpaid Leave",
         "half_leave" => "Half Leave",
@@ -45,10 +45,10 @@ class LeaveController extends Controller
     public function index()
     {
         $employee = Auth::User();
-        $this->meta['title'] = 'Show Leaves';  
+        $this->meta['title'] = 'Show Leaves';
         $leaves = Leave::where('employee_id', $employee->id)->with('leaveType')->get();
 
-        $consumed_leaves = 0; 
+        $consumed_leaves = 0;
         if ($leaves->count() > 0) {
             foreach ($leaves as $leave) {
                 $datefrom = Carbon::parse($leave->datefrom);
@@ -57,37 +57,35 @@ class LeaveController extends Controller
             }
         }
 
-        return view('admin.leaves.showleaves',$this->metaResponse(),[
+        return view('admin.leaves.showleaves', $this->metaResponse(), [
             'leaves' => $leaves,
             'consumed_leaves' => $consumed_leaves,
             'employee' => $employee,
         ]);
     }
 
-    public function employeeleaves($id="")
+    public function employeeleaves($id = "")
     {
-        $this->meta['title'] = 'Show Employee Leaves';  
+        $this->meta['title'] = 'Show Employee Leaves';
         $user = Auth::user()->id;
         if ($user == 1) {
-            if($id=='Approved' || $id=='Declined'){
-                $leaves = Leave::leftJoin('employees', function($join) {
+            if ($id == 'Approved' || $id == 'Declined') {
+                $leaves = Leave::leftJoin('employees', function ($join) {
                     $join->on('employees.id', '=', 'leaves.employee_id');
                     // $join->whereIn('leaves.status', ['', 'Pending']);
-                })->where('leaves.status',$id);
-            }
-            else{
-                $leaves = Leave::leftJoin('employees', function($join) {
+                })->where('leaves.status', $id);
+            } else {
+                $leaves = Leave::leftJoin('employees', function ($join) {
                     $join->on('employees.id', '=', 'leaves.employee_id');
                 });
             }
-        }
-        else{
-            $leaves = Leave::leftJoin('employees', function($join) use ($user) {
+        } else {
+            $leaves = Leave::leftJoin('employees', function ($join) use ($user) {
                 $join->on('employees.id', '=', 'leaves.employee_id');
                 // $join->whereIn('leaves.status', ['', 'Pending']);
-                $join->where(function($q) use ($user) {
+                $join->where(function ($q) use ($user) {
                     $q->where('leaves.line_manager', $user)
-                    ->orWhere('leaves.point_of_contact', $user);
+                        ->orWhere('leaves.point_of_contact', $user);
                 });
             });
         }
@@ -103,17 +101,17 @@ class LeaveController extends Controller
             'leaves.status AS leave_status',
             'leaves.id AS leave_id'
         ]);
-        return view('admin.leaves.employeeleaves',$this->metaResponse(),[
+        return view('admin.leaves.employeeleaves', $this->metaResponse(), [
             'employees' => $leaves,
-        ])->with('id',$id);
+        ])->with('id', $id);
     }
 
     public function indexEmployee($id)
     {
-        $this->meta['title'] = 'Show Leaves';  
+        $this->meta['title'] = 'Show Leaves';
         $leaves = Leave::where('employee_id', $id)->get();
-        
-        return view('admin.leaves.employeeshowleaves',$this->metaResponse(),['leaves' => $leaves]);
+
+        return view('admin.leaves.employeeshowleaves', $this->metaResponse(), ['leaves' => $leaves]);
     }
 
     /**
@@ -124,54 +122,54 @@ class LeaveController extends Controller
     public function create()
     {
         $id = Auth::User()->id;
-        $this->meta['title'] = 'Create Leave';    
+        $this->meta['title'] = 'Create Leave';
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $id)->with('lineManager')->first();
         $employees = Employee::all();
         $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
-        return view('admin.leaves.create',$this->metaResponse(),[
+        return view('admin.leaves.create', $this->metaResponse(), [
             'employees' => $employees,
             'line_manager' => $line_manager,
-            'leave_types' => LeaveType::where('status','1')->get(),
+            'leave_types' => LeaveType::where('status', '1')->get(),
         ]);
     }
-    public function adminCreate($id="")
+
+    public function adminCreate($id = "")
     {
-        if($id!=""){
-            $employee_id=$id;
-        }
-        else{
-            $employee_id=Auth::user()->id;
+        if ($id != "") {
+            $employee_id = $id;
+        } else {
+            $employee_id = Auth::user()->id;
         }
         $this->meta['title'] = 'Create Leave';
-        $OrganizationHierarchy = OrganizationHierarchy::where('employee_id',$employee_id)->with('lineManager')->first();
-        $employees = Employee::where('status','!=','0')->orderBy('firstname')->get();
-        $selectedEmployee=Employee::where('id',$employee_id)->first();
+        $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $employee_id)->with('lineManager')->first();
+        $employees = Employee::where('status', '!=', '0')->orderBy('firstname')->get();
+        $selectedEmployee = Employee::where('id', $employee_id)->first();
         $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
-        return view('admin.leaves.admincreateleave',$this->metaResponse(),[
+        return view('admin.leaves.admincreateleave', $this->metaResponse(), [
             'employees' => $employees,
             'line_manager' => $line_manager,
-            'leave_types' => LeaveType::where('status','1')->get(),
-            'selectedEmployee'=>$selectedEmployee,
+            'leave_types' => LeaveType::where('status', '1')->get(),
+            'selectedEmployee' => $selectedEmployee,
         ]);
     }
 
     public function EmployeeCreate()
     {
-        $this->meta['title'] = 'Create Leave';    
+        $this->meta['title'] = 'Create Leave';
         $employees = Employee::all();
-        return view('admin.leaves.create',$this->metaResponse(),['employees' => $employees]);
+        return view('admin.leaves.create', $this->metaResponse(), ['employees' => $employees]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
+     * @param  \Illuminate\Http\Request $request
      * @return \Illuminate\Http\Response
      */
 
     public function adminStore(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'leave_type' => 'required',
             'datefrom' => 'required',
             'dateto' => 'required|after_or_equal:datefrom',
@@ -189,12 +187,12 @@ class LeaveController extends Controller
             ->whereDate('date', '<=', $dateToTime->toDateString())
             ->get();
 
-        if($attendance_summaries->count() > 0){
+        if ($attendance_summaries->count() > 0) {
             $msg = '';
             foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '. $attendance_summary->date;
+                $msg .= ' ' . $attendance_summary->date;
             }
-            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+            return redirect()->back()->with('error', 'Employee was already present on dates: ' . $msg);
         }
 
         $leave = Leave::create([
@@ -212,38 +210,38 @@ class LeaveController extends Controller
 
         // $this->sendEmail($leave);
 
-        if ($leave){
-            return redirect()->route('employeeleaves')->with('success','Leave for Employee is created successfully');
+        if ($leave) {
+            return redirect()->route('employeeleaves')->with('success', 'Leave for Employee is created successfully');
         }
     }
 
     public function store(Request $request)
     {
-        $this->validate($request,[
+        $this->validate($request, [
             'datefrom' => 'required',
             'dateto' => 'required|after_or_equal:datefrom',
         ]);
         $employee_id = Auth::User()->id;
         $leave_type = $request->leave_type;
-        
+
         $dateFromTime = Carbon::parse($request->datefrom);
         $dateToTime = Carbon::parse($request->dateto);
-        
+
         $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
-        
+
         $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
             ->whereDate('date', '>=', $dateFromTime->toDateString())
             ->whereDate('date', '<=', $dateToTime->toDateString())
             ->get();
 
-        if($attendance_summaries->count() > 0){
+        if ($attendance_summaries->count() > 0) {
             $msg = '';
             foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '. $attendance_summary->date;
+                $msg .= ' ' . $attendance_summary->date;
             }
-            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+            return redirect()->back()->with('error', 'Employee was already present on dates: ' . $msg);
         }
-        
+
         $leave = Leave::create([
             'employee_id' => $employee_id,
             'leave_type' => $leave_type,
@@ -256,43 +254,42 @@ class LeaveController extends Controller
             'cc_to' => $request->cc_to,
             'status' => 'pending',
         ]);
-        
+
         // $this->sendEmail($leave);
 
-        if ($leave){
-           return redirect()->route('leave.index')->with('success','Leave is created succesfully');
+        if ($leave) {
+            return redirect()->route('leave.index')->with('success', 'Leave is created succesfully');
         }
     }
 
-    public function sendEmail($leave,Request $request)
+    public function sendEmail($leave, Request $request)
     {
-        Mail::raw($leave->description, function($message) use ($leave)
-        {
+        Mail::raw($leave->description, function ($message) use ($leave) {
             $message->from('hr@glowlogix.com', 'HR GlowLogix');
             $message->to($leave->cc_to)->subject($leave->subject);
         });
 
-        return 'mail sent to '. $request->email;
+        return 'mail sent to ' . $request->email;
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\Leave  $leave
+     * @param  \App\Leave $leave
      * @return \Illuminate\Http\Response
      */
     public function show($id)
     {
         $this->meta['title'] = 'Leave Details';
-                
+
         $leave = Leave::where(['id' => $id])->with([
-        // $leave = Leave::find($id)->with([
-            'employee', 
+            // $leave = Leave::find($id)->with([
+            'employee',
             'lineManager',
             'pointOfContact',
             'leaveType',
         ])->first();
-        
+
         $dateFromTime = Carbon::parse($leave->datefrom);
         $dateToTime = Carbon::parse($leave->dateto);
         $leave_days = $dateToTime->diffInDays($dateFromTime) + 1;
@@ -304,16 +301,16 @@ class LeaveController extends Controller
         // Iterate over the period
         foreach ($period as $date) {
             if (strstr($branch->address, 'Islamabad')) { //if islamabad offc sat off
-                if($date->format('l') == "Saturday"){
+                if ($date->format('l') == "Saturday") {
                     $leave_days--;
                 }
             }
-            if($date->format('l') == "Sunday"){
+            if ($date->format('l') == "Sunday") {
                 $leave_days--;
             }
         }
 
-        return view('admin.leaves.show',$this->metaResponse(),[
+        return view('admin.leaves.show', $this->metaResponse(), [
             'leave' => $leave,
             'leave_days' => $leave_days,
         ]);
@@ -322,23 +319,23 @@ class LeaveController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Leave  $leave
+     * @param  \App\Leave $leave
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $this->meta['title'] = 'Update Leave';
-        
+
         $employee_id = Auth::User()->id;
         $OrganizationHierarchy = OrganizationHierarchy::where('employee_id', $employee_id)->with('lineManager')->first();
         $line_manager = isset($OrganizationHierarchy->lineManager) ? $OrganizationHierarchy->lineManager : '';
-        
+
         $employees = Employee::all();
-        
+
         $leave = Leave::find($id);
         // $this->sendEmail($leave);
 
-        return view('admin.leaves.edit',$this->metaResponse(),[
+        return view('admin.leaves.edit', $this->metaResponse(), [
             'employees' => $employees,
             'line_manager' => $line_manager,
             'leave_types' => LeaveType::all(),
@@ -350,109 +347,111 @@ class LeaveController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request  $request
-     * @param  \App\Leave  $leave
+     * @param  \Illuminate\Http\Request $request
+     * @param  \App\Leave $leave
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $leave = Leave::find($id);
 
-        $this->validate($request,[
+        $this->validate($request, [
             'datefrom' => 'required',
             'dateto' => 'required|after_or_equal:datefrom',
         ]);
 
         $dateFromTime = Carbon::parse($request->datefrom);
         $dateToTime = Carbon::parse($request->dateto);
-        
+
         $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
-        
+
         $attendance_summaries = AttendanceSummary::where(['employee_id' => $leave->employee_id])
             ->whereDate('date', '>=', $dateFromTime->toDateString())
             ->whereDate('date', '<=', $dateToTime->toDateString())
             ->get();
 
-        if($attendance_summaries->count() > 0){
+        if ($attendance_summaries->count() > 0) {
             $msg = '';
             foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '. $attendance_summary->date;
+                $msg .= ' ' . $attendance_summary->date;
             }
-            return redirect()->back()->with('error','Employee was already present on dates: '. $msg);
+            return redirect()->back()->with('error', 'Employee was already present on dates: ' . $msg);
         }
 
-        $leave->leave_type =  $request->leave_type;
-        $leave->datefrom =  $dateFromTime;
-        $leave->dateto =  $dateToTime;
-        $leave->subject =  $request->subject;
-        $leave->description =  $request->description;
-        $leave->line_manager =  $request->line_manager;
+        $leave->leave_type = $request->leave_type;
+        $leave->datefrom = $dateFromTime;
+        $leave->dateto = $dateToTime;
+        $leave->subject = $request->subject;
+        $leave->description = $request->description;
+        $leave->line_manager = $request->line_manager;
         $leave->point_of_contact = $request->point_of_contact;
-        $leave->cc_to =  $request->cc_to;
+        $leave->cc_to = $request->cc_to;
         $leave->status = 'Pending';
 
         $leave = $leave->save();
 
-        return redirect()->route('leave.index')->with('success','Leave is created succesfully');
+        return redirect()->route('leave.index')->with('success', 'Leave is created succesfully');
     }
 
-    function updateEmployeeLeaveType($employee_id, $leave_type_id){
-        
+    function updateEmployeeLeaveType($employee_id, $leave_type_id)
+    {
+
 
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Leave  $leave
+     * @param  \App\Leave $leave
      * @return \Illuminate\Http\Response
      */
     public function updateStatus($id, $status)
     {
         $leave = Leave::find($id);
         if ($leave->status == 'Approved') { // if already approved do nothing
-            return redirect()->back()->with('success','Leave already approved');   
+            return redirect()->back()->with('success', 'Leave already approved');
         }
-        
+
         if ($status == 'Approved') {
             $dateFromTime = Carbon::parse($leave->datefrom);
             $dateToTime = Carbon::parse($leave->dateto);
-            
+
             $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
 
             $employee_leave_type = EmployeeLeaveType::where([
                 'employee_id' => $leave->employee_id,
                 'leave_type_id' => $leave->leave_type,
             ])->first();
-            
+
             $cnt = $employee_leave_type->count -= $consumed_leaves;
-            
-            DB::statement("UPDATE employee_leave_type SET count = $cnt where employee_id = ".$leave->employee_id." AND leave_type_id = ". $leave->leave_type);
+
+            DB::statement("UPDATE employee_leave_type SET count = $cnt where employee_id = " . $leave->employee_id . " AND leave_type_id = " . $leave->leave_type);
         }
 
         $leave->status = $status;
         $leave->save();
 
-        return redirect()->back()->with('success','Leave status is updated successfully');
+        return redirect()->back()->with('success', 'Leave status is updated successfully');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Leave  $leave
+     * @param  \App\Leave $leave
      * @return \Illuminate\Http\Response
      */
-    public function destroy(Leave $leave,$id)
+    public function destroy(Leave $leave, $id)
     {
-        $leave = Leave::where('employee_id',$id)->first();
+        $leave = Leave::where('employee_id', $id)->first();
         $leave->delete();
-        return redirect()->back()->with('success','Leave is deleted successfully');
+        return redirect()->back()->with('success', 'Leave is deleted successfully');
     }
+
     public function leaveDelete($id)
     {
-        $leave = Leave::where('id',$id)->first();
+        $leave = Leave::where('id', $id)->first();
         $leave->delete();
-        return redirect()->back()->with('success','Leave is deleted successfully');
+        return redirect()->back()->with('success', 'Leave is deleted successfully');
     }
 
 }
