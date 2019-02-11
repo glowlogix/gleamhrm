@@ -67,8 +67,8 @@ class LeaveController extends Controller
     public function employeeleaves($id = "")
     {
         $this->meta['title'] = 'Show Employee Leaves';
-        $user = Auth::user()->id;
-        if ($user == 1) {
+        $user = Auth::user()->designation;
+        if ($user =="CEO" || $user =="Admin") {
             if ($id == 'Approved' || $id == 'Declined') {
                 $leaves = Leave::leftJoin('employees', function ($join) {
                     $join->on('employees.id', '=', 'leaves.employee_id');

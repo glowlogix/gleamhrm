@@ -194,6 +194,7 @@ class AttendanceController extends Controller
             'employees' => $employees,
             'today' => $today,
             'branch_id' => $id,
+            'today' => $today,
             'present' => $present,
             'absent' => $absent,
             'delays' => $delays,
@@ -301,6 +302,7 @@ class AttendanceController extends Controller
             'timestamp_break_start' => !empty($request->break_start) ? Carbon::parse($request->break_start) : '',
             'comment' => $request->comment,
         ];
+
         if (!empty($request->break_end)) {
             $attendance['timestamp_break_end'] = Carbon::parse($request->break_end);
         }
@@ -552,11 +554,13 @@ class AttendanceController extends Controller
             $text = 'aoa';
             $attendanceSummarycheck = AttendanceSummary::where('employee_id', $employee->id)->where('date', $date)->first();
             if ($attendanceSummarycheck == null) {
-                $request->employee_id = $employee->id;
-                $request->time_in = $time;
-                $request->time_out = "";
-                $request->date = $date;
-                $this->storeAttendanceSummaryToday($request);
+                $data = [
+                    'employee_id' => $employee->id,
+                    'first_timestamp_in' => $time,
+                    'date' => $date,
+                    'total_time' => 0,
+                ];
+                AttendanceSummary::create($data);
             }
         } elseif (strstr(strtolower($text), 'brb')) {
             $clean = array("_", ".", "-", "brb");
@@ -566,6 +570,7 @@ class AttendanceController extends Controller
                 'timestamp_break_start' => $time,
                 'comment' => $comment,
                 'date' => $date,
+                'total_time' => 0,
             ];
             AttendanceBreak::create($data);
         } elseif (strstr(strtolower($text), 'back')) {
@@ -1044,6 +1049,41 @@ class AttendanceController extends Controller
         return response()->json('success');
     }
 
+
+    public function mybot()
+    {
+
+        /* DriverManager::loadDriver(\BotMan\Drivers\Slack\SlackDriver::class);
+
+         // Create BotMan instance
+         $config = [
+             'slack' => [
+                 // 'token' => 'xoxp-8188862598-8188819876-462791872723-de4f3d8c55f00dc1d46827fbae51d864'
+                 'token' => 'xoxp-8188862598-433759455604-469796436497-af16f66263dfa5b7d260dd41faa0103f'
+             ]
+         ];
+         $botMan = BotManFactory::create($config);
+         $botman->on('event', function($payload, $bot) {
+             dump($payload);
+             dd($payload);
+         });
+
+
+         $botman->hears('brb', function (SlackBot $bot, $message) {
+           $bot->reply("You have already did aoa today!");
+           $bot->reply("What do you want to do please reply below!");
+         });
+         $botman->hears('aoa', function (SlackBot $bot, $message) {
+           $bot->reply("You have already did aoa today!");
+           $bot->reply("What do you want to do please reply below!");
+         });
+         $botman->hears('aoa', function (SlackBot $bot, $message) {
+           $bot->reply("You have already did aoa today!");
+           $bot->reply("What do you want to do please reply below!");
+         });
+         $loop->run();*/
+    }
+
     public function authUserTimeline($id = "")
     {
 
@@ -1250,6 +1290,14 @@ class AttendanceController extends Controller
         }
         Session::flash('success', 'Correction Email Sent To the HR');
         return redirect()->back();
+    }
+
+    public function Attendance_Summary_Delete($id)
+    {
+        $attendance_summary_delete = AttendanceSummary::find($id);
+        $attendance_summary_delete->delete();
+        Session::flash('success', 'Attendance Deleted Successfully.');
+        return redirect()->route("today_timeline");
     }
 
 }

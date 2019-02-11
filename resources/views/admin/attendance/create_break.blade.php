@@ -16,7 +16,33 @@
             <div class="card card-outline-info">
                 <div style="margin-top: 10px;margin-right: 10px">
                     <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('today_timeline')}}'">Back</button>
+                    @if(isset($attendance_summary))
+                    <a style="margin-left: 10px" data-toggle="modal" data-target="#confirm-delete{{ $department->id }}" class="btn btn-danger float-left text-white">Delete</a>
+                    @endif
                 </div>
+                @if(isset($attendance_summary))
+                <div class="modal fade" id="confirm-delete{{$attendance_summary->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                    <div class="modal-dialog">
+                        <div class="modal-content">
+                            <form action="{{ route('attendance.delete' ,$attendance_summary->id)}}" method="post">
+                                {{ csrf_field() }}
+                                <div class="modal-header">
+                                    Are you sure you want to delete Attendance Of?
+                                </div>
+                                <div class="modal-header">
+                                    <h4> @foreach($employees as $emp)
+                                            @if($emp_id == $emp->id) {{$emp->firstname}} {{$emp->lastname}} @endif
+                                        @endforeach</h4>
+                                </div>
+                                <div class="modal-footer">
+                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                                    <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+                @endif
                 <div class="card-body">
                     <form   class="form-horizontal" action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
                         {{csrf_field()}}

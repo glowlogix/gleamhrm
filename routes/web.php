@@ -699,6 +699,10 @@ Route::Post('/applicant/store', [
 ]);
 Route::get('/findjob','ApplicantController@findjob');
 
+Route::Post('/attendance/delete/{id}', [
+    'uses' => 'AttendanceController@Attendance_Summary_Delete',
+    'as' => 'attendance.delete'
+]);
 //Route::get('sendmail', 'SendMailController@sendMail');
 
 //Route::get('/ajax-job',function(){
