@@ -1,32 +1,14 @@
-# HRM - Human Resource Management
-Laravel 5.6 version is used to create the HRM system. The purpose of this system is to effectively manage HR. Each module performs a separate function within the HRM that helps with information gathering or tracking. HRM modules can assist with:
-1. Employee Management
-2. Leave Management
-3. Attendance Management
-4. Team Management
-5. Hiring Management
+# GleamHRM [![StyleCI](https://github.styleci.io/repos/121434773/shield?branch=master)](https://github.styleci.io/repos/121434773) [![GitHub Issues](https://img.shields.io/github/issues/glowlogix/gleamhrm)](#github-issues) [![GPLv3 License](https://img.shields.io/github/license/glowlogix/gleamhrm.svg)](https://github.com/glowlogix/gleamhrm/blob/master/LICENSE)
 
-## Official Documentation of Framework
+> Human Resource Management (HRM) System
 
-Documentation for the framework can be found on the [Laravel website](http://laravel.com/docs).
+Laravel 5.6 version is used to create the HRM system. The purpose of this system is to effectively manage HR functions. Each module performs a separate function within the HRM that helps with information gathering or tracking. HRM modules can assist with:
 
-## Contribution for the project
-
-    1. Fork it
-    2. Create your feature branch (git checkout -b my-new-feature)
-    3. Make your changes
-    4. Run the tests, adding new ones for your own code if necessary (phpunit)
-    5. Commit your changes (git commit -am 'Added some feature')
-    6. Push to the branch (git push origin my-new-feature)
-    7. Create new Pull Request
-
-## Project License
-
-The project is available to be used freely for personal and educational purposes, cloning the project does not gives you any rights to sell it online/offline.
-
-## License
-
-The Laravel framework is open-sourced software licensed under the [MIT license](http://opensource.org/licenses/MIT).
+* Employee Management
+* Leave Management
+* Attendance Management
+* Team Management
+* Hiring Management
 
 ## Requirement
 
@@ -69,3 +51,7 @@ Once done migrating and seeding you will have default user:
 9. Run `php artisan migrate` to run all of the migration
 10. Add `127.0.0.1 hrm.local:8080` to your `/etc/hosts` file
 11. Access the site using `hrm.local:8080` in your browser
+
+## License
+
+The GleamHRM is open-sourced software licensed under the [GNU GPLv3](LICENSE).
