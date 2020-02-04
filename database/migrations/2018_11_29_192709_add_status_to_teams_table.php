@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddStatusToTeamsTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddStatusToTeamsTable extends Migration
      */
     public function up()
     {
-        Schema::table('teams', function($table) {
+        Schema::table('teams', function ($table) {
             $table->integer('status')->after('department_id');
         });
     }
@@ -25,7 +24,7 @@ class AddStatusToTeamsTable extends Migration
      */
     public function down()
     {
-        Schema::table('teams', function($table) {
+        Schema::table('teams', function ($table) {
             $table->dropColumn('status');
         });
     }

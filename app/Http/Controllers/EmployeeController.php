@@ -2,34 +2,31 @@
 
 namespace App\Http\Controllers;
 
+use App\Branch;
 use App\Department;
 use App\Designation;
-use App\Mail\UpdateAccount;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Hash;
 use App\Employee;
 use App\LeaveType;
-use App\Salary;
-use App\Document;
-use App\Branch;
-use Session;
+use App\Mail\CompanyPoliciesMail;
+use App\Mail\EmailPasswordChange;
+use App\Mail\SimSimMail;
+use App\Mail\SlackInvitationMail;
+use App\Mail\UpdateAccount;
+use App\Mail\ZohoInvitationMail;
 use App\Traits\AsanaTrait;
 use App\Traits\SlackTrait;
 use App\Traits\ZohoTrait;
-use Mail;
-use File;
-use App\Mail\EmailPasswordChange;
-use App\Mail\SlackInvitationMail;
-use App\Mail\ZohoInvitationMail;
-use App\Mail\CompanyPoliciesMail;
-use App\Mail\SimSimMail;
-use DB;
-use Response;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Storage;
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
 use Carbon\Carbon;
+use DB;
+use File;
+use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
+use Mail;
+use Response;
+use Session;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller
 {
@@ -38,41 +35,41 @@ class EmployeeController extends Controller
     use SlackTrait;
 
     public $designations = [
-        "ceo" => "CEO",
-        "project_coordinator" => "Project Coordinator",
-        "web_developer" => "Web Developer",
-        "junior_web_developer" => "Junior Web Developer",
-        "front_end_developer" => "Front-end Developer",
-        "account_sales_executive" => "Account Sales Executive",
-        "sales_officer" => "Sales Officer",
-        "digital_marketing_executive" => "Digital Marketing Executive",
-        "content_writer" => "Content Writer",
-        "digital_marketer" => "Digital Marketer",
-        "web_designer_lead" => "Web Designer Lead",
-        "junior_web_designer" => "Junior Web Designer",
-        "hr_manager" => "HR Manager",
-        "hr_officer" => "HR Officer",
-        "admin" => "Admin",
+        'ceo'                         => 'CEO',
+        'project_coordinator'         => 'Project Coordinator',
+        'web_developer'               => 'Web Developer',
+        'junior_web_developer'        => 'Junior Web Developer',
+        'front_end_developer'         => 'Front-end Developer',
+        'account_sales_executive'     => 'Account Sales Executive',
+        'sales_officer'               => 'Sales Officer',
+        'digital_marketing_executive' => 'Digital Marketing Executive',
+        'content_writer'              => 'Content Writer',
+        'digital_marketer'            => 'Digital Marketer',
+        'web_designer_lead'           => 'Web Designer Lead',
+        'junior_web_designer'         => 'Junior Web Designer',
+        'hr_manager'                  => 'HR Manager',
+        'hr_officer'                  => 'HR Officer',
+        'admin'                       => 'Admin',
     ];
 
     public $employment_statuses = [
-        "permanent" => "Permanent",
-        "contractual" => "Contractual",
-        "probation" => "Probation",
-        "intern" => "Intern",
-        "resigned" => "Resigned",
-        "terminated" => "Terminated",
-        "on_leave" => "On Leave",
+        'permanent'   => 'Permanent',
+        'contractual' => 'Contractual',
+        'probation'   => 'Probation',
+        'intern'      => 'Intern',
+        'resigned'    => 'Resigned',
+        'terminated'  => 'Terminated',
+        'on_leave'    => 'On Leave',
     ];
     public $filters = [
-        "all" => "all",
-        "contractual" => "contractual",
-        "intern" => "intern",
-        "on_leave" => "on_Leave",
-        "permanent" => "permanent",
-        "probation" => "probation",
-        "resigned" => "resigned",
-        "terminated" => "terminated",
+        'all'         => 'all',
+        'contractual' => 'contractual',
+        'intern'      => 'intern',
+        'on_leave'    => 'on_Leave',
+        'permanent'   => 'permanent',
+        'probation'   => 'probation',
+        'resigned'    => 'resigned',
+        'terminated'  => 'terminated',
     ];
 
     public function __construct()
@@ -80,12 +77,11 @@ class EmployeeController extends Controller
         // $this->middleware(['role_or_permission:super-admin|edit articles']);
     }
 
-
-    public function index($id = "")
+    public function index($id = '')
     {
         if ($id == 'all') {
             $data = Employee::with('branch', 'department')->get();
-        } elseif ($id == "") {
+        } elseif ($id == '') {
             $data = Employee::with('branch', 'department')->where('status', '!=', '0')->get();
         } else {
             $data = Employee::with('branch', 'department')
@@ -93,6 +89,7 @@ class EmployeeController extends Controller
                 ->get();
         }
         $active_employees = Employee::where('status', '1')->count();
+
         return view('admin.employees.index', ['title' => 'All Employees'])
             ->with('employees', $data)
             ->with('active_employees', $active_employees)
@@ -120,13 +117,13 @@ class EmployeeController extends Controller
     {
         //also do js validation
         $this->validate($request, [
-            'firstname' => 'required',
-            'lastname' => 'required',
+            'firstname'      => 'required',
+            'lastname'       => 'required',
             'official_email' => 'required|email|unique:employees',
             'personal_email' => 'required|email|unique:employees',
-            'contact_no' => 'required|unique:employees|size:11',
-            'gender' => 'required',
-            'picture' => 'max:1000'
+            'contact_no'     => 'required|unique:employees|size:11',
+            'gender'         => 'required',
+            'picture'        => 'max:1000',
 
             // 'cnic' => 'size:13',
         ]);
@@ -141,55 +138,55 @@ class EmployeeController extends Controller
 
         $when = Carbon::now()->addMinutes(10);
         $l = 8;
-        $password = bcrypt("123456");
+        $password = bcrypt('123456');
 
         $arr = [
-            'firstname' => $request->firstname,
-            'lastname' => $request->lastname,
-            'contact_no' => $request->contact_no,
-            'emergency_contact' => $request->emergency_contact,
+            'firstname'                      => $request->firstname,
+            'lastname'                       => $request->lastname,
+            'contact_no'                     => $request->contact_no,
+            'emergency_contact'              => $request->emergency_contact,
             'emergency_contact_relationship' => $request->emergency_contact_relationship,
-            'password' => $password,
-            'official_email' => $request->official_email,
-            'personal_email' => $request->personal_email,
-            'status' => 1,
-            'employment_status' => $request->employment_status,
-            'basic_salary' => $request->salary,
-            'department_id' => $request->department_id,
-            'designation' => strtolower($request->designation),
-            'type' => $request->type,
-            'cnic' => $request->cnic,
-            'date_of_birth' => $request->date_of_birth,
-            'current_address' => $request->current_address,
-            'permanent_address' => $request->permanent_address,
-            'city' => $request->city,
-            'invite_to_zoho' => $request->invite_to_zoho,
-            'invite_to_slack' => $request->invite_to_slack,
-            'invite_to_asana' => $request->invite_to_asana,
-            'joining_date' => $request->joining_date,
-            'gender' => $request->gender,
+            'password'                       => $password,
+            'official_email'                 => $request->official_email,
+            'personal_email'                 => $request->personal_email,
+            'status'                         => 1,
+            'employment_status'              => $request->employment_status,
+            'basic_salary'                   => $request->salary,
+            'department_id'                  => $request->department_id,
+            'designation'                    => strtolower($request->designation),
+            'type'                           => $request->type,
+            'cnic'                           => $request->cnic,
+            'date_of_birth'                  => $request->date_of_birth,
+            'current_address'                => $request->current_address,
+            'permanent_address'              => $request->permanent_address,
+            'city'                           => $request->city,
+            'invite_to_zoho'                 => $request->invite_to_zoho,
+            'invite_to_slack'                => $request->invite_to_slack,
+            'invite_to_asana'                => $request->invite_to_asana,
+            'joining_date'                   => $request->joining_date,
+            'gender'                         => $request->gender,
         ];
 
         if (!empty($request->branch_id)) {
             $arr['branch_id'] = $request->branch_id;
         }
 
-        if ($request->picture != "") {
-            $picture = time() . '_' . $request->picture->getClientOriginalName();
+        if ($request->picture != '') {
+            $picture = time().'_'.$request->picture->getClientOriginalName();
             $request->picture->move('storage/employees/profile/', $picture);
-            $arr['picture'] = 'storage/employees/profile/' . $picture;
+            $arr['picture'] = 'storage/employees/profile/'.$picture;
         }
 
         $employee = Employee::create($arr);
         // $this->storeEmployeeTimings($employee->id);
 
         $params = [
-            'emailAddress' => $request->official_email,
-            "primaryEmailAddress" => $request->official_email,
-            "displayName" => $request->firstname . ' ' . $request->lastname,
-            "password" => $password,
-            "userExist" => false,
-            "country" => "pk"
+            'emailAddress'        => $request->official_email,
+            'primaryEmailAddress' => $request->official_email,
+            'displayName'         => $request->firstname.' '.$request->lastname,
+            'password'            => $password,
+            'userExist'           => false,
+            'country'             => 'pk',
         ];
 
         if ($request->zoho) {
@@ -218,9 +215,9 @@ class EmployeeController extends Controller
         $employee_id = $employee->id;
 
         $leave_types = LeaveType::get();
-        $arr = array();
+        $arr = [];
         foreach ($leave_types as $leave_type) {
-            $arr[$leave_type->id] = array('count' => $leave_type->amount);
+            $arr[$leave_type->id] = ['count' => $leave_type->amount];
         }
         $employee->leaveTypes()->sync($arr);
 
@@ -238,18 +235,16 @@ class EmployeeController extends Controller
             Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
         }
 
-
         return redirect()->route('employees')->with('success', 'Employee is created succesfully');
     }
 
     public function storeEmployeeTimings($employee)
     {
-
         $employee = [
-            'employee_id' => $employee_id,
+            'employee_id'  => $employee_id,
             'timing_start' => $employee->branch->timing_start,
-            'timing_off' => $employee->branch->timing_start,
-            'day' => 'Monday',
+            'timing_off'   => $employee->branch->timing_start,
+            'day'          => 'Monday',
         ];
 
         $employee = Employee::create($arr);
@@ -267,13 +262,13 @@ class EmployeeController extends Controller
             $employee_role_id = $employee->roles[0]->id; //todo
         }
 
-        $employee_permissions = array();
+        $employee_permissions = [];
         foreach ($employee->permissions as $key => $value) {
             $employee_permissions[] = $value->id;
         }
 
         $role = Role::find($id);
-        $permissions = array();
+        $permissions = [];
         if ($role) {
             $permissions = $role->permissions()->get();
         }
@@ -302,13 +297,13 @@ class EmployeeController extends Controller
             $employee_role_id = $employee->roles[0]->id; //todo
         }
 
-        $employee_permissions = array();
+        $employee_permissions = [];
         foreach ($employee->permissions as $key => $value) {
             $employee_permissions[] = $value->id;
         }
 
         $role = Role::find($employee->id);
-        $permissions = array();
+        $permissions = [];
         if ($role) {
             $permissions = $role->permissions()->get();
         }
@@ -333,12 +328,12 @@ class EmployeeController extends Controller
         }
 
         $this->validate($request, [
-            'firstname' => 'required',
-            'lastname' => 'required',
-            'official_email' => 'required|email|unique:employees,official_email,' . $id,
-            'personal_email' => 'required|email|unique:employees,personal_email,' . $id,
-            'contact_no' => 'required|size:11|unique:employees,contact_no,' . $id,
-            'picture' => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
+            'firstname'      => 'required',
+            'lastname'       => 'required',
+            'official_email' => 'required|email|unique:employees,official_email,'.$id,
+            'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
+            'contact_no'     => 'required|size:11|unique:employees,contact_no,'.$id,
+            'picture'        => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
             // 'cnic' => 'size:13',
         ]);
 
@@ -352,10 +347,10 @@ class EmployeeController extends Controller
         $employee->firstname = $request->firstname;
         $employee->lastname = $request->lastname;
         $employee->contact_no = $request->contact_no;
-        if ($request->picture != "") {
-            $picture = time() . '_' . $request->picture->getClientOriginalName();
+        if ($request->picture != '') {
+            $picture = time().'_'.$request->picture->getClientOriginalName();
             $request->picture->move('storage/employees/profile/', $picture);
-            $employee->picture = 'storage/employees/profile/' . $picture;
+            $employee->picture = 'storage/employees/profile/'.$picture;
         }
         $employee->joining_date = $request->joining_date;
         $employee->exit_date = $request->exit_date;
@@ -389,22 +384,20 @@ class EmployeeController extends Controller
 
         //admin password get from model confirmation box.
         $params = [
-            "mode" => '',
-            "zuid" => $employee->zuid,
-            "password" => $adminPassword
+            'mode'     => '',
+            'zuid'     => $employee->zuid,
+            'password' => $adminPassword,
         ];
 
         if ($request->employee_status === '1') {
             $params['mode'] = 'enableUser';
             $employee->status = 1;
             $this->updateZohoAccount($params, $employee->account_id);
-
-        } else if ($request->employee_status === '0') {
+        } elseif ($request->employee_status === '0') {
             $params['mode'] = 'disableUser';
             $employee->status = 0;
             $this->updateZohoAccount($params, $employee->account_id);
         }
-
 
         $when = Carbon::now()->addMinutes(10);
 
@@ -438,7 +431,6 @@ class EmployeeController extends Controller
             Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
         }
 
-
         if ($employee->roles->count() > 0) {
             $old_role = $employee->roles[0];
             $employee->removeRole($old_role);
@@ -468,6 +460,7 @@ class EmployeeController extends Controller
     public function trashed()
     {
         $employee = Employee::onlyTrashed()->get();
+
         return view('admin.employees.trashed',
             ['title' => 'Trash Employees']
         )->with('employees', $employee);
@@ -487,13 +480,12 @@ class EmployeeController extends Controller
         $employee->restore();
 
         return redirect()->route('employees')->with('success', 'Employee is deleted succesfully');
-
     }
 
     public function destroy(Request $request, $id)
     {
         $this->validate($request, [
-            'password' => 'required'
+            'password' => 'required',
         ]);
 
         $adminPassword = Auth::user()->password;
@@ -511,8 +503,8 @@ class EmployeeController extends Controller
         // if($response)
         if ($request->invite_to_zoho == 1) {
             $arr = [
-                "zuid" => $zuid,
-                "password" => bcrypt($request->zoho_password), /*get pass from admin model box*/
+                'zuid'     => $zuid,
+                'password' => bcrypt($request->zoho_password), /*get pass from admin model box*/
             ];
 
             $this->deleteZohoAccount($arr, $account_id);
@@ -520,8 +512,8 @@ class EmployeeController extends Controller
 
         if ($request->invite_to_asana == 1) {
             $arr = [
-                "zuid" => $zuid,
-                "password" => $adminPassword, /*get pass from admin model box*/
+                'zuid'     => $zuid,
+                'password' => $adminPassword, /*get pass from admin model box*/
             ];
 
             $this->removeUser($email);
@@ -542,8 +534,8 @@ class EmployeeController extends Controller
     public function postEmployeeLogin(Request $request)
     {
         $this->validate($request, [
-            'email' => 'required',
-            'password' => 'required'
+            'email'    => 'required',
+            'password' => 'required',
         ]);
 
         $email = $request->email;
@@ -557,26 +549,27 @@ class EmployeeController extends Controller
 
         if (isset($employee->id)) {
             $request->session()->put('emp_auth', $employee->id);
+
             return redirect()->route('employee.profile');
         }
 
         $messages = 'Username/Password Incorrect';
+
         return redirect()->back()->with('msg', $messages);
     }
 
     public function EmployeeProfile(Request $request)
     {
         $employee = Employee::find($request->session()->get('emp_auth'));
-        return view('admin.employees.profile', ['employee' => $employee, 'title' => 'Update Profile']);
 
+        return view('admin.employees.profile', ['employee' => $employee, 'title' => 'Update Profile']);
     }
 
     public function UpdateEmployeeProfile(Request $request, $id)
     {
-
         $this->validate($request, [
             'firstname' => 'required',
-            'lastname' => 'required'
+            'lastname'  => 'required',
         ]);
 
         $employee = Employee::find($id);
@@ -594,6 +587,7 @@ class EmployeeController extends Controller
     public function EmployeeLogout(Request $request)
     {
         $request->session()->forget('emp_auth');
+
         return redirect()->route('employee.login');
     }
 
@@ -601,6 +595,7 @@ class EmployeeController extends Controller
     {
         $data = DB::table('employees')->where('id', $request->session()->get('emp_auth'))->get();
         $data2 = DB::table('uploads')->where('status', '=', 1)->get();
+
         return view('admin.employees.showDocs', ['data' => $data, 'files' => $data2, 'title' => 'All Documents']);
     }
 
@@ -613,26 +608,22 @@ class EmployeeController extends Controller
         $events = [];
 
         if ($data->count()) {
-
             foreach ($attendance as $key => $value) {
-
                 $events[] = Calendar::event(
 
-                    "present",
+                    'present',
 
                     true,
                     new \DateTime($value->checkintime),
 
-                    new \DateTime($value->checkouttime . ' +1 day'),
+                    new \DateTime($value->checkouttime.' +1 day'),
                     null,
                     [
-                        'color' => 'green'
+                        'color' => 'green',
                     ]
                 );
-
             }
             foreach ($leave as $key => $value) {
-
                 $events[] = Calendar::event(
 
                     $value->leave_type,
@@ -640,24 +631,24 @@ class EmployeeController extends Controller
                     true,
                     new \DateTime($value->datefrom),
 
-                    new \DateTime($value->dateto . ' +1 day'),
+                    new \DateTime($value->dateto.' +1 day'),
                     null,
                     [
-                        'color' => 'orange'
+                        'color' => 'orange',
                     ]
                 );
-
             }
         }
 
         $calendar = Calendar::addEvents($events);
+
         return view('admin.employees.showAttendance', $this->metaResponse(), ['data' => $data, 'calendar' => $calendar]);
     }
 
     public function seedSlackId()
     {
         $token = config('values.SlackToken');
-        $output = file_get_contents('https://slack.com/api/users.list?token=' . $token . '&pretty=1');
+        $output = file_get_contents('https://slack.com/api/users.list?token='.$token.'&pretty=1');
         $output = json_decode($output, true);
         foreach ($output['members'] as $key => $member) {
             $employee = Employee::where('official_email', $member['profile']['email'])->first();
@@ -667,12 +658,12 @@ class EmployeeController extends Controller
                 $employee->save();
             } else {
                 $employee = Employee::create([
-                    'slack_id' => $member['id'],
+                    'slack_id'       => $member['id'],
                     'official_email' => $member['profile']['email'],
-                    'firstname' => $member['profile']['first_name'],
-                    'lastname' => $member['profile']['last_name'],
-                    'contact_no' => $member['profile']['phone'],
-                    'password' => bcrypt("123456"),
+                    'firstname'      => $member['profile']['first_name'],
+                    'lastname'       => $member['profile']['last_name'],
+                    'contact_no'     => $member['profile']['phone'],
+                    'password'       => bcrypt('123456'),
                 ]);
             }
         }

@@ -2,17 +2,15 @@
 
 namespace App\Mail;
 
+use App\Document;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
-use App\Document;
-
 
 class CompanyPoliciesMail extends Mailable
 {
-    use Queueable, SerializesModels;
-
+    use Queueable;
+    use SerializesModels;
     /**
      * Create a new message instance.
      *
@@ -32,14 +30,15 @@ class CompanyPoliciesMail extends Mailable
     {
         $attachments = Document::all();
         $email = $this->view('emails.policies');
-        foreach($attachments as $attachment){
+        foreach ($attachments as $attachment) {
             $filepath = public_path('uploads/files/'.$attachment->name);
             $fileParameters = [
-                'as' => $attachment->name,
+                'as'   => $attachment->name,
                 'mime' => 'application/pdf',
             ];
             $email->attach($filepath, $fileParameters);
         }
+
         return $email;
     }
 }

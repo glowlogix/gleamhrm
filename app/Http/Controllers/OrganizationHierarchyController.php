@@ -3,15 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Designation;
-use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
-use App\Traits\MetaTrait;
-use App\OrganizationHierarchy;
 use App\Employee;
+use App\OrganizationHierarchy;
+use App\Traits\MetaTrait;
+use Illuminate\Http\Request;
 
 class OrganizationHierarchyController extends Controller
 {
-
     use MetaTrait;
     public $hierarchy = '';
     public $designations = [
@@ -23,7 +21,7 @@ class OrganizationHierarchyController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    function __constructor()
+    public function __constructor()
     {
         $designations = Designation::all();
         foreach ($designations as $designation) {
@@ -31,14 +29,14 @@ class OrganizationHierarchyController extends Controller
         }
     }
 
-    function processHierarchy()
+    public function processHierarchy()
     {
         $hierarchy = $this->hierarchy();
 
         foreach ($hierarchy as $key => $row) {
             if (isset($row['children'])) {
                 foreach ($row['children'] as $child) {
-                    # code...
+                    // code...
                 }
                 $this->hierarchy[$key]->children = $row;
             }
@@ -66,20 +64,19 @@ class OrganizationHierarchyController extends Controller
 
         return view('admin.organization_hierarchy.index', $this->metaResponse())->with([
             'organization_hierarchies' => $organization_hierarchies,
-            'hierarchy' => $hierarchy,
+            'hierarchy'                => $hierarchy,
         ]);
     }
 
-    function myhire($organization_hierarchies)
+    public function myhire($organization_hierarchies)
     {
         // dd($organization_hierarchies);
         foreach ($organization_hierarchies as $organization_hierarchy) {
-
             $this->hierarchy .= '{
-                "id": "' . $organization_hierarchy->id . '", 
-                "employee_id": "' . $organization_hierarchy->employee->id . '", 
-                "name": "' . $organization_hierarchy->employee->firstname . ' ' . $organization_hierarchy->employee->lastname . '", 
-                "title": "' . $organization_hierarchy->employee->designation . '"';
+                "id": "'.$organization_hierarchy->id.'", 
+                "employee_id": "'.$organization_hierarchy->employee->id.'", 
+                "name": "'.$organization_hierarchy->employee->firstname.' '.$organization_hierarchy->employee->lastname.'", 
+                "title": "'.$organization_hierarchy->employee->designation.'"';
 
             if (count($organization_hierarchy->childs) > 0) {
                 $this->hierarchy .= ',"children": [';
@@ -102,8 +99,9 @@ class OrganizationHierarchyController extends Controller
 
         $employees = Employee::where('status', '!=', '0')->get();
         $OrganizationHierarchyCnt = OrganizationHierarchy::all()->count();
+
         return view('admin.organization_hierarchy.create', $this->metaResponse())->with([
-            'employees' => $employees,
+            'employees'                => $employees,
             'OrganizationHierarchyCnt' => $OrganizationHierarchyCnt,
         ]);
     }
@@ -111,10 +109,10 @@ class OrganizationHierarchyController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
-
     public function store(Request $request)
     {
         // $this->validate($request,[
@@ -122,9 +120,9 @@ class OrganizationHierarchyController extends Controller
         // ]);
 
         $OrganizationHierarchy = OrganizationHierarchy::create([
-            'employee_id' => $request->employee_id,
+            'employee_id'     => $request->employee_id,
             'line_manager_id' => $request->line_manager_id,
-            'parent_id' => $request->parent_id,
+            'parent_id'       => $request->parent_id,
         ]);
 
         return redirect()->route('organization_hierarchy.index')->with('success', 'Employee added to OrganizationHierarchy succesfully');
@@ -133,7 +131,8 @@ class OrganizationHierarchyController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -144,7 +143,8 @@ class OrganizationHierarchyController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -153,17 +153,19 @@ class OrganizationHierarchyController extends Controller
 
         $employees = Employee::all();
         $organization_hierarchy = OrganizationHierarchy::find($id);
+
         return view('admin.organization_hierarchy.edit', $this->metaResponse())->with([
             'organization_hierarchy' => $organization_hierarchy,
-            'employees' => $employees,
+            'employees'              => $employees,
         ]);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -182,7 +184,8 @@ class OrganizationHierarchyController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

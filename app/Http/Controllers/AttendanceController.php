@@ -2,31 +2,23 @@
 
 namespace App\Http\Controllers;
 
+use App\Attendance;
 use App\AttendanceBreak;
+use App\AttendanceSummary;
+use App\Branch;
+use App\Employee;
+use App\Leave;
 use App\OrganizationHierarchy;
+use App\Traits\MetaTrait;
+use Carbon\Carbon;
 use Carbon\CarbonPeriod;
+use DateTime;
+use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Hash;
-use App\Traits\MetaTrait;
-use App\Attendance;
-use App\AttendanceSummary;
-use App\Employee;
-use App\Branch;
-use Carbon\Carbon;
-use App\Leave;
-use Session;
-use App\Salary;
-use App\MonthlySalary;
-use Box\Spout\Reader\ReaderFactory;
-use Box\Spout\Writer\WriterFactory;
-use Box\Spout\Common\Type;
-use DB;
-use Calendar;
-use DateTime;
 use Illuminate\Support\Facades\Log;
 use Mail;
-use App\Mail\Reminder;
+use Session;
 
 class AttendanceController extends Controller
 {
@@ -34,9 +26,9 @@ class AttendanceController extends Controller
 
     public function index($id)
     {
-
         $this->meta['title'] = 'Show Attendance';
         $attendance = Attandance::where('employee_id', $id)->get();
+
         return view('admin.attendance.showattendance', $this->metaResponse(), ['attendances' => $attendance]);
     }
 
@@ -44,43 +36,43 @@ class AttendanceController extends Controller
     {
         $datee = explode('_', $id);
         $date = $datee[1];
-        if ($date == "1") {
-            $name = "January";
-        } elseif ($date == "2") {
-            $name = "February";
-        } elseif ($date == "3") {
-            $name = "March";
-        } elseif ($date == "4") {
-            $name = "April";
-        } elseif ($date == "5") {
-            $name = "May";
-        } elseif ($date == "6") {
-            $name = "June";
-        } elseif ($date == "7") {
-            $name = "July";
-        } elseif ($date == "8") {
-            $name = "August";
-        } elseif ($date == "9") {
-            $name = "September";
-        } elseif ($date == "10") {
-            $name = "October";
-        } elseif ($date == "11") {
-            $name = "November";
+        if ($date == '1') {
+            $name = 'January';
+        } elseif ($date == '2') {
+            $name = 'February';
+        } elseif ($date == '3') {
+            $name = 'March';
+        } elseif ($date == '4') {
+            $name = 'April';
+        } elseif ($date == '5') {
+            $name = 'May';
+        } elseif ($date == '6') {
+            $name = 'June';
+        } elseif ($date == '7') {
+            $name = 'July';
+        } elseif ($date == '8') {
+            $name = 'August';
+        } elseif ($date == '9') {
+            $name = 'September';
+        } elseif ($date == '10') {
+            $name = 'October';
+        } elseif ($date == '11') {
+            $name = 'November';
         } else {
-            $name = "December";
+            $name = 'December';
         }
 
         $employees = Employee::all();
+
         return view('admin.attendance.sheet')->with(['employees' => $employees, 'date' => $date, 'name' => $name]);
     }
-
 
     /**
      * Show the form for creating a new resource.
      *
      * @return \Illuminate\Http\Response
      */
-//Old
+    //Old
     public function create($emp_id = '', $date = '')
     {
         $this->meta['title'] = 'Create Attendance';
@@ -103,18 +95,19 @@ class AttendanceController extends Controller
         $attendance_summary = AttendanceSummary::where(['date' => $date, 'employee_id' => $emp_id])->first();
 
         $attendances = Attendance::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_in', 'asc')->get();
+
         return view('admin.attendance.create', $this->metaResponse(), [
-            'employees' => $employees,
-            'attendances' => $attendances,
+            'employees'          => $employees,
+            'attendances'        => $attendances,
             'attendance_summary' => $attendance_summary,
-            'current_date' => $date,
-            'current_time' => $current_time,
-            'selected_in_out' => $selected_in_out,
-            'emp_id' => $emp_id,
+            'current_date'       => $date,
+            'current_time'       => $current_time,
+            'selected_in_out'    => $selected_in_out,
+            'emp_id'             => $emp_id,
         ]);
     }
 
-//New
+    //New
     public function createBreak($emp_id = '', $date = '')
     {
         $this->meta['title'] = 'Create Attendance';
@@ -138,22 +131,22 @@ class AttendanceController extends Controller
         $attendances = AttendanceBreak::where(['date' => $date, 'employee_id' => $emp_id])->orderBy('timestamp_break_end', 'asc')->get();
 
         return view('admin.attendance.create_break', $this->metaResponse(), [
-            'employees' => $employees,
-            'attendances' => $attendances,
+            'employees'          => $employees,
+            'attendances'        => $attendances,
             'attendance_summary' => $attendance_summary,
-            'current_date' => $date,
-            'current_time' => $current_time,
-            'selected_in_out' => $selected_in_out,
-            'emp_id' => $emp_id,
-            'today' => $today
+            'current_date'       => $date,
+            'current_time'       => $current_time,
+            'selected_in_out'    => $selected_in_out,
+            'emp_id'             => $emp_id,
+            'today'              => $today,
         ]);
     }
 
-    public function todayTimeline($id = "")
+    public function todayTimeline($id = '')
     {
         $this->meta['title'] = 'Show Attendance';
 
-        if ($id == "") {
+        if ($id == '') {
             $today = Carbon::now()->toDateString();
         } else {
             $today = ($id);
@@ -164,9 +157,9 @@ class AttendanceController extends Controller
             },
         ], 'branch', 'leaves')->where('status', '!=', '0')->where('type', '!=', 'remote')->get();
 
-//Leaves Count
-        $leaveDate = array();
-        $periods = array();
+        //Leaves Count
+        $leaveDate = [];
+        $periods = [];
         $leaves = Leave::join('employees', 'leaves.employee_id', '=', 'employees.id')->where('employees.type', 'office')->where('employees.status', '!=', '0')->where('leaves.status', 'Approved')->get();
         foreach ($leaves as $leave) {
             $periods[$leave->employee_id] = CarbonPeriod::create($leave->datefrom, $leave->dateto);
@@ -177,29 +170,29 @@ class AttendanceController extends Controller
             }
         }
         $leavesCount = 0;
-        $employeeLeave = array();
+        $employeeLeave = [];
         foreach ($leaveDate as $key => $leave) {
             if (in_array($today, $leave)) {
                 $leavesCount = $leavesCount + 1;
                 $employeeLeave[$key] = $key;
             }
         }
-//leaves Count
+        //leaves Count
         $present = AttendanceSummary::with('branch')->join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type', 'office')->where('employees.status', '!=', '0')->where('date', $today)->count();
         $employeeCount = Employee::where('type', 'office')->where('status', '!=', '0')->count();
         $absent = $employeeCount - $present - $leavesCount;
         $delays = AttendanceSummary::join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type', 'office')->where('employees.status', '!=', '0')->where('date', $today)->where('is_delay', 'yes')->count();
 
         return view('admin.attendance.today_timeline', $this->metaResponse(), [
-            'employees' => $employees,
-            'today' => $today,
-            'branch_id' => $id,
-            'today' => $today,
-            'present' => $present,
-            'absent' => $absent,
-            'delays' => $delays,
-            'leavesCount' => $leavesCount,
-            'employeeLeave' => $employeeLeave
+            'employees'     => $employees,
+            'today'         => $today,
+            'branch_id'     => $id,
+            'today'         => $today,
+            'present'       => $present,
+            'absent'        => $absent,
+            'delays'        => $delays,
+            'leavesCount'   => $leavesCount,
+            'employeeLeave' => $employeeLeave,
         ]);
     }
 
@@ -232,20 +225,21 @@ class AttendanceController extends Controller
 
         return view('admin.attendance.createByAjax')
             ->with([
-                'employees' => $employees,
-                'attendances' => $attendances,
+                'employees'          => $employees,
+                'attendances'        => $attendances,
                 'attendance_summary' => $attendance_summary,
-                'current_date' => $date,
-                'current_time' => $current_time,
-                'selected_in_out' => $selected_in_out,
-                'emp_id' => $emp_id,
+                'current_date'       => $date,
+                'current_time'       => $current_time,
+                'selected_in_out'    => $selected_in_out,
+                'emp_id'             => $emp_id,
             ]);
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -253,8 +247,8 @@ class AttendanceController extends Controller
         // dd($request);
         $this->validate($request, [
             'employee_id' => 'required',
-            'time_in' => 'required',
-            'date' => 'required',
+            'time_in'     => 'required',
+            'date'        => 'required',
         ]);
 
         $time = Carbon::parse($request->time);
@@ -264,9 +258,9 @@ class AttendanceController extends Controller
             $key = 'timestamp_out';
         }
         $attendance = [
-            'employee_id' => $request->employee_id,
-            'date' => $request->date,
-            'time' => $time->toTimeString(),
+            'employee_id'  => $request->employee_id,
+            'date'         => $request->date,
+            'time'         => $time->toTimeString(),
             'timestamp_in' => !empty($request->time_in) ? Carbon::parse($request->time_in) : '',
         ];
 
@@ -286,21 +280,20 @@ class AttendanceController extends Controller
 
     public function storeBreak(Request $request)
     {
-
         $this->validate($request, [
             'employee_id' => 'required',
             'break_start' => 'required',
-            'date' => 'required',
+            'date'        => 'required',
         ]);
 
         $time = Carbon::parse($request->time);
 
         $attendance = [
-            'employee_id' => $request->employee_id,
-            'date' => $request->date,
-            'time' => $time->toTimeString(),
+            'employee_id'           => $request->employee_id,
+            'date'                  => $request->date,
+            'time'                  => $time->toTimeString(),
             'timestamp_break_start' => !empty($request->break_start) ? Carbon::parse($request->break_start) : '',
-            'comment' => $request->comment,
+            'comment'               => $request->comment,
         ];
 
         if (!empty($request->break_end)) {
@@ -317,7 +310,7 @@ class AttendanceController extends Controller
         }
     }
 
-//OLD
+    //OLD
     public function storeAttendaceSummary(Request $request)
     {
         $attendance = Attendance::where(['date' => $request->date, 'employee_id' => $request->employee_id])->orderBy('timestamp_in', 'asc')->get();
@@ -327,7 +320,7 @@ class AttendanceController extends Controller
         $last_timestamp_out = $attendance->last()->timestamp_out;
         // dump($last_time_out);
         $totaltime = 0;
-        if ($last_timestamp_out != "") {
+        if ($last_timestamp_out != '') {
             foreach ($attendance as $i => $row) {
                 $in = Carbon::parse($row->timestamp_in);
                 $out = Carbon::parse($row->timestamp_out);
@@ -336,7 +329,7 @@ class AttendanceController extends Controller
         }
         $attendance_summary = AttendanceSummary::where([
             'employee_id' => $request->employee_id,
-            'date' => $request->date,
+            'date'        => $request->date,
         ])->first();
 
         $employee = Employee::find($request->employee_id);
@@ -371,26 +364,25 @@ class AttendanceController extends Controller
             $attendance_summary->save();
         } else {
             $arr = [
-                'employee_id' => $request->employee_id,
+                'employee_id'        => $request->employee_id,
                 'first_timestamp_in' => $first_timestamp_in,
                 'last_timestamp_out' => $last_timestamp_out,
-                'total_time' => $totaltime,
-                'is_delay' => $is_delay,
-                'date' => $request->date,
+                'total_time'         => $totaltime,
+                'is_delay'           => $is_delay,
+                'date'               => $request->date,
             ];
             // dump($arr);
             $attendance_summary = AttendanceSummary::create($arr);
         }
     }
 
-//NEW
+    //NEW
     public function storeAttendanceSummaryToday(Request $request)
     {
-
         Carbon::parse($request->time_in);
         $attendance_summary = AttendanceSummary::where([
             'employee_id' => $request->employee_id,
-            'date' => $request->date,
+            'date'        => $request->date,
         ])->first();
 
         $employee = Employee::find($request->employee_id);
@@ -400,7 +392,7 @@ class AttendanceController extends Controller
 
         $branch = Branch::find($employee->branch_id);
         if (isset($branch->timing_start)) {
-            $ofc_in = Carbon::parse($request->time_in)->toDateString() . " " . Carbon::parse($branch->timing_start)->toTimeString();
+            $ofc_in = Carbon::parse($request->time_in)->toDateString().' '.Carbon::parse($branch->timing_start)->toTimeString();
         }
         $emp_in = Carbon::parse($request->time_in);
         $delay = $emp_in->diffInMinutes($ofc_in);
@@ -424,7 +416,6 @@ class AttendanceController extends Controller
             $out = Carbon::parse($request->time_out);
             $totaltime = $out->diffInMinutes($in);
             $totaltime = $totaltime - $totalbreaktime;
-
         } else {
             $out = null;
             $totaltime = 0;
@@ -439,12 +430,12 @@ class AttendanceController extends Controller
             $attendance_summary->save();
         } else {
             $arr = [
-                'employee_id' => $request->employee_id,
+                'employee_id'        => $request->employee_id,
                 'first_timestamp_in' => $in,
                 'last_timestamp_out' => $out,
-                'total_time' => $totaltime,
-                'is_delay' => $is_delay,
-                'date' => $request->date,
+                'total_time'         => $totaltime,
+                'is_delay'           => $is_delay,
+                'date'               => $request->date,
             ];
             // dump($arr);
             $attendance_summary = AttendanceSummary::create($arr);
@@ -475,7 +466,7 @@ class AttendanceController extends Controller
         }
         $attendance_summary = AttendanceSummary::where([
             'employee_id' => $request->employee_id,
-            'date' => $request->date,
+            'date'        => $request->date,
         ])->first();
 
         $employee = Employee::find($request->employee_id);
@@ -484,7 +475,7 @@ class AttendanceController extends Controller
         }
         $office_location = Branch::find($employee->branch_id);
         $emp_in = Carbon::parse($first_timestamp_in);
-        $ofc_in = Carbon::parse($emp_in)->toDateString() . " " . Carbon::parse($office_location->timing_start)->toTimeString();
+        $ofc_in = Carbon::parse($emp_in)->toDateString().' '.Carbon::parse($office_location->timing_start)->toTimeString();
         $delay = $emp_in->diffInMinutes($ofc_in);
 
         $day = Carbon::parse($request->date)->format('l');
@@ -523,15 +514,17 @@ class AttendanceController extends Controller
         }
         if ($request['event']['channel'] != config('values.SlackChannel')) {
             Log::debug('Accept from Slack Attendance Channel.');
+
             return;
         }
         $employee = Employee::where('slack_id', $request['event']['user'])->first();
         if (!isset($employee->id)) {
             $token = config('values.SlackToken');
-            $output = file_get_contents('https://slack.com/api/users.profile.get?token=' . $token . '&user=' . $request['event']['user']);
+            $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token.'&user='.$request['event']['user']);
             $output = json_decode($output, true);
             if (!$output['ok']) {
                 Log::debug('no user info found.');
+
                 return 'no user info found.';
             }
 
@@ -547,30 +540,30 @@ class AttendanceController extends Controller
 
         $text = $request['event']['text'];
 
-        $checkInText = array("aoa", "salam", "slaam", "slam", "assalam-o-alaikum", "assalam o alaikum", "assalamualaikum", 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'Assalam o Alikum', 'Asslamo Alaikum');
-        $checkOutText = array("ah", "allah haffiz", "allah hafiz", "allahhafiz", "allah hafiz.", "bye", "allah-hafiz", 'allah haffiz');
+        $checkInText = ['aoa', 'salam', 'slaam', 'slam', 'assalam-o-alaikum', 'assalam o alaikum', 'assalamualaikum', 'asslam o alaikum', 'assalamu-alaeikum', 'morning', 'asslam o alikum', 'assalamu-aleikum', 'assalamu alaikum', 'Assalam o Alikum', 'Asslamo Alaikum'];
+        $checkOutText = ['ah', 'allah haffiz', 'allah hafiz', 'allahhafiz', 'allah hafiz.', 'bye', 'allah-hafiz', 'allah haffiz'];
 
         if (in_array(strtolower($text), $checkInText) == true) {
             $text = 'aoa';
             $attendanceSummarycheck = AttendanceSummary::where('employee_id', $employee->id)->where('date', $date)->first();
             if ($attendanceSummarycheck == null) {
                 $data = [
-                    'employee_id' => $employee->id,
+                    'employee_id'        => $employee->id,
                     'first_timestamp_in' => $time,
-                    'date' => $date,
-                    'total_time' => 0,
+                    'date'               => $date,
+                    'total_time'         => 0,
                 ];
                 AttendanceSummary::create($data);
             }
         } elseif (strstr(strtolower($text), 'brb')) {
-            $clean = array("_", ".", "-", "brb");
+            $clean = ['_', '.', '-', 'brb'];
             $comment = str_replace($clean, '', $text);
             $data = [
-                'employee_id' => $employee->id,
+                'employee_id'           => $employee->id,
                 'timestamp_break_start' => $time,
-                'comment' => $comment,
-                'date' => $date,
-                'total_time' => 0,
+                'comment'               => $comment,
+                'date'                  => $date,
+                'total_time'            => 0,
             ];
             AttendanceBreak::create($data);
         } elseif (strstr(strtolower($text), 'back')) {
@@ -595,14 +588,16 @@ class AttendanceController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  \App\Leave $leave
+     * @param \App\Leave $leave
+     *
      * @return \Illuminate\Http\Response
      */
 
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\Leave $leave
+     * @param \App\Leave $leave
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -612,27 +607,27 @@ class AttendanceController extends Controller
         $attendance = Attandance::where('id', $id)->first();
 
         return view('admin.attendance.edit', compact('attendance'), $this->metaResponse());
-
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Leave $leave
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Leave               $leave
+     *
      * @return \Illuminate\Http\Response
      */
     public function updateSummary(Request $request)
     {
         $validator = \Validator::make($request->all(), [
             'datefrom' => 'required|before_or_equal:dateto',
-            'dateto' => 'required'
+            'dateto'   => 'required',
         ]);
         if ($validator->fails()) {
             return response()->json(['errors' => $validator->errors()->all()]);
         }
 
-        if ($request->currentStatus == "present" && $request->type == "Full Leave") {
+        if ($request->currentStatus == 'present' && $request->type == 'Full Leave') {
             return response()->json('already-present');
         }
         $currentStartDate = str_replace('/', '-', $request->currentStartDate);
@@ -647,10 +642,8 @@ class AttendanceController extends Controller
         }
 
         if ($request->dateto) {
-
             $end_date = $request->dateto;
             $parseEnd_date = Carbon::parse($end_date);
-
         }
         $parsecheckinTime = Carbon::parse($currentStartDate);
         $parsecheckoutTime = Carbon::parse($currentEndDate);
@@ -665,7 +658,6 @@ class AttendanceController extends Controller
             $row = DB::update(DB::raw("Update leaves set datefrom = '$parseStart_date', dateto = '$parseEnd_date' , leave_type = '$status' where employee_id= '$id' And datefrom ='$currentStartDate'"));
             if ($row == 1) {
                 return response()->json('success');
-
             }
         }
     }
@@ -673,17 +665,18 @@ class AttendanceController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\Leave $leave
+     * @param \Illuminate\Http\Request $request
+     * @param \App\Leave               $leave
+     *
      * @return \Illuminate\Http\Response
      */
-////OLD
+    ////OLD
     public function update(Request $request)
     {
         $this->validate($request, [
-            'time_in' => 'required',
+            'time_in'  => 'required',
             'time_out' => 'required|after:time_in',
-            'date' => 'required',
+            'date'     => 'required',
         ]);
 
         $attendance = Attendance::where([
@@ -705,13 +698,13 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', 'Attendance is updated successfully');
     }
 
-///NEW
+    ///NEW
     public function updateBreak(Request $request)
     {
         $this->validate($request, [
             'break_start' => 'required',
-            'break_end' => 'required|after:time_in',
-            'date' => 'required',
+            'break_end'   => 'required|after:time_in',
+            'date'        => 'required',
         ]);
 
         $attendance = AttendanceBreak::where([
@@ -734,37 +727,36 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', 'Attendance Break is updated successfully');
     }
 
-////
+    ////
     public function getbyAjax(Request $request)
     {
-
         $date = Carbon::parse($request->date);
 
         $employeeID = $request->id;
         $attendance = AttendanceSummary::where([
             'employee_id' => $employeeID,
-            'date' => $date,
+            'date'        => $date,
         ])->first();
 
         if ($attendance) {
             $attendance->first_timestamp_in = date('g:i A', strtotime($attendance->first_timestamp_in));
             $attendance->last_timestamp_out = date('g:i A', strtotime($attendance->last_timestamp_out));
+
             return response()->json([$attendance, 'successAttendance']);
         } else {
             $leave = Leave::where([
                 'employee_id' => $employeeID,
-                'datefrom' => $date,
+                'datefrom'    => $date,
             ])->first();
 
             $dateFrom = $leave->datefrom;
             $leave->datefrom = date('Y/m/d g:i A', strtotime($dateFrom));
             $dateTo = $leave->dateto;
             $leave->dateto = date('Y/m/d g:i A', strtotime($dateTo));
+
             return response()->json($leave);
         }
-
     }
-
 
     public function showAttendance(Request $request, $id = 0)
     {
@@ -784,15 +776,15 @@ class AttendanceController extends Controller
                 $now->year;
 
                 $dob = Carbon::parse($employee->date_of_birth);
-                $date_of_birth = $now->format('Y') . '-' . $dob->format('m') . '-' . $dob->format('d');
+                $date_of_birth = $now->format('Y').'-'.$dob->format('m').'-'.$dob->format('d');
 
                 $events[] = [
-                    "resourceId" => $employee->id,
-                    "title" => "Birthday of \n" . $employee->firstname . ' ' . $employee->lastname,
-                    "date" => $date_of_birth,
-                    "start" => $date_of_birth,
-                    "end" => $date_of_birth,
-                    "color" => 'pink',
+                    'resourceId' => $employee->id,
+                    'title'      => "Birthday of \n".$employee->firstname.' '.$employee->lastname,
+                    'date'       => $date_of_birth,
+                    'start'      => $date_of_birth,
+                    'end'        => $date_of_birth,
+                    'color'      => 'pink',
                 ];
 
                 $attendance_summaries = AttendanceSummary::where('employee_id', $employee_id)->get();
@@ -800,38 +792,38 @@ class AttendanceController extends Controller
                 foreach ($attendance_summaries as $key => $value) {
                     $delays = '';
                     $color = '';
-                    if ($value->status == "Short Leave") {
+                    if ($value->status == 'Short Leave') {
                         $color = '#C24BFF';
                     }
-                    if ($value->status === "Full Leave") {
+                    if ($value->status === 'Full Leave') {
                         $color = 'red';
                     }
-                    if ($value->status === "Half Leave") {
+                    if ($value->status === 'Half Leave') {
                         $color = '#57BB8A';
                     }
-                    if ($value->status == "Paid Leave") {
+                    if ($value->status == 'Paid Leave') {
                         $color = '#ADFF41';
                     }
-                    if ($value->status == "present") {
+                    if ($value->status == 'present') {
                         $color = '#00a560';
                     }
 
-                    if ($value->is_delay && $value->status == "present") {
+                    if ($value->is_delay && $value->status == 'present') {
                         $color = '#43474a';
-                        $delays = $value->is_delay . " delay";
+                        $delays = $value->is_delay.' delay';
                     } else {
-                        $delays = "";
+                        $delays = '';
                     }
-                    $time = date("g:i A", strtotime($value->first_timestamp_in));
+                    $time = date('g:i A', strtotime($value->first_timestamp_in));
                     // $time2= date("g:i A",strtotime($value->checkouttime));
                     $total_time = number_format(($value->total_time / 60), 2, '.', '');
                     $events[] = [
-                        "resourceId" => $value->employee_id,
-                        "title" => $value->status . "\n" . $employee->firstname . ' ' . $employee->lastname . "\n" . $time . "\n" . $total_time . " hrs" . "\n",
-                        "date" => $value->date,
-                        "start" => $value->date . ' ' . Carbon::parse($value->first_timestemp_in)->toTimeString(),
-                        "end" => Carbon::parse($value->last_timestemp_out)->toTimeString(),
-                        "color" => 'blue',
+                        'resourceId' => $value->employee_id,
+                        'title'      => $value->status."\n".$employee->firstname.' '.$employee->lastname."\n".$time."\n".$total_time.' hrs'."\n",
+                        'date'       => $value->date,
+                        'start'      => $value->date.' '.Carbon::parse($value->first_timestemp_in)->toTimeString(),
+                        'end'        => Carbon::parse($value->last_timestemp_out)->toTimeString(),
+                        'color'      => 'blue',
                     ];
                 }
 
@@ -839,26 +831,26 @@ class AttendanceController extends Controller
 
                 foreach ($leave as $key => $value) {
                     $color = '';
-                    if ($value->leave_type == "Short Leave") {
+                    if ($value->leave_type == 'Short Leave') {
                         $color = '#C24BFF';
                     }
-                    if ($value->leave_type === "Full Leave") {
+                    if ($value->leave_type === 'Full Leave') {
                         $color = 'red';
                     }
-                    if ($value->leave_type === "Half Leave") {
+                    if ($value->leave_type === 'Half Leave') {
                         $color = '#57BB8A';
                     }
-                    if ($value->leave_type == "Paid Leave") {
+                    if ($value->leave_type == 'Paid Leave') {
                         $color = '#ADFF41';
                     }
 
                     $events[] = [
-                        "resourceId" => $value->employee_id,
-                        "title" => $value->leave_type . "\n" . $employee->firstname . ' ' . $employee->lastname . "\n" . "Reason:" . $value->reason . "\n" . "Status:" . $value->status,
-                        "date" => $value->datefrom,
-                        "start" => $value->datefrom,
-                        "end" => $value->dateto,
-                        'color' => $color,
+                        'resourceId' => $value->employee_id,
+                        'title'      => $value->leave_type."\n".$employee->firstname.' '.$employee->lastname."\n".'Reason:'.$value->reason."\n".'Status:'.$value->status,
+                        'date'       => $value->datefrom,
+                        'start'      => $value->datefrom,
+                        'end'        => $value->dateto,
+                        'color'      => $color,
                     ];
                 }
             }
@@ -866,9 +858,9 @@ class AttendanceController extends Controller
         $office_locations = Branch::all();
 
         return view('admin.attendance.allattendance', $this->metaResponse(), [
-            'branch_id' => $id,
+            'branch_id'        => $id,
             'office_locations' => $office_locations,
-            'events' => json_encode($events),
+            'events'           => json_encode($events),
         ]);
     }
 
@@ -882,30 +874,30 @@ class AttendanceController extends Controller
             $employees = Employee::where(['branch_id' => $id])->where('type', '!=', 'remote')->where('status', '!=', '0')->get()->toJson();
         }
         $attendance_summaries = AttendanceSummary::where('date', '!=', '')->get();
-        $events = array();
+        $events = [];
         foreach ($attendance_summaries as $key => $value) {
             $delays = '';
             $color = '';
-            if ($value->status == "Short Leave") {
+            if ($value->status == 'Short Leave') {
                 $color = '#C24BFF';
             }
-            if ($value->status === "Full Leave") {
+            if ($value->status === 'Full Leave') {
                 $color = 'red';
             }
-            if ($value->status === "Half Leave") {
+            if ($value->status === 'Half Leave') {
                 $color = '#57BB8A';
             }
-            if ($value->status == "Paid Leave") {
+            if ($value->status == 'Paid Leave') {
                 $color = '#ADFF41';
             }
-            if ($value->status == "present") {
+            if ($value->status == 'present') {
                 $color = '#00a560';
             }
-            if ($value->is_delay && $value->status == "present") {
+            if ($value->is_delay && $value->status == 'present') {
                 $color = '#43474a';
-                $delays = $value->is_delay . " delay";
+                $delays = $value->is_delay.' delay';
             } else {
-                $delays = "";
+                $delays = '';
             }
             $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
 
@@ -916,49 +908,49 @@ class AttendanceController extends Controller
             }
             $total_time = gmdate('H:i', floor(number_format(($value->total_time / 60), 2, '.', '') * 3600));
             $events[] = [
-                "resourceId" => $value->employee_id,
-                "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
-                "date" => $value->date,
-                "color" => $color,
+                'resourceId' => $value->employee_id,
+                'title'      => $value->status."\n".$timeIn.' - '.$timeOut."\n".$total_time.' hrs'."\n",
+                'date'       => $value->date,
+                'color'      => $color,
             ];
         }
         $leave = Leave::with('leaveType')->get();
         foreach ($leave as $key => $value) {
             $color = '';
-            if ($value->leave_type == "Short Leave") {
+            if ($value->leave_type == 'Short Leave') {
                 $color = '#C24BFF';
             }
-            if ($value->leave_type === "Full Leave") {
+            if ($value->leave_type === 'Full Leave') {
                 $color = 'red';
             }
-            if ($value->leave_type === "Half Leave") {
+            if ($value->leave_type === 'Half Leave') {
                 $color = '#57BB8A';
             }
-            if ($value->leave_type == "Paid Leave") {
+            if ($value->leave_type == 'Paid Leave') {
                 $color = '#ADFF41';
             }
             $events[] = [
-                "resourceId" => $value->employee_id,
-                "title" => $value->leaveType->name . "\n" . "Reason:" . $value->reason . "\n" . "Status:" . $value->status,
-                "date" => $value->datefrom,
-                "start" => Carbon::parse($value->datefrom)->toDateString(),
-                "end" => date('Y-m-d', strtotime($value->dateto . ' +1 day')),
-                "color" => $color,
+                'resourceId' => $value->employee_id,
+                'title'      => $value->leaveType->name."\n".'Reason:'.$value->reason."\n".'Status:'.$value->status,
+                'date'       => $value->datefrom,
+                'start'      => Carbon::parse($value->datefrom)->toDateString(),
+                'end'        => date('Y-m-d', strtotime($value->dateto.' +1 day')),
+                'color'      => $color,
             ];
         }
 
         $events = json_encode($events);
         $office_locations = Branch::all();
+
         return view('admin.attendance.timeline', $this->metaResponse(), [
-            'employees' => $employees,
-            'branch_id' => $id,
+            'employees'        => $employees,
+            'branch_id'        => $id,
             'office_locations' => $office_locations,
-            'events' => $events
+            'events'           => $events,
         ]);
     }
 
-
-///OLD
+    ///OLD
     public function deleteChecktime(Request $request)
     {
         $id = $request->id;
@@ -968,16 +960,15 @@ class AttendanceController extends Controller
         ])->first();
 
         if ($attendance) {
-
             $attendanceCount = Attendance::where([
                 'employee_id' => $attendance->employee_id,
-                'date' => $attendance->date,
+                'date'        => $attendance->date,
             ])->count();
 
             if ($attendanceCount == 1) {
                 $attendance_summary = AttendanceSummary::where([
                     'employee_id' => $attendance->employee_id,
-                    'date' => $attendance->date,
+                    'date'        => $attendance->date,
                 ])->first();
 
                 $attendance_summary->delete();
@@ -989,7 +980,7 @@ class AttendanceController extends Controller
         return redirect()->back()->with('success', 'Attendance Break is deleted successfully');
     }
 
-///NEW
+    ///NEW
     public function deleteBreakChecktime(Request $request)
     {
         $id = $request->id;
@@ -999,16 +990,15 @@ class AttendanceController extends Controller
         ])->first();
 
         if ($attendance) {
-
             $attendanceCount = AttendanceBreak::where([
                 'employee_id' => $attendance->employee_id,
-                'date' => $attendance->date,
+                'date'        => $attendance->date,
             ])->count();
 
             if ($attendanceCount == 1) {
                 $attendance_summary = AttendanceSummary::where([
                     'employee_id' => $attendance->employee_id,
-                    'date' => $attendance->date,
+                    'date'        => $attendance->date,
                 ])->first();
 
                 $attendance_summary->delete();
@@ -1019,12 +1009,14 @@ class AttendanceController extends Controller
 
         return redirect()->back()->with('success', 'Attendance Break is deleted successfully');
     }
-///
+
+    ///
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\Leave $leave
+     * @param \App\Leave $leave
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)
@@ -1034,21 +1026,21 @@ class AttendanceController extends Controller
         $date = Carbon::parse($request->date);
         $attendance = Attandance::where([
             'employee_id' => $id,
-            'checkintime' => $date
+            'checkintime' => $date,
         ])->first();
         if ($attendance) {
             $attendance->delete();
         } else {
             $leave = Leave::where([
                 'employee_id' => $id,
-                'datefrom' => $date
+                'datefrom'    => $date,
 
             ])->first();
             $leave->delete();
         }
+
         return response()->json('success');
     }
-
 
     public function mybot()
     {
@@ -1084,20 +1076,19 @@ class AttendanceController extends Controller
          $loop->run();*/
     }
 
-    public function authUserTimeline($id = "")
+    public function authUserTimeline($id = '')
     {
-
         $employees = Employee::where('status', '!=', '0')->where('type', '!=', 'remote')->orderBy('firstname')->get();
         $days = [
-            'Sunday' => 0,
-            'Monday' => 1,
-            'Tuesday' => 2,
+            'Sunday'    => 0,
+            'Monday'    => 1,
+            'Tuesday'   => 2,
             'Wednesday' => 3,
-            'Thursday' => 4,
-            'Friday' => 5,
-            'Saturday' => 6
+            'Thursday'  => 4,
+            'Friday'    => 5,
+            'Saturday'  => 6,
         ];
-        if ($id != "") {
+        if ($id != '') {
             $employeeId = $id;
             $employee = Employee::where(['id' => $id])->first();
             $attendance_summaries = AttendanceSummary::where('employee_id', $id)->get();
@@ -1107,62 +1098,60 @@ class AttendanceController extends Controller
             $attendance_summaries = AttendanceSummary::where('employee_id', Auth::user()->id)->get();
         }
         $currentMonth = date('m');
-        $events = array();
-        $presentDate = array();
+        $events = [];
+        $presentDate = [];
         $branchWeekend = json_decode(Branch::find($employee->branch_id)->weekend);
         //For Dow
         if ($attendance_summaries->count() > 0) {
             foreach ($attendance_summaries as $key => $value) {
-                if ($value->first_timestamp_in != "") {
+                if ($value->first_timestamp_in != '') {
                     $delays = '';
                     $color = '';
-                    if ($value->status == "Short Leave") {
+                    if ($value->status == 'Short Leave') {
                         $color = '#C24BFF';
                     }
-                    if ($value->status === "Full Leave") {
+                    if ($value->status === 'Full Leave') {
                         $color = 'red';
                     }
-                    if ($value->status === "Half Leave") {
+                    if ($value->status === 'Half Leave') {
                         $color = '#57BB8A';
                     }
-                    if ($value->status == "Paid Leave") {
+                    if ($value->status == 'Paid Leave') {
                         $color = '#ADFF41';
                     }
-                    if ($value->status == "present") {
+                    if ($value->status == 'present') {
                         $color = '#00a560';
                     }
 
-                    if ($value->is_delay && $value->status == "present") {
+                    if ($value->is_delay && $value->status == 'present') {
                         $color = '#43474a';
-                        $delays = $value->is_delay . " delay";
+                        $delays = $value->is_delay.' delay';
                     } else {
-                        $delays = "";
+                        $delays = '';
                     }
                     $timeIn = Carbon::parse($value->first_timestamp_in)->format('g:i A');
-                    if ($value->last_timestamp_out != "") {
-
+                    if ($value->last_timestamp_out != '') {
                         $timeOut = Carbon::parse($value->last_timestamp_out)->format('g:i A');
                     } else {
                         $timeOut = 0;
                     }
                     $total_time = round((Carbon::parse($value->last_timestamp_out)->diffInMinutes(Carbon::parse($value->first_timestamp_in))) / 60, '2');
                     $events[] = [
-                        "resourceId" => $value->employee_id,
-                        "title" => $value->status . "\n" . $timeIn . " - " . $timeOut . "\n" . $total_time . " hrs" . "\n",
-                        "date" => Carbon::parse($value->date)->toDateString(),
-                        "start" => Carbon::parse($value->date)->toDateString(),
-                        "end" => Carbon::parse($value->date)->toDateString(),
-                        "color" => $color,
+                        'resourceId' => $value->employee_id,
+                        'title'      => $value->status."\n".$timeIn.' - '.$timeOut."\n".$total_time.' hrs'."\n",
+                        'date'       => Carbon::parse($value->date)->toDateString(),
+                        'start'      => Carbon::parse($value->date)->toDateString(),
+                        'end'        => Carbon::parse($value->date)->toDateString(),
+                        'color'      => $color,
                     ];
                     $presentDate[] = $value->date;
                 }
-
             }
         }
 
-//Leave Days
-        $leaveDate = array();
-        $periods = array();
+        //Leave Days
+        $leaveDate = [];
+        $periods = [];
         $leaves = Leave::where('employee_id', $employee->id)->get();
         foreach ($leaves as $leave) {
             $periods[] = CarbonPeriod::create($leave->datefrom, $leave->dateto);
@@ -1173,14 +1162,14 @@ class AttendanceController extends Controller
             }
         }
 
-//Leave DaysEnd
+        //Leave DaysEnd
         $dow = [0, 1, 2, 3, 4, 5, 6];
         foreach ($branchWeekend as $day) {
             unset($dow[$days[$day]]);
-        };
+        }
         $dow = implode(',', $dow);
 
-        $leaveCount = array();
+        $leaveCount = [];
         foreach ($leaveDate as $leavecnt) {
             if (date('m', strtotime($leavecnt)) == $currentMonth && in_array(Carbon::parse($leavecnt)->format('l'), $branchWeekend) == false) {
                 $leaveCount[] = $leavecnt;
@@ -1188,7 +1177,7 @@ class AttendanceController extends Controller
         }
         $JoiningDate = Employee::where('id', $employeeId)->first();
         $periods[] = CarbonPeriod::create($JoiningDate->joining_date, Carbon::now()->toDateString());
-        $absentDates = array();
+        $absentDates = [];
         foreach ($periods as $period) {
             foreach ($period as $dates) {
                 $absentDates[] = $dates->format('Y-m-d');
@@ -1197,44 +1186,44 @@ class AttendanceController extends Controller
         foreach ($absentDates as $date) {
             if (!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
                 $events[] = [
-                    "title" => "Absent   ",
-                    "date" => Carbon::parse($date)->toDateString(),
-                    "color" => "red",
+                    'title' => 'Absent   ',
+                    'date'  => Carbon::parse($date)->toDateString(),
+                    'color' => 'red',
                 ];
             }
         }
-//For Absent Event
+        //For Absent Event
         $till_date = new DateTime();
-        $absent = array();
+        $absent = [];
         for ($i = 1; $i <= $till_date->format('d'); $i++) {
             $now = Carbon::now();
-            $date = Carbon::parse($i . "-" . $now->month . "-" . $now->year)->toDateString();
+            $date = Carbon::parse($i.'-'.$now->month.'-'.$now->year)->toDateString();
             if (!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
-                $absent[] = "";
+                $absent[] = '';
             }
         }
         $AbsentCount = count($absent);
         $leave = Leave::with('leaveType')->where('employee_id', $employee->id)->get();
         foreach ($leave as $key => $value) {
             $color = '';
-            if ($value->leave_type == "Short Leave") {
+            if ($value->leave_type == 'Short Leave') {
                 $color = '#C24BFF';
             }
-            if ($value->leave_type === "Full Leave") {
+            if ($value->leave_type === 'Full Leave') {
                 $color = 'red';
             }
-            if ($value->leave_type === "Half Leave") {
+            if ($value->leave_type === 'Half Leave') {
                 $color = '#57BB8A';
             }
-            if ($value->leave_type == "Paid Leave") {
+            if ($value->leave_type == 'Paid Leave') {
                 $color = '#ADFF41';
             }
             $events[] = [
-                "title" => $value->leaveType->name . "\n" . "Status:" . $value->status,
-                "date" => $value->datefrom,
-                "start" => Carbon::parse($value->datefrom)->toIso8601String(),
-                "end" => date('Y-m-d', strtotime($value->dateto . ' +1 day')),
-                "color" => $color
+                'title' => $value->leaveType->name."\n".'Status:'.$value->status,
+                'date'  => $value->datefrom,
+                'start' => Carbon::parse($value->datefrom)->toIso8601String(),
+                'end'   => date('Y-m-d', strtotime($value->dateto.' +1 day')),
+                'color' => $color,
             ];
         }
         //Average Arrivals
@@ -1260,8 +1249,9 @@ class AttendanceController extends Controller
         //Line Manager
         $linemanagers = OrganizationHierarchy::with('lineManager')->where('employee_id', $employee->id)->get();
         $events = json_encode($events);
+
         return view('admin.attendance.myattendance', $this->metaResponse(), [
-            'events' => $events
+            'events' => $events,
         ])->with('employeeId', $employeeId)
             ->with('employees', $employees)
             ->with('dow', $dow)
@@ -1276,11 +1266,12 @@ class AttendanceController extends Controller
 
     public function correctionEmail(Request $request)
     {
-        $data = array('name' => Auth::user()->firstname, 'messages' => "$request->message", 'email' => Auth::user()->official_email, 'date' => "$request->date");
+        $data = ['name' => Auth::user()->firstname, 'messages' => "$request->message", 'email' => Auth::user()->official_email, 'date' => "$request->date"];
+
         try {
             Mail::send('emails.attendance_correction_email', $data, function ($message) use ($request) {
-                $message->to('awaid.anjum@gmail.com')->subject('Attendance Correction Request For Date ' . $request->date);
-                if ($request->line_manager_email != "") {
+                $message->to('awaid.anjum@gmail.com')->subject('Attendance Correction Request For Date '.$request->date);
+                if ($request->line_manager_email != '') {
                     $message->cc($request->line_manager_email);
                 }
                 $message->from('noreply@glowlogix.com', Auth::user()->official_email);
@@ -1289,6 +1280,7 @@ class AttendanceController extends Controller
             Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
         }
         Session::flash('success', 'Correction Email Sent To the HR');
+
         return redirect()->back();
     }
 
@@ -1297,7 +1289,7 @@ class AttendanceController extends Controller
         $attendance_summary_delete = AttendanceSummary::find($id);
         $attendance_summary_delete->delete();
         Session::flash('success', 'Attendance Deleted Successfully.');
-        return redirect()->route("today_timeline");
-    }
 
+        return redirect()->route('today_timeline');
+    }
 }

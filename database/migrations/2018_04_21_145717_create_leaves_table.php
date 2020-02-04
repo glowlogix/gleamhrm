@@ -1,8 +1,8 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Database\Schema\Blueprint;
+use Illuminate\Support\Facades\Schema;
 
 class CreateLeavesTable extends Migration
 {
@@ -24,7 +24,7 @@ class CreateLeavesTable extends Migration
             $table->longText('description')->nullable();
             $table->string('line_manager')->nullable();
             $table->string('subject')->nullable();
-            $table->string('status');                        
+            $table->string('status');
             $table->timestamps();
         });
     }

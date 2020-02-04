@@ -3,10 +3,10 @@
 namespace App\Http\Controllers;
 
 use App\OfficeLocation;
-use Illuminate\Http\Request;
 use App\Traits\MetaTrait;
-use Session;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use Session;
 
 class OfficeLocationController extends Controller
 {
@@ -33,13 +33,15 @@ class OfficeLocationController extends Controller
     public function create()
     {
         $this->meta['title'] = 'Create Office Location';
+
         return view('admin.office_locations.create', $this->metaResponse());
     }
 
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -48,8 +50,8 @@ class OfficeLocationController extends Controller
             'name' => 'required',
             // 'status' => 'required',
             'timing_start' => 'required',
-            'timing_off' => 'required|after:timing_start',
-            'address' => 'required',
+            'timing_off'   => 'required|after:timing_start',
+            'address'      => 'required',
             'phone_number' => 'required',
         ]);
 
@@ -57,19 +59,21 @@ class OfficeLocationController extends Controller
             'name' => $request->name,
             // 'status' => $request->status,
             'timing_start' => Carbon::parse($request->timing_start),
-            'timing_off' => Carbon::parse($request->timing_off),
-            'address' => $request->address,
+            'timing_off'   => Carbon::parse($request->timing_off),
+            'address'      => $request->address,
             'phone_number' => $request->phone_number,
         ]);
 
         Session::flash('success', 'OfficeLocation is created successfully');
+
         return redirect()->route('offices');
     }
 
     /**
      * Display the specified resource.
      *
-     * @param  \App\OfficeLocation $officeLocation
+     * @param \App\OfficeLocation $officeLocation
+     *
      * @return \Illuminate\Http\Response
      */
     public function show(OfficeLocation $officeLocation)
@@ -80,31 +84,34 @@ class OfficeLocationController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  \App\OfficeLocation $officeLocation
+     * @param \App\OfficeLocation $officeLocation
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
     {
         $this->meta['title'] = 'Update OfficeLocation';
         $office_location = OfficeLocation::find($id);
+
         return view('admin.office_locations.edit', $this->metaResponse())->with('office_location', $office_location);
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  \App\OfficeLocation $officeLocation
+     * @param \Illuminate\Http\Request $request
+     * @param \App\OfficeLocation      $officeLocation
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
     {
         $this->validate($request, [
-            'name' => 'required',
-            'status' => 'required',
+            'name'         => 'required',
+            'status'       => 'required',
             'timing_start' => 'required',
-            'timing_off' => 'required|after:timing_start',
-            'address' => 'required',
+            'timing_off'   => 'required|after:timing_start',
+            'address'      => 'required',
             'phone_number' => 'required',
         ]);
 
@@ -119,13 +126,15 @@ class OfficeLocationController extends Controller
         $office_location->save();
 
         Session::flash('success', 'Office location is updated successfully');
+
         return redirect()->route('offices');
     }
 
     /**
      * Remove the specified resource from storage.
      *
-     * @param  \App\OfficeLocation $officeLocation
+     * @param \App\OfficeLocation $officeLocation
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)
@@ -133,6 +142,7 @@ class OfficeLocationController extends Controller
         $office_location = OfficeLocation::find($id);
         $office_location->delete();
         Session::flash('success', 'OfficeLocation deleted successfully.');
+
         return redirect()->back();
     }
 }

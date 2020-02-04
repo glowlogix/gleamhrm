@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class RemoveCategoryIdFromApplicantsTable extends Migration
 {
@@ -13,7 +12,7 @@ class RemoveCategoryIdFromApplicantsTable extends Migration
      */
     public function up()
     {
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->dropColumn('category_id');
         });
     }
@@ -25,7 +24,7 @@ class RemoveCategoryIdFromApplicantsTable extends Migration
      */
     public function down()
     {
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->integer('category_id')->nullable()->after('job_id');
         });
     }
