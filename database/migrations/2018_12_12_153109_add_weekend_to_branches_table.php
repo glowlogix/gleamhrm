@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddWeekendToBranchesTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddWeekendToBranchesTable extends Migration
      */
     public function up()
     {
-        Schema::table('branches', function($table) {
+        Schema::table('branches', function ($table) {
             $table->string('weekend')->nullable()->after('timing_off');
         });
     }
@@ -25,7 +24,7 @@ class AddWeekendToBranchesTable extends Migration
      */
     public function down()
     {
-        Schema::table('branches', function($table) {
+        Schema::table('branches', function ($table) {
             $table->dropColumn('weekend');
         });
     }

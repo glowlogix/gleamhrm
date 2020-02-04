@@ -8,9 +8,9 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class Salary extends Model
 {
     use SoftDeletes;
-    
+
     protected $dates = ['deleted_at'];
-    protected $fillable=[
-        'employee_id','basic_salary'
+    protected $fillable = [
+        'employee_id', 'basic_salary',
     ];
 }

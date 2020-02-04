@@ -5,16 +5,13 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class Mymail extends Mailable
 {
-    use Queueable, SerializesModels;
-   
-    
+    use Queueable;
+    use SerializesModels;
     public function __construct()
     {
-       
     }
 
     /**

@@ -14,6 +14,7 @@ class TeamMembersController extends Controller
     {
         $teams = Team::with('department')->get();
         $employees = Employee::where('status', '!=', '0')->get();
+
         return view('admin.teams.team_member')->with('teams', $teams)->with('employees', $employees);
     }
 
@@ -26,20 +27,21 @@ class TeamMembersController extends Controller
         if ($member_exist == null) {
             TeamMember::create([
                 'employee_id' => $request->team_member,
-                'team_id' => $request->team_id
+                'team_id'     => $request->team_id,
             ]);
             Session::flash('success', 'Member added to team successfully');
         } else {
             Session::flash('error', 'This employee already exist in this team');
         }
-        return redirect()->route('teams.index');
 
+        return redirect()->route('teams.index');
     }
 
     public function edit($id)
     {
         $team_name = Team::find($id);
         $team_members = TeamMember::with('employee')->where('team_id', $id)->get();
+
         return view('admin.teams.team_member_edit')->with('team_members', $team_members)->with('team_name', $team_name);
     }
 
@@ -48,6 +50,7 @@ class TeamMembersController extends Controller
         $member_name = TeamMember::where('id', $id);
         $member_name->delete();
         Session::flash('success', 'Employee deleted from team successfully');
+
         return redirect()->back();
     }
 }

@@ -6,12 +6,11 @@ use App\Employee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class UpdateAccount extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     private $employee_id;
     private $password;
 
@@ -22,7 +21,7 @@ class UpdateAccount extends Mailable
      * @param string $password
      * @param $type
      */
-    public function __construct($id,$password='')
+    public function __construct($id, $password = '')
     {
         $this->employee_id = $id;
         $this->password = $password;
@@ -35,8 +34,9 @@ class UpdateAccount extends Mailable
      */
     public function build()
     {
-        $employee = Employee::find($this->employee_id );
+        $employee = Employee::find($this->employee_id);
+
         return $this->view('emails.updateaccount')
-            ->with('employee', $employee)->with('password',$this->password);
+            ->with('employee', $employee)->with('password', $this->password);
     }
 }

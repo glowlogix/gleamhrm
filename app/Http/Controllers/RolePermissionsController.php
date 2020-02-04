@@ -2,16 +2,15 @@
 
 namespace App\Http\Controllers;
 
-use Spatie\Permission\Models\Role;
-use Spatie\Permission\Models\Permission;
+use App\Employee;
+use App\Traits\MetaTrait;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
-use App\Traits\MetaTrait;
-use App\Employee;
+use Spatie\Permission\Models\Permission;
+use Spatie\Permission\Models\Role;
 
 class RolePermissionsController extends Controller
 {
-
     use MetaTrait;
 
     /**
@@ -27,7 +26,7 @@ class RolePermissionsController extends Controller
         $permissions = Permission::all();
 
         return view('admin.roles_permissions.index', $this->metaResponse())->with([
-            'roles' => $roles,
+            'roles'       => $roles,
             'permissions' => $permissions,
         ]);
     }
@@ -41,7 +40,7 @@ class RolePermissionsController extends Controller
         $permissions = Permission::all();
 
         return view('admin.roles_permissions.applyRole', $this->metaResponse())->with([
-            'roles' => $roles,
+            'roles'     => $roles,
             'employees' => $employees,
         ]);
     }
@@ -53,7 +52,7 @@ class RolePermissionsController extends Controller
 
         $employee->assignRole($role);
 
-        return redirect()->route('roles_permissions')->with('success', 'Role (' . $role->name . ') Assigned employee (' . $employee->firstname . ' ' . $employee->lastname . ') succesfully');
+        return redirect()->route('roles_permissions')->with('success', 'Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');
     }
 
     public function getPermissionsFromRole($id, $employee_id)
@@ -62,18 +61,18 @@ class RolePermissionsController extends Controller
         $role = Role::find($id);
 
         $permissions = $role->permissions()->get();
-        $routes = array();
+        $routes = [];
 
         foreach ($permissions as $key => $permission) {
             $index = explode(':', $permission->name);
             $routes[$index[0]][] = $permission;
         }
+
         return view('admin.roles_permissions.getPermissionsFromRole')->with([
-            'role' => $role,
+            'role'            => $role,
             'all_controllers' => $routes,
             'emp_permissions' => $emp_permissions,
         ]);
-
     }
 
     /**
@@ -91,7 +90,8 @@ class RolePermissionsController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
+     * @param \Illuminate\Http\Request $request
+     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -108,7 +108,7 @@ class RolePermissionsController extends Controller
                 $val = explode(':', $value);
                 $data = [
                     'guard_name' => $val[0],
-                    'name' => $val[1] . ':' . $val[2],
+                    'name'       => $val[1].':'.$val[2],
                 ];
 
                 $permission = Permission::where($data)->first();
@@ -125,7 +125,8 @@ class RolePermissionsController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function show($id)
@@ -136,7 +137,8 @@ class RolePermissionsController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -144,14 +146,14 @@ class RolePermissionsController extends Controller
         $this->meta['title'] = 'Update Role';
         $role = Role::find($id);
         $permissions = $role->permissions()->get()->toArray();
-        $routes = array();
+        $routes = [];
         foreach ($permissions as $permission) {
             $routes[] = $permission['name'];
         }
 
         return view('admin.roles_permissions.edit', $this->metaResponse())->with([
-            'role' => $role,
-            'routes' => $routes,
+            'role'            => $role,
+            'routes'          => $routes,
             'all_controllers' => $this->routesList(),
         ]);
     }
@@ -164,8 +166,8 @@ class RolePermissionsController extends Controller
             $action = $route->getAction();
             if (array_key_exists('controller', $action)) {
                 $row = explode('@', $action['controller']);
-                $index = str_replace("App\Http\Controllers\\", "", $row[0]);
-                $index = str_replace("Auth\\", "", $index);
+                $index = str_replace("App\Http\Controllers\\", '', $row[0]);
+                $index = str_replace('Auth\\', '', $index);
                 if (
                     $index == 'LoginController' ||
                     $index == 'RegisterController' ||
@@ -177,6 +179,7 @@ class RolePermissionsController extends Controller
                 $all_controllers[$index][] = $row[1];
             }
         }
+
         return $all_controllers;
     }
 
@@ -188,8 +191,8 @@ class RolePermissionsController extends Controller
             $action = $route->getAction();
             if (array_key_exists('controller', $action)) {
                 $row = explode('@', $action['controller']);
-                $index = str_replace("App\Http\Controllers\\", "", $row[0]);
-                $index = str_replace("Auth\\", "", $index);
+                $index = str_replace("App\Http\Controllers\\", '', $row[0]);
+                $index = str_replace('Auth\\', '', $index);
                 if (
                     $index == 'LoginController' ||
                     $index == 'RegisterController' ||
@@ -201,14 +204,16 @@ class RolePermissionsController extends Controller
                 $all_controllers[$index][] = $row[1];
             }
         }
+
         return $all_controllers;
     }
 
     /**
      * Update the specified resource in storage.
      *
-     * @param  \Illuminate\Http\Request $request
-     * @param  int $id
+     * @param \Illuminate\Http\Request $request
+     * @param int                      $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, $id)
@@ -222,7 +227,7 @@ class RolePermissionsController extends Controller
                 $val = explode(':', $value);
                 $data = [
                     'guard_name' => $val[0],
-                    'name' => $val[1] . ':' . $val[2],
+                    'name'       => $val[1].':'.$val[2],
                 ];
 
                 $permission = Permission::where($data)->first();
@@ -247,7 +252,8 @@ class RolePermissionsController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param  int $id
+     * @param int $id
+     *
      * @return \Illuminate\Http\Response
      */
     public function destroy($id)

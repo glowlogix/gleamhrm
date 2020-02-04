@@ -1,4 +1,5 @@
 <?php
+
 return [
     /*
     |--------------------------------------------------------------------------
@@ -11,7 +12,7 @@ return [
     |
     */
     'defaults' => [
-        'guard' => 'web',
+        'guard'     => 'web',
         'passwords' => 'employees',
     ],
     /*
@@ -32,11 +33,11 @@ return [
     */
     'guards' => [
         'api' => [
-            'driver' => 'token',
+            'driver'   => 'token',
             'provider' => 'employees',
         ],
         'web' => [
-            'driver' => 'session',
+            'driver'   => 'session',
             'provider' => 'employees',
         ],
     ],
@@ -59,7 +60,7 @@ return [
     'providers' => [
         'employees' => [
             'driver' => 'eloquent',
-            'model' => App\Employee::class,
+            'model'  => App\Employee::class,
         ],
         // 'users' => [
         //     'driver' => 'database',
@@ -88,8 +89,8 @@ return [
         ],*/
         'employees' => [
             'provider' => 'employees',
-            'table' => 'password_resets',
-            'expire' => 60,
+            'table'    => 'password_resets',
+            'expire'   => 60,
         ],
     ],
 ];

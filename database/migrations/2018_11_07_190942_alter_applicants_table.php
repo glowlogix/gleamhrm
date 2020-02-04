@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AlterApplicantsTable extends Migration
 {
@@ -13,10 +12,10 @@ class AlterApplicantsTable extends Migration
      */
     public function up()
     {
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->dropColumn('job_id');
         });
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->unsignedInteger('job_id')->after('recruited');
         });
     }
@@ -28,11 +27,10 @@ class AlterApplicantsTable extends Migration
      */
     public function down()
     {
-
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->dropColumn('job_id');
         });
-        Schema::table('applicants', function($table) {
+        Schema::table('applicants', function ($table) {
             $table->integer('job_id')->after('recruited');
         });
     }

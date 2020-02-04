@@ -1,15 +1,15 @@
 <?php
 
 namespace App\Mail;
-use Illuminate\Http\Request;
+
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class SlackInvitationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     public $data;
     public $name;
 
@@ -18,7 +18,7 @@ class SlackInvitationMail extends Mailable
      *
      * @return void
      */
-    public function __construct(array $data )
+    public function __construct(array $data)
     {
         $this->name = $data['firstname'];
     }
@@ -30,7 +30,7 @@ class SlackInvitationMail extends Mailable
      */
     public function build()
     {
-       return $this->subject('Slack Invitation')
-         ->view('emails.slackmail',['name' => $this->name]);
+        return $this->subject('Slack Invitation')
+         ->view('emails.slackmail', ['name' => $this->name]);
     }
 }

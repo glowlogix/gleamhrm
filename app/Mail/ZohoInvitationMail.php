@@ -5,15 +5,15 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class ZohoInvitationMail extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     public $data;
     public $org_email;
     public $password;
-    public $getPassword;    
+    public $getPassword;
     public $fname;
 
     /**
@@ -23,12 +23,11 @@ class ZohoInvitationMail extends Mailable
      */
     public function __construct(array $data, $getPassword)
     {
-        $data['password'] =  $getPassword;
+        $data['password'] = $getPassword;
         $this->fname = $data['firstname'];
         $this->password = $data['password'];
         $this->org_email = $data['org_email'];
     }
-
 
     /**
      * Build the message.
@@ -38,6 +37,6 @@ class ZohoInvitationMail extends Mailable
     public function build()
     {
         return $this->subject('Zoho Invitation')
-        ->view('emails.zohomail',['name'=>$this->fname,'org_email'=>$this->org_email,'password'=>$this->password]);
+        ->view('emails.zohomail', ['name'=>$this->fname, 'org_email'=>$this->org_email, 'password'=>$this->password]);
     }
 }

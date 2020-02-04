@@ -1,16 +1,15 @@
 <?php
+
 namespace App\Traits;
 
-trait MetaTrait{
-
+trait MetaTrait
+{
     protected $meta = [
-        'title' => ''
+        'title' => '',
     ];
 
     public function metaResponse()
     {
         return $this->meta;
     }
-
-
 }

@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\Employee;
+use Illuminate\Database\Seeder;
 
 class EmployeeSlackIdSeeder extends Seeder
 {

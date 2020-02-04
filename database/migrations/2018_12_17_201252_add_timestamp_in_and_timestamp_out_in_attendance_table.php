@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddTimestampInAndTimestampOutInAttendanceTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddTimestampInAndTimestampOutInAttendanceTable extends Migration
      */
     public function up()
     {
-        Schema::table('attendances', function($table) {
+        Schema::table('attendances', function ($table) {
             $table->dateTime('timestamp_in')->nullable()->after('time_out');
             $table->dateTime('timestamp_out')->nullable()->after('timestamp_in');
         });
@@ -26,7 +25,7 @@ class AddTimestampInAndTimestampOutInAttendanceTable extends Migration
      */
     public function down()
     {
-        Schema::table('attendances', function($table) {
+        Schema::table('attendances', function ($table) {
             $table->dropColumn('timestamp_in');
             $table->dropColumn('timestamp_out');
         });

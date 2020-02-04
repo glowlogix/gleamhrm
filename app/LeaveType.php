@@ -15,5 +15,4 @@ class LeaveType extends Model
         return $this->belongsToMany('App\Employee')
             ->withTimestamps();
     }
-
 }

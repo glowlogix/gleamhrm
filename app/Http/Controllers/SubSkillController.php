@@ -12,6 +12,7 @@ class SubSkillController extends Controller
     public function index()
     {
         $skills = Skill::all();
+
         return view('admin.skills.sub_skill')->with('skills', $skills);
     }
 
@@ -24,20 +25,21 @@ class SubSkillController extends Controller
         if ($sub_skill_exist == null) {
             SubSkill::create([
                 'sub_skill_name' => $request->sub_skill_name,
-                'skill_id' => $request->skill_id
+                'skill_id'       => $request->skill_id,
             ]);
             Session::flash('success', 'Sub-Skill added successfully');
         } else {
             Session::flash('error', 'This sub-skill already exist in this parent skill');
         }
-        return redirect()->route('sub_skill.index');
 
+        return redirect()->route('sub_skill.index');
     }
 
     public function edit($id)
     {
         $skill_name = Skill::find($id);
         $sub_skills = SubSkill::where('skill_id', $id)->get();
+
         return view('admin.skills.sub_skill_edit')->with('sub_skills', $sub_skills)->with('skill_name', $skill_name);
     }
 
@@ -46,6 +48,7 @@ class SubSkillController extends Controller
         $sub_skill = SubSkill::find($id);
         $sub_skill->delete();
         Session::flash('success', 'Sub-Skill deleted successfully');
+
         return redirect()->back();
     }
 
@@ -55,7 +58,7 @@ class SubSkillController extends Controller
         $sub_skill->sub_skill_name = $request->sub_skill_name;
         $sub_skill->save();
         Session::flash('success', 'Sub-Skill updated successfully');
-        return redirect()->back();
 
+        return redirect()->back();
     }
 }

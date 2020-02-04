@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddGenderToEmployeesTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddGenderToEmployeesTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function($table) {
+        Schema::table('employees', function ($table) {
             $table->string('gender')->nullable()->after('date_of_birth');
         });
     }
@@ -25,7 +24,7 @@ class AddGenderToEmployeesTable extends Migration
      */
     public function down()
     {
-        Schema::table('employees', function($table) {
+        Schema::table('employees', function ($table) {
             $table->dropColumn('gender');
         });
     }

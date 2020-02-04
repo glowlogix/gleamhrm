@@ -12,12 +12,12 @@ class DepartmentSeeder extends Seeder
     public function run()
     {
         App\Department::Create([
-        'department_name'      => 'HR',
-        'status'    => 'Active',
-    ]);
+            'department_name'      => 'HR',
+            'status'               => 'Active',
+        ]);
         App\Department::Create([
             'department_name'      => 'Development',
-            'status'    => 'Active',
+            'status'               => 'Active',
         ]);
     }
 }
