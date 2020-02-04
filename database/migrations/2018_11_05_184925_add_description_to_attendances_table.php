@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddDescriptionToAttendancesTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddDescriptionToAttendancesTable extends Migration
      */
     public function up()
     {
-        Schema::table('attendances', function($table) {
+        Schema::table('attendances', function ($table) {
             $table->string('comment')->nullable()->after('time_out');
         });
     }
@@ -25,7 +24,7 @@ class AddDescriptionToAttendancesTable extends Migration
      */
     public function down()
     {
-        Schema::table('attendances', function($table) {
+        Schema::table('attendances', function ($table) {
             $table->dropColumn('comment');
         });
     }

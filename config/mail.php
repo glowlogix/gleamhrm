@@ -57,7 +57,7 @@ return [
 
     'from' => [
         'address' => env('MAIL_FROM_ADDRESS', 'noreply@glowlogix.com'),
-        'name' => env('MAIL_FROM_NAME', 'GlowLogix'),
+        'name'    => env('MAIL_FROM_NAME', 'GlowLogix'),
     ],
 
     /*

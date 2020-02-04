@@ -1,8 +1,7 @@
 <?php
 
-use Illuminate\Support\Facades\Schema;
-use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
+use Illuminate\Support\Facades\Schema;
 
 class AddDepartmentIdToEmpTable extends Migration
 {
@@ -13,7 +12,7 @@ class AddDepartmentIdToEmpTable extends Migration
      */
     public function up()
     {
-        Schema::table('employees', function($table) {
+        Schema::table('employees', function ($table) {
             $table->string('department_id')->nullable()->after('account_id');
         });
     }
@@ -25,7 +24,7 @@ class AddDepartmentIdToEmpTable extends Migration
      */
     public function down()
     {
-        Schema::table('employees', function($table) {
+        Schema::table('employees', function ($table) {
             $table->dropColumn('department_id');
         });
     }

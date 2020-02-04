@@ -1,7 +1,7 @@
 <?php
 
-use Illuminate\Database\Seeder;
 use App\LeaveType;
+use Illuminate\Database\Seeder;
 
 class LeaveTypeSeeder extends Seeder
 {
@@ -13,12 +13,12 @@ class LeaveTypeSeeder extends Seeder
     public function run()
     {
         $leave_type = LeaveType::create([
-            'name' => 'Sick Leaves',
+            'name'  => 'Sick Leaves',
             'count' => '12',
         ]);
 
         $leave_type = LeaveType::create([
-            'name' => 'Casual Leaves',
+            'name'  => 'Casual Leaves',
             'count' => '12',
         ]);
     }

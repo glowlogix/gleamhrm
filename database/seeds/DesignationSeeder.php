@@ -11,7 +11,6 @@ class DesignationSeeder extends Seeder
      * @return void
      */
     public function run()
-
     {
         $designations = [
             ['designation_name' => 'CEO'],
@@ -31,8 +30,7 @@ class DesignationSeeder extends Seeder
             ['designation_name' => 'HR Manager'],
             ['designation_name' => 'HR Officer'],
             ['designation_name' => 'Admin'],
-            ];
+        ];
         DB::table('designations')->insert($designations);
-
     }
 }

@@ -6,12 +6,11 @@ use App\Employee;
 use Illuminate\Bus\Queueable;
 use Illuminate\Mail\Mailable;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Http\Request;
-use Illuminate\Contracts\Queue\ShouldQueue;
 
 class EmailPasswordChange extends Mailable
 {
-    use Queueable, SerializesModels;
+    use Queueable;
+    use SerializesModels;
     private $employee_id;
 
     /**
@@ -33,8 +32,8 @@ class EmailPasswordChange extends Mailable
      */
     public function build()
     {
+        $employee = Employee::find($this->employee_id);
 
-        $employee = Employee::find($this->employee_id );
         return $this->view('emails.email_password_change')
         ->with('employee', $employee);
     }

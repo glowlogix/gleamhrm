@@ -18,24 +18,23 @@ class LeaveTypeController extends Controller
     public function create(Request $request)
     {
         $this->validate($request, [
-            'name' => 'required',
+            'name'   => 'required',
             'amount' => 'required',
             'status' => 'required',
         ]);
         $leave_exist = LeaveType::where('name', $request->name)->first();
         if ($leave_exist == null) {
             LeaveType::create([
-                'name' => $request->name,
+                'name'   => $request->name,
                 'amount' => $request->amount,
                 'status' => $request->status,
             ]);
             Session::flash('success', 'Leave type is created successfully');
-
         } else {
             Session::flash('error', 'Leave type with this name already exist');
         }
-        return redirect()->route('leave_type.index');
 
+        return redirect()->route('leave_type.index');
     }
 
     public function update(Request $request, $id)
@@ -46,6 +45,7 @@ class LeaveTypeController extends Controller
         $leave_type->status = $request->status;
         $leave_type->save();
         Session::flash('success', 'Leave type is updated successfully');
+
         return redirect()->route('leave_type.index');
     }
 
@@ -54,7 +54,7 @@ class LeaveTypeController extends Controller
         $leave_type = LeaveType::find($id);
         $leave_type->delete();
         Session::flash('success', 'Leave type deleted successfully.');
+
         return redirect()->route('leave_type.index');
     }
-
 }
