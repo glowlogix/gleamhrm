@@ -11,6 +11,7 @@ class CompanyPoliciesMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
+
     /**
      * Create a new message instance.
      *

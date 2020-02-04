@@ -10,6 +10,7 @@ class SimSimMail extends Mailable
 {
     use Queueable;
     use SerializesModels;
+
     /**
      * Create a new message instance.
      *
