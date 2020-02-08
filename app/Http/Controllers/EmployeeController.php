@@ -128,7 +128,7 @@ class EmployeeController extends Controller
             // 'cnic' => 'size:13',
         ]);
 
-        if (!strstr(strtolower($request->official_email), 'glowlogix.com')) {
+        if (! strstr(strtolower($request->official_email), 'glowlogix.com')) {
             return redirect()->back()->with('error', 'Enter correct official email like "abc@glowlogix.com"');
             // return redirect()->back()->withInput($request)->with('error','Enter correct official email like "abc@glowlogix.com"');
         }
@@ -167,7 +167,7 @@ class EmployeeController extends Controller
             'gender'                         => $request->gender,
         ];
 
-        if (!empty($request->branch_id)) {
+        if (! empty($request->branch_id)) {
             $arr['branch_id'] = $request->branch_id;
         }
 
@@ -253,7 +253,7 @@ class EmployeeController extends Controller
     public function edit($id)
     {
         $employee = Employee::find($id);
-        if (!$employee) {
+        if (! $employee) {
             abort(404);
         }
 
@@ -288,7 +288,7 @@ class EmployeeController extends Controller
     public function profile()
     {
         $employee = Auth::user();
-        if (!$employee) {
+        if (! $employee) {
             abort(404);
         }
 
@@ -323,7 +323,7 @@ class EmployeeController extends Controller
     {
         $adminPassword = Auth::user()->password;
 
-        if (!Hash::check($request->old_password, $adminPassword)) {
+        if (! Hash::check($request->old_password, $adminPassword)) {
             return redirect()->back()->with('error', 'Wrong admin password entered');
         }
 
@@ -338,7 +338,7 @@ class EmployeeController extends Controller
         ]);
 
         // rename image name or file name
-        if (!strstr(strtolower($request->official_email), 'glowlogix.com')) {
+        if (! strstr(strtolower($request->official_email), 'glowlogix.com')) {
             return redirect()->back()->with('error', 'Enter correct official email like "abc@glowlogix.com"');
         }
 
@@ -362,7 +362,7 @@ class EmployeeController extends Controller
         $employee->designation = $request->designation;
         $employee->employment_status = $request->employment_status;
         $employee->type = $request->type;
-        if (!empty($request->branch_id)) {
+        if (! empty($request->branch_id)) {
             $employee->branch_id = $request->branch_id;
         }
         $employee->cnic = $request->cnic;
@@ -374,7 +374,7 @@ class EmployeeController extends Controller
         $employee->gender = $request->gender;
         $employee->status = $request->status;
 
-        if (!empty($request->password)) {
+        if (! empty($request->password)) {
             $employee->password = Hash::make($request->password);
         }
 
@@ -436,7 +436,7 @@ class EmployeeController extends Controller
             $employee->removeRole($old_role);
         }
 
-        if (!empty($request->role_id)) {
+        if (! empty($request->role_id)) {
             $role = Role::find($request->role_id);
             $employee->assignRole($role);
         }
@@ -490,7 +490,7 @@ class EmployeeController extends Controller
 
         $adminPassword = Auth::user()->password;
 
-        if (!Hash::check($request->password, $adminPassword)) {
+        if (! Hash::check($request->password, $adminPassword)) {
             return redirect()->back()->with('error', 'Wrong admin password entered');
         }
 
@@ -543,7 +543,7 @@ class EmployeeController extends Controller
         if (isset($employee->password)) {
             return redirect()->back()->with('error', 'Email not found');
         }
-        if (!Hash::check($request->password, $employee->password)) {
+        if (! Hash::check($request->password, $employee->password)) {
             return redirect()->back()->with('error', 'Wrong email/password entered');
         }
 

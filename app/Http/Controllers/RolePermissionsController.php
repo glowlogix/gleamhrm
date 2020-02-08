@@ -112,7 +112,7 @@ class RolePermissionsController extends Controller
                 ];
 
                 $permission = Permission::where($data)->first();
-                if (!isset($permission->id)) {
+                if (! isset($permission->id)) {
                     $permission = Permission::create($data);
                 }
                 $role->givePermissionTo($permission);
@@ -234,7 +234,7 @@ class RolePermissionsController extends Controller
 
                 if (in_array($value, $request->permissions_checked)) {
                     // dump('give permission' . $permission->id. '==>' . $role->id.'<br>');
-                    if (!isset($permission->id)) {
+                    if (! isset($permission->id)) {
                         $permission = Permission::create($data);
                     }
                     $role->givePermissionTo($permission);

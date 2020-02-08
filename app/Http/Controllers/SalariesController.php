@@ -111,7 +111,7 @@ class SalariesController extends Controller
             $absent = [];
             for ($i = 1; $i <= $mothDays; $i++) {
                 $date = Carbon::parse($i.'-'.$currentMonth.'-'.Carbon::parse($id)->format('Y'))->toDateString();
-                if (!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), json_decode($weekend->weekend)) == false && in_array(Carbon::parse($date)->toDateString(), $Approved) == false && in_array(Carbon::parse($date)->toDateString(), $unApproved) == false) {
+                if (! in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), json_decode($weekend->weekend)) == false && in_array(Carbon::parse($date)->toDateString(), $Approved) == false && in_array(Carbon::parse($date)->toDateString(), $unApproved) == false) {
                     $absent[] = '';
                 }
             }
