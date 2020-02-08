@@ -261,10 +261,10 @@ class AttendanceController extends Controller
             'employee_id'  => $request->employee_id,
             'date'         => $request->date,
             'time'         => $time->toTimeString(),
-            'timestamp_in' => !empty($request->time_in) ? Carbon::parse($request->time_in) : '',
+            'timestamp_in' => ! empty($request->time_in) ? Carbon::parse($request->time_in) : '',
         ];
 
-        if (!empty($request->time_out)) {
+        if (! empty($request->time_out)) {
             $attendance['timestamp_out'] = Carbon::parse($request->time_out);
         }
         $attendance = Attendance::create($attendance);
@@ -292,11 +292,11 @@ class AttendanceController extends Controller
             'employee_id'           => $request->employee_id,
             'date'                  => $request->date,
             'time'                  => $time->toTimeString(),
-            'timestamp_break_start' => !empty($request->break_start) ? Carbon::parse($request->break_start) : '',
+            'timestamp_break_start' => ! empty($request->break_start) ? Carbon::parse($request->break_start) : '',
             'comment'               => $request->comment,
         ];
 
-        if (!empty($request->break_end)) {
+        if (! empty($request->break_end)) {
             $attendance['timestamp_break_end'] = Carbon::parse($request->break_end);
         }
         $attendance = AttendanceBreak::create($attendance);
@@ -412,7 +412,7 @@ class AttendanceController extends Controller
 
         $in = Carbon::parse($request->time_in);
 
-        if (!empty($request->time_out)) {
+        if (! empty($request->time_out)) {
             $out = Carbon::parse($request->time_out);
             $totaltime = $out->diffInMinutes($in);
             $totaltime = $totaltime - $totalbreaktime;
@@ -518,11 +518,11 @@ class AttendanceController extends Controller
             return;
         }
         $employee = Employee::where('slack_id', $request['event']['user'])->first();
-        if (!isset($employee->id)) {
+        if (! isset($employee->id)) {
             $token = config('values.SlackToken');
             $output = file_get_contents('https://slack.com/api/users.profile.get?token='.$token.'&user='.$request['event']['user']);
             $output = json_decode($output, true);
-            if (!$output['ok']) {
+            if (! $output['ok']) {
                 Log::debug('no user info found.');
 
                 return 'no user info found.';
@@ -1184,7 +1184,7 @@ class AttendanceController extends Controller
             }
         }
         foreach ($absentDates as $date) {
-            if (!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
+            if (! in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
                 $events[] = [
                     'title' => 'Absent   ',
                     'date'  => Carbon::parse($date)->toDateString(),
@@ -1198,7 +1198,7 @@ class AttendanceController extends Controller
         for ($i = 1; $i <= $till_date->format('d'); $i++) {
             $now = Carbon::now();
             $date = Carbon::parse($i.'-'.$now->month.'-'.$now->year)->toDateString();
-            if (!in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
+            if (! in_array($date, $presentDate) && in_array(Carbon::parse($date)->format('l'), $branchWeekend) == false && in_array(Carbon::parse($date)->toDateString(), $leaveDate) == false) {
                 $absent[] = '';
             }
         }

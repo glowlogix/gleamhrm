@@ -33,7 +33,7 @@ class AllowedPermission
         $getUrl = str_replace('@', ':', $getUrl);
         $getUrl = str_replace("App\Http\Controllers\\", '', $getUrl);
 
-        if (!Auth::user()->isAllowed($getUrl)) {
+        if (! Auth::user()->isAllowed($getUrl)) {
             return redirect()->route('error');
         // dump('401 not authorized to view this page');
         } else {
@@ -57,7 +57,7 @@ class AllowedPermission
         }
 
         if ($request->is('posts/create')) {//If user is creating a post
-            if (!Auth::user()->hasPermissionTo('Create Post')) {
+            if (! Auth::user()->hasPermissionTo('Create Post')) {
                 abort('401');
             } else {
                 return $next($request);
@@ -65,7 +65,7 @@ class AllowedPermission
         }
 
         if ($request->is('posts/*/edit')) { //If user is editing a post
-            if (!Auth::user()->hasPermissionTo('Edit Post')) {
+            if (! Auth::user()->hasPermissionTo('Edit Post')) {
                 abort('401');
             } else {
                 return $next($request);
@@ -73,7 +73,7 @@ class AllowedPermission
         }
 
         if ($request->isMethod('Delete')) { //If user is deleting a post
-            if (!Auth::user()->hasPermissionTo('Delete Post')) {
+            if (! Auth::user()->hasPermissionTo('Delete Post')) {
                 abort('401');
             } else {
                 return $next($request);
