@@ -1,0 +1,25 @@
+require('./bootstrap');
+require('bootstrap');
+require('bootstrap-touchspin');
+require('bootstrap-switch');
+require('flot');
+// require('chartist');
+require('chartist-plugin-tooltip'); //
+require('d3');
+require('c3');
+// require('sparkline');
+require('moment');
+require('chart.js');
+require('jquery-sparkline');
+require('orgchart');
+require('icheck');
+require('waves/dist/waves.min');
+require('jquery-slimscroll');
+require('sticky-kit/dist/sticky-kit.js');
+require('jquery.flot.tooltip');
+require('metismenu');
+require('wysihtml');
+require('bootstrap-wysiwyg');
+require('datatables');
+// require('./dashboard1');
+require('./custom');

@@ -1176,6 +1176,7 @@ class AttendanceController extends Controller
             }
         }
         $JoiningDate = Employee::where('id', $employeeId)->first();
+        // TODO: If joining date is null then we need to handle it here.
         $periods[] = CarbonPeriod::create($JoiningDate->joining_date, Carbon::now()->toDateString());
         $absentDates = [];
         foreach ($periods as $period) {

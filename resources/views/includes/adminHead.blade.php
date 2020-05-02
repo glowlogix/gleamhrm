@@ -7,17 +7,17 @@
     <meta name="author" content="">
     <!-- Favicon icon -->
     <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/favicon.PNG') }}">
-    <title>HR|Glowlogix</title>
+    <title>HRM | Glowlogix</title>
     <meta name="csrf-token" content="{{ csrf_token() }}">
     <!-- Bootstrap Core CSS -->
-    <link href="{{asset('assets/plugins/bootstrap/css/bootstrap.min.css') }}" rel="stylesheet">
+    <link href="{{asset('css/bootstrap.min.css') }}" rel="stylesheet">
 
     <!-- chartist CSS -->
-    <link href="{{asset('assets/plugins/chartist-js/dist/chartist.min.css') }}" rel="stylesheet">
-    <link href="{{asset('assets/plugins/chartist-js/dist/chartist-init.css') }}" rel="stylesheet">
-    <link href="{{asset('assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.css') }}" rel="stylesheet">
+    <link href="{{asset('css/chartist.min.css') }}" rel="stylesheet">
+    <link href="{{asset('css/chartist-init.css') }}" rel="stylesheet">
+    <link href="{{asset('css/chartist-plugin-tooltip.css') }}" rel="stylesheet">
     <!--This page css - Morris CSS -->
-    <link href="{{asset('assets/plugins/c3-master/c3.min.css') }}" rel="stylesheet">
+    <link href="{{asset('css/c3.min.css') }}" rel="stylesheet">
     <!-- Custom CSS -->
 
     <link href="{{asset('css/style.css') }}" rel="stylesheet">
@@ -33,6 +33,6 @@
     <link href="{{asset('assets/plugins/footable/css/footable.bootstrap.min.css')}}" rel="stylesheet">
 
     <link href="{{asset('assets/plugins/wizard/steps.css')}}" rel="stylesheet" type="text/css">
-    <link href="{{asset('assets/plugins/datatables/media/css/dataTables.bootstrap4.css')}}" rel="stylesheet">
-    <link rel="stylesheet" href="{{asset('assets/plugins/html5-editor/bootstrap-wysihtml5.css')}}" />
+    <link href="{{asset('css/dataTables.bootstrap4.css')}}" rel="stylesheet">
+    <link rel="stylesheet" href="{{asset('css/bootstrap-wysihtml5.css')}}" />
 </head>

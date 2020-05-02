@@ -140,62 +140,43 @@
         </div>
         </div>
     </div>
-        @push('scripts')
-        <!--stickey kit -->
-        <script src="{{asset('assets/plugins/sticky-kit-master/dist/sticky-kit.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/sparkline/jquery.sparkline.min.js')}}"></script>
-        <!-- ============================================================== -->
-        <!-- This page plugins -->
-        <!-- ============================================================== -->
-        <!-- chartist chart -->
-        <script src="{{asset('assets/plugins/chartist-js/dist/chartist.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/chartist-plugin-tooltip-master/dist/chartist-plugin-tooltip.min.js')}}"></script>
-        <!--c3 JavaScript -->
-        <script src="{{asset('assets/plugins/d3/d3.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/c3-master/c3.min.js')}}"></script>
-        <!-- Chart JS -->
-        <script src="{{asset('js/dashboard6.js')}}"></script>
-        {{--///Gender Ratio Script///--}}
+    @push('scripts')
         <script>
-            var chart = c3.generate({
-                bindto: '#visitors',
-                data: {
-                    columns: [
-                        ['Male', {!! $male !!}],
-                        ['Female', {!! $female !!}],
-
-                    ],
-
-                    type : 'donut',
-                    onclick: function (d, i) { console.log("onclick", d, i); },
-                    onmouseover: function (d, i) { console.log("onmouseover", d, i); },
-                    onmouseout: function (d, i) { console.log("onmouseout", d, i); }
-                },
-                donut: {
-                    label: {
-                        show: false
-                    },
-                    title: "Gender Ratio",
-                    width:20,
-                },
-
-                legend: {
-                    hide: true
-                    //or hide: 'data1'
-                    //or hide: ['data1', 'data2']
-                },
-                color: {
-                    pattern: ['#1e88e5','#26c6da' ]
-                }
-            });
-
-        </script>
-
-        {{--//Attendence--}}
-        <script>
-
             $(function () {
                 "use strict";
+                {{--///Gender Ratio Script///--}}
+                var chart = c3.generate({
+                    bindto: '#visitors',
+                    data: {
+                        columns: [
+                            ['Male', {!! $male !!}],
+                            ['Female', {!! $female !!}],
+
+                        ],
+
+                        type : 'donut',
+                        onclick: function (d, i) { console.log("onclick", d, i); },
+                        onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                        onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+                    },
+                    donut: {
+                        label: {
+                            show: false
+                        },
+                        title: "Gender Ratio",
+                        width:20,
+                    },
+
+                    legend: {
+                        hide: true
+                        //or hide: 'data1'
+                        //or hide: ['data1', 'data2']
+                    },
+                    color: {
+                        pattern: ['#1e88e5','#26c6da' ]
+                    }
+                });
+                {{--//Attendence--}}
                 // ==============================================================
                 // Total revenue chart
                 // ==============================================================
@@ -253,10 +234,7 @@
                 });
                 sparklineLogin();
             });
-        </script>
-{{--Employee Chart--}}
-        <script>
-
+            {{--Employee Chart--}}
             $(function () {
                 "use strict";
                 // ==============================================================
@@ -294,7 +272,6 @@
                     }
                 });
             });
-
         </script>
     @endpush
 @endsection

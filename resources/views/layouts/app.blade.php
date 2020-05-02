@@ -1,3 +1,5 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -38,26 +40,57 @@
         @yield('content')
     </div>
 </section>
-<script src="{{ asset('assets/plugins/jquery/jquery.min.js')}}"></script>
-<!-- Bootstrap tether Core JavaScript -->
-<script src="{{ asset('assets/plugins/popper/popper.min.js')}}"></script>
-<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>
+
+<script src="{{ mix('/js/app.js') }}"></script>
+{{--<script src="{{ asset('assets/plugins/jquery/jquery.min.js')}}"></script>--}}
+{{--<!-- Bootstrap tether Core JavaScript -->--}}
+{{--<script src="{{ asset('assets/plugins/popper/popper.min.js')}}"></script>--}}
+{{--<script src="{{ asset('assets/plugins/bootstrap/js/bootstrap.min.js')}}"></script>--}}
 
 <!-- slimscrollbar scrollbar JavaScript -->
-<script  src="{{ asset('js/jquery.slimscroll.js') }}"></script>
+{{--<script  src="{{ asset('js/jquery.slimscroll.js') }}"></script>--}}
 <!--Wave Effects -->
-<script src="{{ asset('js/waves.js') }}"></script>
+{{--<script src="{{ asset('js/waves.js') }}"></script>--}}
 <!--Menu sidebar -->
-<script src="{{ asset('js/sidebarmenu.js')}}"></script>
+{{--<script src="{{ asset('js/sidebarmenu.js')}}"></script>--}}
 <!--stickey kit -->
-<script  src="{{ asset('assets/plugins/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
-<script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
+{{--<script  src="{{ asset('assets/plugins/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>--}}
+{{--<script src="{{ asset('assets/plugins/sparkline/jquery.sparkline.min.js') }}"></script>--}}
 <!--Custom JavaScript -->
-<script src="{{ asset('js/custom.min.js') }}"></script>
+{{--<script src="{{ asset('js/custom.min.js') }}"></script>--}}
 <!-- ============================================================== -->
 <!-- Style switcher -->
 <!-- ============================================================== -->
-<script src="{{ asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>
+{{--<script src="{{ asset('assets/plugins/styleswitcher/jQuery.style.switcher.js') }}"></script>--}}
+{{--<script>--}}
+{{--    $(document).ready(function(){--}}
+{{--        function store(name, val) {--}}
+{{--            if (typeof (Storage) !== "undefined") {--}}
+{{--                localStorage.setItem(name, val);--}}
+{{--            } else {--}}
+{{--                window.alert('Please use a modern browser to properly view this template!');--}}
+{{--            }--}}
+{{--        }--}}
+{{--        $("*[data-theme]").click(function(e){--}}
+{{--            e.preventDefault();--}}
+{{--            var currentStyle = $(this).attr('data-theme');--}}
+{{--            store('theme', currentStyle);--}}
+{{--            $('#theme').attr({href: 'css/colors/'+currentStyle+'.css'})--}}
+{{--        });--}}
+
+{{--        // var currentTheme =  localStorage.getItem('theme');--}}
+{{--        // if(currentTheme)--}}
+{{--        // {--}}
+{{--        //     $('#theme').attr({href: 'css/colors/'+currentTheme+'.css'});--}}
+{{--        // }--}}
+{{--        // // color selector--}}
+{{--        // $('#themecolors').on('click', 'a', function(){--}}
+{{--        //     $('#themecolors li a').removeClass('working');--}}
+{{--        //     $(this).addClass('working')--}}
+{{--        // });--}}
+{{--    });--}}
+
+{{--</script>--}}
 </body>
 
 
