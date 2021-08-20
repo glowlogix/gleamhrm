@@ -1,67 +1,131 @@
-@extends('layouts.admin')
-@section('Heading')
-	<button type="button" class="btn btn-info btn-rounded m-t-10 float-right" onclick="window.location.href='{{route('documents.create')}}'" data-toggle="modal" data-target="#add-contact"><span class="fas fa-plus" ></span> Add New Document</button>
-	<h3 class="text-themecolor">Documents</h3>
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Settings</li>
-		<li class="breadcrumb-item active">Documents</li>
-	</ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-	<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-body">
-					<h6 class="card-subtitle"></h6>
-					<div class="table">
-						<table id="demo-foo-addrow" class="table table-box m-t-20 table-hover contact-list" data-paging="true" data-paging-size="7">
-							@if(count($files) > 0)
-							<thead>
-							<tr>
-								<th>Document Name</th>
-								<th>Status</th>
-								@if(Auth::user()->hasRole('admin'))
-								<th>Action</th>
-								@endif
-							</tr>
-							</thead>
-								@foreach($files as $file)
-							<tbody>
-								<td>
-									<a  target="_blank" href="{{asset($file->url)}}">{{ $file->name }}</a>
-								</td>
-								<td>
-									{{ ($file->status == 1) ? 'Active' : 'Inactive' }}
-								</td>
-								@if(Auth::user()->hasRole('admin'))
-								<td class="row">
-									<div class="col-sm-2">
-										<form action="{{ route('documents.delete' , $file->id )}}" method="post">
-											{{ csrf_field() }}
-											<button class="btn btn-danger btn-sm">
-												<span class="fas fa-window-close"></span>
-											</button>
-										</form>
-									</div>
-									<div class="col-sm-2">
-										<a class="btn btn-info btn-sm" href="{{route('documents.edit',['id'=>$file->id])}}">
-											<span class="fas fa-pencil-alt"></span>
-										</a>
-									</div>
-								</td>
-								@endif
-							@endforeach
-							@else
-							<p class="text-center" style="margin-top:70px;" >No Document Found</p>
-							@endif
-							</tbody>
-						</table>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Documents</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('documents') }}">Settings</a></li>
+          <li class="breadcrumb-item active">Documents</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if(Session::has('error'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+@if(Session::has('success'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                    	<div class="text-right">
+                    		<button type="button" class="btn btn-info btn-rounded" onclick="window.location.href='{{route('documents.create')}}'" data-toggle="modal" data-target="#add-contact" title="Add New Document"><i class="fas fa-plus"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Add New Document</span></button>
+                        </div>
+
+                        <hr>
+
+						<div class="table-responsive">
+                            <table id="documents" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th>Document Name</th>
+										<th class="text-center">Status</th>
+										@if(Auth::user()->hasRole('admin'))
+											<th>Action</th>
+										@endif
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($files as $file)
+										<tr>
+											<td>
+												<a target="_blank" href="{{asset($file->url)}}">{{ $file->name }}</a>
+											</td>
+											<td class="text-center">
+												@if($file->status == 1)
+                                                    <div class="text-white badge badge-success font-weight-bold">Active</div>
+                                                @else
+                                                    <div class="text-white badge badge-danger font-weight-bold">Inactive</div>
+                                                @endif
+											</td>
+											@if(Auth::user()->hasRole('admin'))
+												<td class="row">
+													<a class="btn btn-warning btn-sm ml-1" href="{{route('documents.edit',['id'=>$file->id])}}" title="Edit Document">
+														<span class="fas fa-pencil-alt text-white"></span>
+													</a>
+													<form action="{{ route('documents.delete' , $file->id )}}" method="post">
+														{{ csrf_field() }}
+														<button class="btn btn-danger btn-sm ml-1" title="Delete Document">
+															<span class="fas fa-trash-alt"></span>
+														</button>
+													</form>
+												</td>
+											@endif
+										</tr>
+									@endforeach
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+<!-- Main Content End -->
+
+<script>
+    $(document).ready(function () {
+        $('#documents').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
+        });
+    });
+</script>
 @stop
 
 

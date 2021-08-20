@@ -1,46 +1,148 @@
-@extends('layouts.admin')
-@section('Heading')
-	<h3 class="text-themecolor">Upload Document</h3>
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Settings</li>
-		<li class="breadcrumb-item active">Document</li>
-		<li class="breadcrumb-item active">Create</li>
-	</ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-<div class="row">
-	<div class="col-lg-12">
-		<div class="card card-outline-info">
-			<div class="card-body">
-				<form action="{{asset('documents/upload')}}" method="post" enctype="multipart/form-data">
-					{{ csrf_field() }}
-					<div class="form-body">
-						<div class="col-md-6">
-							<div class="form-group">
-								<label class="control-label">Document Name</label>
-								<input type="text" name="document_name" class="form-control" placeholder="Enter Document Name">
-							</div>
-						</div>
-					</div>
-					<div class="row">
-						<div class="col-lg-6 col-md-6">
-								<div class="card-body">
-									<h4 class="card-title">File Upload</h4>
-									<label for="input-file-now">You Can Attatch More Than One File </label>
-									<br>
-									<input type="file" class="form-control" name="document" multiple/>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Upload Document</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('documents') }}">Settings</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('documents') }}">Documents</a></li>
+          <li class="breadcrumb-item active">Upload</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if ($errors->any())
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        @foreach ($errors->all() as $error)
+                          <li><strong>Error!</strong> {{ $error }}</li>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+@if(Session::has('error'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+@if(Session::has('success'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+						<form id="uploadDocumentForm" action="{{asset('documents/upload')}}" method="post" enctype="multipart/form-data">
+							{{ csrf_field() }}
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label">Document Name</label>
+										<input type="text" name="document_name" class="form-control" placeholder="Enter Document Name" value="{{ old('document_name') }}">
+									</div>
 								</div>
-						</div>
+								<div class="col-md-6">
+									<div class="form-group">
+					                    <label for="document">Upload Document (Max Size 2MB)</label>
+					                    <div class="input-group">
+					                      	<div class="custom-file">
+					                        	<input type="file" class="custom-file-input" name="document" id="document"/>
+					                        	<label class="custom-file-label" for="document" id="choose">Choose file</label>
+					                      	</div>
+					                    </div>
+					                </div>
+								</div>
+							</div>
+
+							<hr>
+
+							<button type="submit" class="btn btn-primary" title="Upload Document"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Upload</span></button>
+							<button type="button" onclick="window.location.href='{{route('documents')}}'" class="btn btn-default" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+						</form>
 					</div>
-				<br>
-					<div class="form-actions">
-						&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Upload</button>
-						<button type="button" onclick="window.location.href='{{route('documents')}}'" class="btn btn-inverse">Cancel</button>
-					</div>
-				</form>
+				</div>
 			</div>
 		</div>
     </div>
 </div>
+<!-- Main Content End -->
+
+<script>
+	$("#document").on('change', function(){
+	  	var file = $('#document')[0].files[0].name;
+	  	var output = document.getElementById('choose');
+	  	output.innerHTML = file;
+	});
+
+	$(function () {
+	  	$('#uploadDocumentForm').validate({
+		    rules: {
+		    	document_name: {
+		        	required: true
+		     	},
+				document: {
+		        	required: true
+		     	}
+		    },
+		    messages: {
+		      	document_name: "Document name is required",
+		      	document: "Document is required"
+		    },
+		    errorElement: 'span',
+		    errorPlacement: function (error, element) {
+		      	error.addClass('invalid-feedback');
+		      	element.closest('.form-group').append(error);
+		    },
+		    highlight: function (element, errorClass, validClass) {
+		      	$(element).addClass('is-invalid');
+		    },
+		    unhighlight: function (element, errorClass, validClass) {
+		      	$(element).removeClass('is-invalid');
+		    }
+	  	});
+	});
+</script>
 @stop
