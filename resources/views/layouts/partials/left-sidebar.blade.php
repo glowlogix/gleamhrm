@@ -216,7 +216,7 @@
               @endif
               @if(Auth::user()->isAllowed('LeaveTypeController:index'))
                 <li class="nav-item">
-                  <a href="{{route('leave_type.index')}}" class="nav-link">
+                  <a href="{{route('leave_type.index')}}" @if(request()->is('leave_types')) class="nav-link active" @else class="nav-link" @endif>
                     <i class="far fa-circle nav-icon"></i>
                     <p>Leave Management</p>
                   </a>

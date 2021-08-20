@@ -26,7 +26,7 @@ class LeaveTypeController extends Controller
         if ($leave_exist == null) {
             LeaveType::create([
                 'name'   => $request->name,
-                'amount' => $request->amount,
+                'count' => $request->amount,
                 'status' => $request->status,
             ]);
             Session::flash('success', 'Leave type is created successfully');
@@ -41,7 +41,7 @@ class LeaveTypeController extends Controller
     {
         $leave_type = LeaveType::find($id);
         $leave_type->name = $request->name;
-        $leave_type->amount = $request->amount;
+        $leave_type->count = $request->amount;
         $leave_type->status = $request->status;
         $leave_type->save();
         Session::flash('success', 'Leave type is updated successfully');
