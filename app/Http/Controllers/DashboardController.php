@@ -58,6 +58,7 @@ class DashboardController extends Controller
             $employeesCount = Employee::all()->count();
             $averageAttendance[] = round((array_sum($array) / $employeesCount), 2);
         }
+        // $averageAttendance = [5,10,15,8,11,6,20,18,16,25,12,21];
 
         $averageAttendance = json_encode($averageAttendance);
         $Chartmonths = ['January', 'February', 'March', 'April', 'May', 'June', 'July', 'August', 'September', 'October', 'November', 'December'];
@@ -74,8 +75,8 @@ class DashboardController extends Controller
             }
         }
         $replace = ['[', ']'];
-        $DesignationName = str_replace($replace, '', json_encode($DesignationName));
-        $designationSeries = implode(',', $chartEmployee);
+        $DesignationName = json_encode($DesignationName);
+        $designationSeries = json_encode($chartEmployee);
 
         return view('admin.dashboard.index', $this->metaResponse())
             ->with('employee', Employee::orderBy('joining_date', 'Desc')->take(5)->get())
