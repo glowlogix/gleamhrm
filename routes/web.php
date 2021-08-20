@@ -594,7 +594,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as'   => 'leave.updateStatus',
         ]);
 
-        Route::Post('/leave/delete/{id}', [
+        Route::Post('/leave/destroy/{id}', [
             'uses' => 'LeaveController@destroy',
             'as'   => 'leave.destroy',
         ]);
