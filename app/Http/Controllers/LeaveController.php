@@ -67,6 +67,7 @@ class LeaveController extends Controller
     {
         $this->meta['title'] = 'Show Employee Leaves';
         $user = Auth::user()->designation;
+        $leaveEmployees = Employee::all();
         if ($user == 'CEO' || $user == 'Admin') {
             if ($id == 'Approved' || $id == 'Declined') {
                 $leaves = Leave::leftJoin('employees', function ($join) {
@@ -89,7 +90,7 @@ class LeaveController extends Controller
             });
         }
         $leaves = $leaves->with('leaveType')->get([
-            'employees.*',
+            'leaves.employee_id AS employee_id',
             'leaves.id AS leave_id',
             'leaves.leave_type AS leave_type',
             'leaves.datefrom AS datefrom',
@@ -103,6 +104,7 @@ class LeaveController extends Controller
 
         return view('admin.leaves.employeeleaves', $this->metaResponse(), [
             'employees' => $leaves,
+            'leaveEmployees' => $leaveEmployees,
         ])->with('id', $id);
     }
 

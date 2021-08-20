@@ -1,130 +1,191 @@
-@extends('layouts.admin')
-@section('Heading')
-    @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
-    <button type="button"  onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Employee Leave</button>
-   @endif
-    <h3 class="text-themecolor">Employee Leaves</h3>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">Employee Leaves</li>
-    </ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-    <div class="card">
-        <div class="card-body">
-            <div class="float-right">
-                <select class="form-control" id="filter">
-                    <option>All</option>
-                    <option @if($id=='Approved') selected @endif>Approved</option>
-                    <option @if($id=='Declined') selected @endif >Declined</option>
-                </select>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Employee Leaves</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('employee_leaves') }}">Attendance</a></li>
+          <li class="breadcrumb-item active">Leaves</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if (Session::has('error'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> {{Session::get('error')}}
+                </div>
             </div>
-            <div class="table-responsive m-t-40">
-                <table id="myTable" class="display nowrap table table-hover table-striped table-bordered" cellspacing="0" width="100%">
-                    <thead>
-                    <tr>
-                    @if(count($employees) > 0)
-                        <tr>
-                            <th>Employee</th>
-                            <th>Leave Type</th>
-                            <th>Date From</th>
-                            <th>Date To</th>
-                            <th>Subject</th>
-                            <th>Actions</th>
-                            <th>Status</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                    @foreach($employees as $employee)
-                        @if (empty($employee->id))
-                            @continue
-                        @endif
-                        <tr>
-                            <td>{{$employee->firstname}} {{$employee->lastname}}</td>
-                            <td>{{$employee->leaveType->name}}</td>
-                            <td>{{Carbon\Carbon::parse($employee->datefrom)->format('d-m-Y')}}</td>
-                            <td>{{Carbon\Carbon::parse($employee->dateto)->format('d-m-Y')}}</td>
-                            <td>{{$employee->leave_subject}}</td>
-                            <td class="row">
-                                @if(
-                                    ($employee->leave_status == 'Pending' && $employee->leave_status == '')
-                                )
-                                @endif
-                                    &nbsp <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$employee->leave_id])}}" data-toggle="tooltip" data-original-title="Show"> <i class="fas fa-eye text-white "></i></a>
-                                    &nbsp
-                                    <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{$employee->leave_id }}"  data-original-title="Close"><i class="fas fa-window-close text-white"></i></a>
+        </div>
+    </div>
+</div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="d-flex justify-content-between">
+                            <select class="form-control col-2" id="filter">
+                                <option>All</option>
+                                <option @if($id=='Approved') selected @endif>Approved</option>
+                                <option @if($id=='Declined') selected @endif >Declined</option>
+                            </select>
+                            @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
+                                <button type="button"  onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info btn-rounded" title="Add Employee Leave"><i class="fas fa-plus"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Add Employee Leave</span></button>
+                            @endif
+                        </div>
+                        
+                        <hr>
+
+                        <div class="table-responsive">
+                            <table id="leaves" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Employee</th>
+                                        <th>Leave Type</th>
+                                        <th>Date From</th>
+                                        <th>Date To</th>
+                                        <th>Subject</th>
+                                        <th class="text-center">Status</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                @foreach($employees as $employee)
+                                    <tr>
+                                        <td>
+                                            @foreach($leaveEmployees as $leaveEmployee)
+                                                @if($leaveEmployee->id == $employee->employee_id)
+                                                    {{$leaveEmployee->firstname}} {{$employee->lastname}} 
+                                                @endif
+                                            @endforeach
+                                        </td>
+                                        <td>{{$employee->leaveType->name}}</td>
+                                        <td>{{Carbon\Carbon::parse($employee->datefrom)->format('d-m-Y')}}</td>
+                                        <td>{{Carbon\Carbon::parse($employee->dateto)->format('d-m-Y')}}</td>
+                                        <td>{{$employee->leave_subject}}</td>
+                                        <td class="text-center">
+                                            @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
+                                                @if(Auth::user()->id == 1 || (Auth::user()->id != $employee->id))
+                                                    <select class="update_status form-control" id="{{$employee->leave_id}}" style="width:160px;">
+                                                        <option value="">Update Status</option>
+                                                        <option value="Approved">Approved</option>
+                                                        <option value="Declined">Declined</option>
+                                                    </select>
+                                                @endif
+                                            @endif
+
+                                            @if(strtolower($employee->leave_status) == 'approved')
+                                                <div class="text-white badge badge-success font-weight-bold">{{$employee->leave_status}}</div>
+                                            @endif
+                                            @if(strtolower($employee->leave_status) == 'declined')
+                                            <div class="text-white badge badge-danger font-weight-bold">{{$employee->leave_status}}</div>
+                                            @endif
+                                        </td>
+                                        <td class="text-nowrap">
+                                            @if(
+                                                ($employee->leave_status == 'Pending' && $employee->leave_status == '')
+                                            )
+                                            @endif
+                                            <a class="btn btn-info btn-sm" href="{{route('leave.show',['id'=>$employee->leave_id])}}" title="Show Leave"> <i class="fas fa-eye text-white "></i></a>
+                                            <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{$employee->leave_id }}" title="Delete Leave"><i class="fas fa-trash-alt text-white"></i></a>
+                                        </td>
+                                    </tr>
                                     <div class="modal fade" id="confirm-delete{{$employee->leave_id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                         <div class="modal-dialog">
                                             <div class="modal-content">
                                                 <form action="{{ route('leave.delete' , $employee->leave_id)}}" method="post">
                                                     {{ csrf_field() }}
                                                     <div class="modal-header">
+                                                        <h4 class="modal-title">Delete Leave</h4>
+                                                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                            <span aria-hidden="true">×</span>
+                                                        </button>
+                                                    </div>
+                                                    <div class="modal-body">
                                                         Are you sure you want to delete this Leaves?
                                                     </div>
-                                                    <div class="modal-header">
-                                                        <h4>{{$employee->firstname}} {{$employee->lastname}}</h4>
-                                                    </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                        <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
+                                                    <div class="modal-footer justify-content-between">
+                                                        <button type="button" class="btn btn-default" data-dismiss="modal" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                        <button  type="submit" class="btn btn-danger btn-ok" title="Delete Leave"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Delete</span></button>
                                                     </div>
                                                 </form>
                                             </div>
                                         </div>
                                     </div>
-                            </td>
-                            <td>
-                                @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
-                                    @if(Auth::user()->id == 1 || (Auth::user()->id != $employee->id))
-                                        <select class="update_status form-control" id="{{$employee->leave_id}}" style="width:160px;">
-                                            <option value="">Update Status</option>
-                                            <option value="Approved">Approved</option>
-                                            <option value="Declined">Declined</option>
-                                        </select>
-                                    @endif
-                                @endif
-
-                                @if(strtolower($employee->leave_status) == 'approved' || strtolower($employee->leave_status) == 'declined')
-                                    {{$employee->leave_status}}
-                                @endif
-                            </td>
-                        </tr>
-                    @endforeach @else
-                        <p style="text-align: center;">No Leave Found</p> @endif
-                    </tbody>
-                </table>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
-    @push('scripts')
-        <script type="text/javascript">
-        $(document).ready(function () {
-            $("#filter").change(function(e){
-                    var url = "{{route('employeeleaves')}}/" + $(this).val();
+</div>
+<!-- Main Content End -->
 
-                if (url) {
-                    window.location = url;
-                }
-                return false;
-            });
+<script>
+    $(document).ready(function () {
+        $("#filter").change(function(e){
+                var url = "{{route('employeeleaves')}}/" + $(this).val();
+
+            if (url) {
+                window.location = url;
+            }
+            return false;
         });
-    </script>
-        <script type="text/javascript">
-            $(".update_status").on('change', function (event) {
-                if ($(this).val() !== '') {
-                    location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
-                }
-            });
-        </script>
-        <script>
-            $(document).ready(function() {
-                $('#myTable').DataTable({
-                    stateSave: true,
-                    info: false,
-                    ordering:false
-                });
-            });
-        </script>
-    @endpush
+    });
+
+    $(".update_status").on('change', function (event) {
+        if ($(this).val() !== '') {
+            location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
+        }
+    });
+
+    $(document).ready(function () {
+        $('#leaves').DataTable({
+          "paging": true,
+          "lengthChange": true,
+          "searching": true,
+          "ordering": true,
+          "info": true,
+          "autoWidth": false,
+          "responsive": true,
+        });
+    });
+</script>
 @stop
