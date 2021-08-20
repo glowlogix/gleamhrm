@@ -70,8 +70,8 @@
                                         <th>Contact Name</th>
                                         <th>Email</th>
                                         <th>Vendor Type</th>
-                                        <th>Filer</th>
-                                        <th>NTN #</th>
+                                        <th>Tax Payer</th>
+                                        <th>Tax#</th>
                                         <th>Branch</th>
                                         <th>Address</th>
                                         <th>City</th>
@@ -95,9 +95,9 @@
                                             <td>{{$vendor->email}}</td>
                                             <td>{{$vendor->vendor_type}}</td>
 
-                                            @if($vendor->filer == '1')
+                                            @if($vendor->tax_payer == '1')
                                             <td>Yes</td>
-                                            <td>{{$vendor->ntn_no}}</td>
+                                            <td>{{$vendor->tax_no}}</td>
                                             @else
                                             <td>No</td>
                                             <td class="text-center">N/A</td>

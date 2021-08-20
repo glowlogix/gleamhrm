@@ -123,11 +123,11 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Filer</label>
-                                        <select class="form-control custom-select" tabindex="1" name="filer" id="filer">
+                                        <label class="control-label">Tax Payer</label>
+                                        <select class="form-control custom-select" tabindex="1" name="tax_payer" id="tax_payer">
                                             <option value="">Select an Option</option>
-                                                <option value="1" @if($vendor->filer == '1') selected @endif>Yes</option>
-                                                <option value="0" @if($vendor->filer == '0') selected @endif>No</option>
+                                                <option value="1" @if($vendor->tax_payer == '1') selected @endif>Yes</option>
+                                                <option value="0" @if($vendor->tax_payer == '0') selected @endif>No</option>
                                         </select>
                                     </div>
                                 </div>
@@ -142,10 +142,10 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col-md-6" id="ntn" style="display: none;">
+                                <div class="col-md-6" id="tax" @if($vendor->tax_payer != 1) style="display: none;" @endif>
                                     <div class="form-group">
-                                        <label class="control-label">NTN No</label>
-                                        <input  type="number" name="ntn_no" placeholder="Enter NTN number here" class="form-control" value="{{ $vendor->ntn_no }}">
+                                        <label class="control-label">Tax#</label>
+                                        <input  type="number" name="tax_no" placeholder="Enter Tax Number here" class="form-control" value="{{ $vendor->tax_no }}">
                                     </div>
                                 </div>
                             </div>
@@ -231,7 +231,7 @@
                 filer: {
                     required: true
                 },
-                ntn_no: {
+                tax_no: {
                     required: true
                 },
                 branch: {
@@ -245,7 +245,7 @@
                 vendor_category_id: "Vendor category is required",
                 vendor_type: "Vendor Type is required",
                 filer: "Filer information is required",
-                ntn_no: "NTN number is required",
+                tax_no: "Tax number is required",
                 branch: "Branch is required"
             },
             errorElement: 'span',
@@ -262,15 +262,14 @@
         });
     });
 
-    $("#filer").on('change', function(){
-        console.log(this.value);
+    $("#tax_payer").on('change', function(){
         if(this.value == 1)
         {
-            document.getElementById('ntn').style.display = 'block';
+            document.getElementById('tax').style.display = 'block';
         }
         else
         {
-            document.getElementById('ntn').style.display = 'none';
+            document.getElementById('tax').style.display = 'none';
         }
     });
 </script>

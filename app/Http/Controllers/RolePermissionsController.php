@@ -57,6 +57,28 @@ class RolePermissionsController extends Controller
         return redirect()->route('roles_permissions');
     }
 
+    public function checkPermissions($id, $employee_id)
+    {
+        $emp_permissions = Employee::find($employee_id)->permissions()->get()->pluck('id')->toArray();
+        $role = Role::find($id);
+
+        $permissions = $role->permissions()->get();
+        $routes = [];
+
+        foreach ($permissions as $key => $permission) {
+            $index = explode(':', $permission->name);
+            $routes[$index[0]][] = $permission;
+        }
+
+        if ($permissions == '[]') {
+            $check = 0;
+        } else {
+            $check = 1;
+        }
+
+        return $check;
+    }
+
     public function getPermissionsFromRole($id, $employee_id)
     {
         $emp_permissions = Employee::find($employee_id)->permissions()->get()->pluck('id')->toArray();
