@@ -208,7 +208,7 @@
               @endif
               @if(Auth::user()->isAllowed('VendorCategoryController:index'))
                 <li class="nav-item">
-                  <a href="{{route('vendor_category.index')}}" class="nav-link">
+                  <a href="{{route('vendor_category.index')}}" @if(request()->is('vendors/category')) class="nav-link active" @else class="nav-link" @endif>
                     <i class="far fa-circle nav-icon"></i>
                     <p>Vendor Categories</p>
                   </a>
