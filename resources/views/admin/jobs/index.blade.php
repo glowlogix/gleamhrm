@@ -1,89 +1,153 @@
-@extends('layouts.admin')
-@section('Heading')
-	<button type="button"  onclick="window.location.href='{{route('job.create')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Job</button>
-	<h3 class="text-themecolor">Jobs</h3>
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Hiring</li>
-		<li class="breadcrumb-item active">Jobs</li>
-	</ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-<div class="row">
-		<div class="col-12">
-			<div class="card">
-				<div class="card-body">
-					<h6 class="card-subtitle"></h6>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Jobs</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('job') }}">Hiring</a></li>
+          <li class="breadcrumb-item active">Jobs</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
 
-					<div class="table">
-						<table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
-							<thead>
-							@if($jobs->count() > 0)
-							<tr>
-								<th> Title</th>
-								<th> Designation</th>
-								<th> Department</th>
-								<th> Branch</th>
-								<th>Skill Required</th>
-								@if (
-			                        Auth::user()->hasRole('admin') ||
-			                        Auth::user()->hasPermissionTo('EmployeeController:index')
-		                        )
-								<th> Actions </th>
-								@endif
-							</tr>
-							</thead>
-							<tbody>
-							 @foreach($jobs as $job)
-							<tr>
-								<td>{{$job->title}}</td>
-								<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
-								<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
-								<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
-								<td>@foreach($skills as $skill) @foreach(json_decode($job->skill) as $key) @if($skill->id==$key)<p class="btn btn-sm btn-success">{{$skill->skill_name}}</p> @endif @endforeach @endforeach</td>
-								<td class="text-nowrap">
-									@if (
-				                        Auth::user()->hasRole('admin') ||
-				                        Auth::user()->hasPermissionTo('JobsController:edit')
-			                        )
-									<a class="btn btn-info btn-sm" href="{{route('job.edit',['id'=>$job->id])}}" data-toggle="tooltip" data-original-title="Edit"> <i class="fas fa-pencil-alt text-white "></i></a>
-									@endif
+<!-- Error Message Section Start -->
+@if (Session::has('error'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> {{Session::get('error')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
 
-									@if (
-				                        Auth::user()->hasRole('admin') ||
-				                        Auth::user()->hasPermissionTo('JobsController:destroy')
-			                        )
-									<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $job->id }}"> <i class="fas fa-window-close text-white"></i></a>
-									<div class="modal fade" id="confirm-delete{{ $job->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-										<div class="modal-dialog">
-											<div class="modal-content">
-												<form action="{{ route('job.destroy' , $job->id )}}" method="post">
-													<input name="_method" type="hidden" value="DELETE">
-													{{ csrf_field() }}
-													<div class="modal-header">
-														Are you sure you want to delete this Job?
+<!-- Main Content Start -->
+<div class="content">
+  <div class="container-fluid">
+		<div class="row">
+			<div class="col-12">
+				<div class="card">
+					<div class="card-body">
+						<div class="text-right">
+							<button type="button" onclick="window.location.href='{{route('job.create')}}'" class="btn btn-info btn-rounded" data-toggle="tooltip" title="Add Job"><i class="fas fa-plus"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Add Job</button>
+						</div>
+			      		
+			      		<hr>
+
+						<div class="table-responsive">
+							<table id="jobs" class="table table-bordered table-striped table-hover">
+								<thead>
+									<tr>
+										<th> Title</th>
+										<th> Designation</th>
+										<th> Department</th>
+										<th> Branch</th>
+										<th>Skill Required</th>
+										@if (Auth::user()->hasRole('admin') || Auth::user()->hasPermissionTo('EmployeeController:index'))
+											<th> Actions </th>
+										@endif
+									</tr>
+								</thead>
+								<tbody>
+									@foreach($jobs as $job)
+										<tr>
+											<td>{{$job->title}}</td>
+											<td>{{isset($job->designation_id) ? $job->designation->designation_name : ''}}</td>
+											<td>{{isset($job->department_id) ? $job->department->department_name : ''}}</td>
+											<td>{{isset($job->branch_id) ? $job->branch->name.'('.$job->branch->address.')': ''}}</td>
+											<td>
+												@foreach($skills as $skill) 
+													@foreach(json_decode($job->skill) as $key) 
+														@if($skill->id==$key)
+															<p class="btn btn-sm btn-success">{{$skill->skill_name}}</p>
+														@endif
+													@endforeach
+												@endforeach
+											</td>
+											<td class="text-nowrap">
+												@if (Auth::user()->hasRole('admin') || Auth::user()->hasPermissionTo('JobsController:edit'))
+													<a class="btn btn-warning btn-sm" href="{{route('job.edit',[$job->id])}}" data-toggle="tooltip" title="Edit Job"> <i class="fas fa-pencil-alt text-white"></i></a>
+													<a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $job->id }}" data-toggle="tooltip" title="Delete Job"> <i class="fas fa-trash-alt"></i></a>
+												@endif
+											</td>
+										</tr>
+										@if (Auth::user()->hasRole('admin') || Auth::user()->hasPermissionTo('JobsController:destroy'))
+											<div class="modal fade" id="confirm-delete{{ $job->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+												<div class="modal-dialog">
+													<div class="modal-content">
+														<div class="modal-header">
+											              <h4 class="modal-title">Delete Job</h4>
+											              <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+											                <span aria-hidden="true">×</span>
+											              </button>
+											            </div>
+														<form action="{{ route('job.destroy' , $job->id )}}" method="post">
+															<input name="_method" type="hidden" value="DELETE">
+															{{ csrf_field() }}
+															<div class="modal-body">
+																Are you sure you want to delete Job "{{$job->title}}"?
+															</div>
+															<div class="modal-footer justify-content-between">
+																<button type="button" class="btn btn-default" data-dismiss="modal" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                            	<button  type="submit" class="btn btn-danger btn-ok" data-toggle="tooltip" title="Delete Job"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Delete</span></button>
+															</div>
+														</form>
 													</div>
-													<div class="modal-footer">
-														<button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-														<button  type="submit" class="btn btn-danger btn-ok">Delete</button>
-													</div>
-												</form>
+												</div>
 											</div>
-										</div>
-									</div>
-									@endif
-									
-								</td>
-							</tr>
-							@endforeach @else
-								<p class="text-center"> No Job Found</p>
-							@endif
-
-							</tbody>
-						</table>
+										@endif
+									@endforeach
+								</tbody>
+							</table>
+						</div>
 					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+<!-- Main Content End -->
+
+<script>
+  	$(document).ready(function () {
+	    $('#jobs').DataTable({
+	      "paging": true,
+	      "lengthChange": true,
+	      "searching": true,
+	      "ordering": true,
+	      "info": true,
+	      "autoWidth": false,
+	      "responsive": true,
+	    });
+  	});
+</script>
 @stop
