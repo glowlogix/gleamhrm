@@ -117,8 +117,8 @@
             </ul>
           </li>
         @endif
-        <li @if(request()->is('attendance/today_timeline') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-item menu-open" @else class="nav-item" @endif>
-          <a href="#" @if(request()->is('attendance/today_timeline') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-link active" @else class="nav-link" @endif>
+        <li @if(request()->is('attendance/today_timeline') || request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if(request()->is('attendance/today_timeline') || request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon mdi mdi-alarm-check pl-1"></i>
             <p>
               Attendance
@@ -135,7 +135,7 @@
               </li>
             @endif
             <li class="nav-item">
-              <a href="{{route('myAttendance')}}" class="nav-link">
+              <a href="{{route('myAttendance')}}" @if(request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*')) class="nav-link active" @else class="nav-link" @endif>
                 <i class="far fa-circle nav-icon"></i>
                 <p>My Attendance</p>
               </a>

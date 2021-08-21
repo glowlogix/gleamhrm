@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Attendance;
 use App\AttendanceBreak;
 use App\AttendanceSummary;
+use App\AttendanceCorrection;
 use App\Branch;
 use App\Employee;
 use App\Leave;
@@ -183,16 +184,19 @@ class AttendanceController extends Controller
         $absent = $employeeCount - $present - $leavesCount;
         $delays = AttendanceSummary::join('employees', 'employees.id', '=', 'attendance_summaries.employee_id')->where('employees.type', 'office')->where('employees.status', '!=', '0')->where('date', $today)->where('is_delay', 'yes')->count();
 
+        $attendance_corrections = AttendanceCorrection::all();
+
         return view('admin.attendance.today_timeline', $this->metaResponse(), [
-            'employees'     => $employees,
-            'today'         => $today,
-            'branch_id'     => $id,
-            'today'         => $today,
-            'present'       => $present,
-            'absent'        => $absent,
-            'delays'        => $delays,
-            'leavesCount'   => $leavesCount,
-            'employeeLeave' => $employeeLeave,
+            'employees'             => $employees,
+            'today'                 => $today,
+            'branch_id'             => $id,
+            'today'                 => $today,
+            'present'               => $present,
+            'absent'                => $absent,
+            'delays'                => $delays,
+            'leavesCount'           => $leavesCount,
+            'employeeLeave'         => $employeeLeave,
+            'attendance_corrections' => $attendance_corrections,
         ]);
     }
 
@@ -304,7 +308,15 @@ class AttendanceController extends Controller
 //        $this->storeAttendaceSummary($request);
         $this->updateTotalTime($request);
         if ($attendance) {
-            return redirect()->back()->with('success', 'Break is created successfully');
+            if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday'))
+            {
+                return redirect()->back()->with('success', 'Break is created successfully');
+            }
+            else
+            {
+                return redirect()->route('myAttendance')->with('success', 'Break is created successfully');
+            }
+            
         } else {
             return redirect()->back()->with('error', 'Error while add attendance');
         }
@@ -379,6 +391,21 @@ class AttendanceController extends Controller
     //NEW
     public function storeAttendanceSummaryToday(Request $request)
     {
+        $currentDate = Carbon::now();
+        $time_in = Carbon::parse($request->time_in);
+        $time_out = Carbon::parse($request->time_out);
+        $currentDate = $currentDate->day . '-' . $currentDate->month . '-' . $currentDate->year;
+        $time_in_date = $time_in->day . '-' . $time_in->month . '-' . $time_in->year;
+        $time_out_date = $time_out->day . '-' . $time_out->month . '-' . $time_out->year;
+        
+        if(!Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday'))
+        {
+            if($currentDate != $time_out_date || $currentDate != $time_in_date)
+            {
+                return redirect()->back()->with('error', 'Please select current date');
+            }
+        }
+
         Carbon::parse($request->time_in);
         $attendance_summary = AttendanceSummary::where([
             'employee_id' => $request->employee_id,
@@ -1078,6 +1105,33 @@ class AttendanceController extends Controller
 
     public function authUserTimeline($id = '')
     {
+        $summary = AttendanceSummary::where('employee_id', Auth::user()->id)->latest('created_at')->first();
+        if($summary != '')
+        {
+            if($summary->first_timestamp_in != '' &&  $summary->last_timestamp_out != '')
+            {
+                $summaryDate = explode(' ', $summary->first_timestamp_in);
+                $summaryDate = $summaryDate[0];
+                $current = Carbon::now();
+                $current = explode(' ', $current);
+                $current = $current[0];
+                if($summaryDate != $current)
+                {
+                    $summaryDate = '';
+                }
+            }
+            else
+            {
+                $summaryDate = '';
+            }
+        }
+        else
+        {
+            $summaryDate = '';
+        }
+
+        $today = Carbon::now()->toDateString();
+        
         $employees = Employee::where('status', '!=', '0')->where('type', '!=', 'remote')->orderBy('firstname')->get();
         $days = [
             'Sunday'    => 0,
@@ -1261,7 +1315,9 @@ class AttendanceController extends Controller
             ->with('linemanagers', $linemanagers)
             ->with('present', $present)
             ->with('absent', $absent)
-            ->with('leaveCount', count($leaveCount));
+            ->with('leaveCount', count($leaveCount))
+            ->with('today', $today)
+            ->with('summaryDate', $summaryDate);
     }
 
     public function correctionEmail(Request $request)
@@ -1291,5 +1347,124 @@ class AttendanceController extends Controller
         Session::flash('success', 'Attendance Deleted Successfully.');
 
         return redirect()->route('today_timeline');
+    }
+
+    public function attendanceCorrection(Request $request)
+    {
+        $attendance_correction = AttendanceCorrection::where('employee_id', Auth::user()->id)->where('date', $request->timeDate)->first();
+
+        if(isset($attendance_correction))
+        {
+            if($attendance_correction->status != '')
+            {
+                return redirect()->route('myAttendance')->with('error', 'Your change request against ' . $request->timeDate . ' attendance is already processed. So, you cannot submit change request again.');
+            }
+        }
+
+        if($attendance_correction == '')
+        {
+            $attendance_correction = new AttendanceCorrection();
+        }
+        
+        if($request->time_in)
+        {
+            $attendance_correction->time_in = $request->timeDate . ' ' . Carbon::parse($request->time_in)->toTimeString();
+        }
+        if($request->time_out)
+        {
+            $attendance_correction->time_out = $request->timeDate . ' ' . Carbon::parse($request->time_out)->toTimeString();
+        }
+        if($request->break_start)
+        {
+            $attendance_correction->break_start = $request->timeDate . ' ' . Carbon::parse($request->break_start)->toTimeString();
+        }
+        if($request->break_end)
+        {
+            $attendance_correction->break_end = $request->timeDate . ' ' . Carbon::parse($request->break_end)->toTimeString();
+        }
+        if($request->time_in != '' || $request->time_out != '' || $request->break_start != '' || $request->break_end != '')
+        {
+            $attendance_correction->employee_id = Auth::user()->id;
+            $attendance_correction->date = $request->timeDate;
+            $attendance_correction->save();
+        }
+
+        if($attendance_correction != '[]')
+        {
+            return redirect()->route('myAttendance')->with('success', 'Change request submitted successfully');
+        }
+        else
+        {
+            return redirect()->route('myAttendance')->with('error', 'No change saved');
+        }
+    }
+
+    public function updateAttendanceCorrection(Request $request)
+    {
+        $attendance_correction = AttendanceCorrection::where('id', $request->correction_id)->first();
+        $attendance_summary = AttendanceSummary::where('id', $request->summary_id)->first();
+        $attendance_break = AttendanceBreak::where('employee_id', $request->employee_id)->where('date', $request->date)->first();
+
+        if($request->decision == 'Approved')
+        {
+            if($attendance_correction->time_in != '')
+            {
+                $attendance_summary->first_timestamp_in = $attendance_correction->time_in;
+            }
+            if($attendance_correction->time_out != '')
+            {
+                $attendance_summary->last_timestamp_out = $attendance_correction->time_out;
+            }
+            $attendance_summary->save();
+
+            if($attendance_correction->break_start != '')
+            {
+                $attendance_break->timestamp_break_start = $attendance_correction->break_start;
+            }
+            if($attendance_correction->break_end != '')
+            {
+                $attendance_break->timestamp_break_end = $attendance_correction->break_end;
+            }
+            $attendance_break->save();
+
+            $attendance_correction->status = $request->decision;
+            $attendance_correction->save();
+
+            $totaltime = 0;
+            if ($attendance_summary->last_timestamp_out != '')
+            {
+                $in = Carbon::parse($attendance_summary->first_timestamp_in);
+                $out = Carbon::parse($attendance_summary->last_timestamp_out);
+                $totaltime += $out->diffInMinutes($in);
+            }
+
+            $office_location = Branch::find($request->employee_id);
+            $ofc_in = Carbon::parse($office_location->timing_start);
+            $emp_in = Carbon::parse($attendance_summary->first_timestamp_in);
+            $delay = $emp_in->diffInMinutes($ofc_in);
+
+            $day = Carbon::parse($request->date)->format('l');
+
+            $is_delay = 'no';
+            if ($emp_in->gt($ofc_in) && $delay > 30)
+            {
+                $is_delay = 'yes';
+            }
+            if (($office_location->id == 1 && $day == 'Friday') || ($office_location->id == 2 && $day == 'Saturday'))
+            {
+                $is_delay = 'No';
+            }
+
+            $attendance_summary->total_time = $totaltime;
+            $attendance_summary->is_delay = $is_delay;
+            $attendance_summary->save();
+
+            return redirect()->route('today_timeline')->with('success', 'Changes approved and applied successfully');
+        }
+        
+        if($request->decision == 'Rejected')
+        {
+            return redirect()->route('today_timeline')->with('success', 'Changes rejected successfully');
+        }
     }
 }
