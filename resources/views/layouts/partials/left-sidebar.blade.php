@@ -233,8 +233,8 @@
             </ul>
           </li>
         @endif
-        <li class="nav-item">
-          <a href="#" class="nav-link">
+        <li @if(request()->is('salary') || request()->is('salary/*')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon fas fa-database"></i>
             <p>
               Payments
@@ -243,7 +243,7 @@
           </a>
           <ul class="nav nav-treeview">
             <li class="nav-item">
-              <a href="{{route('salary.show')}}" class="nav-link">
+              <a href="{{route('salary.show')}}" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
                 <i class="far fa-circle nav-icon"></i>
                 <p>Salary</p>
               </a>

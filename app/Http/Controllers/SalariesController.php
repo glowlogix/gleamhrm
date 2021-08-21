@@ -128,7 +128,7 @@ class SalariesController extends Controller
             } elseif ($employee->emloyment_status == 'probation') {
                 $approvedDeduction = $approvedCount[$employee->id];
             }
-            $absentDeduction[$employee->id] = ($employee->basic_salary / $workingDays) * $AbsentCount[$employee->id] * 2;
+            $absentDeduction[$employee->id] = ($employee->basic_salary / $workingDays) * $AbsentCount[$employee->id];
             $netPayables[$employee->id] = round(($employee->basic_salary - ($employeeUnApprovedLeaves[$employee->id] * 2) - $approvedDeduction - $absentDeduction[$employee->id]) + ($employee->bonus));
 
 //            $unApprovedCount[$employee->id]=$employeeUnApprovedLeaves[$employee->id];
