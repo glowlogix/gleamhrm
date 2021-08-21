@@ -3,7 +3,7 @@
   
   <a href="/dashboard" class="brand-link pt-3 pb-1">
     <div class="d-flex">
-      <img src="{{ asset('assets/images/hrm-white-logo-1.png') }}" alt="AdminLTE Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
+      <img src="{{ asset('assets/images/hrm-white-logo-1.png') }}" alt="HRM Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
       <img src="{{asset('assets/images/hrm-white-logo-2.png')}}" class="brand-text font-weight-light" height="45px" width="120px" style="opacity: .8; margin-top: -9px;"/>
     </div>
   </a>
@@ -13,7 +13,7 @@
     <!-- Sidebar user panel (optional) -->
     <div class="user-panel mt-3 pb-3 mb-3 d-flex">
       <div class="image">
-        <img src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3 bg-white" height="30px" width="30px"/>
+        <img src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="img-circle elevation-3 bg-white"/>
       </div>
       <div class="info">
         <a href="#" class="d-block">{{ Auth::user()->firstname }} {{ Auth::user()->lastname }}</a>
@@ -305,13 +305,15 @@
     <!-- Sidebar Footer Items -->
     <hr>
     <div class="row col-12 bg-primary pb-2 pt-2" style="position: absolute; bottom: 0px; left: 0px; margin-left: 0px; padding-left: 0px;">
-      <a href="#" class="link col-4 text-center text-light" data-toggle="tooltip" title="Settings">
+      <a href="{{route('profile.index')}}" class="link col-4 text-center text-light" title="Account Setting">
         <i class="fas fa-cog"></i>
       </a>
-      <a href="https://www.zoho.com/mail/index1.html" class="link col-4 text-center text-light" data-toggle="tooltip" title="Email">
+
+      <a href="https://www.zoho.com/mail" target="_blank" class="link col-4 text-center text-light" title="Email">
         <i class="mdi mdi-gmail"></i>
       </a>
-      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();" class="link col-4 text-center text-light" data-toggle="tooltip" title="Logout">
+
+      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();" class="link col-4 text-center text-light" title="Logout">
         <i class="fa fa-power-off"></i>
       </a>
       <form id="sidebar-logout" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>

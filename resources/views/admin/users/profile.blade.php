@@ -1,4 +1,4 @@
-@extends('layouts.admin')
+@extends('layouts.master')
 @section('Heading')
     <button type="button" onclick="window.location.href='{{route('admin.dashboard')}}'" class="btn btn-info float-right">Back</button>
     <h3 class="text-themecolor">Dashboard</h3>
@@ -8,121 +8,215 @@
     </ol>
 @stop
 @section('content')
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card card-outline-info">
-                <div style="margin-top:10px; margin-right: 10px;">
-                </div>
-                <div class="card-body">
-                    <form action="{{route('profile_pic.update')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                        {{csrf_field()}}
-                        <center >
-                            @if($employee->picture != '')
-                                <img   src="{{asset($employee->picture)}}" class="img-circle picture-container picture-src" alt="Employee Picture"  id="wizardPicturePreview" title="" width="150" onclick="document.getElementById('wizard-picture').click();"  width="150"/>
-                                <input  type="file" name="picture" id="wizard-picture" class="" required hidden>
-                            @else
-                                <img src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src" id="wizardPicturePreview" title="" width="150" height="150" onclick="document.getElementById('wizard-picture').click();" />
-                                <input  type="file" name="picture" id="wizard-picture" class="" required hidden>
-                            @endif
-                            <h6 class="card-title m-t-10">Click On Image to Upload  Picture</h6>
-                        </center>
-                        <center>
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Update Image
-                                </button>
-                            </div>
-                        </center>
-                    </form>
-                    <form action="{{route('password.update')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
-                        {{csrf_field()}}
-                        <div class="form-body">
-                            <a class="box-title show "><span class="arrow fa fa-angle-right"></span> Click Here To Change Password</a>
-                            <hr class="m-t-0 m-b-40">
-                            <div style="display: none" id="show">
-                            <div class="form-group{{ $errors->has('current-password') ? ' has-error' : '' }}">
-                                <label for="new-password" class="col-md-4 control-label">Current Password</label>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">User Profile</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('personal_profile') }}">User Profile</a></li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
 
-                                <div class="col-md-6">
-                                    <input id="current-password" type="password" class="form-control" name="current-password" required>
-
-                                    @if ($errors->has('current-password'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('current-password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group{{ $errors->has('new-password') ? ' has-error' : '' }}">
-                                <label for="new-password" class="col-md-4 control-label">New Password</label>
-
-                                <div class="col-md-6">
-                                    <input id="new-password" type="password" class="form-control" name="new-password" required>
-
-                                    @if ($errors->has('new-password'))
-                                        <span class="help-block">
-                                        <strong>{{ $errors->first('new-password') }}</strong>
-                                    </span>
-                                    @endif
-                                </div>
-                            </div>
-
-                            <div class="form-group">
-                                <label for="new-password-confirm" class="col-md-4 control-label">Confirm New Password</label>
-
-                                <div class="col-md-6">
-                                    <input id="new-password-confirm" type="password" class="form-control" name="new-password_confirmation" required>
-                                </div>
-                            </div>
-                            <!--/row-->
-                        <hr>
-                            <div class="form-group">
-                                <div class="col-md-6 col-md-offset-4">
-                                    <button type="submit" class="btn btn-primary">
-                                        Change Password
-                                    </button>
-                                </div>
-                            </div>
-                        </div>
-                        </div>
-                    </form>
+<!-- Error Message Section Start -->
+@if(Session::has('error'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
-@push('scripts')
-    <script>
-        $(document).ready(function(){
-// Prepare the preview for profile picture
-            $("#wizard-picture").change(function(){
-                readURL(this);
-            });
-        });
-        function readURL(input) {
-            if (input.files && input.files[0]) {
-                var reader = new FileReader();
+@endif
+@if(Session::has('success'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-success" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Success!</strong> {{Session::get('success')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+<!-- Error Message Section End -->
 
-                reader.onload = function (e) {
-                    $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <button type="button" onclick="window.location.href='{{route('admin.dashboard')}}'" class="btn btn-info btn-rounded" data-toggle="tooltip" title="Back"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></button>
+                        
+                        <hr>
+
+                        <form id="imageUploadForm" action="{{route('profile_pic.update')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <!-- <center>
+                                <input type="image"  src="{{asset('assets/images/default.png')}}" class="img-circle picture-container picture-src"  id="wizardPicturePreview" title="" width="90" height="90" />
+                                <br>
+                                <a class="btn btn-primary btn-sm" id="change">Add Image</a>
+                                <div class="form-group mb-0">
+                                    <input type="file" name="picture" id="wizard-picture" class="form-control" style="position: absolute; top: 0px;z-index: -1;">
+                                </div>
+                            </center> -->
+                            <center>
+                                Click On Image to Upload Picture
+
+                                <br>
+
+                                <img @if($employee->picture != '') src="{{asset($employee->picture)}}" @else src="{{asset('assets/images/default.png')}}" @endif class="img-circle picture-container picture-src mt-2" alt="Employee Picture"  id="wizardPicturePreview" width="90" height="90" onclick="document.getElementById('wizard-picture').click();"/>
+
+                                <br>
+
+                                <button type="submit" class="btn btn-primary btn-sm mt-2" title="Click To Upload Picture">
+                                    Update Picture
+                                </button>
+
+                                <div class="form-group">
+                                    <input type="file" name="picture" id="wizard-picture" class="form-control col-1" style="position: absolute; top: 0px;z-index: -1;">
+                                </div>
+                            </center>
+                        </form>
+
+                        <form id="changePasswordForm" action="{{route('password.update')}}" method="post" class="form-horizontal" enctype="multipart/form-data">
+                            {{csrf_field()}}
+                            <a href="#" class="box-title show"><span class="arrow fas fa-chevron-right fa-sm"></span> Click Here To Change Password</a>
+
+                            <hr class="mt-1">
+
+                            <div style="display: none" id="show">
+                                <div class="form-group col-md-6">
+                                    <label for="new-password" class="control-label">Current Password</label>
+                                    <input id="current-password" type="password" class="form-control" name="current_password">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="new-password" class="control-label">New Password</label>
+                                    <input id="new-password" type="password" class="form-control" name="new_password">
+                                </div>
+
+                                <div class="form-group col-md-6">
+                                    <label for="new-password-confirm" class="control-label">Confirm New Password</label>
+                                    <input id="new-password-confirm" type="password" class="form-control" name="new_password_confirmation">
+                                </div>
+
+                                <hr>
+                                
+                                <button type="submit" class="btn btn-primary">
+                                    Change Password
+                                </button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(function () {
+        $('#imageUploadForm').validate({
+            rules: {
+                picture: {
+                    required: true
                 }
-                reader.readAsDataURL(input.files[0]);
-            }           }
-
-        $(".form-control").keypress(function(e) {
-            if (e.which === 13) {
-                e.preventDefault();
-                return false;
+            },
+            messages: {
+                picture: "Picture is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+              error.addClass('invalid-feedback');
+              element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+              $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+              $(element).removeClass('is-invalid');
             }
         });
-    </script>
-    <script>
-        $(document).ready(function() {
-            $('.show').click(function() {
-                $('#show').slideToggle("fast");
-                $('.arrow').toggleClass('fa fa-angle-right fa fa-angle-down');
-            });
+
+        $('#changePasswordForm').validate({
+            rules: {
+                current_password: {
+                    required: true
+                },
+                new_password: {
+                    required: true
+                },
+                new_password_confirmation: {
+                    required: true
+                }
+            },
+            messages: {
+                current_password: "Current password is required",
+                new_password: "New password is required",
+                new_password_confirmation: "Confirmation password is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+              error.addClass('invalid-feedback');
+              element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+              $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+              $(element).removeClass('is-invalid');
+            }
         });
-    </script>
-@endpush
+    });
+
+    $(document).ready(function(){
+        // Prepare the preview for profile picture
+        $("#wizard-picture").change(function(){
+            readURL(this);
+        });
+    });
+
+    function readURL(input) {
+        if (input.files && input.files[0]) {
+            var reader = new FileReader();
+
+            reader.onload = function (e) {
+                $('#wizardPicturePreview').attr('src', e.target.result).fadeIn('slow');
+            }
+            reader.readAsDataURL(input.files[0]);
+        }
+    }
+
+    $(".form-control").keypress(function(e) {
+        if (e.which === 13) {
+            e.preventDefault();
+            return false;
+        }
+    });
+
+    $(document).ready(function() {
+        $('.show').click(function() {
+            $('#show').slideToggle("fast");
+            $('.arrow').toggleClass('fas fa-chevron-right fa-sm fas fa-chevron-down fa-sm');
+        });
+    });
+</script>
+@stop
