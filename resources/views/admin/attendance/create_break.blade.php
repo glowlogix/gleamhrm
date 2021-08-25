@@ -1,348 +1,414 @@
-@extends('layouts.admin')
-@section('Heading')
-    @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
-        <button type="button"  onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus"></span> Add Employee Leave</button>
-    @endif
-    <h3 class="text-themecolor">Add Attendance</h3>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">Add Attendance</li>
-    </ol>
-@endsection
+@extends('layouts.master')
+
 @section('content')
-    <div class="row">
-        <div class="col-lg-12">
-            <div class="card card-outline-info">
-                <div style="margin-top: 10px;margin-right: 10px">
-                    <button type="button" class="btn  btn-info float-right" onclick="window.location.href='{{route('today_timeline')}}'">Back</button>
-                    @if(isset($attendance_summary))
-                    <a style="margin-left: 10px" data-toggle="modal" data-target="#confirm-delete{{ $department->id }}" class="btn btn-danger float-left text-white">Delete</a>
-                    @endif
-                </div>
-                @if(isset($attendance_summary))
-                <div class="modal fade" id="confirm-delete{{$attendance_summary->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="{{ route('attendance.delete' ,$attendance_summary->id)}}" method="post">
-                                {{ csrf_field() }}
-                                <div class="modal-header">
-                                    Are you sure you want to delete Attendance Of?
-                                </div>
-                                <div class="modal-header">
-                                    <h4> @foreach($employees as $emp)
-                                            @if($emp_id == $emp->id) {{$emp->firstname}} {{$emp->lastname}} @endif
-                                        @endforeach</h4>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
-                                </div>
-                            </form>
-                        </div>
+<!-- Breadcrumbs Start -->
+@if(request()->is('attendance/create_break/*/*'))
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Add Attendance</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ url('attendance/today_timeline') }}">Attendance</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('attendance/today_timeline') }}">Today Timeline</a></li>
+              <li class="breadcrumb-item active">Add Attendance</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+@endif
+@if(request()->is('attendance/create_break'))
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Add Attendance</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ url('attendance/timeline') }}">Attendance</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('attendance/timeline') }}">Timeline</a></li>
+              <li class="breadcrumb-item active">Add Attendance</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+@endif
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if ($errors->any())
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        @foreach ($errors->all() as $error)
+                          <li><strong>Error!</strong> {{ $error }}</li>
+                        @endforeach
                     </div>
                 </div>
-                @endif
-                <div class="card-body">
-                    <form   class="form-horizontal" action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
-                        {{csrf_field()}}
-                        <div class="form-body">
-                            <h3 class="box-title">Create CheckIn/CheckOut</h3>
-                            <hr class="m-t-0 m-b-40">
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Select Name Here</label>
-                                        <div class="col-md-9">
-                                            <select class="form-control custom-select" name="employee_id">
-                                                <option value="0">Select Employee</option>
-                                                @foreach($employees as $emp)
-                                                    <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
-                                                @endforeach
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Select Date</label>
-                                        <div class="col-md-9" >
-                                            <input type="date" class="form-control date" name="date" value="{{$current_date}}">
-                                            <span class="input-group-addon">
-                                        <span class="glyphicon glyphicon-calendar"></span>
-                                    </span>
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                            </div>
-                            <!--/row-->
-                            <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group row">
-                                        <label class="control-label text-right col-md-3">Time In</label>
-                                        <div class="col-md-9">
-                                            <input type="datetime-local"  class="form-control" name="time_in" value="{{isset($attendance_summary['first_timestamp_in']) ? date('Y-m-d\TH:i',strtotime($attendance_summary['first_timestamp_in'])): ''}}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                                <div class="col-md-6">
-                                    <div class="form-group row ">
-                                        <label class="control-label text-right col-md-3">Time Out</label>
-                                        <div class="col-md-9">
-                                            <input type="datetime-local" class="form-control" name="time_out" value="{{isset($attendance_summary['last_timestamp_out']) && $attendance_summary['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($attendance_summary['last_timestamp_out'])): '' }}">
-                                        </div>
-                                    </div>
-                                </div>
-                                <!--/span-->
-                            </div>
-                        </div>
-                        <div class="form-actions">
-                            <hr>
-                            <div class="col-md-12">
-                                <div class="row">
-
-                                    <div class="col-md-offset-3 col-md-12">
-                                        <button type="submit" class="btn btn-info float-right">Create</button>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="col-md-6"> </div>
-                        </div>
-                    </form>
-                    <br>
-                    <h3 class="box-title">Details</h3>
-                    <hr>
-                    <div class="row">
-                        <div class="col-md-4">
-                            <div class="form-group row">
-                                <label class="control-label text-right col-md-6">Is Delay? :</label>
-                                <div class="col-md-4 ">
-                                    @if(isset($attendance_summary->is_delay)) {{$attendance_summary->is_delay}} @endif
-                                </div>
-                            </div>
-                        </div>
-
-                        <!--/span-->
-                        <div class="col-md-4">
-                            <div class="form-group row ">
-                                <label class="control-label text-right col-md-6">Total Hours:</label>
-                                <div class="col-md-3 ">
-                                    @if(isset($attendance_summary->total_time))
-                                        {{gmdate('H:i', floor(number_format(($attendance_summary->total_time/60), 2, '.', '') * 3600))}}
-                                    @endif
-                                </div>
-                            </div>
-                        </div>
-                        <!--/span-->
-                        <div class="col-md-4">
-                            <div class="form-group row ">
-                                <label class="control-label text-right col-md-6">Total Checks:</label>
-                                <div class="col-md-4 ">
-                                    @if($attendances->count()) {{$attendances->count()}} @endif
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-                    <br>
-                    <h3 class="box-title">Breaks<a class="btn btn-info text-white float-right" data-toggle="modal" data-target="#popup" data-original-title="Edit"> <i class="fas fa-plus text-white"></i> Add Break</a>
-                    </h3>
-                    <hr>
-                    {{--///Dialog Box/// --}}
-                <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                    <div class="modal-dialog">
-                        <div class="modal-content">
-                            <form action="{{route('attendance.storeBreak')}}" method='POST'>
-                                {{ csrf_field() }}
-                                <div class="modal-header" style="margin-right: 20px;">
-                                    Add Break
-                                </div>
-                                <div class="modal-body">
-                                    <div class="container-fluid">
-                                                <select class="form-control custom-select" name="employee_id" hidden>
-                                                    <option value="0">Select Employee</option>
-                                                    @foreach($employees as $emp)
-                                                        <option value="{{$emp->id}}" @if($emp_id == $emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
-                                                    @endforeach
-                                                </select>
-                                        <div class="col-md-14">
-                                            <label for="date">Date</label><br>
-                                            <div class="input-group date1">
-                                                <input type="date" class="form-control date" name="date" value="{{$current_date}}">
-                                            </div>
-                                        </div>
-                                        <div class="row">
-                                            <div class="col-md-12">
-                                                <label for="time_in">Break Start</label>
-                                                <div class="input-group timepicker">
-                                                    <input type="datetime-local"  class="form-control" name="break_start" value="{{$current_time}}">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label for="time_out">Break End</label>
-                                                <div class="input-group timepicker">
-                                                    <input type="datetime-local" class="form-control" name="break_end" value="">
-                                                </div>
-                                            </div>
-                                            <div class="col-md-12">
-                                                <label for="time_out">Comment</label>
-                                                <div class="input-group timepicker">
-                                                    <input type="text" class="form-control" name="comment" value="">
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="modal-footer">
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                    <button type="submit" class="btn btn-success create-btn" id="add-btn" >Add Break</button>
-                                </div>
-                            </form>
-                        </div>
-                    </div>
-                </div>
-                    <div class="col-md-push-12">
-                                <div class="table">
-                                    <table id="demo-foo-addrow" class="table m-t-30 table-hover contact-list" data-paging="true" data-paging-size="7">
-                                        <thead>
-                                        @if($attendances->count() > 0)
-                                            <tr>
-                                                <th>Break Start</th>
-                                                <th>Break End</th>
-                                                <th>Comment</th>
-                                                <th>Actions</th>
-                                            </tr>
-                                        </thead>
-
-                                        <tbody>
-                                        @foreach($attendances as $att)
-                                            <tr>
-                                                <td>
-                                                    @if($att->timestamp_break_start != '')
-                                                    {{ Carbon\Carbon::parse($att->timestamp_break_start)->format('h:i a')}}
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    @if ($att->timestamp_break_end != '')
-                                                        {{ Carbon\Carbon::parse($att->timestamp_break_end)->format('h:i a') }}
-                                                    @endif
-                                                </td>
-                                                <td>{{$att->comment}}</td>
-                                                <td class="text-nowrap">
-                                                    <a class="btn btn-info btn-sm" data-toggle="modal" data-target="#edit{{ $att->id }}"> <i class="fas fa-pencil-alt text-white "></i></a>
-                                                    <div class="modal fade" id="edit{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <form action="{{ route('attendance.updateBreak' , ['id'=>$att->id] )}}" method="post">
-                                                                    {{ csrf_field() }}
-                                                                    <div class="modal-header">
-                                                                        Edit Break
-                                                                    </div>
-                                                                    <div class="modal-body">
-
-                                                                        <div>
-                                                                            <label for="date">Date</label></br>
-                                                                            <div class="input-group">
-                                                                                <input type="date" class="form-control" name="date" value="{{$att->date}}" />
-                                                                            </div>
-                                                                        </div>
-
-                                                                        <label for="time">Break Start</label>
-                                                                        <div class="input-group">
-                                                                            <input type="datetime-local" class="form-control" name="break_start"  value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_start))}}" />
-                                                                        </div>
-
-                                                                        <label for="time">Break End</label>
-                                                                        <div class="input-group">
-                                                                            <input type="datetime-local" class="form-control" name="break_end" @if($att->timestamp_break_end!=null) value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_end))}}" @endif />
-                                                                        </div>
-                                                                        <label for="time">Comment</label>
-                                                                        <div class="input-group">
-                                                                            <input type="text" class="form-control" name="comment" value="{{$att->comment}}">                                                                        </div>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                        <button  type="submit" class="btn btn-success btn-ok">Update</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                    {{--//Edit--}}
-                                                    <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $att->id }}"> <i class="fas fa-window-close text-white"></i></a>
-
-                                                    <div class="modal fade" id="confirm-delete{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                                        <div class="modal-dialog">
-                                                            <div class="modal-content">
-                                                                <form action="{{ route('attendance.deleteBreakChecktime' , ['id' => $att->id] )}}" method="post">
-                                                                    {{ csrf_field() }}
-                                                                    <div class="modal-header">
-                                                                        Are you sure you want to delete this Break check
-                                                                    </div>
-                                                                    <div class="modal-content">
-                                                                        <strong>{{ $att->in_out }} on {{Carbon\Carbon::parse($att->timestamp_break_start)->format('Y-m-d h:i a')}} ?</strong>
-                                                                    </div>
-                                                                    <div class="modal-footer">
-                                                                        <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
-                                                                        <button  type="submit" class="btn btn-danger btn-ok">Delete</button>
-                                                                    </div>
-                                                                </form>
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </td>
-                                            </tr>
-                                        @endforeach @else
-                                            <tr>
-                                                <p>
-                                                    Time Not Added yet
-                                                </p>
-                                            </tr>
-                                        @endif
-
-                                        </tbody>
-                                    </table>
-                                </div>
-                        </div>
-                    </div>
-                </div>
+            </div>
         </div>
     </div>
-    @push('scripts')
-    <script type="text/javascript">
-        $(document).ready(function () {
-            $('#delay').hide();
+@endif
 
-            $('.date').on("change", function(e) {
-                        @if($emp_id)
-                var url = '{{route('attendance.createBreak')}}/{{$emp_id}}/' + $(this).val();
-                        @else
-                var url = '{{route('attendance.createBreak')}}/0/' + $(this).val();
-                @endif
-                if (url) {
-                    window.location = url;
-                }
-                return false;
-            });
+@if (Session::has('error'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> {{Session::get('error')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
 
-            $(".custom-select").on('change', function(e){
-                var url = '{{route('attendance.createBreak')}}/' + $(this).val() + '/{{$current_date}}';
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-12">
+                                @if(isset($attendance_summary))
+                                    <a data-toggle="modal" data-target="#confirm-delete{{$attendance_summary->id}}" class="btn btn-danger" title="Delete Attendance Summary"><span class=" d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Delete</span></a>
+                                @endif
+                                @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
+                                    <button type="button" title="Add Employee Leave" onclick="window.location.href='{{route('admin.createLeave')}}'" class="btn btn-info float-right" ><i class="fas fa-plus"></i> <span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Add Employee Leave</span></button>
+                                @endif
+                            </div>
+                        </div>
+                        <hr>
+                        <h5 class="pt-3"><strong>Details</strong></h5>
+                        <hr class="mt-0">
+                        <div class="row">
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Is Delay? :</label>
+                                    <div class="col-md-4 ">
+                                        @if(isset($attendance_summary->is_delay)) {{$attendance_summary->is_delay}} @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Total Hours:</label>
+                                    <div class="col-md-3 ">
+                                        @if(isset($attendance_summary->total_time))
+                                        {{gmdate('H:i', floor(number_format(($attendance_summary->total_time/60), 2, '.', '') * 3600))}}
+                                        @endif
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-4">
+                                <div class="form-group">
+                                    <label class="control-label">Total Checks:</label>
+                                    <div class="col-md-4 ">
+                                        @if($attendances->count()) {{$attendances->count()}} @endif
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <hr>
+                        @if(isset($attendance_summary))
+                            <div class="modal fade" id="confirm-delete{{$attendance_summary->id}}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                <div class="modal-dialog">
+                                    <div class="modal-content">
+                                        <form action="{{ route('attendance.delete' ,$attendance_summary->id)}}" method="post">
+                                            {{ csrf_field() }}
+                                            <div class="modal-header">
+                                                <h4 class="modal-title">Delete Attendance Summary</h4>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">×</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                Are you sure you want to delete Attendance of "@foreach($employees as $emp)
+                                                @if($emp_id == $emp->id) {{$emp->firstname}} {{$emp->lastname}} @endif @endforeach"?
+                                            </div>
+                                            <div class="modal-footer justify-content-between">
+                                                <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                <button  type="submit" class="btn btn-danger btn-ok" title="Delete Attendance Summary"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Delete</span></button>
+                                            </div>
+                                        </form>
+                                    </div>
+                                </div>
+                            </div>
+                        @endif
+                        <form action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
+                            {{csrf_field()}}
+                            <h5 class="pt-3"><strong>Create CheckIn/CheckOut</strong></h5>
+                            <hr class="mt-0">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Name Here</label>
+                                        <select class="form-control custom-select" name="employee_id">
+                                            <option value="0">Select Employee</option>
+                                            @foreach($employees as $emp)
+                                            <option value="{{$emp->id}}" @if($emp_id==$emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Select Date</label>
+                                        <input type="date" class="form-control date" name="date" value="{{$current_date}}"/>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Time In</label>
+                                        <input type="datetime-local" class="form-control" name="time_in" value="{{isset($attendance_summary['first_timestamp_in']) ? date('Y-m-d\TH:i',strtotime($attendance_summary['first_timestamp_in'])): ''}}"/>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="form-group">
+                                        <label class="control-label">Time Out</label>
+                                        <input type="datetime-local" class="form-control" name="time_out" value="{{isset($attendance_summary['last_timestamp_out']) && $attendance_summary['last_timestamp_out']!=""  ? date('Y-m-d\TH:i',strtotime($attendance_summary['last_timestamp_out'])): '' }}"/>
+                                    </div>
+                                </div>
+                            </div>
 
-                if (url) {
-                    window.location = url;
-                }
-                return false;
-            });
+                            <hr>
+
+                            <button type="submit" class="btn btn-primary" title="Create Attendance"><i class="fas fa-check-circle d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Create</span></button>
+                            <button type="button" class="btn btn-default" title="Cancel" @if(request()->is('attendance/create_break/*/*')) onclick="window.location.href='{{route('today_timeline')}}'" @endif @if(request()->is('attendance/create_break')) onclick="window.location.href='{{route('timeline')}}'" @endif><i class="fas fa-window-close d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Cancel</span></button>
+                            <div class="col-md-6"> </div>
+                        </form>
+                        <hr>
+                        <h5 class="pt-3 row justify-content-between">
+                            <strong class="ml-2 mr-1 pt-1">Breaks</strong>
+                            <a class="btn btn-info text-white mr-2" data-toggle="modal" data-target="#popup" title="Add Break"> <i class="fas fa-plus"></i> <span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Add Break</span></a>
+                        </h5>
+                        <hr class="mt-0">
+                        <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="{{route('attendance.storeBreak')}}" method='POST'>
+                                        {{ csrf_field() }}
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Add Break</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <select class="form-control custom-select" name="employee_id" hidden>
+                                                <option value="0">Select Employee</option>
+                                                @foreach($employees as $emp)
+                                                <option value="{{$emp->id}}" @if($emp_id==$emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
+                                                @endforeach
+                                            </select>
+                                            <div class="row">
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="date">Date</label>
+                                                        <input type="date" class="form-control date" name="date" value="{{$current_date}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="time_in">Break Start</label>
+                                                        <input type="datetime-local" class="form-control" name="break_start" value="{{$current_time}}">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="time_out">Break End</label>
+                                                        <input type="datetime-local" class="form-control" name="break_end" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="time_out">Comment</label>
+                                                        <input type="text" class="form-control" name="comment" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                            <button  type="submit" class="btn btn-primary btn-ok" title="Create Break"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Create</span></button>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="table-responsive">
+                            <table id="break" class="table table-bordered table-striped table-hover">
+                                <thead>
+                                    <tr>
+                                        <th>Break Start</th>
+                                        <th>Break End</th>
+                                        <th>Comment</th>
+                                        <th>Actions</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    @foreach($attendances as $att)
+                                        <tr>
+                                            <td>
+                                                @if($att->timestamp_break_start != '')
+                                                {{ Carbon\Carbon::parse($att->timestamp_break_start)->format('h:i a')}}
+                                                @endif
+                                            </td>
+                                            <td>
+                                                @if ($att->timestamp_break_end != '')
+                                                {{ Carbon\Carbon::parse($att->timestamp_break_end)->format('h:i a') }}
+                                                @endif
+                                            </td>
+                                            <td>{{$att->comment}}</td>
+                                            <td class="text-nowrap">
+                                                <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#edit{{ $att->id }}" title="Edit Break"> <i class="fas fa-pencil-alt text-white "></i></a>
+                                                <a class="btn btn-danger btn-sm" data-toggle="modal" data-target="#confirm-delete{{ $att->id }}" title="Delete Break"> <i class="fas fa-trash-alt text-white"></i></a>
+                                            </td>
+                                        </tr>
+                                        <div class="modal fade" id="edit{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('attendance.updateBreak' , ['id'=>$att->id] )}}" method="post">
+                                                        {{ csrf_field() }}
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Edit Break</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            <div class="row">
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="date">Date</label><br>
+                                                                        <input type="date" class="form-control" name="date" value="{{$att->date}}" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="time">Break Start</label>
+                                                                        <input type="datetime-local" class="form-control" name="break_start" value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_start))}}" />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="time">Break End</label>
+                                                                        <input type="datetime-local" class="form-control" name="break_end" @if($att->timestamp_break_end!=null) value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_end))}}" @endif />
+                                                                    </div>
+                                                                </div>
+                                                                <div class="col-12">
+                                                                    <div class="form-group">
+                                                                        <label for="time">Comment</label>
+                                                                        <input type="text" class="form-control" name="comment" value="{{$att->comment}}"/>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                            <button  type="submit" class="btn btn-primary btn-ok" title="Update Break"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal fade" id="confirm-delete{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                            <div class="modal-dialog">
+                                                <div class="modal-content">
+                                                    <form action="{{ route('attendance.deleteBreakChecktime' , ['id' => $att->id] )}}" method="post">
+                                                        {{ csrf_field() }}
+                                                        <div class="modal-header">
+                                                            <h4 class="modal-title">Delete Break</h4>
+                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                <span aria-hidden="true">×</span>
+                                                            </button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to delete this Break from <strong>{{Carbon\Carbon::parse($att->timestamp_break_start)->format('h:i a')}}</strong> to <strong>{{Carbon\Carbon::parse($att->timestamp_break_end)->format('h:i a')}} </strong>on <strong>{{Carbon\Carbon::parse($att->timestamp_break_end)->format('d-m-Y')}}</strong>?
+                                                        </div>
+                                                        <div class="modal-footer justify-content-between">
+                                                            <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                            <button  type="submit" class="btn btn-danger btn-ok" title="Delete Break"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Delete</span></button>
+                                                        </div>
+                                                    </form>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    @endforeach
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<script>
+    $(document).ready(function () {
+        $('#break').DataTable({
+            "paging": true,
+            "lengthChange": true,
+            "searching": true,
+            "ordering": true,
+            "info": true,
+            "autoWidth": false,
+            "responsive": true,
         });
-    </script>
-    <script type="text/javascript">
-        $(function () {
-            $('#datetimepicker2').datetimepicker({
-                locale: 'ru'
-            });
+    });
+
+    $(document).ready(function() {
+        $('#delay').hide();
+
+        $('.date').on("change", function(e) {
+            @if($emp_id)
+            var url = '{{route('attendance.createBreak')}}/{{$emp_id}}/' + $(this).val();
+            @else
+            var url = '{{route('attendance.createBreak')}}/0/' + $(this).val();
+            @endif
+            if (url) {
+                window.location = url;
+            }
+            return false;
         });
-    </script>
-    @endpush
+
+        $(".custom-select").on('change', function(e) {
+            var url = '{{route('attendance.createBreak')}}/' + $(this).val() + '/{{$current_date}}';
+
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
+    });
+</script>
 @stop
