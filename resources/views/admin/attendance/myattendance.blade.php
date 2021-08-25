@@ -1,187 +1,288 @@
-@extends('layouts.admin')
-@section('Heading')
-    {{--<button type="button"  onclick="window.location.href='{{route('attendance.create')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Attendance</button>--}}
-    <h3 class="text-themecolor">My Attendance</h3>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">Attendance</li>
-        <li class="breadcrumb-item active">My Attendance</li>
-    </ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-    <div class="row">
-        <div class="col-md-12 col-xlg-12">
-            <!-- Row -->
-            <div class="row">
-                        <!-- Column -->
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-row">
-                                <div class="round round-md align-self-center round-info"><i class="far fa-calendar-alt"></i></div>
-                                <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{$averageAttendance}}%</h3>
-                                    <h5 class="text-muted m-b-0">Average&nbspAttend</h5></div>
-                            </div>
-                        </div>
-                    </div>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">My Attendance</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('attendance/myAttendance') }}">Attendance</a></li>
+          <li class="breadcrumb-item active">My Attendance</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if (Session::has('error'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> {{Session::get('error')}}
                 </div>
-                <!-- Column -->
-                <!-- Column -->
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-row">
-                                <div class="round round-md align-self-center round-danger"><i class="far fa-calendar-plus"></i></div>
-                                <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{$averageArrival}}</h3>
-                                    <h5 class="text-muted m-b-0">Average&nbspArrival</h5></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!-- Column -->
-                <!-- Column -->
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-row">
-                                <div class="round round-md align-self-center round-warning"><i class="far fa-clock"></i></div>
-                                <div class="m-l-10 align-self-center">
-                                    <h3 class="m-b-0 font-light">{{$averageHours}} HRS</h3>
-                                    <h5 class="text-muted m-b-0">Average Hour</h5></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <div class="col-md-3">
-                    <div class="card">
-                        <div class="card-body">
-                            <div class="d-flex flex-row">
-                                <div class="round round-md align-self-center round-primary"><i class="far fa-calendar-check"></i></div>
-                                <div class="m-l-10 align-self-center">
-                                    <h5 class="m-b-0 ">{{$present}}&nbsp Present</h5>
-                                    <h5 class="m-b-0 ">{{$leaveCount}}&nbsp Leaves</h5>
-                                    <h5 class="m-b-0"> {{$absent}}&nbsp Absent</h5></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-            </div>
             </div>
         </div>
-    <div class="card">
-        <div class="card-body">
-                        <span style="float: right;">
-                        @if(
-                        Auth::user()->isAllowed('AttendanceController:showTimeline')
-                        )
-                        <select class="form-control" id="employee">
-                            <option value={{Auth::user()->id}} @if(Auth::user()->type=='remote')Selected @endif>Select Employee</option>
-                            @foreach($employees as $employee)
-                            <option value="{{$employee->id}}"  @if($employeeId==$employee->id) Selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
-                            @endforeach
-                        </select>
-                        @endif
-                        </span>
-            <br></br>
-            <div id="calendar">
+    </div>
+</div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
             </div>
-            <div id="calendarModal" class="modal fade">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                          Send Correction Message
-                        </div>
-                        <div class="modal-header">
-                            <h4 id="modalTitle" class="modal-title"></h4>
-                        </div>
-                        <div >
-                            <form action="{{route('correction_email')}}" method="post">
-                            {{csrf_field()}}
-                                <div class="col-md-12">
-                                <div class="form-group">
-                                    <label class="control-label">To</label>
-                                    <input  type="email" name="email" value="hr@glowlogix.com" class="form-control" hidden>
-                                    <input  type="email" value="hr@glowlogix.com" class="form-control" disabled>
-                                </div>
-                                    <div class="form-group">
-                                        <label class="control-label">CC to Line Manager</label>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
 
-                                    <select class="form-control" name="line_manager_email" @foreach($linemanagers as $linemanager) @if($linemanager->line_manager_id == null) disabled @endif @endforeach>
-                                        @foreach($linemanagers as $linemanager)
-                                            @if($linemanager->line_manager_id!=null)
-                                                <option value="{{$linemanager->lineManager->official_email}}">{{$linemanager->lineManager->official_email}}</option>
-                                            @endif
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-success"><i class="far fa-calendar-alt"></i></span>
+                    <div class="info-box-content">
+                        <span >Average Attendance</span>
+                        <span class="info-box-number">{{$averageAttendance}}%</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-danger"><i class="far fa-calendar-plus"></i></span>
+                    <div class="info-box-content">
+                        <span>Average Arrival</span>
+                        <span class="info-box-number">{{$averageArrival}}</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-warning"><i class="far fa-clock"></i></span>
+                    <div class="info-box-content">
+                        <span>Average Hours</span>
+                        <span class="info-box-number">{{$averageHours}} HRS</span>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-3">
+                <div class="info-box">
+                    <span class="info-box-icon bg-primary"><i class="far fa-calendar-check"></i></span>
+                    <div class="info-box-content">
+                        <span class="info-box-text"><b>{{$present}}</b> Present</span>
+                        <span class="info-box-text"><b>{{$leaveCount}}</b> Leaves</span>
+                        <span class="info-box-text"><b>{{$absent}}</b> Absent</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="row justify-content-between pl-2 pr-2">
+                            <div>
+                                @if(Auth::user()->isAllowed('AttendanceController:showTimeline'))
+                                    <select class="form-control" id="employee">
+                                        <option value={{Auth::user()->id}} @if(Auth::user()->type=='remote')Selected @endif>Select Employee</option>
+                                        @foreach($employees as $employee)
+                                        <option value="{{$employee->id}}"  @if($employeeId==$employee->id) Selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
                                         @endforeach
                                     </select>
-                                    </div>
-                                    <input id="date" type="text" name="date" hidden>
-                                <div class="form-group">
-                                    <label class="control-label">Message</label>
-                                    <textarea  name="message" class="form-control"></textarea>
+                                @endif
+                            </div>
+                            <div>
+                                @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday') || $summaryDate == '')
+                                    <a type="button" href="{{route('add.attendance', Auth::user()->id)}}/{{$today}}" class="btn btn-info btn-rounded ml-1" title="Add Attendance"><i class="fas fa-plus"></i> <span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Add Attendance</span></a>
+                                @endif
+                            </div>
+                        </div>
+
+                        @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday') || $summaryDate == '')
+                            <hr>
+                        @endif
+
+                        <div id="calendar"></div>
+
+                        <div id="calendarModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="{{route('correction_email')}}" method="post">
+                                    {{csrf_field()}}
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Send Attendance Correction Request</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h6 id="modalTitle" class="modal-title"></h6>
+                                            <br>
+                                            <div class="row">
+                                                <div class="form-group col-md-12">
+                                                    <label class="control-label">To</label>
+                                                    <input  type="email" name="email" value="hr@glowlogix.com" class="form-control" hidden>
+                                                    <input  type="email" value="hr@glowlogix.com" class="form-control" disabled>
+                                                </div>
+                                                <div class="form-group col-md-12">
+                                                    <label class="control-label">CC to Line Manager</label>
+                                                    <select class="form-control" name="line_manager_email" @foreach($linemanagers as $linemanager) @if($linemanager->line_manager_id == null) disabled @endif @endforeach>
+                                                        @foreach($linemanagers as $linemanager)
+                                                            @if($linemanager->line_manager_id!=null)
+                                                                <option value="{{$linemanager->lineManager->official_email}}">{{$linemanager->lineManager->official_email}}</option>
+                                                            @endif
+                                                        @endforeach
+                                                    </select>
+                                                </div>
+                                                <input id="date" type="text" name="date" hidden>
+                                                <div class="form-group col-md-12">
+                                                    <label class="control-label">Message</label>
+                                                    <textarea  name="message" class="form-control"></textarea>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                            <button  type="submit" class="btn btn-primary btn-ok" title="Delete Attendance Summary"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Send</span></button>
+                                        </div>
+                                    </form>
                                 </div>
                             </div>
-                                <div class="modal-footer">
-                                    <button type="submit" class="btn btn-success" >Send</button>
-                                    <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                        </div>
+                        <div id="timeCorrectionModal" class="modal fade">
+                            <div class="modal-dialog">
+                                <div class="modal-content">
+                                    <form action="{{ route('attendance.correction') }}" method="post">
+                                    {{csrf_field()}}
+                                        <input id="timeDate" type="text" name="timeDate" hidden>
+                                        
+                                        <div class="modal-header">
+                                            <h4 class="modal-title">Send Time Correction Request</h4>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">×</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <h6 id="timeModalTitle" class="modal-title"></h6>
+                                            <br>
+                                            <div class="row">
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Time In</label>
+                                                        <input type="time" class="form-control" name="time_in" value=""/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-md-12">
+                                                    <div class="form-group">
+                                                        <label class="control-label">Time Out</label>
+                                                        <input type="time" class="form-control" name="time_out" value=""/>
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="time_in">Break Start</label>
+                                                        <input type="time" class="form-control" name="break_start" value="">
+                                                    </div>
+                                                </div>
+                                                <div class="col-12">
+                                                    <div class="form-group">
+                                                        <label for="time_out">Break End</label>
+                                                        <input type="time" class="form-control" name="break_end" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="modal-footer justify-content-between">
+                                            <button type="button" class="btn btn-default" title="Cancel" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                            <button  type="submit" class="btn btn-primary btn-ok" title="Delete Attendance Summary"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Send</span></button>
+                                        </div>
+                                    </form>
                                 </div>
-                            </form>
-
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
         </div>
     </div>
+</div>
+<!-- Main Content End -->
 
-    @push('scripts')
-        <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
-        <link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
-        <link href="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet' />
-        <script src="{{asset('assets/plugins/fullcalendar-3.9.0/2.22.2-moment.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
-        <script src="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
-        <script type="text/javascript">
-            $(document).ready(function () {
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet'/>
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print'/>
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet'/>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/2.22.2-moment.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 
-                $('#calendar').fullCalendar({
+<script>
+    $(document).ready(function () {
+        $('#calendar').fullCalendar({
+            themeSystem: 'bootstrap4',
+            defaultView: 'month',
+            schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
+            displayEventTime: false,
+            businessHours: {
+                // days of week. an array of zero-based day of week integers (0=Sunday)
+                dow: [{{ $dow }}],
+            },
+            showNonCurrentDates: false,
 
-                    themeSystem: 'bootstrap4',
-                    defaultView: 'month',
-                    schedulerLicenseKey: 'GPL-My-Project-Is-Open-Source',
-                    displayEventTime: false,
-                    businessHours: {
-                        // days of week. an array of zero-based day of week integers (0=Sunday)
-                        dow: [{{ $dow }}],
-                    },
-                    showNonCurrentDates: false,
+            firstDay: 1,
+            slotWidth :80,
 
-                    firstDay: 1,
-                    slotWidth :80,
+            eventClick:function(event, jsEvent, view) {
+                if (event.title.search('Absent') !== -1){
+                    $('#modalTitle').html('Your attendance was marked as <b>' + event.title + '</b> on date ');
+                    $('#modalTitle').append('<b>' + event.date + '</b>. For correction please fill the form below:');
+                    $('#date').val(event.date);
+                    $('#calendarModal').modal();
+                }
 
-                    eventClick:function(event, jsEvent, view) {
-                        if (event.title.search('Absent') !== -1){
-                            $('#modalTitle').html(event.title)
-                            $('#modalTitle').append(event.date);
-                            $('#date').val(event.date);
-                            $('#calendarModal').modal();
-                        }
-                        },
+                arr = event.title.split('\n');
+                title = arr[0];
+                time = arr[1].split(' - ');
+                time_in = time[0];
+                time_out = time[1];
+                hours = arr[2];
+                if(title == 'present')
+                {
+                    $('#timeModalTitle').html('You attendance was marked from <b>' + time_in + '</b> to <b>' + time_out + '</b> for <b>' + hours + '</b> on ');
+                    $('#timeModalTitle').append('<b>' + event.date + '</b>. For correction request plese fill the form below:');
+                    $('#timeDate').val(event.date);
+                    $('#timeCorrectionModal').modal();
+                }
+            },
 
-                    events:{!! $events !!}
+            events:{!! $events !!}
 
-                });
-                $("#employee").change(function(e){
-                    var url = "{{route('myAttendance')}}/" + $(this).val();
+        });
+        $("#employee").change(function(e){
+            var url = "{{route('myAttendance')}}/" + $(this).val();
 
-                    if (url) {
-                        window.location = url;
-                    }
-                    return false;
-                });
-            });
-                $('.fc-other-month').html('');
-        </script>
-    @endpush
+            if (url) {
+                window.location = url;
+            }
+            return false;
+        });
+    });
+    
+    $('.fc-other-month').html('');
+</script>
 @stop

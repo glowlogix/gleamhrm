@@ -38,6 +38,23 @@
       </div>
     </div>
 @endif
+@if(request()->is('add/attendance/*/*'))
+    <div class="content-header">
+      <div class="container-fluid">
+        <div class="row mb-2">
+          <div class="col-sm-6">
+            <h1 class="m-0">Add Attendance</h1>
+          </div>
+          <div class="col-sm-6">
+            <ol class="breadcrumb float-sm-right">
+              <li class="breadcrumb-item"><a href="{{ url('attendance/myAttendance') }}">My Attendance</a></li>
+              <li class="breadcrumb-item active">Add Attendance</li>
+            </ol>
+          </div>
+        </div>
+      </div>
+    </div>
+@endif
 <!-- Breadcrumbs End -->
 
 <!-- Error Message Section Start -->
@@ -97,7 +114,7 @@
                     <div class="card-body">
                         <div class="row">
                             <div class="col-12">
-                                @if(isset($attendance_summary))
+                                @if(isset($attendance_summary) && Auth::user()->isAllowed('AttendanceController:Attendance_Summary_Delete'))
                                     <a data-toggle="modal" data-target="#confirm-delete{{$attendance_summary->id}}" class="btn btn-danger" title="Delete Attendance Summary"><span class=" d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-trash-alt"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Delete</span></a>
                                 @endif
                                 @if(Auth::user()->isAllowed('LeaveController:adminCreate'))
@@ -105,7 +122,9 @@
                                 @endif
                             </div>
                         </div>
-                        <hr>
+                        @if(Auth::user()->isAllowed('LeaveController:adminCreate') || Auth::user()->isAllowed('AttendanceController:Attendance_Summary_Delete'))
+                            <hr>
+                        @endif
                         <h5 class="pt-3"><strong>Details</strong></h5>
                         <hr class="mt-0">
                         <div class="row">
@@ -162,28 +181,34 @@
                                 </div>
                             </div>
                         @endif
-                        <form action="{{route('attendance.storeAttendanceSummaryToday')}}" method='POST'>
+
+                        <form @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday')) action="{{route('attendance.storeAttendanceSummaryToday')}}" @else action="{{route('store.attendance')}}" @endif method='POST'>
                             {{csrf_field()}}
                             <h5 class="pt-3"><strong>Create CheckIn/CheckOut</strong></h5>
                             <hr class="mt-0">
                             <div class="row">
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Select Name Here</label>
-                                        <select class="form-control custom-select" name="employee_id">
-                                            <option value="0">Select Employee</option>
-                                            @foreach($employees as $emp)
-                                            <option value="{{$emp->id}}" @if($emp_id==$emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
-                                            @endforeach
-                                        </select>
+                                @if(Auth::user()->isAllowed('AttendanceController:createBreak'))
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Select Name Here</label>
+                                            <select class="form-control custom-select" name="employee_id">
+                                                <option value="0">Select Employee</option>
+                                                @foreach($employees as $emp)
+                                                <option value="{{$emp->id}}" @if($emp_id==$emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
+                                                @endforeach
+                                            </select>
+                                        </div>
                                     </div>
-                                </div>
-                                <div class="col-md-6">
-                                    <div class="form-group">
-                                        <label class="control-label">Select Date</label>
-                                        <input type="date" class="form-control date" name="date" value="{{$current_date}}"/>
+                                    <div class="col-md-6">
+                                        <div class="form-group">
+                                            <label class="control-label">Select Date</label>
+                                            <input type="date" class="form-control date" name="date" value="{{$current_date}}"/>
+                                        </div>
                                     </div>
-                                </div>
+                                @else
+                                    <input type="text" name="employee_id" value="{{ Auth::user()->id }}" hidden>
+                                    <input type="text" name="date" value="{{$current_date}}" hidden>
+                                @endif
                             </div>
                             <div class="row">
                                 <div class="col-md-6">
@@ -202,8 +227,9 @@
 
                             <hr>
 
-                            <button type="submit" class="btn btn-primary" title="Create Attendance"><i class="fas fa-check-circle d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Create</span></button>
-                            <button type="button" class="btn btn-default" title="Cancel" @if(request()->is('attendance/create_break/*/*')) onclick="window.location.href='{{route('today_timeline')}}'" @endif @if(request()->is('attendance/create_break')) onclick="window.location.href='{{route('timeline')}}'" @endif><i class="fas fa-window-close d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Cancel</span></button>
+                            <button type="submit" class="btn btn-primary" title="Create Attendance" @if(!Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday') && isset($attendance_summary)) @if($attendance_summary->first_timestamp_in != '' && $attendance_summary->last_timestamp_out != '') disabled @endif @endif><i class="fas fa-check-circle d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Create</span></button>
+                            
+                            <button type="button" class="btn btn-default" title="Cancel" @if(request()->is('attendance/create_break/*/*')) onclick="window.location.href='{{route('today_timeline')}}'" @endif @if(request()->is('attendance/create_break')) onclick="window.location.href='{{route('timeline')}}'" @endif @if(request()->is('add/attendance/*/*')) onclick="window.location.href='{{route('myAttendance')}}'" @endif><i class="fas fa-window-close d-lg-none d-md-none d-sm-block"></i><span class="d-none d-md-inline d-lg-inline">Cancel</span></button>
                             <div class="col-md-6"> </div>
                         </form>
                         <hr>
@@ -215,7 +241,7 @@
                         <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form action="{{route('attendance.storeBreak')}}" method='POST'>
+                                    <form @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday'))  action="{{route('attendance.storeBreak')}}" @else action="{{route('store.attendance.break')}}" @endif method='POST'>
                                         {{ csrf_field() }}
                                         <div class="modal-header">
                                             <h4 class="modal-title">Add Break</h4>
@@ -385,10 +411,8 @@
             "responsive": true,
         });
     });
-
     $(document).ready(function() {
         $('#delay').hide();
-
         $('.date').on("change", function(e) {
             @if($emp_id)
             var url = '{{route('attendance.createBreak')}}/{{$emp_id}}/' + $(this).val();
@@ -400,10 +424,8 @@
             }
             return false;
         });
-
         $(".custom-select").on('change', function(e) {
             var url = '{{route('attendance.createBreak')}}/' + $(this).val() + '/{{$current_date}}';
-
             if (url) {
                 window.location = url;
             }

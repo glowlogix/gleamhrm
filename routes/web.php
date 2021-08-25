@@ -641,10 +641,31 @@ Route::group(['middleware' => 'auth'], function () {
         'uses' => 'AttendanceController@authUserTimeline',
         'as'   => 'myAttendance',
     ]);
+    Route::Get('/add/attendance/{id?}/{date?}/', [
+        'uses' => 'AttendanceController@createBreak', //show Attendance
+        'as'   => 'add.attendance',
+    ]);
+    Route::Post('store/attendance', [
+        'uses' => 'AttendanceController@storeAttendanceSummaryToday',
+        'as'   => 'store.attendance',
+    ]);
+    Route::Post('store/attendance/break', [
+        'uses' => 'AttendanceController@storeBreak',
+        'as'   => 'store.attendance.break',
+    ]);
     Route::post('/attendance/correction_email', [
         'uses' => 'AttendanceController@correctionEmail',
         'as'   => 'correction_email',
     ]);
+    Route::POST('/attendance/correction', [
+        'uses' => 'AttendanceController@attendanceCorrection',
+        'as'   => 'attendance.correction',
+    ]);
+    Route::POST('update/attendance/correction', [
+        'uses' => 'AttendanceController@updateAttendanceCorrection',
+        'as'   => 'update.attendance.correction',
+    ]);
+
     //	Help
     Route::get('/help', [
         'uses' => 'DashboardController@help',
