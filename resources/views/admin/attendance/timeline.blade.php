@@ -1,6 +1,6 @@
-@extends('layouts.admin')
+@extends('layouts.master')
 @section('Heading')
-    <button type="button"  onclick="window.location.href='{{route('attendance.createBreak')}}'" class="btn btn-info btn-rounded m-t-10 float-right"><span class="fas fa-plus" ></span> Add Attendance</button>
+    
     <h3 class="text-themecolor">Dashboad</h3>
     <ol class="breadcrumb">
         <li class="breadcrumb-item"><a href="javascript:void(0)">Attendance</a></li>
@@ -8,33 +8,108 @@
     </ol>
 @stop
 @section('content')
-<div class="card">
-    <div class="card-body">
-        <span style="float: left;"><input id="myTextBox" value="{{ Carbon\Carbon::now()->toDateString()}}" class="form-control" type="date" name="date"></span>
-            <span style="float: right;">
-                <select class="form-control" id="selectOffice">
-                    <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
-                    @foreach($office_locations as $office_location)
-                    <option value="{{$office_location->id}}" @if($branch_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
-                    @endforeach
-                </select>
-            </span>
-        <br><br>
-            <div class="card">
-                <div class="card-body">
-                    <div id="calendar">
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Timeline</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('attendance/timeline') }}">Attendance</a></li>
+          <li class="breadcrumb-item active">Timeline</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@if (Session::has('error'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-danger" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Error!</strong> {{Session::get('error')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+  <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <div class="text-right">
+                            <button type="button" onclick="window.location.href='{{route('attendance.createBreak')}}'" class="btn btn-info btn-rounded" title="Add Attendance"><i class="fas fa-plus"></i> <span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Add Attendance</span></button>
+                        </div>
+                        
+                        <hr>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Date</label>
+                                    <input id="myTextBox" value="{{ Carbon\Carbon::now()->toDateString()}}" class="form-control" type="date" name="date">
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="form-group">
+                                    <label>Office</label>
+                                    <select class="form-control" id="selectOffice">
+                                        <option value="0" @if($branch_id == 0) selected @endif>All Offices</option>
+                                        @foreach($office_locations as $office_location)
+                                        <option value="{{$office_location->id}}" @if($branch_id == $office_location->id) selected @endif>{{$office_location->name}}</option>
+                                        @endforeach
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <br><br>
+                        <div class="card">
+                            <div class="card-body">
+                                <div id="calendar" style="overflow: auto;"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
+        </div>
     </div>
 </div>
-@push('scripts')
-<link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet' />
-<link href="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print' />
-<link href="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet' />
-<script src="{{asset('assets/plugins/fullcalendar-3.9.0/2.22.2-moment.min.js')}}"></script>
-<script src="{{asset('assets/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
-<script src="{{asset('assets/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
+
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.min.css')}}" rel='stylesheet'/>
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.print.css')}}" rel='stylesheet' media='print'/>
+<link href="{{asset('assets/backend/plugins/fullcalendar-3.9.0/scheduler.min.css')}}" rel='stylesheet'/>
+<script src="{{asset('assets/backend/plugins/jquery/jquery3.2.0.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/2.22.2-moment.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/fullcalendar.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 <script type="text/javascript">
     $(document).ready(function () {
         $('#calendar').fullCalendar({
@@ -90,5 +165,4 @@
         $('#calendar').fullCalendar('gotoDate', $(this).val());
     });
 </script>
-@endpush
 @stop
