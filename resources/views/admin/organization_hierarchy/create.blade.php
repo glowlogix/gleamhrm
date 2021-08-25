@@ -1,66 +1,131 @@
-@extends('layouts.admin')
-@section('Heading')
-	<h3 class="text-themecolor">Create Hierarchy</h3>
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">People-Management</li>
-		<li class="breadcrumb-item active">Org Chart</li>
-		<li class="breadcrumb-item active">Create</li>
-	</ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-	<div class="row">
-		<div class="col-lg-8" style="margin-left: 200px;">
-			<div class="card card-outline-info">
-				<h6 class="card-subtitle"><button type="button" style="margin-right: 10px; margin-top:15px;" class="btn btn-info  m-t-10 float-right" onclick="window.location.href='{{route('organization_hierarchy.index')}}'">Back</button></h6>
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Create Organization Hierarchy</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('organization_hierarchy') }}">People Management</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('organization_hierarchy') }}">Organization Hierarchy</a></li>
+          <li class="breadcrumb-item active">Create</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
 
-				<div class="card-body">
-					<form  action="{{route('organization_hierarchy.store')}}" method="post" enctype="multipart/form-data">
-						{{csrf_field()}}
-						<div class="form-body">
-							<div class="col-md-8">
-								<div class="form-group">
-									<label class="control-label">Name</label>
-									<select class="form-control custom-select" name="employee_id">
-										@foreach ($employees as $employee)
-											<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
-										@endforeach
-									</select>
+<!-- Error Message Section Start -->
+@if ($errors->any())
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        @foreach ($errors->all() as $error)
+                          <li><strong>Error!</strong> {{ $error }}</li>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+
+@if (Session::has('error'))
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger" align="left">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        <strong>Error!</strong> {{Session::get('error')}}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endif
+@if (Session::has('success'))
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="alert alert-success" align="left">
+                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+                    <strong>Success!</strong> {{Session::get('success')}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+@endif
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+						<button type="button" class="btn btn-info" onclick="window.location.href='{{route('organization_hierarchy.index')}}'" title="Back"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></button>
+
+                        <hr>
+
+						<form  action="{{route('organization_hierarchy.store')}}" method="post" enctype="multipart/form-data">
+							{{csrf_field()}}
+							<div class="row">
+								<div class="col-md-6">
+									<div class="form-group">
+										<label class="control-label">Name</label>
+										<select class="form-control custom-select" name="employee_id">
+											@foreach ($employees as $employee)
+												<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
+											@endforeach
+										</select>
+									</div>
 								</div>
-							</div>
-							@if($OrganizationHierarchyCnt > 0)
-							<div class="col-md-8">
-								<div class="form-group">
-									<label class="control-label">Line Manager</label>
-									<select class="form-control custom-select" name="line_manager_id">
-										@foreach ($employees as $employee)
-											<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
-										@endforeach
-									</select>
-								</div>
+								@if($OrganizationHierarchyCnt > 0)
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label">Line Manager</label>
+											<select class="form-control custom-select" name="line_manager_id">
+												@foreach ($employees as $employee)
+													<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+									<div class="col-md-6">
+										<div class="form-group">
+											<label class="control-label">Parent Employee</label>
+											<select class="form-control custom-select" name="parent_id">
+												@foreach ($employees as $employee)
+													<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
+												@endforeach
+											</select>
+										</div>
+									</div>
+								@endif
 							</div>
 
-							<div class="col-md-8">
-								<div class="form-group">
-									<label class="control-label">Parent Employee</label>
-									<select class="form-control custom-select" name="parent_id">
-										@foreach ($employees as $employee)
-											<option value="{{$employee->id}}" @if($employee->id == old('employee_id')) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
-										@endforeach
-									</select>
-								</div>
-							</div>
-							@endif
-						</div>
-
-						<div class="form-actions">
 							<hr>
-							&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Create</button>
-							<button type="button" onclick="window.location.href='{{route('organization_hierarchy.index')}}'" class="btn btn-inverse">Cancel</button>
-						</div>
-					</form>
+
+							<button type="submit" class="btn btn-primary" title="Create Organization Hierarchy"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Create</span></button>
+                            <button type="button" onclick="window.location.href='{{route('organization_hierarchy.index')}}'" class="btn btn-default" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
+</div>
+<!-- Main Content End -->
 @stop
