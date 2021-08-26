@@ -8,6 +8,7 @@
         "php": "^7.3|^8.0",
         "ext-calendar": "*",
         "ext-json": "*",
+        "barryvdh/laravel-snappy": "^0.4.8",
         "botman/driver-slack": "^2.2",
         "box/spout": "^2.7",
         "doctrine/dbal": "^2.9",
@@ -21,7 +22,8 @@
         "league/csv": "9.0",
         "nesbot/carbon": "^2.51",
         "spatie/laravel-permission": "^3.8",
-        "twbs/bootstrap": "^4.0"
+        "twbs/bootstrap": "^4.0",
+        "wemersonjanuario/wkhtmltopdf-windows": "0.12.2.3"
     },
     "require-dev": {
         "facade/ignition": "^2.5",

@@ -249,8 +249,9 @@
             </li>
           </ul>
         </li>
-        <li @if(request()->is('salary') || request()->is('salary/*')) class="nav-item menu-open" @else class="nav-item" @endif>
-          <a href="#" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
+
+        <li @if(request()->is('salary') || request()->is('salary/*') || request()->is('slips/salary') || request()->is('slips/salary/*') || request()->is('slip/salary/*/*')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if(request()->is('salary') || request()->is('salary/*') || request()->is('slips/salary') || request()->is('slips/salary/*') || request()->is('slip/salary/*/*')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon fas fa-database"></i>
             <p>
               Payments
@@ -265,6 +266,13 @@
               </a>
             </li>
             <li class="nav-item">
+
+              <a href="{{route('salary.slips')}}" @if(request()->is('slips/salary') || request()->is('slips/salary/*') || request()->is('slip/salary/*/*')) class="nav-link active" @else class="nav-link" @endif>
+                <i class="far fa-circle nav-icon"></i>
+                <p>Salary Slips</p>
+              </a>
+            </li>
+            <!-- <li class="nav-item">
               <a href="#" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Payroll Payments</p>
@@ -281,7 +289,7 @@
                 <i class="far fa-circle nav-icon"></i>
                 <p>Bill Payments</p>
               </a>
-            </li>
+            </li> -->
           </ul>
         </li>
         @if(Auth::user()->isAllowed('RolePermissionsController:index'))

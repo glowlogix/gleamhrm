@@ -49,6 +49,7 @@ class EmployeeSeeder extends Seeder
             'designation'                    => 'admin',
             'city'                           => 'Islamabad',
             'joining_date'                   => '2021-08-23',
+            'gross_salary'                   => 20000,
             'branch_id'                      => '1',
             'status'                         => 1,
             'employment_status'              => 'permanent',

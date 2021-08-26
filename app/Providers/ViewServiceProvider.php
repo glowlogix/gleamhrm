@@ -30,6 +30,10 @@ class ViewServiceProvider extends ServiceProvider
             'App\Http\View\Composers\PlatformComposer'
         );
         View::composer(
+            'layouts.print',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
             'layouts.application-form',
             'App\Http\View\Composers\PlatformComposer'
         );
@@ -59,6 +63,18 @@ class ViewServiceProvider extends ServiceProvider
         );
         View::composer(
             'auth.passwords.reset',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.salary.monthly_salary_slip',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.salary.print_salary_slip',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.salary.generate_salary_slip',
             'App\Http\View\Composers\PlatformComposer'
         );
     }
