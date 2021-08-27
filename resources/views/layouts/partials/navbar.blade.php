@@ -132,15 +132,15 @@
         </a>
       </li> -->
       <li class="nav-item">
-        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3" height="30px" width="30px"/></a>
+        <a class="nav-link dropdown-toggle text-muted waves-effect waves-dark" href="" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false"><img src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="img-circle elevation-3" height="30px" width="30px"/></a>
         <div class="dropdown-menu dropdown-menu-right scale-up mr-2">
           <ul class="dropdown-user pl-3 pr-3">
             <div class="row">
               <div class="col-5 d-none d-lg-block d-md-block">
-                <img  src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3" width="80px">
+                <img  src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3" width="80px" height="90px">
               </div>
               <div class="col-sm-12 d-lg-none d-md-none d-sm-block">
-                <img  src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3" width="50px">
+                <img  src="{{asset(Auth::user()->picture)}}" onerror="this.src ='{{asset('assets/images/default.png')}}';" alt="user" class="brand-image img-circle elevation-3" width="50px" height="50px">
               </div>
               <div class="col-lg-7 col-md-7 col-sm-12">
                 <h4 class="mb-0">{{Auth::user()->firstname}}</h4>
