@@ -165,8 +165,8 @@
           </ul>
         </li>
         @if(Auth::user()->isAllowed('DocumentsController:index') || Auth::user()->isAllowed('BranchController:index') || Auth::user()->isAllowed('DepartmentController:index') || Auth::user()->isAllowed('DesignationController:index') || Auth::user()->isAllowed('VendorCategoryController:index') || Auth::user()->isAllowed('LeaveTypeController:index') || Auth::user()->isAllowed('SkillController:index'))
-          <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types') || request()->is('skills') || request()->is('vendors/category')) class="nav-item menu-open" @else class="nav-item" @endif>
-            <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('vendors/category')) class="nav-link active" @else class="nav-link" @endif>
+          <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types') || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category')) class="nav-item menu-open" @else class="nav-item" @endif>
+            <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category')) class="nav-link active" @else class="nav-link" @endif>
               <i class="nav-icon fas fa-cog"></i>
               <p>
                 Settings
@@ -224,7 +224,7 @@
               @endif
               @if(Auth::user()->isAllowed('SkillController:index'))
                 <li class="nav-item">
-                  <a href="{{route('skill.index')}}" class="nav-link">
+                  <a href="{{route('skill.index')}}" @if(request()->is('skills') || request()->is('assign_skill/edit/*')) class="nav-link active" @else class="nav-link" @endif>
                     <i class="far fa-circle nav-icon"></i>
                     <p>Skills</p>
                   </a>
