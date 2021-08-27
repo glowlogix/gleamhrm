@@ -25,7 +25,7 @@ Route::any('/register', function () {
 });
 
 Route::get('/error', function () {
-    return view('error');
+    abort(401);
 })->name('error');
 
 Route::get('/job/skill/{jobId}', [
