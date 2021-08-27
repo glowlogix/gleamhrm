@@ -200,7 +200,7 @@
               @endif
               @if(Auth::user()->isAllowed('DesignationController:index'))
                 <li class="nav-item">
-                  <a href="{{route('designations.index')}}" class="nav-link">
+                  <a href="{{route('designations.index')}}" @if(str_contains(Request::fullUrl(),'designation')) class="nav-link active" @else class="nav-link" @endif>
                     <i class="far fa-circle nav-icon"></i>
                     <p>Designations</p>
                   </a>
