@@ -85,9 +85,7 @@
                                         <th>Date To</th>
                                         <th>Subject</th>
                                         <th>Status</th>
-                                        @if(Auth::user()->id == 1)
-                                            <th>Actions</th>
-                                        @endif
+                                        <th>Actions</th>
                                     </tr>
                                 </thead>
                                 <tbody>

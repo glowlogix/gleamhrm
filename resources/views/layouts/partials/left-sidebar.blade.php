@@ -150,7 +150,7 @@
             @endif
             @if(Auth::user()->isAllowed('LeaveController:employeeleaves'))
               <li class="nav-item">
-                <a href="{{route('employeeleaves')}}" @if(request()->is('leave/admin_create') || request()->is('employee_leaves')) class="nav-link active" @else class="nav-link" @endif>
+                <a href="{{route('employeeleaves')}}" @if(request()->is('leave/admin_create') || str_contains(Request::fullUrl(),'employee_leaves')) class="nav-link active" @else class="nav-link" @endif>
                   <i class="far fa-circle nav-icon"></i>
                   <p>Leaves</p>
                 </a>
