@@ -6,119 +6,117 @@
 	</svg>
 </div>
 
-<body style="background-image:url({{ asset('assets/images/background/hiring.jpg') }});background-size:cover;">	
-	<div class="card">
-		<div class=" card-body">
-			<h3>Apply for Job</h3>
-			<hr>
+<div class="card">
+	<div class=" card-body">
+		<h3>Apply for Job</h3>
+		<hr>
 
-			<!-- Error Message Section Start -->
-			@if ($errors->any())
-	            <div class="row">
-	                <div class="col-12">
-	                    <div class="alert alert-danger">
-	                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-	                        @foreach ($errors->all() as $error)
-	                          <li><strong>Error!</strong> {{ $error }}</li>
-	                        @endforeach
-	                    </div>
+		<!-- Error Message Section Start -->
+		@if ($errors->any())
+            <div class="row">
+                <div class="col-12">
+                    <div class="alert alert-danger">
+                        <a href="#" class="close" data-dismiss="alert">&times;</a>
+                        @foreach ($errors->all() as $error)
+                          <li><strong>Error!</strong> {{ $error }}</li>
+                        @endforeach
+                    </div>
+                </div>
+            </div>
+		@endif
+
+		@if (Session::has('error'))
+	        <div class="row">
+	            <div class="col-12">
+	                <div class="alert alert-danger" align="left">
+	                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+	                    <strong>Error!</strong> {{Session::get('error')}}
 	                </div>
 	            </div>
-			@endif
+	        </div>
+		@endif
+		@if (Session::has('success'))
+	        <div class="row">
+	            <div class="col-12">
+	                <div class="alert alert-success" align="left">
+	                    <a href="#" class="close" data-dismiss="alert">&times;</a>
+	                    <strong>Success!</strong> {{Session::get('success')}}
+	                </div>
+	            </div>
+	        </div>
+		@endif
+		<!-- Error Message Section End -->
 
-			@if (Session::has('error'))
-		        <div class="row">
-		            <div class="col-12">
-		                <div class="alert alert-danger" align="left">
-		                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-		                    <strong>Error!</strong> {{Session::get('error')}}
-		                </div>
-		            </div>
-		        </div>
-			@endif
-			@if (Session::has('success'))
-		        <div class="row">
-		            <div class="col-12">
-		                <div class="alert alert-success" align="left">
-		                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-		                    <strong>Success!</strong> {{Session::get('success')}}
-		                </div>
-		            </div>
-		        </div>
-			@endif
-			<!-- Error Message Section End -->
-
-			<form id="applyForm" action="{{route('applicant.store')}}" method="post" enctype="multipart/form-data">
-				{{csrf_field()}}
-				<div class="row">
-					<div class="form-group col-md-12">
-						<label for="job_id">Select Position</label>
-						<select name="position" id="job_id" type="select" class="job_id form-control select" >
-							<option value="">Select Position</option>
-							@foreach($jobs as $j)
-								<option  value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}&nbsp({{isset($j->designation) ? $j->designation->designation_name : ''}})</option>
-							@endforeach
-						</select>
-						<div class="show" style="display: none">
-							<div  id="showSkills">
-							</div>
+		<form id="applyForm" action="{{route('applicant.store')}}" method="post" enctype="multipart/form-data">
+			{{csrf_field()}}
+			<div class="row">
+				<div class="form-group col-md-12">
+					<label for="job_id">Select Position</label>
+					<select name="position" id="job_id" type="select" class="job_id form-control select" >
+						<option value="">Select Position</option>
+						@foreach($jobs as $j)
+							<option  value="{{$j->id}}" @if(old("job_id") == $j->id ) selected @endif>{{$j->title}}&nbsp({{isset($j->designation) ? $j->designation->designation_name : ''}})</option>
+						@endforeach
+					</select>
+					<div class="show" style="display: none">
+						<div  id="showSkills">
 						</div>
 					</div>
 				</div>
-				<div class="row">
-					<div class="form-group col-md-12">
-						<label for="name">Location</label>
-						<select name="city" id="city" type="select" class="city form-control">
-							<option value="Gujrat" @if(old("city") == "Gujrat") selected @endif>Gujrat</option>
-							<option value="Islamabad" @if(old("city") == "Islamabad") selected @endif>Islamabad</option>
-						</select>
-					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6">
-						<label for="name">Name</label>
-						<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
-					</div>
-					<div class="form-group col-md-6">
-						<label for="fname">Father Name</label>
-						<input type="text" name="fname" placeholder="Enter name here" class="form-control" value="{{old('fname')}}">
-					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-12">
-						<label for="email">Email</label>
-						<input type="text" name="email" placeholder="Enter email here" class="form-control" value="{{old('email')}}">
-					</div>
-				</div>
-				<div class="row">
-					<div class="form-group col-md-6">
-						<div >
-							<label>Select your avatar:</label><br>
-							<input type="file"  name="avatar" accept="image/*" value="{{old('avatar')}}"/>
-						</div>
-					</div>
-					<div class="form-group col-md-6">
-						<div >
-							<label>Resume:</label><br>
-							<input type="file" name="cv" value="{{old('cv')}}"/>
-						</div>
-					</div>
-				</div>
-				<div class="form-group">
-					<label for="job_status">Job status</label>
-					<select name="job_status" id="job_status" class="form-control">
-						<option value="Employed" @if(old("job_Status") == "Employed") selected @endif >Currently working</option>
-						<option value="Unemployed" @if(old("job_Status") == "Unemployed") selected @endif >Currently not working</option>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-12">
+					<label for="name">Location</label>
+					<select name="city" id="city" type="select" class="city form-control">
+						<option value="Gujrat" @if(old("city") == "Gujrat") selected @endif>Gujrat</option>
+						<option value="Islamabad" @if(old("city") == "Islamabad") selected @endif>Islamabad</option>
 					</select>
 				</div>
-				<div class="form-group">
-					<button class="btn btn-primary" type="submit" align="right" data-toggle="tooltip" title="Submit"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Submit</span></button>
-					<button type="button" onclick="window.location.href='{{ url('/') }}'" class="btn btn-default" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-6">
+					<label for="name">Name</label>
+					<input type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
 				</div>
-			</form>
-		</div>
+				<div class="form-group col-md-6">
+					<label for="fname">Father Name</label>
+					<input type="text" name="fname" placeholder="Enter name here" class="form-control" value="{{old('fname')}}">
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-12">
+					<label for="email">Email</label>
+					<input type="text" name="email" placeholder="Enter email here" class="form-control" value="{{old('email')}}">
+				</div>
+			</div>
+			<div class="row">
+				<div class="form-group col-md-6">
+					<div >
+						<label>Select your avatar:</label><br>
+						<input type="file"  name="avatar" accept="image/*" value="{{old('avatar')}}"/>
+					</div>
+				</div>
+				<div class="form-group col-md-6">
+					<div >
+						<label>Resume:</label><br>
+						<input type="file" name="cv" value="{{old('cv')}}"/>
+					</div>
+				</div>
+			</div>
+			<div class="form-group">
+				<label for="job_status">Job status</label>
+				<select name="job_status" id="job_status" class="form-control">
+					<option value="Employed" @if(old("job_Status") == "Employed") selected @endif >Currently working</option>
+					<option value="Unemployed" @if(old("job_Status") == "Unemployed") selected @endif >Currently not working</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<button class="btn btn-primary" type="submit" align="right" data-toggle="tooltip" title="Submit"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Submit</span></button>
+				<button type="button" onclick="window.location.href='{{ url('/') }}'" class="btn btn-default" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+			</div>
+		</form>
 	</div>
-</body>
+</div>
 
 <script>
 	$(function () {

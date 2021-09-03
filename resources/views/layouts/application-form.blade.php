@@ -26,7 +26,7 @@
     <script src="{{ asset('assets/backend/plugins/sparkline/jquery.sparkline.min.js') }}"></script>
     <script src="{{ asset('assets/backend/plugins/sticky-kit-master/dist/sticky-kit.min.js') }}"></script>
   </head>
-  <body class="hold-transition login-page">
+  <body class="hold-transition login-page" style="background-image:url({{ asset('assets/images/background/hiring.jpg') }});background-size:cover;">
     
     <div class="mt-5">
       @yield('content')
