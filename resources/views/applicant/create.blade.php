@@ -6,7 +6,7 @@
 	</svg>
 </div>
 
-<div class="card">
+<div class="card card-outline card-primary">
 	<div class=" card-body">
 		<h3>Apply for Job</h3>
 		<hr>
