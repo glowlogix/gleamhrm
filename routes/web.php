@@ -18,6 +18,11 @@ Route::get('/', function () {
     return view('welcome');
 });
 
+Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
+Route::post('password/email', 'ForgotPasswordController@sendResetLinkEmail')->name('password.email');
+Route::get('password/reset/{$token}/{$email}', 'Auth\ResetPasswordController@showResetForm')->name('password.reset.form');
+Route::post('password/updated', 'Auth\ResetPasswordController@reset')->name('password.updated');
+
 Auth::routes();
 
 Route::any('/register', function () {
