@@ -57,7 +57,7 @@ class ApplicantController extends Controller
         $this->validate($request, [
             'cv' => 'required|mimes:doc,docx,pdf,txt',
         ]);
-        
+
         $avatar = $request->avatar;
         $avatar_new_name = time().$avatar->getClientOriginalName();
         $avatar->move('storage/uploads/applicants/image', $avatar_new_name);
