@@ -55,13 +55,7 @@ class ApplicantController extends Controller
     public function store(Request $request)
     {
         $this->validate($request, [
-            'position'   => 'required',
-            'name'       => 'required',
-            'fname'      => 'required',
-            'avatar'     => 'required|image',
-            'city'       => 'required',
-            'cv'         => 'required|mimes:doc,docx,pdf,txt',
-            'job_status' => 'required',
+            'cv' => 'required|mimes:doc,docx,pdf,txt',
         ]);
 
         $avatar = $request->avatar;
