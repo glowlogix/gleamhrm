@@ -19,36 +19,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if(Session::has('error'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-@if(Session::has('success'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -95,7 +68,7 @@
                                         <div class="modal fade" id="edit{{ $leave_type->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="{{route('leave_type.update',['id'=>$leave_type->id])}}" method="post">
+                                                    <form id="updateLeaveTypeForm{{$leave_type->id}}" action="{{route('leave_type.update',['id'=>$leave_type->id])}}" method="post">
                                                         {{ csrf_field() }}
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Update Leave Type</h4>
@@ -106,11 +79,13 @@
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label class="control-label">Name</label>
-                                                                <input  type="text" name="name" value="{{old('name',$leave_type->name)}}" placeholder="Enter Name Here" class="form-control">
+                                                                <input  type="text" name="name" value="{{old('name',$leave_type->name)}}" placeholder="Enter Name Here" class="form-control" id="leave_type_name{{$leave_type->id}}" oninput="check('leave_type_name'+{!! $leave_type->id !!});">
+                                                                <span id="leave_type_name-error{{$leave_type->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Count</label>
-                                                                <input  type="number" name="amount" value="{{old('count',$leave_type->count)}}" placeholder="Enter Amount Here" class="form-control">
+                                                                <input  type="number" name="amount" value="{{old('count',$leave_type->count)}}" placeholder="Enter Amount Here" class="form-control" id="leave_type_amount{{$leave_type->id}}" oninput="check('leave_type_amount'+{!! $leave_type->id !!});">
+                                                                <span id="leave_type_amount-error{{$leave_type->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Status</label>
@@ -122,7 +97,7 @@
                                                         </div>
                                                         <div class="modal-footer justify-content-between">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
-                                                            <button  type="submit" class="btn btn-primary btn-ok" title="Update Leave Type"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></button>
+                                                            <a onclick="validate({!! $leave_type->id !!});" class="btn btn-primary btn-ok" title="Update Leave Type"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></a>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -162,7 +137,7 @@
     <div class="modal fade" id="create" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{route('leave_type.create')}}" method="post">
+                <form id="leaveTypeForm" action="{{route('leave_type.create')}}" method="post">
                     {{ csrf_field() }}
                     <div class="modal-header">
                         <h4 class="modal-title">Create Leave Type</h4>
@@ -210,5 +185,65 @@
             "responsive": true,
         });
     });
+
+    $(function () {
+        $('#leaveTypeForm').validate({
+            rules: {
+                name: {
+                    required: true
+                },
+                amount: {
+                    required: true
+                }
+            },
+            messages: {
+                name: "Name is required",
+                amount: "Count is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+    function validate(id)
+    {
+        if($("#leave_type_name"+id).val() == '')
+        {
+            $('#leave_type_name-error'+id).addClass('show');
+            $('#leave_type_name'+id).addClass('is-invalid');
+        }
+        else if($("#leave_type_amount"+id).val() == '')
+        {
+            $('#leave_type_amount-error'+id).addClass('show');
+            $('#leave_type_amount'+id).addClass('is-invalid');
+        }
+        else
+        {
+            $('#updateLeaveTypeForm'+id).submit();
+        }
+    }
+
+    function check(id)
+    {
+        if($('#'+id).val() != '')
+        {
+            $('#'+id).removeClass('show');
+            $('#'+id).removeClass('is-invalid');
+        }
+        else
+        {
+            $('#'+id).addClass('show');
+            $('#'+id).addClass('is-invalid');
+        }
+    }
 </script>
 @stop

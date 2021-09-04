@@ -49,7 +49,7 @@ class JobsController extends Controller
             'skill'          => json_encode($request->skills),
         ]);
 
-        Session::flash('success', 'job is created successfully');
+        Session::flash('success', 'Job is created successfully');
 
         return redirect()->route('job.index');
     }
@@ -72,7 +72,7 @@ class JobsController extends Controller
         $job->description = $request->description;
         $job->skill = json_encode($request->skills);
         $job->save();
-        Session::flash('success', 'job is updated successfully');
+        Session::flash('success', 'Job is updated successfully');
 
         return redirect()->route('job.index');
     }
@@ -81,7 +81,7 @@ class JobsController extends Controller
     {
         $job = Job::where('id', $id)->first();
         $job->delete();
-        Session::flash('success', 'Job deleted successsfuly.');
+        Session::flash('success', 'Job is deleted successsfuly');
 
         return redirect()->back();
     }

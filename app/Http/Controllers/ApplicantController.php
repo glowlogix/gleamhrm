@@ -74,12 +74,11 @@ class ApplicantController extends Controller
             'city'       => $request->city,
             'job_status' => $request->job_status,
             'job_id'     => $request->position,
-            // 'job_position_id'=>$request->job_position_id,
             'recruited' => 0,
         ]);
 
         /*Mail::to($request->email)->send(new Reminder);*/
-        Session::flash('success', 'application is submitted successfully');
+        Session::flash('success', 'Application is submitted successfully');
 
         return redirect()->back();
     }
@@ -91,16 +90,11 @@ class ApplicantController extends Controller
         return view('admin.applicants.singleCategoryJobs')->with('applicants', $applicants);
     }
 
-    // public function singleApplicant($id)
-    // {
-    //     return view('admin.applicants.singleapplicant')->with('applicants',Applicant::find($id));
-    // }
-
     public function destroy($id)
     {
         $applicant = Applicant::find($id);
         $applicant->delete();
-        Session::flash('sucess', 'Applicant deleted successfully.');
+        Session::flash('success', 'Applicant is deleted successfully.');
 
         return redirect()->back();
     }
@@ -118,7 +112,7 @@ class ApplicantController extends Controller
         $applicant = Applicant::withTrashed()->where('id', $id)->first();
         $applicant->forceDelete();
 
-        Session::flash('success', 'Applicant deleted permanently.');
+        Session::flash('success', 'Applicant is deleted permanently.');
 
         return redirect()->back();
     }
@@ -127,7 +121,7 @@ class ApplicantController extends Controller
     {
         $applicant = Applicant::withTrashed()->where('id', $id)->first();
         $applicant->restore();
-        Session::flash('success', 'Successfully Restored the applicant');
+        Session::flash('success', 'Applicant is restored successfully');
 
         return redirect()->back();
     }
@@ -137,6 +131,7 @@ class ApplicantController extends Controller
         $applicant = Applicant::find($id);
         $applicant->recruited = 1;
         $applicant->save();
+        Session::flash('success', 'Applicant is Successfully Hired');
 
         return redirect()->back();
     }
@@ -146,6 +141,7 @@ class ApplicantController extends Controller
         $applicant = Applicant::find($id);
         $applicant->recruited = 0;
         $applicant->save();
+        Session::flash('success', 'Applicant is Successfully Retired');
 
         return redirect()->back();
     }

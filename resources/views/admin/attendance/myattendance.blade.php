@@ -19,36 +19,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if (Session::has('error'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Error!</strong> {{Session::get('error')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-@if (Session::has('success'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-success" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Success!</strong> {{Session::get('success')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -123,7 +96,7 @@
                         <div id="calendarModal" class="modal fade">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form action="{{route('correction_email')}}" method="post">
+                                    <form id="attendanceCorrectionForm" action="{{route('correction_email')}}" method="post">
                                     {{csrf_field()}}
                                         <div class="modal-header">
                                             <h4 class="modal-title">Send Attendance Correction Request</h4>
@@ -168,7 +141,7 @@
                         <div id="timeCorrectionModal" class="modal fade">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form action="{{ route('attendance.correction') }}" method="post">
+                                    <form id="attendanceTimeCorrectionForm" action="{{ route('attendance.correction') }}" method="post">
                                     {{csrf_field()}}
                                         <input id="timeDate" type="text" name="timeDate" hidden>
                                         
@@ -232,6 +205,66 @@
 <script src="{{asset('assets/backend/plugins/fullcalendar-3.9.0/scheduler.min.js')}}"></script>
 
 <script>
+    $(function () {
+        $('#attendanceCorrectionForm').validate({
+            rules: {
+                message: {
+                    required: true,
+                }
+            },
+            messages: {
+                message: "Message is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+              $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+    
+    $(function () {
+        $('#attendanceTimeCorrectionForm').validate({
+            rules: {
+                time_in: {
+                    required: true,
+                },
+                time_out: {
+                    required: true,
+                },
+                break_start: {
+                    required: true,
+                },
+                break_end: {
+                    required: true,
+                }
+            },
+            messages: {
+                time_in: "In time is required",
+                time_out: "Out time is required",
+                break_start: "Break start is required",
+                break_end: "Break end is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+              $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
     $(document).ready(function () {
         $('#calendar').fullCalendar({
             themeSystem: 'bootstrap4',

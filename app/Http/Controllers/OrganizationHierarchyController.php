@@ -7,6 +7,7 @@ use App\Employee;
 use App\OrganizationHierarchy;
 use App\Traits\MetaTrait;
 use Illuminate\Http\Request;
+use Session;
 
 class OrganizationHierarchyController extends Controller
 {
@@ -130,7 +131,9 @@ class OrganizationHierarchyController extends Controller
             $manager->save();
         }
 
-        return redirect()->route('organization_hierarchy.index')->with('success', 'Employee added to OrganizationHierarchy succesfully');
+        Session::flash('success', 'Employee added to Organization Hierarchy successfully');
+
+        return redirect()->route('organization_hierarchy.index');
     }
 
     /**
@@ -180,7 +183,9 @@ class OrganizationHierarchyController extends Controller
 
         $organization_hierarchy->save();
 
-        return redirect()->route('organization_hierarchy.index')->with('success', 'Employee updated in OrganizationHierarchy succesfully');
+        Session::flash('success', 'Employee updated in Organization Hierarchy successfully');
+
+        return redirect()->route('organization_hierarchy.index');
     }
 
     /**
@@ -194,6 +199,8 @@ class OrganizationHierarchyController extends Controller
         OrganizationHierarchy::where('parent_id', $id)->delete();
         OrganizationHierarchy::where('employee_id', $id)->delete();
 
-        return redirect()->back()->with('success', 'Employee & his subordinates in OrganizationHierarchy are deleted succesfully');
+        Session::flash('success', 'Employee & his subordinates in Organization Hierarchy are deleted successfully');
+
+        return redirect()->back();
     }
 }

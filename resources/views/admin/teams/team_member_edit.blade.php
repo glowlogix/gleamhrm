@@ -20,53 +20,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if ($errors->any())
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        @foreach ($errors->all() as $error)
-                          <li><strong>Error!</strong> {{ $error }}</li>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-
-@if (Session::has('error'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-@if(Session::has('success'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -75,7 +31,8 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
-                            <button type="button" class="btn btn-info btn-rounded" onclick="window.location.href='{{route('teams.index')}}'" title="Back"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></button>
+                        <button type="button" class="btn btn-info btn-rounded" onclick="window.location.href='{{route('teams.index')}}'" title="Back"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span>
+                        </button>
 
                         <hr>
 

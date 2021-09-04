@@ -19,36 +19,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if(Session::has('error'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-@if(Session::has('success'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -126,8 +99,8 @@
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label class="control-label">Designation Name</label>
-                                                                <input  type="text" name="name" value="{{old('name',$designation->designation_name)}}" placeholder="Enter Designation Name" class="form-control" id="designation_name{{$designation->id}}">
-                                                                <span id="designation_name-error{{$designation->id}}"  class="error invalid-feedback">Designation name is required</span>
+                                                                <input  type="text" name="name" value="{{old('name',$designation->designation_name)}}" placeholder="Enter Designation Name" class="form-control" id="designation_name{{$designation->id}}" oninput="check('designation_name'+{!! $designation->id !!});">
+                                                                <span id="designation_name-error{{$designation->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Status</label>
@@ -236,6 +209,20 @@
         else
         {
             $('#editDesignationForm'+id).submit();
+        }
+    }
+
+    function check(id)
+    {
+        if($('#'+id).val() != '')
+        {
+            $('#'+id).removeClass('show');
+            $('#'+id).removeClass('is-invalid');
+        }
+        else
+        {
+            $('#'+id).addClass('show');
+            $('#'+id).addClass('is-invalid');
         }
     }
 </script>

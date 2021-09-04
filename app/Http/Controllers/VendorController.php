@@ -94,7 +94,7 @@ class VendorController extends Controller
     {
         $vendor = Vendor::find($id);
         $vendor->delete();
-        Session::flash('success', 'Vendor deleted successfully.');
+        Session::flash('success', 'Vendor is deleted successfully.');
 
         return redirect()->route('vendors.index');
     }

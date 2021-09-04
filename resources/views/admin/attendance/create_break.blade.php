@@ -57,53 +57,9 @@
 @endif
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if ($errors->any())
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        @foreach ($errors->all() as $error)
-                          <li><strong>Error!</strong> {{ $error }}</li>
-                        @endforeach
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-
-@if (Session::has('error'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Error!</strong> {{Session::get('error')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-@if (Session::has('success'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-success" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Success!</strong> {{Session::get('success')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -235,7 +191,9 @@
                         <hr>
                         <h5 class="pt-3 row justify-content-between">
                             <strong class="ml-2 mr-1 pt-1">Breaks</strong>
+                            @if(isset($attendance_summary))
                             <a class="btn btn-info text-white mr-2" data-toggle="modal" data-target="#popup" title="Add Break"> <i class="fas fa-plus"></i> <span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline">Add Break</span></a>
+                            @endif
                         </h5>
                         <hr class="mt-0">
                         <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
