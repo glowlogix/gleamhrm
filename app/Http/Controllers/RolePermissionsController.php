@@ -5,7 +5,8 @@ namespace App\Http\Controllers;
 use App\Employee;
 use App\Traits\MetaTrait;
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\Route;
+use Illuminate\Support\Str;
+use Session;
 use Spatie\Permission\Models\Permission;
 use Spatie\Permission\Models\Role;
 
@@ -51,8 +52,9 @@ class RolePermissionsController extends Controller
         $employee = Employee::find($request->employee_id);
 
         $employee->assignRole($role);
+        Session::flash('success', 'Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');
 
-        return redirect()->route('roles_permissions')->with('success', 'Role ('.$role->name.') Assigned employee ('.$employee->firstname.' '.$employee->lastname.') succesfully');
+        return redirect()->route('roles_permissions');
     }
 
     public function getPermissionsFromRole($id, $employee_id)
@@ -96,13 +98,7 @@ class RolePermissionsController extends Controller
      */
     public function store(Request $request)
     {
-        $this->validate($request, [
-            'name' => 'required|unique:roles',
-            // 'lastname' => 'required',
-        ]);
-
         $role = Role::create(['name' => $request->name]);
-        // dd($request->permissions);
         if ($request->permissions) {
             foreach ($request->permissions as $value) {
                 $val = explode(':', $value);
@@ -118,8 +114,9 @@ class RolePermissionsController extends Controller
                 $role->givePermissionTo($permission);
             }
         }
+        Session::flash('success', 'Role is created successfully');
 
-        return redirect()->route('roles_permissions')->with('success', 'Role is created successfully');
+        return redirect()->route('roles_permissions');
     }
 
     /**
@@ -161,10 +158,11 @@ class RolePermissionsController extends Controller
     public function routesList()
     {
         $all_controllers = [];
+        $routeList = \Route::getRoutes();
 
-        foreach (Route::getRoutes()->getRoutes() as $route) {
+        foreach ($routeList as $route) {
             $action = $route->getAction();
-            if (array_key_exists('controller', $action)) {
+            if (isset($action['controller']) && Str::contains($action['controller'], 'Controller@') == true) {
                 $row = explode('@', $action['controller']);
                 $index = str_replace("App\Http\Controllers\\", '', $row[0]);
                 $index = str_replace('Auth\\', '', $index);
@@ -186,10 +184,11 @@ class RolePermissionsController extends Controller
     public function routesListForEmp()
     {
         $all_controllers = [];
+        $routeList = \Route::getRoutes();
 
-        foreach (Route::getRoutes()->getRoutes() as $route) {
+        foreach ($routeList as $route) {
             $action = $route->getAction();
-            if (array_key_exists('controller', $action)) {
+            if (isset($action['controller']) && Str::contains($action['controller'], 'Controller@') == true) {
                 $row = explode('@', $action['controller']);
                 $index = str_replace("App\Http\Controllers\\", '', $row[0]);
                 $index = str_replace('Auth\\', '', $index);
@@ -233,20 +232,18 @@ class RolePermissionsController extends Controller
                 $permission = Permission::where($data)->first();
 
                 if (in_array($value, $request->permissions_checked)) {
-                    // dump('give permission' . $permission->id. '==>' . $role->id.'<br>');
                     if (! isset($permission->id)) {
                         $permission = Permission::create($data);
                     }
                     $role->givePermissionTo($permission);
                 } else {
-                    // dump('revoke permission' . $permission->id. '==>' . $role->id.'<br>');
                     $role->revokePermissionTo($permission);
                 }
             }
         }
-        // dd('here');
+        Session::flash('success', 'Role is updated successfully');
 
-        return redirect()->route('roles_permissions')->with('success', 'Role is updated successfully');
+        return redirect()->route('roles_permissions');
     }
 
     /**
@@ -263,7 +260,8 @@ class RolePermissionsController extends Controller
             $role->revokePermissionTo($permission);
         }
         $role->delete();
+        Session::flash('success', 'Role and assigned permissions is deleted successfully.');
 
-        return redirect()->back()->with('success', 'Role and assigned permissions is deleted successfully.');
+        return redirect()->back();
     }
 }

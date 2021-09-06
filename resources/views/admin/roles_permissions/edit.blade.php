@@ -1,83 +1,109 @@
-@extends('layouts.admin')
-@section('Heading')
-	<h3 class="text-themecolor">Edit Role</h3>
-	<ol class="breadcrumb">
-		<li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-		<li class="breadcrumb-item active">Roles Permissions</li>
-		<li class="breadcrumb-item active">Edit</li>
-	</ol>
-@stop
-@section('content')
-	<div class="row">
-		<div class="col-lg-12">
-			<div class="card card-outline-info">
-				<div style="margin-top:10px; margin-right: 10px;">
-					<a class="btn btn-info float-right" href="{{route('roles_permissions')}}"> Back</a>
-				</div>
-				<div class="card-body">
-					<form  action="{{route('roles_permissions.update', $role->id)}}" method="post" enctype="multipart/form-data">
-						{{csrf_field()}}
-						<div class="form-body">
+@extends('layouts.master')
 
-							<div class="col-md-6">
-								<div class="form-group">
-									<label class="control-label">Name</label>
-									<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{$role->name}}">
-									<input type="hidden" name="status" value="1">
+@section('content')
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Edit Role</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Manage Roles</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Roles and Permissions</a></li>
+          <li class="breadcrumb-item active">Edit</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+						<div>
+							<a class="btn btn-info" href="{{route('roles_permissions')}}"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></a>
+						</div>
+
+						<hr>
+
+						<form  action="{{route('roles_permissions.update', $role->id)}}" method="post" enctype="multipart/form-data">
+							{{csrf_field()}}
+							<div class="row justify-content-between">
+								<div class="col-6">
+									<div class="form-group">
+										<label class="control-label">Name</label>
+										<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{$role->name}}">
+										<input type="hidden" name="status" value="1">
+									</div>
+								</div>
+								<div class="col-6 mt-5 text-right">
+									<label for="check_all"><input type="checkbox" class="mr-1" id="check_all"/>Select All</label>
 								</div>
 							</div>
-						<hr>
-							<input type="checkbox" id="check_all"/>
-							<label for="check_all">Select All</label>
-							<br>
-							<br>
+
+							<hr class="mt-0">
+
 							<div class="form-group row">
 								@foreach ($all_controllers as $key => $row)
+									<div class="col-md-12">
+										<div>
+											<input type="checkbox" class="check_all_sub" id="{{$key}}">
+											<label for="{{$key}}"><b>{{$key}}</b></label>
+										</div>
 
-									<div class="col-md-4">
-										<hr>
-									<input type="checkbox" class="check_all_sub" id="{{$key}}">
-									<label for="{{$key}}"><b>{{$key}}</b></label>
-									<br>
-									<div class="{{$key}}">
-										@foreach ($row as $route)
-											<div class="col-md-6">
-											<input type="hidden" name="permissions[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
+										<hr class="mt-0">
 
-											<input type="checkbox" id="{{$key}}:{{$route}}"  name="permissions_checked[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
+										<div class="{{$key}} row">
+											@foreach ($row as $route)
+												<div class="col-lg-4 col-md-4 col-sm-4">
+													<label class="font-weight-normal col-12" for="{{$key}}:{{$route}}">
+														<input type="hidden" class="mr-1" name="permissions[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
 
-											<label for="{{$key}}:{{$route}}">{{$route}}</label>
-											</div>
-										@endforeach
+														<input type="checkbox" class="mr-1" id="{{$key}}:{{$route}}"  name="permissions_checked[]" value="web:{{$key}}:{{$route}}" @if(in_array($key.':'.$route, $routes)) checked @endif>
 
+														{{$route}}
+													</label>
+												</div>
+											@endforeach
+										</div>
+										<br>
 									</div>
-									</div>
-
 								@endforeach
 							</div>
-						</div>
-						<hr>
-						<div class="form-actions">
-							&nbsp;&nbsp;&nbsp;<button type="submit" class="btn btn-success">Update Role</button>
-							<button type="button" onclick="window.location.href='{{route('roles_permissions')}}'" class="btn btn-inverse">Cancel</button>
-						</div>
-					</form>
+
+							<hr>
+
+							<button type="submit" class="btn btn-primary"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update Role</span></button>
+							<button type="button" onclick="window.location.href='{{route('roles_permissions')}}'" class="btn btn-default"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+						</form>
+					</div>
 				</div>
 			</div>
 		</div>
 	</div>
-@push('scripts')
-<script type="text/javascript">
-$(document).ready(function () {
-    $(function () {
-	    $("#check_all").click(function(){
-		    $('input:checkbox').not(this).prop('checked', this.checked);
-		});
-		$(".check_all_sub").click(function(){
-		    $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);
-		});
-    });
-});
+</div>
+
+<script>
+	$(document).ready(function () {
+	    $(function () {
+		    $("#check_all").click(function(){
+			    $('input:checkbox').not(this).prop('checked', this.checked);
+			});
+			$(".check_all_sub").click(function(){
+			    $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);
+			});
+	    });
+	});
 </script>
-@endpush
 @stop
