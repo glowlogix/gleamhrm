@@ -31,7 +31,6 @@ class MonthlySalariesController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -43,7 +42,6 @@ class MonthlySalariesController extends Controller
      * Display the specified resource.
      *
      * @param  \App\MonthlySalaries  $monthlySalaries
-     *
      * @return \Illuminate\Http\Response
      */
     public function show(MonthlySalaries $monthlySalaries)
@@ -55,7 +53,6 @@ class MonthlySalariesController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\MonthlySalaries  $monthlySalaries
-     *
      * @return \Illuminate\Http\Response
      */
     public function edit(MonthlySalaries $monthlySalaries)
@@ -68,7 +65,6 @@ class MonthlySalariesController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\MonthlySalaries  $monthlySalaries
-     *
      * @return \Illuminate\Http\Response
      */
     public function update(Request $request, MonthlySalaries $monthlySalaries)
@@ -80,7 +76,6 @@ class MonthlySalariesController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\MonthlySalaries  $monthlySalaries
-     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(MonthlySalaries $monthlySalaries)

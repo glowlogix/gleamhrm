@@ -91,13 +91,10 @@ class DashboardController extends Controller
             ->with('applicants', $applicants);
     }
 
-//    Help
-    public function help()
+    //    Help
+    public function contact()
     {
-//        $this->meta['title'] = 'Applicants';
-//        $applicants = Applicant::where('recruited', 0)->take(10)->get();
-
-        return view('help.index', $this->metaResponse());
+        return view('help.contact_us', $this->metaResponse());
     }
 
     /**
@@ -110,7 +107,6 @@ class DashboardController extends Controller
 
     /**
      * @param $id
-     *
      * @return $this
      */
     public function singleApplicant($id)

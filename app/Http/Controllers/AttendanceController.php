@@ -243,7 +243,6 @@ class AttendanceController extends Controller
      * Store a newly created resource in storage.
      *
      * @param  \Illuminate\Http\Request  $request
-     *
      * @return \Illuminate\Http\Response
      */
     public function store(Request $request)
@@ -610,7 +609,6 @@ class AttendanceController extends Controller
      * Display the specified resource.
      *
      * @param  \App\Leave  $leave
-     *
      * @return \Illuminate\Http\Response
      */
 
@@ -618,7 +616,6 @@ class AttendanceController extends Controller
      * Show the form for editing the specified resource.
      *
      * @param  \App\Leave  $leave
-     *
      * @return \Illuminate\Http\Response
      */
     public function edit($id)
@@ -635,7 +632,6 @@ class AttendanceController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Leave  $leave
-     *
      * @return \Illuminate\Http\Response
      */
     public function updateSummary(Request $request)
@@ -688,7 +684,6 @@ class AttendanceController extends Controller
      *
      * @param  \Illuminate\Http\Request  $request
      * @param  \App\Leave  $leave
-     *
      * @return \Illuminate\Http\Response
      */
     ////OLD
@@ -1037,7 +1032,6 @@ class AttendanceController extends Controller
      * Remove the specified resource from storage.
      *
      * @param  \App\Leave  $leave
-     *
      * @return \Illuminate\Http\Response
      */
     public function destroy(Request $request)

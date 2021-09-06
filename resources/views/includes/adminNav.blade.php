@@ -159,7 +159,7 @@
                 </li>
                 @endif
 
-                <li @if(request()->is('help')) class="active" @endif> <a class="waves-effect waves-dark" href="{{route('admin.help')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
+                <li @if(request()->is('help')) class="active" @endif> <a class="waves-effect waves-dark" href="{{route('help.contact_us')}}" aria-expanded="false"><i class="mdi mdi-help-circle"></i><span class="hide-menu">Help</span></a>
                 </li>
                 {{--///////// Second End--}}
             </ul>
