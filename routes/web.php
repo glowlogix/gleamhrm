@@ -643,6 +643,14 @@ Route::group(['middleware' => 'auth'], function () {
             'as'   => 'documents.update',
             'uses' => 'DocumentsController@update',
         ]);
+        Route::get('/platform/edit', [
+            'uses' => 'PlatformController@edit',
+            'as'   => 'admin.platform.edit',
+        ]);
+        Route::post('/platform/update', [
+            'uses' => 'PlatformController@update',
+            'as'   => 'admin.platform.update',
+        ]);
     });
 
     //My Attendance
@@ -705,6 +713,12 @@ Route::group(['middleware' => 'auth'], function () {
     Route::post('/faq/category/store', [
         'uses' => 'FaqController@faqCategoryStore',
         'as'   => 'faq.category.store',
+    ]);
+
+    //  Platform settings
+    Route::get('/platform', [
+        'uses' => 'PlatformController@index',
+        'as'   => 'admin.platform.index',
     ]);
 });
 Route::Get('/my_leaves', [

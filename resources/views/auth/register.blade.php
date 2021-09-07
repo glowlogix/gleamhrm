@@ -1,69 +1,152 @@
-@extends('layouts.app') @section('title') HRM|Register @endsection @section('content')
-<div class="container">
-    <div class="row">
-        <div class="col-md-8 col-md-offset-2">
-            <div class="panel panel-default">
-                <div class="panel-heading">Register</div>
+@extends('layouts.auth')
+@section('content')
+<div class="card card-outline card-primary">
+    <div class="card-header text-center">
+      <a href="#"><b>HRM</b> | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif</a>
+    </div>
 
-                <div class="panel-body">
-                    <form class="form-horizontal" method="POST" action="{{ route('register') }}">
-                        {{ csrf_field() }}
+    <!-- Session Message Section Start -->
+    @include('layouts.partials.session-message')
+    <!-- Session Message Section End -->
+    
+    <div class="card-body">
+        <p class="login-box-msg">Sign in to start your session</p>
+        <form id="registerForm" method="POST" action="{{ route('register') }}">
+            {{ csrf_field() }}
+            <div class="input-group form-group">
+                <input id="firstname" type="text" class="form-control" name="firstname" value="{{ old('firstname') }}" placeholder="Enter first name" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-user"></span>
+                    </div>
+                </div>
+                @if($errors->has('firstname'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('firstname') }}</strong>
+                    </span>
+                @endif
+            </div>
 
-                        <div class="form-group{{ $errors->has('name') ? ' has-error' : '' }}">
-                            <label for="name" class="col-md-4 control-label">Name</label>
+            <div class="input-group form-group">
+                <input id="lastname" type="text" class="form-control" name="lastname" value="{{ old('lastname') }}" placeholder="Enter last name" required autofocus>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-user"></span>
+                    </div>
+                </div>
+                @if($errors->has('lastname'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('lastname') }}</strong>
+                    </span>
+                @endif
+            </div>
 
-                            <div class="col-md-6">
-                                <input id="name" type="text" class="form-control" name="name" value="{{ old('name') }}" required autofocus> @if ($errors->has('name'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('name') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
+            <div class="input-group form-group">
+                <input id="official_email" type="email" class="form-control" name="official_email" value="{{ old('official_email') }}" placeholder="Enter official email" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+                @if ($errors->has('official_email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('official_email') }}</strong>
+                </span>
+                @endif
+            </div>
 
-                        <div class="form-group{{ $errors->has('email') ? ' has-error' : '' }}">
-                            <label for="email" class="col-md-4 control-label">E-Mail Address</label>
+            <div class="input-group form-group">
+                <input id="personal_email" type="email" class="form-control" name="personal_email" value="{{ old('personal_email') }}" placeholder="Enter personal email address" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-envelope"></span>
+                    </div>
+                </div>
+                @if ($errors->has('personal_email'))
+                <span class="help-block">
+                    <strong>{{ $errors->first('personal_email') }}</strong>
+                </span>
+                @endif
+            </div>
 
-                            <div class="col-md-6">
-                                <input id="email" type="email" class="form-control" name="email" value="{{ old('email') }}" required> @if ($errors->has('email'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('email') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
+            <div class="input-group form-group">
+                <input id="password" type="password" class="form-control" name="password" placeholder="Enter password" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
+                </div>
+                @if ($errors->has('password'))
+                    <span class="help-block">
+                        <strong>{{ $errors->first('password') }}</strong>
+                    </span>
+                @endif
+            </div>
 
-                        <div class="form-group{{ $errors->has('password') ? ' has-error' : '' }}">
-                            <label for="password" class="col-md-4 control-label">Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password" type="password" class="form-control" name="password" required> @if ($errors->has('password'))
-                                <span class="help-block">
-                                    <strong>{{ $errors->first('password') }}</strong>
-                                </span>
-                                @endif
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <label for="password-confirm" class="col-md-4 control-label">Confirm Password</label>
-
-                            <div class="col-md-6">
-                                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" required>
-                            </div>
-                        </div>
-
-                        <div class="form-group">
-                            <div class="col-md-6 col-md-offset-4">
-                                <button type="submit" class="btn btn-primary">
-                                    Register
-                                </button>
-                            </div>
-                        </div>
-                    </form>
+            <div class="input-group form-group">
+                <input id="password-confirm" type="password" class="form-control" name="password_confirmation" placeholder="Enter confirmation password" required>
+                <div class="input-group-append">
+                    <div class="input-group-text">
+                        <span class="fas fa-lock"></span>
+                    </div>
                 </div>
             </div>
-        </div>
+
+            <div class="form-group">
+                <div class="col-md-6 col-md-offset-4">
+                    <button type="submit" class="btn btn-primary">
+                        Register
+                    </button>
+                </div>
+            </div>
+        </form>
     </div>
 </div>
+<!-- Main Content End -->
+
+<script>
+    $(function () {
+        $('#registerForm').validate({
+            rules: {
+                firstname: {
+                    required: true,
+                },
+                lastname: {
+                    required: true,
+                },
+                official_email: {
+                    required: true,
+                },
+                personal_email: {
+                    required: true,
+                },
+                password: {
+                    required: true
+                },
+                password_confirmation: {
+                    required: true
+                }
+            },
+            messages: {
+                firstname: "First name is required.",
+                lastname: "Last name is required.",
+                official_email: "Official email is required.",
+                personal_email: "Personal email is required.",
+                password: "Password is required.",
+                password_confirmation: "Confirmation password is required."
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+</script>
 @endsection

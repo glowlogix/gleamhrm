@@ -17,7 +17,7 @@
     </p>
         Email:{{$employee->official_email}}
     <br>
-    <br> Password: {{$employee->password}}
+    <br> Password: 123456
     <br>
     Note: As soon as you log in change your password.
     <br> Best Luck,

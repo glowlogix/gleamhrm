@@ -1,10 +1,20 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
   <!-- Brand Logo -->
   
-  <a href="/dashboard" class="brand-link pt-3 pb-1">
+  <a href="/dashboard" class="brand-link">
     <div class="d-flex">
-      <img src="{{ asset('assets/images/hrm-white-logo-1.png') }}" alt="HRM Logo" class="brand-image img-circle elevation-3" style="opacity: .8">
-      <img src="{{asset('assets/images/hrm-white-logo-2.png')}}" class="brand-text font-weight-light" height="45px" width="120px" style="opacity: .8; margin-top: -9px;"/>
+      @if(isset($platform->logo))
+        <img src="{{ asset($platform->logo) }}" alt="Logo" class="brand-image elevation-3">
+      @else
+        <img src="{{ asset('assets/images/company_logo.png') }}" alt="Logo" class="brand-image elevation-3 bg-white">
+      @endif
+
+      @if(isset($platform->name))
+        <span class="brand-text font-weight-light">{{$platform->name}}</span>
+      @else
+        <span class="brand-text font-weight-light">Company Name</span>
+      @endif
+      <!-- <img src="{{asset('assets/images/hrm-white-logo-2.png')}}" class="brand-text font-weight-light" height="45px" width="120px" style="opacity: .8; margin-top: -9px;"/> -->
     </div>
   </a>
 
@@ -164,16 +174,16 @@
             </li>
           </ul>
         </li>
-        @if(Auth::user()->isAllowed('DocumentsController:index') || Auth::user()->isAllowed('BranchController:index') || Auth::user()->isAllowed('DepartmentController:index') || Auth::user()->isAllowed('DesignationController:index') || Auth::user()->isAllowed('VendorCategoryController:index') || Auth::user()->isAllowed('LeaveTypeController:index') || Auth::user()->isAllowed('SkillController:index'))
-          <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types') || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category')) class="nav-item menu-open" @else class="nav-item" @endif>
-            <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category')) class="nav-link active" @else class="nav-link" @endif>
-              <i class="nav-icon fas fa-cog"></i>
-              <p>
-                Settings
-                <i class="fas fa-angle-left right"></i>
-              </p>
-            </a>
-            <ul class="nav nav-treeview">
+        <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types') || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform')) class="nav-link active" @else class="nav-link" @endif>
+            <i class="nav-icon fas fa-cog"></i>
+            <p>
+              Settings
+              <i class="fas fa-angle-left right"></i>
+            </p>
+          </a>
+          <ul class="nav nav-treeview">
+            @if(Auth::user()->isAllowed('DocumentsController:index') || Auth::user()->isAllowed('BranchController:index') || Auth::user()->isAllowed('DepartmentController:index') || Auth::user()->isAllowed('DesignationController:index') || Auth::user()->isAllowed('VendorCategoryController:index') || Auth::user()->isAllowed('LeaveTypeController:index') || Auth::user()->isAllowed('SkillController:index'))
               @if(Auth::user()->isAllowed('DocumentsController:index'))
                 <li class="nav-item">
                   <a href="{{ route('documents') }}" @if(str_contains(Request::fullUrl(),'documents')) class="nav-link active" @else class="nav-link" @endif>
@@ -230,9 +240,15 @@
                   </a>
                 </li>
               @endif
-            </ul>
-          </li>
-        @endif
+            @endif
+            <li class="nav-item">
+              <a href="{{route('admin.platform.index')}}" @if(request()->is('platform')) class="nav-link active" @else class="nav-link" @endif>
+                <i class="far fa-circle nav-icon"></i>
+                <p>Platform Settings</p>
+              </a>
+            </li>
+          </ul>
+        </li>
         <li @if(request()->is('salary') || request()->is('salary/*')) class="nav-item menu-open" @else class="nav-item" @endif>
           <a href="#" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon fas fa-database"></i>
