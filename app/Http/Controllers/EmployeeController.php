@@ -13,12 +13,14 @@ use App\Mail\SimSimMail;
 use App\Mail\SlackInvitationMail;
 use App\Mail\UpdateAccount;
 use App\Mail\ZohoInvitationMail;
+use App\OrganizationHierarchy;
+use App\Team;
+use App\TeamMember;
 use App\Traits\AsanaTrait;
 use App\Traits\SlackTrait;
 use App\Traits\ZohoTrait;
 use Carbon\Carbon;
 use DB;
-use File;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
@@ -109,28 +111,20 @@ class EmployeeController extends Controller
             ->with('branches', Branch::all())
             ->with('departments', Department::all())
             ->with('employment_statuses', $this->employment_statuses)
-            ->with('designations', Designation::all());
+            ->with('designations', Designation::all())
+            ->with('managers', Employee::where('status', '!=', '0')->get())
+            ->with('teams', Team::where('status', '!=', '0')->get());
     }
 
     public function store(Request $request)
     {
         //also do js validation
-        $this->validate($request, [
-            'firstname'      => 'required',
-            'lastname'       => 'required',
+        $request->validate([
             'official_email' => 'required|email|unique:employees',
             'personal_email' => 'required|email|unique:employees',
-            'contact_no'     => 'required|unique:employees|size:11',
-            'gender'         => 'required',
-            'picture'        => 'max:1000',
-
-            // 'cnic' => 'size:13',
+            'contact_no'     => 'required|size:11|unique:employees,contact_no',
+            'picture'        => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
         ]);
-
-        if (! strstr(strtolower($request->official_email), 'glowlogix.com')) {
-            return redirect()->back()->with('error', 'Enter correct official email like "abc@glowlogix.com"');
-            // return redirect()->back()->withInput($request)->with('error','Enter correct official email like "abc@glowlogix.com"');
-        }
 
         //token get from values.php in config folder
         $token = config('values.SlackToken');
@@ -145,6 +139,7 @@ class EmployeeController extends Controller
             'contact_no'                     => $request->contact_no,
             'emergency_contact'              => $request->emergency_contact,
             'emergency_contact_relationship' => $request->emergency_contact_relationship,
+            'emergency_contact_address'      => $request->emergency_contact_address,
             'password'                       => $password,
             'official_email'                 => $request->official_email,
             'personal_email'                 => $request->personal_email,
@@ -154,7 +149,7 @@ class EmployeeController extends Controller
             'department_id'                  => $request->department_id,
             'designation'                    => strtolower($request->designation),
             'type'                           => $request->type,
-            'cnic'                           => $request->cnic,
+            'identity_no'                    => $request->identity_no,
             'date_of_birth'                  => $request->date_of_birth,
             'current_address'                => $request->current_address,
             'permanent_address'              => $request->permanent_address,
@@ -231,7 +226,21 @@ class EmployeeController extends Controller
             //simsim
             Mail::to($request->official_email)->later($when, new SimSimMail());
         } catch (\Exception $e) {
-            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+            Session::flash('error', $e->getMessage());
+        }
+
+        if ($request->manager) {
+            $org_chart = new OrganizationHierarchy();
+            $org_chart->employee_id = $employee->id;
+            $org_chart->line_manager_id = $request->manager;
+            $org_chart->save();
+        }
+
+        if ($request->team) {
+            $team = new TeamMember();
+            $team->team_id = $request->team;
+            $team->employee_id = $employee->id;
+            $team->save();
         }
 
         return redirect()->route('employees')->with('success', 'Employee is created succesfully');
@@ -281,7 +290,11 @@ class EmployeeController extends Controller
             ->with('employee_role_id', $employee_role_id)
             ->with('permissions', $permissions)
             ->with('employee_permissions', $employee_permissions)
-            ->with('roles', Role::all());
+            ->with('roles', Role::all())
+            ->with('managers', Employee::where('status', '!=', '0')->get())
+            ->with('teams', Team::where('status', '!=', '0')->get())
+            ->with('team_member', TeamMember::where('employee_id', $employee->id)->latest('created_at')->first())
+            ->with('employee_manager', OrganizationHierarchy::where('employee_id', $employee->id)->latest('created_at')->first());
     }
 
     public function profile()
@@ -327,19 +340,11 @@ class EmployeeController extends Controller
         }
 
         $this->validate($request, [
-            'firstname'      => 'required',
-            'lastname'       => 'required',
             'official_email' => 'required|email|unique:employees,official_email,'.$id,
             'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
             'contact_no'     => 'required|size:11|unique:employees,contact_no,'.$id,
             'picture'        => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
-            // 'cnic' => 'size:13',
         ]);
-
-        // rename image name or file name
-        if (! strstr(strtolower($request->official_email), 'glowlogix.com')) {
-            return redirect()->back()->with('error', 'Enter correct official email like "abc@glowlogix.com"');
-        }
 
         $employee = Employee::find($id);
 
@@ -355,6 +360,7 @@ class EmployeeController extends Controller
         $employee->exit_date = $request->exit_date;
         $employee->emergency_contact = $request->emergency_contact;
         $employee->emergency_contact_relationship = $request->emergency_contact_relationship;
+        $employee->emergency_contact_address = $request->emergency_contact_address;
         $employee->official_email = $request->official_email;
         $employee->personal_email = $request->personal_email;
         $employee->basic_salary = $request->salary;
@@ -364,7 +370,7 @@ class EmployeeController extends Controller
         if (! empty($request->branch_id)) {
             $employee->branch_id = $request->branch_id;
         }
-        $employee->cnic = $request->cnic;
+        $employee->identity_no = $request->identity_no;
         $employee->date_of_birth = $request->date_of_birth;
         $employee->current_address = $request->current_address;
         $employee->permanent_address = $request->permanent_address;
@@ -427,7 +433,7 @@ class EmployeeController extends Controller
             Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id, $request->password));
             Mail::to($request->personal_email)->later($when, new UpdateAccount($employee->id, $request->password));
         } catch (\Exception $e) {
-            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+            Session::flash('error', $e->getMessage());
         }
 
         if ($employee->roles->count() > 0) {
@@ -452,6 +458,29 @@ class EmployeeController extends Controller
             }
         }
         $employee->save();
+
+        if ($request->manager) {
+            $manager = OrganizationHierarchy::where('employee_id', $employee->id)->first();
+            if ($manager == '') {
+                $org_chart = new OrganizationHierarchy();
+                $org_chart->employee_id = $employee->id;
+                $org_chart->line_manager_id = $request->manager;
+                $org_chart->save();
+            } else {
+                $manager->line_manager_id = $request->manager;
+                $manager->save();
+            }
+        }
+
+        if ($request->team) {
+            $team_member = TeamMember::where('employee_id', $employee->id)->where('team_id', $request->team)->first();
+            if ($team_member == '') {
+                $team = new TeamMember();
+                $team->team_id = $request->team;
+                $team->employee_id = $employee->id;
+                $team->save();
+            }
+        }
 
         return redirect()->route('employees')->with('success', 'Employee is updated succesfully');
     }

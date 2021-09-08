@@ -20,13 +20,14 @@ class CreateEmployeesTable extends Migration
             $table->string('contact_no');
             $table->string('official_email')->unique();
             $table->string('personal_email')->unique();
-            $table->string('cnic')->nullable();
+            $table->string('identity_no')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('emergency_contact_relationship')->nullable();
             $table->string('emergency_contact')->nullable();
+            $table->text('emergency_contact_address')->nullable();
             $table->string('password');
-            $table->string('current_address')->nullable();
-            $table->string('permanent_address')->nullable();
+            $table->text('current_address')->nullable();
+            $table->text('permanent_address')->nullable();
             $table->string('city')->nullable();
             $table->string('designation')->nullable();
             $table->string('type')->comment('work from remote/office')->default('office');

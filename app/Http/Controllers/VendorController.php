@@ -37,8 +37,8 @@ class VendorController extends Controller
             'contact_title'      => $request->contact_title,
             'email'              => $request->email,
             'vendor_type'        => $request->vendor_type,
-            'filer'              => $request->filer,
-            'ntn_no'             => $request->ntn_no,
+            'tax_payer'          => $request->tax_payer,
+            'tax_no'             => $request->tax_no,
             'branch_id'          => $request->branch,
             'address'            => $request->address,
             'city'               => $request->city,
@@ -70,8 +70,12 @@ class VendorController extends Controller
         $vendor->contact_title = $request->contact_title;
         $vendor->email = $request->email;
         $vendor->vendor_type = $request->vendor_type;
-        $vendor->filer = $request->filer;
-        $vendor->ntn_no = $request->ntn_no;
+        $vendor->tax_payer = $request->tax_payer;
+        if ($request->tax_payer == 1) {
+            $vendor->tax_no = $request->tax_no;
+        } else {
+            $vendor->tax_no = null;
+        }
         $vendor->branch_id = $request->branch;
         $vendor->address = $request->address;
         $vendor->city = $request->city;

@@ -119,11 +119,17 @@ class OrganizationHierarchyController extends Controller
         //     'name' => 'required|unique:roles',
         // ]);
 
-        $OrganizationHierarchy = OrganizationHierarchy::create([
-            'employee_id'     => $request->employee_id,
-            'line_manager_id' => $request->line_manager_id,
-            'parent_id'       => $request->parent_id,
-        ]);
+        $manager = OrganizationHierarchy::where('employee_id', $request->employee_id)->first();
+        if ($manager == '') {
+            $OrganizationHierarchy = OrganizationHierarchy::create([
+                'employee_id'     => $request->employee_id,
+                'line_manager_id' => $request->line_manager_id,
+                'parent_id'       => $request->parent_id,
+            ]);
+        } else {
+            $manager->line_manager_id = $request->manager;
+            $manager->save();
+        }
 
         return redirect()->route('organization_hierarchy.index')->with('success', 'Employee added to OrganizationHierarchy succesfully');
     }

@@ -21,8 +21,8 @@ class CreateVendorsTable extends Migration
             $table->string('contact_title');
             $table->string('email')->nullable();
             $table->string('vendor_type');
-            $table->string('filer');
-            $table->string('ntn_no')->nullable();
+            $table->string('tax_payer');
+            $table->string('tax_no')->nullable();
             $table->string('branch_id');
             $table->string('address')->nullable();
             $table->string('city')->nullable();

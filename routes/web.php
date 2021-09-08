@@ -369,6 +369,10 @@ Route::group(['middleware' => 'auth'], function () {
             'uses' => 'RolePermissionsController@getPermissionsFromRole',
             'as'   => 'roles_permissions.getPermissionsFromRole',
         ]);
+        Route::Get('/rolespermissions/checkPermissions/{id}/{employee_id}', [
+            'uses' => 'RolePermissionsController@checkPermissions',
+            'as'   => 'roles_permissions.checkPermissions',
+        ]);
         Route::Get('/rolespermissions/edit/{id}', [
             'uses' => 'RolePermissionsController@edit',
             'as'   => 'roles_permissions.edit',
