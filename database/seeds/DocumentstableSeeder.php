@@ -12,13 +12,13 @@ class DocumentstableSeeder extends Seeder
     public function run()
     {
         $doc = App\Document::Create([
-            'name'      => 'Termination and Resignation Policy 2.docx.pdf',
-            'url'       => 'storage/documents/Termination and Resignation Policy 2.docx.pdf',
+            'name'      => 'Termination and Resignation Policy.pdf',
+            'url'       => 'storage/documents/Termination and Resignation Policy.pdf',
             'status'    => 1,
         ]);
         $doc = App\Document::Create([
-            'name'      => 'Code_of_Conduct.pdf',
-            'url'       => 'storage/documents/Code_of_Conduct.pdf',
+            'name'      => 'Code of Conduct.pdf',
+            'url'       => 'storage/documents/Code of Conduct.pdf',
             'status'    => 1,
         ]);
     }

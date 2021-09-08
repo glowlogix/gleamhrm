@@ -326,28 +326,9 @@
                                                 </div>
                                             </div>
                                         </div>
-                                        <br>
-                                        <div class="form-group">
-                                            <div class="demo-checkbox justify-content-between row col-lg-6 col-md-6 col-sm-12">
-                                                <div>
-                                                    <input type="hidden" name="invite_to_asana" value="0" />
-                                                    <input type="checkbox" id="basic_checkbox_1"  type="checkbox" class="asana" name="invite_to_asana" value="1" @if($employee->invite_to_asana) checked @endif/>
-                                                    <label for="basic_checkbox_1">Asana</label>
-                                                </div>
-                                                <div>
-                                                    <input type="hidden" name="invite_to_slack" value="0" />
-                                                    <input type="checkbox" id="basic_checkbox_2"  type="checkbox" class="zoho" name="invite_to_slack" value="1" @if($employee->invite_to_slack) checked @endif/>
-                                                    <label for="basic_checkbox_2">Slack</label>
-                                                </div>
-                                                <div>
-                                                    <input type="hidden" name="invite_to_zoho" value="0" />
-                                                    <input type="checkbox" id="basic_checkbox_3"  type="checkbox" class="zoho " name="invite_to_zoho" value="1" @if($employee->invite_to_zoho) checked @endif/>
-                                                    <label for="basic_checkbox_3">zoho</label>
-                                                </div>
-                                            </div>
-                                            <div id="asana_teams" class=""></div>
-                                        </div>
+
                                         <hr>
+                                        
                                         <div>
                                             <button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-default" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class=" fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
                                             <button class="btn btn-primary float-right ml-1 update" data-toggle="tooltip" title="Update Employee"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></button>
@@ -575,44 +556,6 @@
                 event.preventDefault();
             }
         });
-        var teams = $('#asana_teams');
-        var count = 0;
-        var orgId = '{{config('values.asanaWorkspaceId')}}';
-        var token = '{{config('values.asanaToken')}}';
-        $('.asana').bind('click', function () {
-            if ($(this).is(':checked')) {
-
-                $.ajax({
-                    url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
-                    type: 'GET',
-                    cache: false,
-                    dataType: 'json',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                    },
-                    success: function (res) {
-                        count++;
-                        if (count == 1) {
-                            teams.append("<h3 class='head row'>Teams in Asana</h3>");
-                            res.data.forEach(function (item, index) {
-                                teams.append("<div class='row'><lable class='teams'><input style='position:unset;opacity:5' name='teams[]' value='" +item.id + "' type='checkbox' id='"+item.id+"'>"+item.name+"</lable><div>"
-                                );
-                            });
-                        }
-                        teams.show();
-                        $('#asana_teams input').each(function () {
-                            var $checkbox = $(this);
-                            $checkbox.checkbox();
-                        });
-                    },
-                    error:function(err){
-                        console.log(err);
-                    }
-                })
-            } else {
-                teams.hide();
-            }
-        })
     });
 
     $(function () {

@@ -9,16 +9,10 @@ use App\Employee;
 use App\LeaveType;
 use App\Mail\CompanyPoliciesMail;
 use App\Mail\EmailPasswordChange;
-use App\Mail\SimSimMail;
-use App\Mail\SlackInvitationMail;
 use App\Mail\UpdateAccount;
-use App\Mail\ZohoInvitationMail;
 use App\OrganizationHierarchy;
 use App\Team;
 use App\TeamMember;
-use App\Traits\AsanaTrait;
-use App\Traits\SlackTrait;
-use App\Traits\ZohoTrait;
 use Carbon\Carbon;
 use DB;
 use Illuminate\Http\Request;
@@ -31,10 +25,6 @@ use Spatie\Permission\Models\Role;
 
 class EmployeeController extends Controller
 {
-    use AsanaTrait;
-    use ZohoTrait;
-    use SlackTrait;
-
     public $designations = [
         'ceo'                         => 'CEO',
         'project_coordinator'         => 'Project Coordinator',
@@ -101,12 +91,6 @@ class EmployeeController extends Controller
 
     public function create()
     {
-        /*Mail::send('emails.welcome', [], function ($m) {
-            $m->from('kosar@glowlogix.com', 'test Application');
-
-            $m->to('kosar@glowlogix.com', 'larallllll')->subject('Your test Reminder!');
-        });*/
-
         return view('admin.employees.create', ['title' => 'Add Employee'])
             ->with('branches', Branch::all())
             ->with('departments', Department::all())
@@ -125,9 +109,6 @@ class EmployeeController extends Controller
             'contact_no'     => 'required|size:11|unique:employees,contact_no',
             'picture'        => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
         ]);
-
-        //token get from values.php in config folder
-        $token = config('values.SlackToken');
 
         $when = Carbon::now()->addMinutes(10);
         $l = 8;
@@ -154,9 +135,6 @@ class EmployeeController extends Controller
             'current_address'                => $request->current_address,
             'permanent_address'              => $request->permanent_address,
             'city'                           => $request->city,
-            'invite_to_zoho'                 => $request->invite_to_zoho,
-            'invite_to_slack'                => $request->invite_to_slack,
-            'invite_to_asana'                => $request->invite_to_asana,
             'joining_date'                   => $request->joining_date,
             'gender'                         => $request->gender,
         ];
@@ -174,38 +152,6 @@ class EmployeeController extends Controller
         $employee = Employee::create($arr);
         // $this->storeEmployeeTimings($employee->id);
 
-        $params = [
-            'emailAddress'        => $request->official_email,
-            'primaryEmailAddress' => $request->official_email,
-            'displayName'         => $request->firstname.' '.$request->lastname,
-            'password'            => $password,
-            'userExist'           => false,
-            'country'             => 'pk',
-        ];
-
-        if ($request->zoho) {
-            $response = $this->createZohoAccount($params);
-
-            if ($response->original) {
-                $this->addUserToTeam($request->teams, $request->official_email);
-
-                $employee->zuid = $response->original->data->zuid;
-                $employee->account_id = $response->original->data->accountId;
-                $employee->save();
-
-                if ($employee) {
-                    Mail::to($request->email)->later($when, new ZohoInvitationMail($request->input(), $params['password']));
-                }
-            }
-        }
-
-        //check if slack is checked for invitation
-        if ($request->slack) {
-            //call the  slack trait method in app/Traits folder
-            $this->createSlackInvitation($request->official_email, $token);
-            //slack mail
-            Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
-        }
         $employee_id = $employee->id;
 
         $leave_types = LeaveType::get();
@@ -220,11 +166,14 @@ class EmployeeController extends Controller
             Mail::to($request->official_email)->later($when, new EmailPasswordChange($employee_id));
             Mail::to($request->personal_email)->later($when, new EmailPasswordChange($employee_id));
 
-            //policies
-            Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
+            Session::flash('success', 'Employee is created succesfully');
+        } catch (\Exception $e) {
+            Session::flash('error', $e->getMessage());
+        }
 
-            //simsim
-            Mail::to($request->official_email)->later($when, new SimSimMail());
+        //send policies email
+        try {
+            Mail::to($request->official_email)->later($when, new CompanyPoliciesMail());
         } catch (\Exception $e) {
             Session::flash('error', $e->getMessage());
         }
@@ -243,7 +192,7 @@ class EmployeeController extends Controller
             $team->save();
         }
 
-        return redirect()->route('employees')->with('success', 'Employee is created succesfully');
+        return redirect()->route('employees');
     }
 
     public function storeEmployeeTimings($employee)
@@ -383,55 +332,16 @@ class EmployeeController extends Controller
             $employee->password = Hash::make($request->password);
         }
 
-        $employee->invite_to_zoho = $request->invite_to_zoho;
-        $employee->invite_to_slack = $request->invite_to_slack;
-        $employee->invite_to_asana = $request->invite_to_asana;
-
-        //admin password get from model confirmation box.
-        $params = [
-            'mode'     => '',
-            'zuid'     => $employee->zuid,
-            'password' => $adminPassword,
-        ];
-
         if ($request->employee_status === '1') {
-            $params['mode'] = 'enableUser';
             $employee->status = 1;
-            $this->updateZohoAccount($params, $employee->account_id);
         } elseif ($request->employee_status === '0') {
-            $params['mode'] = 'disableUser';
             $employee->status = 0;
-            $this->updateZohoAccount($params, $employee->account_id);
         }
 
         $when = Carbon::now()->addMinutes(10);
 
-        if ($request->zoho) {
-            $response = $this->updateZohoAccount($params);
-
-            if ($response->original) {
-                // $this->addUserToTeam($request->teams,$request->official_email);
-                // $employee->zuid = $response->original->data->zuid;
-                // $employee->account_id = $response->original->data->accountId;
-                // $employee->save();
-
-                if ($employee) {
-                    Mail::to($request->email)->later($when, new ZohoInvitationMail($request->input(), $params['password']));
-                }
-            }
-        }
-
-        //check if slack is checked for invitation
-        /*if($request->slack){
-            //call the  slack trait method in app/Traits folder
-            $this->updateSlackInvitation($request->official_email,$token);
-            //slack mail
-            Mail::to($request->official_email)->later($when, new SlackInvitationMail($request->input()));
-        }*/
-
         try {
             Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id, $request->password));
-            Mail::to($request->personal_email)->later($when, new UpdateAccount($employee->id, $request->password));
         } catch (\Exception $e) {
             Session::flash('error', $e->getMessage());
         }
@@ -523,33 +433,7 @@ class EmployeeController extends Controller
         }
 
         $emp = Employee::find($id);
-        $account_id = $emp->account_id;
-        $zuid = $emp->zuid;
-        $email = $emp->official_email;
         $response = $emp->delete();
-
-        // if($response)
-        if ($request->invite_to_zoho == 1) {
-            $arr = [
-                'zuid'     => $zuid,
-                'password' => bcrypt($request->zoho_password), /*get pass from admin model box*/
-            ];
-
-            $this->deleteZohoAccount($arr, $account_id);
-        }
-
-        if ($request->invite_to_asana == 1) {
-            $arr = [
-                'zuid'     => $zuid,
-                'password' => $adminPassword, /*get pass from admin model box*/
-            ];
-
-            $this->removeUser($email);
-        }
-
-        if ($request->invite_to_slack == 1) {
-            //run bot
-        }
 
         return redirect()->back()->with('success', 'Employee is trash succesfully');
     }
@@ -671,29 +555,5 @@ class EmployeeController extends Controller
         $calendar = Calendar::addEvents($events);
 
         return view('admin.employees.showAttendance', $this->metaResponse(), ['data' => $data, 'calendar' => $calendar]);
-    }
-
-    public function seedSlackId()
-    {
-        $token = config('values.SlackToken');
-        $output = file_get_contents('https://slack.com/api/users.list?token='.$token.'&pretty=1');
-        $output = json_decode($output, true);
-        foreach ($output['members'] as $key => $member) {
-            $employee = Employee::where('official_email', $member['profile']['email'])->first();
-            if (isset($employee->id)) {
-                $employee = Employee::where('official_email', $member['profile']['email'])->first();
-                $employee->slack_id = $member['id'];
-                $employee->save();
-            } else {
-                $employee = Employee::create([
-                    'slack_id'       => $member['id'],
-                    'official_email' => $member['profile']['email'],
-                    'firstname'      => $member['profile']['first_name'],
-                    'lastname'       => $member['profile']['last_name'],
-                    'contact_no'     => $member['profile']['phone'],
-                    'password'       => bcrypt('123456'),
-                ]);
-            }
-        }
     }
 }

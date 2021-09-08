@@ -218,28 +218,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <div class="form-group">
-                                <div class="demo-checkbox justify-content-between row col-lg-6 col-md-6 col-sm-12">
-                                    <div>
-                                        <input type="hidden" name="invite_to_asana" value="0" />
-                                        <input type="checkbox" id="basic_checkbox_1"  class="asana" name="invite_to_asana" value="1"/>
-                                        <label for="basic_checkbox_1">Asana</label>
-                                    </div>
-
-                                    <div>
-                                        <input type="hidden" name="invite_to_slack" value="0" />
-                                        <input type="checkbox" id="basic_checkbox_2"  class="zoho" name="invite_to_slack" value="1"/>
-                                        <label for="basic_checkbox_2">Slack</label>
-                                    </div>
-
-                                    <div>
-                                        <input type="hidden" name="invite_to_zoho" value="0" />
-                                        <input type="checkbox" id="basic_checkbox_3" class="zoho" name="invite_to_zoho" value="1"/>
-                                        <label for="basic_checkbox_3">Zoho</label>
-                                    </div>
-                                </div>
-                            </div>
-                            <div id="asana_teams" class=""></div>
 
                             <h5 class="pt-3"><strong>Emergency Contact</strong></h5>
                             <hr class="mt-0">
@@ -247,7 +225,7 @@
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
                                         <label class="control-label">Emergency Contact#</label>
-                                        <input type="text"  class="form-control" placeholder="Enter Emergency Contact Number" name="emergency_contact" value="{{ old('emergency_contact') }}">
+                                        <input type="text" class="form-control" placeholder="Enter Emergency Contact Number" name="emergency_contact" value="{{ old('emergency_contact') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
@@ -371,42 +349,6 @@
                 event.preventDefault();
             }
         });
-
-        var teams = $('#asana_teams');
-        var count = 0;
-        var orgId = '{{config('values.asanaWorkspaceId')}}';
-        var token = '{{config('values.asanaToken')}}';
-
-        $('.asana').bind('click', function () {
-            if ($(this).is(':checked')) {
-
-                $.ajax({
-                    url: "https://app.asana.com/api/1.0/organizations/"+orgId+"/teams",
-                    type: 'GET',
-                    cache: false,
-                    dataType: 'json',
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader('Authorization', 'Bearer ' + token);
-                    },
-                    success: function (res) {
-                        count++;
-                        if (count == 1) {
-                            teams.append("<h3 class='head'>Teams in Asana</h3>");
-                            res.data.forEach(function (item, index) {
-                                teams.append("<div class='row'><lable class='teams'><input name='teams[]' value='" + item.id + "' style='position:unset;opacity:5' type='checkbox' id='"+ item.name +"' >"+ item.name +"</lable></div>"
-                                );
-                            });
-                        }
-                        teams.show();
-                    },
-                    error:function(err){
-                        console.log(err);
-                    }
-                })
-            } else {
-                teams.hide();
-            }
-        })
     });
 
     $(function () {
@@ -449,11 +391,6 @@
             e.preventDefault();
             return false;
         }
-    });
-
-    $('#asana_teams input[type="checkbox"]').each(function () {
-        var $checkbox = $(this);
-        $checkbox.checkbox();
     });
 </script>
 @stop

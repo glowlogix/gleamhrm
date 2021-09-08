@@ -17,7 +17,7 @@ class EmailPasswordChange extends Mailable
      * Create a new message instance.
      *
      * @param $id
-     * @param string $password
+     * @param  string  $password
      * @param $type
      */
     public function __construct($id)
