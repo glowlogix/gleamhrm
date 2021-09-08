@@ -1,50 +1,112 @@
-@extends('layouts.admin')
-@section('Heading')
-    <h3 class="text-themecolor">Help</h3>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item">Help</li>
-    </ol>
-@stop
+@extends('layouts.master')
+
 @section('content')
-    <div class="col-md-10 " >
-        <div class="card card-body" style="margin-left:200px;">
-            <div class="row">
-                <div class="col-sm-12 col-xs-12">
-                    <form action="{{route('contact_us')}}" method="post" novalidate>
-                        {{csrf_field()}}
-                        <div class="form-group ">
-                            <div class="controls">
-                            <input type="text" name="name" class="form-control"  placeholder="Enter Name Here" required data-validation-required-message="This field is required">
+<!-- Breadcrumbs Start -->
+<div class="content-header">
+  <div class="container-fluid">
+    <div class="row mb-2">
+      <div class="col-sm-6">
+        <h1 class="m-0">Help</h1>
+      </div>
+      <div class="col-sm-6">
+        <ol class="breadcrumb float-sm-right">
+          <li class="breadcrumb-item"><a href="{{ url('help') }}">Help</a></li>
+          <li class="breadcrumb-item active">Create</li>
+        </ol>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Breadcrumbs End -->
+
+<!-- Error Message Section Start -->
+@include('layouts.partials.error-message')
+<!-- Error Message Section End -->
+
+<!-- Main Content Start -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-body">
+                        <form id="helpForm" action="{{route('contact_us')}}" method="post" novalidate>
+                            {{csrf_field()}}
+                            <div class="row">
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Name</label>
+                                    <input type="text" name="name" class="form-control"  placeholder="Enter Name Here">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Email</label>
+                                    <input type="email" name="email" class="form-control"  placeholder="Enter email Here">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Phone#</label>
+                                    <input type="number" name="number" class="form-control"  pattern="[0-9]{11}" placeholder="Enter Phone Number Here">
+                                </div>
+                                <div class="form-group col-md-6">
+                                    <label class="control-label">Type</label>
+                                    <select class="form-control custom-select" name="type">
+                                        <option value="">Select Type</option>
+                                        <option value="Feedback">Feedback</option>
+                                        <option value="Others">Others</option>
+                                    </select>
+                                </div>
+                                <div class="form-group col-12">
+                                    <label class="control-label">Message</label>
+                                    <textarea name="message" class="form-control" rows="5" placeholder="Message"></textarea>
+                                </div>
                             </div>
-                            </div>
-                        <div class="form-group ">
-                            <div class="controls">
-                            <input type="email" name="email" class="form-control"  placeholder="Enter email Here" required data-validation-required-message="This field is required">
-                            </div>
-                            </div>
-                        <div class="form-group ">
-                            <div class="controls">
-                            <input type="number" name="number" class="form-control"  pattern="[0-9]{11}" placeholder="Enter Phone Number Here" required data-validation-required-message="This field is required">
-                            </div>
-                            </div>
-                        <div class="form-group ">
-                            <div class="controls">
-                            <select class="form-control custom-select" name="type" required data-validation-required-message="This field is required">
-                                <option value="Feedback">Feedback</option>
-                                <option value="Others">Others</option>
-                            </select>
-                            </div>
-                        </div>
-                        <div class="form-group">
-                            <div class="controls">
-                            <textarea name="message" class="form-control" rows="5" placeholder="Message"  required data-validation-required-message="This field is required"></textarea>
-                            </div>
-                            </div>
-                        <button type="submit" class="btn btn-success waves-effect waves-light m-r-10">Send</button>
-                    </form>
+                            <button type="submit" class="btn btn-primary">Send</button>
+                        </form>
+                    </div>
                 </div>
             </div>
         </div>
     </div>
-@endsection
+</div>
+<!-- Main Content End -->
+
+<script>
+    $(function () {
+      $('#helpForm').validate({
+        rules: {
+            name: {
+                required: true,
+            },
+            email: {
+                required: true,
+            },
+            number: {
+                required: true,
+            },
+            type: {
+                required: true,
+            },
+            message: {
+                required: true,
+            }
+        },
+        messages: {
+            name: "Name is required",
+            email: "Email is required",
+            number: "Phone number is required",
+            type: "Type is required",
+            message: "Message is required"
+        },
+        errorElement: 'span',
+        errorPlacement: function (error, element) {
+          error.addClass('invalid-feedback');
+          element.closest('.form-group').append(error);
+        },
+        highlight: function (element, errorClass, validClass) {
+          $(element).addClass('is-invalid');
+        },
+        unhighlight: function (element, errorClass, validClass) {
+          $(element).removeClass('is-invalid');
+        }
+      });
+    });
+</script>
+@stop

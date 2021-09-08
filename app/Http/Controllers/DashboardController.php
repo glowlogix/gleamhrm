@@ -8,6 +8,7 @@ use App\Branch;
 use App\Designation;
 use App\Employee;
 use App\Job;
+use App\Mail\FeedbackMail;
 use App\Mail\Reminder;
 use App\Traits\MetaTrait;
 use Carbon\Carbon;
@@ -96,7 +97,7 @@ class DashboardController extends Controller
 //        $this->meta['title'] = 'Applicants';
 //        $applicants = Applicant::where('recruited', 0)->take(10)->get();
 
-        return view('Help.index', $this->metaResponse());
+        return view('help.index', $this->metaResponse());
     }
 
     /**
@@ -244,14 +245,11 @@ class DashboardController extends Controller
         $data = ['name' => "$request->name", 'messages' => "$request->message", 'email' => "$request->email"];
 
         try {
-            Mail::send('Help.mail', $data, function ($message) use ($request) {
-                $message->to('awaid.anjum@gmail.com')->subject($request->type);
-                $message->from('noreply@glowlogix.com', "$request->email");
-            });
+            Mail::to('awaid.anjum@gmail.com')->send(new FeedbackMail($request->name, $request->message, $request->email));
+            Session::flash('success', 'Email Sent To the HR');
         } catch (\Exception $e) {
             Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
         }
-        Session::flash('success', 'Email Sent To the HR');
 
         return redirect()->back();
     }
