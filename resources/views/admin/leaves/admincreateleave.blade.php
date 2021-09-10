@@ -40,7 +40,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">Select Employee</label>
-											<select class="form-control custom-select" id="employee" name="employee">
+											<select class="form-control custom-select" id="employee" name="employee" value="{{ old('employee') }}">
 												<option value="">Select Employee</option>
 												@foreach($employees as $employee)
 													<option value="{{$employee->id}}" @if($selectedEmployee->id==$employee->id) selected @endif>{{$employee->firstname}} {{$employee->lastname}}</option>
@@ -60,10 +60,10 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">Leave Type</label>
-											<select class="form-control custom-select" name="leave_type">
+											<select class="form-control custom-select" name="leave_type" value="{{ old('leave_type') }}">
 												<option value="">Select Leave Type</option>
 												@foreach($leave_types as $leave_type)
-													<option @if(old('leave_type') == $leave_type->id)selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->amount}})</option>
+													<option @if(old('leave_type') == $leave_type->id)selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->count}})</option>
 												@endforeach
 											</select>
 										</div>
@@ -71,7 +71,7 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">Back up/ Point of Contact:</label>
-											<select class="form-control custom-select" name="point_of_contact">
+											<select class="form-control custom-select" name="point_of_contact" value="{{ old('point_of_contact') }}">
 												<option value="">Select Backup Contact</option>
 												@foreach($employees as $employee)
 													@if(Auth::user()->id != $employee->id)
@@ -86,13 +86,13 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">From Date</label>
-											<input type="date" class="form-control" name="datefrom" value="{{old('datefrom')}}"/>
+											<input type="date" class="form-control" name="datefrom" value="{{ old('datefrom') }}"/>
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">To Date</label>
-											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}"/>
+											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{ old('dateto') }}"/>
 										</div>
 									</div>
 								</div>
@@ -100,13 +100,13 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">CC To</label>
-											<input type="email"  multiple="multiple" class="form-control" name="cc_to" id="cc_to" value="{{old('cc_to')}}" placeholder="example@example.com" />
+											<input type="email"  multiple="multiple" class="form-control" name="cc_to" id="cc_to" value="{{ old('cc_to') }}" placeholder="example@example.com" />
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">Status</label>
-											<select class="form-control custom-select" name="status">
+											<select class="form-control custom-select" name="status" value="{{ old('status') }}">
 												<option value="">Select Status</option>
 												<option value="pending">Pending</option>
 												<option value="Approved">Approved</option>
@@ -119,13 +119,13 @@
 									<div class="col-md-12">
 										<div class="form-group">
 											<label class="control-label">Subject</label>
-											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{old('subject')}}"/>
+											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{ old('subject') }}"/>
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
 											<label class="control-label">Description</label>
-											<textarea type="text" class="form-control" rows="3" name="description" placeholder="Enter Description Here">{{old('description')}}</textarea>
+											<textarea type="text" class="form-control" rows="3" name="description" placeholder="Enter Description Here">{{ old('description') }}</textarea>
 										</div>
 									</div>
 								</div>

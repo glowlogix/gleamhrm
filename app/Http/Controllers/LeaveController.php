@@ -8,6 +8,9 @@ use App\Employee;
 use App\EmployeeLeaveType;
 use App\Leave;
 use App\LeaveType;
+use App\Mail\AdminApplyLeaveMail;
+use App\Mail\ApplyLeaveMail;
+use App\Mail\LeaveStatusMail;
 use App\OrganizationHierarchy;
 use App\Traits\MetaTrait;
 use Carbon\Carbon;
@@ -16,6 +19,7 @@ use DB;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Mail;
+use Session;
 
 class LeaveController extends Controller
 {
@@ -178,45 +182,112 @@ class LeaveController extends Controller
             'datefrom'   => 'required',
             'dateto'     => 'required|after_or_equal:datefrom',
         ]);
-        $employee_id = $request->employee;
-        $leave_type = $request->leave_type;
 
-        $dateFromTime = Carbon::parse($request->datefrom);
-        $dateToTime = Carbon::parse($request->dateto);
+        // Remaining leave count functionality
+        $currentYear = Carbon::now();
+        $currentYear = $currentYear->year;
+        $approvedLeaveDate = [];
+        $approvedPeriods = [];
+        $leaveType = LeaveType::find($request->leave_type);
+        $availedLeaves = Leave::where('employee_id', $request->employee)->where('leave_type', $request->leave_type)->where('status', '!=', 'Declined')->whereRaw('YEAR(datefrom) = ?', $currentYear)->get();
 
-        $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
-
-        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
-            ->whereDate('date', '>=', $dateFromTime->toDateString())
-            ->whereDate('date', '<=', $dateToTime->toDateString())
-            ->get();
-
-        if ($attendance_summaries->count() > 0) {
-            $msg = '';
-            foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '.$attendance_summary->date;
+        if ($availedLeaves != '[]') {
+            foreach ($availedLeaves as $availedLeave) {
+                $availedPeriods[] = CarbonPeriod::create($availedLeave->datefrom, $availedLeave->dateto);
             }
-
-            return redirect()->back()->with('error', 'Employee was already present on dates: '.$msg);
+            foreach ($availedPeriods as $availedPeriod) {
+                foreach ($availedPeriod as $availedDates) {
+                    $availedLeaveDate[] = $availedDates->format('Y-m-d');
+                }
+            }
+            foreach ($availedLeaveDate as $leaveDate) {
+                $Availed[] = $leaveDate;
+            }
+            $employeeAvailedLeaves = count($Availed);
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
+        } else {
+            $employeeAvailedLeaves = 0;
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
         }
 
-        $leave = Leave::create([
-            'employee_id'      => $employee_id,
-            'leave_type'       => $leave_type,
-            'datefrom'         => $dateFromTime,
-            'dateto'           => $dateToTime,
-            'subject'          => $request->subject,
-            'description'      => $request->description,
-            'point_of_contact' => $request->point_of_contact,
-            'line_manager'     => $request->line_manager,
-            'cc_to'            => $request->cc_to,
-            'status'           => $request->status,
-        ]);
+        // Requested leave count functionality
+        $requestedPeriods[] = CarbonPeriod::create($request->datefrom, $request->dateto);
+        foreach ($requestedPeriods as $requestedPeriod) {
+            foreach ($requestedPeriod as $requestedDates) {
+                $requestedLeaveDate[] = $requestedDates->format('Y-m-d');
+            }
+        }
+        foreach ($requestedLeaveDate as $leaveDate) {
+            $requested[] = $leaveDate;
+        }
+        $employeeRequestedLeaves = count($requested);
 
-        // $this->sendEmail($leave);
+        // Condition for leave functionality
+        if ($employeeRequestedLeaves <= $employeeRemainingLeaves) {
+            $employee_id = $request->employee;
+            $leave_type = $request->leave_type;
 
-        if ($leave) {
-            return redirect()->route('employeeleaves')->with('success', 'Leave for Employee is created successfully');
+            $dateFromTime = Carbon::parse($request->datefrom);
+            $dateToTime = Carbon::parse($request->dateto);
+
+            $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
+
+            $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+                ->whereDate('date', '>=', $dateFromTime->toDateString())
+                ->whereDate('date', '<=', $dateToTime->toDateString())
+                ->get();
+
+            if ($attendance_summaries->count() > 0) {
+                $msg = '';
+                foreach ($attendance_summaries as $key => $attendance_summary) {
+                    $msg .= ' '.$attendance_summary->date;
+                }
+                Session::flash('error', 'Employee was already present on dates: '.$msg);
+
+                return redirect()->back();
+            }
+
+            $leave_summary = Leave::where(['employee_id' => $employee_id])
+            ->whereDate('datefrom', '>=', $dateFromTime->toDateString())
+            ->whereDate('dateto', '<=', $dateToTime->toDateString())
+            ->get();
+            if ($leave_summary->count() > 0) {
+                Session::flash('error', 'Employee leave is already applied for selected dates');
+
+                return redirect()->back();
+            }
+
+            $leave = Leave::create([
+                'employee_id'      => $employee_id,
+                'leave_type'       => $leave_type,
+                'datefrom'         => $dateFromTime,
+                'dateto'           => $dateToTime,
+                'subject'          => $request->subject,
+                'description'      => $request->description,
+                'point_of_contact' => $request->point_of_contact,
+                'line_manager'     => $request->line_manager,
+                'cc_to'            => $request->cc_to,
+                'status'           => $request->status,
+            ]);
+
+            // $this->sendEmail($leave);
+
+            if ($leave) {
+                $employee = Employee::find($leave->employee_id);
+                try {
+                    Mail::to($employee->official_email)->send(new AdminApplyLeaveMail($request, $employee));
+                } catch (\Exception $e) {
+                    Session::flash('error', trans($e->getMessage()));
+                }
+
+                Session::flash('success', 'Leave for Employee is created successfully');
+
+                return redirect()->route('employeeleaves');
+            }
+        } else {
+            Session::flash('error', 'Leave limit exceed. Please try again.');
+
+            return redirect()->back();
         }
     }
 
@@ -226,45 +297,116 @@ class LeaveController extends Controller
             'datefrom' => 'required',
             'dateto'   => 'required|after_or_equal:datefrom',
         ]);
-        $employee_id = Auth::User()->id;
-        $leave_type = $request->leave_type;
 
-        $dateFromTime = Carbon::parse($request->datefrom);
-        $dateToTime = Carbon::parse($request->dateto);
+        // Remaining leave count functionality
+        $currentYear = Carbon::now();
+        $currentYear = $currentYear->year;
+        $approvedLeaveDate = [];
+        $approvedPeriods = [];
+        $leaveType = LeaveType::find($request->leave_type);
+        $availedLeaves = Leave::where('employee_id', Auth::User()->id)->where('leave_type', $request->leave_type)->where('status', '!=', 'Declined')->whereRaw('YEAR(datefrom) = ?', $currentYear)->get();
 
-        $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
-
-        $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
-            ->whereDate('date', '>=', $dateFromTime->toDateString())
-            ->whereDate('date', '<=', $dateToTime->toDateString())
-            ->get();
-
-        if ($attendance_summaries->count() > 0) {
-            $msg = '';
-            foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '.$attendance_summary->date;
+        if ($availedLeaves != '[]') {
+            foreach ($availedLeaves as $availedLeave) {
+                $availedPeriods[] = CarbonPeriod::create($availedLeave->datefrom, $availedLeave->dateto);
             }
-
-            return redirect()->back()->with('error', 'Employee was already present on dates: '.$msg);
+            foreach ($availedPeriods as $availedPeriod) {
+                foreach ($availedPeriod as $availedDates) {
+                    $availedLeaveDate[] = $availedDates->format('Y-m-d');
+                }
+            }
+            foreach ($availedLeaveDate as $leaveDate) {
+                $Availed[] = $leaveDate;
+            }
+            $employeeAvailedLeaves = count($Availed);
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
+        } else {
+            $employeeAvailedLeaves = 0;
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
         }
 
-        $leave = Leave::create([
-            'employee_id'      => $employee_id,
-            'leave_type'       => $leave_type,
-            'datefrom'         => $dateFromTime,
-            'dateto'           => $dateToTime,
-            'subject'          => $request->subject,
-            'description'      => $request->description,
-            'point_of_contact' => $request->point_of_contact,
-            'line_manager'     => $request->line_manager,
-            'cc_to'            => $request->cc_to,
-            'status'           => 'pending',
-        ]);
+        // Requested leave count functionality
+        $requestedPeriods[] = CarbonPeriod::create($request->datefrom, $request->dateto);
+        foreach ($requestedPeriods as $requestedPeriod) {
+            foreach ($requestedPeriod as $requestedDates) {
+                $requestedLeaveDate[] = $requestedDates->format('Y-m-d');
+            }
+        }
+        foreach ($requestedLeaveDate as $leaveDate) {
+            $requested[] = $leaveDate;
+        }
+        $employeeRequestedLeaves = count($requested);
 
-        // $this->sendEmail($leave);
+        // Condition for leave functionality
+        if ($employeeRequestedLeaves <= $employeeRemainingLeaves) {
+            $employee_id = Auth::User()->id;
+            $leave_type = $request->leave_type;
 
-        if ($leave) {
-            return redirect()->route('leave.index')->with('success', 'Leave is created succesfully');
+            $dateFromTime = Carbon::parse($request->datefrom);
+            $dateToTime = Carbon::parse($request->dateto);
+
+            $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
+
+            $attendance_summaries = AttendanceSummary::where(['employee_id' => $employee_id])
+                ->whereDate('date', '>=', $dateFromTime->toDateString())
+                ->whereDate('date', '<=', $dateToTime->toDateString())
+                ->get();
+
+            if ($attendance_summaries->count() > 0) {
+                $msg = '';
+                foreach ($attendance_summaries as $key => $attendance_summary) {
+                    $msg .= ' '.$attendance_summary->date;
+                }
+                Session::flash('error', 'Employee was already present on dates: '.$msg);
+
+                return redirect()->back();
+            }
+
+            $leave_summary = Leave::where(['employee_id' => $employee_id])
+            ->whereDate('datefrom', '>=', $dateFromTime->toDateString())
+            ->whereDate('dateto', '<=', $dateToTime->toDateString())
+            ->get();
+            if ($leave_summary->count() > 0) {
+                Session::flash('error', 'Employee leave is already applied for selected dates');
+
+                return redirect()->back();
+            }
+
+            $leave = Leave::create([
+                'employee_id'      => $employee_id,
+                'leave_type'       => $leave_type,
+                'datefrom'         => $dateFromTime,
+                'dateto'           => $dateToTime,
+                'subject'          => $request->subject,
+                'description'      => $request->description,
+                'point_of_contact' => $request->point_of_contact,
+                'line_manager'     => $request->line_manager,
+                'cc_to'            => $request->cc_to,
+                'status'           => 'pending',
+            ]);
+
+            $employees = Employee::where('id', '!=', $leave->employee_id)->get();
+            $count = 1;
+            if ($leave) {
+                foreach ($employees as $approverEmployee) {
+                    if ($count == 1 && $approverEmployee->isAllowed('LeaveController:updateStatus')) {
+                        try {
+                            Mail::to($approverEmployee->official_email)->send(new ApplyLeaveMail($request, $leave, $approverEmployee));
+                        } catch (\Exception $e) {
+                            Session::flash('error', trans($e->getMessage()));
+                        }
+                        $count++;
+                    }
+                }
+
+                Session::flash('success', 'Leave is created succesfully');
+
+                return redirect()->route('leave.index');
+            }
+        } else {
+            Session::flash('error', 'Leave limit exceed. Please try again.');
+
+            return redirect()->back();
         }
     }
 
@@ -365,38 +507,86 @@ class LeaveController extends Controller
             'dateto'   => 'required|after_or_equal:datefrom',
         ]);
 
-        $dateFromTime = Carbon::parse($request->datefrom);
-        $dateToTime = Carbon::parse($request->dateto);
+        // Remaining leave count functionality
+        $currentYear = Carbon::now();
+        $currentYear = $currentYear->year;
+        $approvedLeaveDate = [];
+        $approvedPeriods = [];
+        $leaveType = LeaveType::find($request->leave_type);
+        $availedLeaves = Leave::where('id', '!=', $id)->where('employee_id', $leave->employee_id)->where('leave_type', $request->leave_type)->where('status', '!=', 'Declined')->whereRaw('YEAR(datefrom) = ?', $currentYear)->get();
 
-        $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
-
-        $attendance_summaries = AttendanceSummary::where(['employee_id' => $leave->employee_id])
-            ->whereDate('date', '>=', $dateFromTime->toDateString())
-            ->whereDate('date', '<=', $dateToTime->toDateString())
-            ->get();
-
-        if ($attendance_summaries->count() > 0) {
-            $msg = '';
-            foreach ($attendance_summaries as $key => $attendance_summary) {
-                $msg .= ' '.$attendance_summary->date;
+        if ($availedLeaves != '[]') {
+            foreach ($availedLeaves as $availedLeave) {
+                $availedPeriods[] = CarbonPeriod::create($availedLeave->datefrom, $availedLeave->dateto);
             }
-
-            return redirect()->back()->with('error', 'Employee was already present on dates: '.$msg);
+            foreach ($availedPeriods as $availedPeriod) {
+                foreach ($availedPeriod as $availedDates) {
+                    $availedLeaveDate[] = $availedDates->format('Y-m-d');
+                }
+            }
+            foreach ($availedLeaveDate as $leaveDate) {
+                $Availed[] = $leaveDate;
+            }
+            $employeeAvailedLeaves = count($Availed);
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
+        } else {
+            $employeeAvailedLeaves = 0;
+            $employeeRemainingLeaves = $leaveType->count - $employeeAvailedLeaves;
         }
 
-        $leave->leave_type = $request->leave_type;
-        $leave->datefrom = $dateFromTime;
-        $leave->dateto = $dateToTime;
-        $leave->subject = $request->subject;
-        $leave->description = $request->description;
-        $leave->line_manager = $request->line_manager;
-        $leave->point_of_contact = $request->point_of_contact;
-        $leave->cc_to = $request->cc_to;
-        $leave->status = 'Pending';
+        // Requested leave count functionality
+        $requestedPeriods[] = CarbonPeriod::create($request->datefrom, $request->dateto);
+        foreach ($requestedPeriods as $requestedPeriod) {
+            foreach ($requestedPeriod as $requestedDates) {
+                $requestedLeaveDate[] = $requestedDates->format('Y-m-d');
+            }
+        }
+        foreach ($requestedLeaveDate as $leaveDate) {
+            $requested[] = $leaveDate;
+        }
+        $employeeRequestedLeaves = count($requested);
 
-        $leave = $leave->save();
+        // Condition for leave functionality
+        if ($employeeRequestedLeaves <= $employeeRemainingLeaves) {
+            $dateFromTime = Carbon::parse($request->datefrom);
+            $dateToTime = Carbon::parse($request->dateto);
 
-        return redirect()->route('leave.index')->with('success', 'Leave is created succesfully');
+            $consumed_leaves = $dateToTime->diffInDays($dateFromTime) + 1;
+
+            $attendance_summaries = AttendanceSummary::where(['employee_id' => $leave->employee_id])
+                ->whereDate('date', '>=', $dateFromTime->toDateString())
+                ->whereDate('date', '<=', $dateToTime->toDateString())
+                ->get();
+
+            if ($attendance_summaries->count() > 0) {
+                $msg = '';
+                foreach ($attendance_summaries as $key => $attendance_summary) {
+                    $msg .= ' '.$attendance_summary->date;
+                }
+                Session::flash('error', 'Employee was already present on dates: '.$msg);
+
+                return redirect()->back();
+            }
+
+            $leave->leave_type = $request->leave_type;
+            $leave->datefrom = $dateFromTime;
+            $leave->dateto = $dateToTime;
+            $leave->subject = $request->subject;
+            $leave->description = $request->description;
+            $leave->line_manager = $request->line_manager;
+            $leave->point_of_contact = $request->point_of_contact;
+            $leave->cc_to = $request->cc_to;
+            $leave->status = 'Pending';
+
+            $leave = $leave->save();
+            Session::flash('success', 'Leave is created succesfully');
+
+            return redirect()->route('leave.index');
+        } else {
+            Session::flash('error', 'Leave limit exceed. Please try again.');
+
+            return redirect()->back();
+        }
     }
 
     public function updateEmployeeLeaveType($employee_id, $leave_type_id)
@@ -413,7 +603,9 @@ class LeaveController extends Controller
     {
         $leave = Leave::find($id);
         if ($leave->status == 'Approved') { // if already approved do nothing
-            return redirect()->back()->with('success', 'Leave already approved');
+            Session::flash('success', 'Leave already approved');
+
+            return redirect()->back();
         }
 
         if ($status == 'Approved') {
@@ -435,7 +627,16 @@ class LeaveController extends Controller
         $leave->status = $status;
         $leave->save();
 
-        return redirect()->back()->with('success', 'Leave status is updated successfully');
+        $employee = Employee::find($leave->employee_id);
+        try {
+            Mail::to($employee->official_email)->send(new LeaveStatusMail($leave, $employee));
+        } catch (\Exception $e) {
+            Session::flash('error', trans($e->getMessage()));
+        }
+
+        Session::flash('success', 'Leave status is updated successfully');
+
+        return redirect()->back();
     }
 
     /**
@@ -448,15 +649,17 @@ class LeaveController extends Controller
     {
         $leave = Leave::where('employee_id', $id)->first();
         $leave->delete();
+        Session::flash('success', 'Leave is deleted successfully');
 
-        return redirect()->back()->with('success', 'Leave is deleted successfully');
+        return redirect()->back();
     }
 
     public function leaveDelete($id)
     {
         $leave = Leave::where('id', $id)->first();
         $leave->delete();
+        Session::flash('success', 'Leave is deleted successfully');
 
-        return redirect()->back()->with('success', 'Leave is deleted successfully');
+        return redirect()->back();
     }
 }

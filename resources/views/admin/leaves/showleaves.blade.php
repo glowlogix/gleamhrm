@@ -44,7 +44,9 @@
                                         <th>Date To</th>
                                         <th>Subject</th>
                                         <th>Status</th>
-                                        <th>Actions</th>
+                                        @if(Auth::user()->isAllowed('LeaveController:show') || Auth::user()->isAllowed('LeaveController:edit') || Auth::user()->isAllowed('LeaveController:destroy'))
+                                            <th>Actions</th>
+                                        @endif
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -65,16 +67,24 @@
                                                     <div class="text-white badge badge-danger font-weight-bold">Declined</div> 
                                                 @endif
                                             </td>
-                                            <td class="row">
-                                                <a class="btn btn-info btn-sm ml-1" href="{{route('leave.show',['id'=>$leave->id])}}" title="Show Leave"> <i class="fas fa-eye text-white"></i></a>
-                                                @if(strtolower($leave->status) == 'pending' || $leave->status == '')
-                                                    <a class="btn btn-warning btn-sm ml-1" href="{{route('leave.edit',['id'=>$leave->id])}}" title="Edit Leave"> <i class="fas fa-pencil-alt text-white"></i></a>
-                                                    <form action="{{ route('leave.destroy' , $leave->employee_id) }}" method="post">
-                                                        {{ csrf_field() }}
-                                                        <button class="btn btn-danger btn-sm ml-1" type="submit" title="Delete Leave"><i class="fas fa-trash-alt text-white"></i></button>
-                                                    </form>
-                                                @endif
-                                            </td>
+                                            @if(Auth::user()->isAllowed('LeaveController:show') || Auth::user()->isAllowed('LeaveController:edit') || Auth::user()->isAllowed('LeaveController:destroy'))
+                                                <td class="row">
+                                                    @if(Auth::user()->isAllowed('LeaveController:show'))
+                                                        <a class="btn btn-info btn-sm ml-1" href="{{route('leave.show',['id'=>$leave->id])}}" title="Show Leave"> <i class="fas fa-eye text-white"></i></a>
+                                                    @endif
+                                                    @if(strtolower($leave->status) == 'pending' || $leave->status == '')
+                                                        @if(Auth::user()->isAllowed('LeaveController:edit'))
+                                                            <a class="btn btn-warning btn-sm ml-1" href="{{route('leave.edit',['id'=>$leave->id])}}" title="Edit Leave"> <i class="fas fa-pencil-alt text-white"></i></a>
+                                                        @endif
+                                                        @if(Auth::user()->isAllowed('LeaveController:destroy'))
+                                                            <form action="{{ route('leave.destroy' , $leave->employee_id) }}" method="post">
+                                                                {{ csrf_field() }}
+                                                                <button class="btn btn-danger btn-sm ml-1" type="submit" title="Delete Leave"><i class="fas fa-trash-alt text-white"></i></button>
+                                                            </form>
+                                                        @endif
+                                                    @endif
+                                                </td>
+                                            @endif
                                         </tr>
                                     @endforeach
                                 </tbody>
