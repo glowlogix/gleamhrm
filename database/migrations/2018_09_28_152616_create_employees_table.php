@@ -40,11 +40,7 @@ class CreateEmployeesTable extends Migration
             $table->integer('bonus')->default(0);
             $table->integer('total_salary')->default(0);
             $table->string('branch_id')->default(0);
-            $table->integer('zuid')->default(0);
-            $table->integer('account_id')->default(0);
-            $table->boolean('invite_to_zoho');
-            $table->boolean('invite_to_slack');
-            $table->boolean('invite_to_asana');
+            $table->string('department_id')->nullable();
             $table->rememberToken();
             $table->softDeletes();
             $table->timestamps();

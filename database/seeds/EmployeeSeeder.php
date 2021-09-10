@@ -1,15 +1,11 @@
 <?php
 
 use App\Employee;
-use App\Salary;
-use App\Traits\ZohoTrait;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Role;
 
 class EmployeeSeeder extends Seeder
 {
-    use ZohoTrait;
-
     /**
      * Run the database seeds.
      *
@@ -34,11 +30,6 @@ class EmployeeSeeder extends Seeder
             'branch_id'                      => '1',
             'status'                         => 0,
             //            'employment_status' => 'permanent',
-            'zuid'            => '123',
-            'account_id'      => '123',
-            'invite_to_zoho'  => 0,
-            'invite_to_slack' => 0,
-            'invite_to_asana' => 0,
         ]);
 
         $role = Role::find(1);
@@ -61,43 +52,6 @@ class EmployeeSeeder extends Seeder
             'branch_id'                      => '1',
             'status'                         => 1,
             'employment_status'              => 'permanent',
-            'zuid'                           => '123',
-            'account_id'                     => '123',
-            'invite_to_zoho'                 => 0,
-            'invite_to_slack'                => 0,
-            'invite_to_asana'                => 0,
         ]);
-
-        /*$employees = $this->getZohoAccount();
-        $employees = $employees->original->data;
-        foreach($employees as $employee){
-            $employees = Employee::create([
-                'firstname' => $employee->firstName,
-                'lastname' => $employee->lastName,
-                'fullname' => $employee->firstName.' '.$employee->lastName,
-                'contact' => '0332456783',
-                'emergency_contact' => '0332456783',
-                'emergency_contact_relationship' => 'Cousin',
-                'password' => '123456',
-                'zuid' => $employee->zuid,
-                'account_id' => $employee->accountId,
-                'org_email' => $employee->primaryEmailAddress,
-                'email' => 'dummy@gmail.com',
-                'role' => $employee->role,
-                'inviteToZoho' => 1,
-                'inviteToSlack' => 0,
-                'inviteToAsana' => 1,
-                'status' => 1
-            ]);
-            if($employees){
-
-            Salary::create([
-                'employee_id' => $employees->id,
-                'basic_salary' => 500
-            ]);
-
-
-            }
-        }*/
     }
 }

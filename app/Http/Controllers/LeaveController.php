@@ -168,7 +168,7 @@ class LeaveController extends Controller
     /**
      * Store a newly created resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
+     * @param  \Illuminate\Http\Request  $request
      *
      * @return \Illuminate\Http\Response
      */
@@ -282,7 +282,7 @@ class LeaveController extends Controller
     /**
      * Display the specified resource.
      *
-     * @param \App\Leave $leave
+     * @param  \App\Leave  $leave
      *
      * @return \Illuminate\Http\Response
      */
@@ -327,7 +327,7 @@ class LeaveController extends Controller
     /**
      * Show the form for editing the specified resource.
      *
-     * @param \App\Leave $leave
+     * @param  \App\Leave  $leave
      *
      * @return \Illuminate\Http\Response
      */
@@ -355,8 +355,8 @@ class LeaveController extends Controller
     /**
      * Update the specified resource in storage.
      *
-     * @param \Illuminate\Http\Request $request
-     * @param \App\Leave               $leave
+     * @param  \Illuminate\Http\Request  $request
+     * @param  \App\Leave  $leave
      *
      * @return \Illuminate\Http\Response
      */
@@ -410,7 +410,7 @@ class LeaveController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Leave $leave
+     * @param  \App\Leave  $leave
      *
      * @return \Illuminate\Http\Response
      */
@@ -446,7 +446,7 @@ class LeaveController extends Controller
     /**
      * Remove the specified resource from storage.
      *
-     * @param \App\Leave $leave
+     * @param  \App\Leave  $leave
      *
      * @return \Illuminate\Http\Response
      */
