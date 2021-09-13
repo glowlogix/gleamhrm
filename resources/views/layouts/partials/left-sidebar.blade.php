@@ -289,13 +289,32 @@
           </ul>
         </li>
         @endif
-        <li class="nav-item pb-3 mb-5">
-          <a href="{{route('admin.help')}}" @if(request()->is('help')) class="nav-link active" @else class="nav-link" @endif>
+        <li @if(request()->is('contact') || request()->is('faq')) class="nav-item menu-open pb-3 mb-5" @else class="nav-item pb-3 mb-5" @endif>
+          <a href="#" @if(request()->is('contact') || request()->is('faq')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon fas fa-calendar-alt"></i>
             <p>
               Help
+              <i class="fas fa-angle-left right"></i>
             </p>
           </a>
+          <ul class="nav nav-treeview">
+            <li class="nav-item">
+              <a href="{{route('help.contact_us')}}" @if(request()->is('contact')) class="nav-link active" @else class="nav-link" @endif>
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                  Contact Us
+                </p>
+              </a>
+            </li>
+            <li class="nav-item">
+              <a href="{{route('faq.index')}}" @if(request()->is('faq')) class="nav-link active" @else class="nav-link" @endif>
+                <i class="far fa-circle nav-icon"></i>
+                <p>
+                  FAQ's
+                </p>
+              </a>
+            </li>
+          </ul>
         </li>
       </ul>
     </nav>

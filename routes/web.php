@@ -676,13 +676,35 @@ Route::group(['middleware' => 'auth'], function () {
     ]);
 
     //	Help
-    Route::get('/help', [
-        'uses' => 'DashboardController@help',
-        'as'   => 'admin.help',
+    Route::get('/contact', [
+        'uses' => 'DashboardController@contact',
+        'as'   => 'help.contact_us',
     ]);
     Route::post('/contact_us', [
         'uses' => 'DashboardController@contact_us',
         'as'   => 'contact_us',
+    ]);
+
+    //   FAQ's
+    Route::get('/faq', [
+        'uses' => 'FaqController@index',
+        'as'   => 'faq.index',
+    ]);
+    Route::post('/faq/store', [
+        'uses' => 'FaqController@store',
+        'as'   => 'faq.store',
+    ]);
+    Route::post('/faq/update', [
+        'uses' => 'FaqController@update',
+        'as'   => 'faq.update',
+    ]);
+    Route::post('/faq/destroy', [
+        'uses' => 'FaqController@destroy',
+        'as'   => 'faq.destroy',
+    ]);
+    Route::post('/faq/category/store', [
+        'uses' => 'FaqController@faqCategoryStore',
+        'as'   => 'faq.category.store',
     ]);
 });
 Route::Get('/my_leaves', [

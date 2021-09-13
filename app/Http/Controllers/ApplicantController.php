@@ -35,7 +35,6 @@ class ApplicantController extends Controller
 
     /**
      * @param $id
-     *
      * @return $this
      */
     public function singleApplicant($id)
