@@ -24,10 +24,15 @@
     <script src="{{ asset('assets/backend/plugins/jquery-validation/jquery.validate.min.js') }}"></script>
     <script src="{{ asset('assets/backend/plugins/jquery-validation/additional-methods.min.js') }}"></script>
   </head>
-  <body class="hold-transition login-page" style="background-image:url({{ asset('assets/images/background/login-register.jpg') }});background-size:cover;">
-    
-    <div class="login-box">
-      @yield('content')
+  <body>
+    <div class="row">
+      <img class="d-none d-lg-block d-md-block d-sm-none col-md-8" src="{{ asset('assets/images/login-v2.svg') }}" style="max-height: 600px;">
+      <div class="d-none d-lg-block d-md-block d-sm-none col-md-4 mt-auto mb-auto">
+        @yield('content')
+      </div>
+    </div>
+    <div class="card-primary card-outline d-lg-none d-md-none d-sm-block mx-auto">
+        @yield('content')
     </div>
 
     <!-- Bootstrap 4 -->
