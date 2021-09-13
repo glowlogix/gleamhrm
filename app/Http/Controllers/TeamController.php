@@ -57,7 +57,7 @@ class TeamController extends Controller
     {
         $team = Team::find($id);
         $team->delete();
-        Session::flash('success', 'Team deleted successfully.');
+        Session::flash('success', 'Team is deleted successfully.');
 
         return redirect()->route('teams.index');
     }

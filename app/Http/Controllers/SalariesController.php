@@ -147,7 +147,7 @@ class SalariesController extends Controller
         $bonus = Employee::find($id);
         $bonus->bonus = $request->bonus;
         $bonus->save();
-        Session::flash('success', 'Bonus Added Successfully');
+        Session::flash('success', 'Bonus is added successfully');
 
         return redirect()->route('salary.show');
     }

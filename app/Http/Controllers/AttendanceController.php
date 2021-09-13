@@ -275,9 +275,13 @@ class AttendanceController extends Controller
         $this->storeAttendaceSummary($request);
 
         if ($attendance) {
-            return redirect()->back()->with('success', 'Attendance is created successfully');
+            Session::flash('success', 'Attendance is created successfully');
+
+            return redirect()->back();
         } else {
-            return redirect()->back()->with('error', 'Error while add attendance');
+            Session::flash('error', 'Error while creating attendance');
+
+            return redirect()->back();
         }
     }
 
@@ -308,12 +312,18 @@ class AttendanceController extends Controller
         $this->updateTotalTime($request);
         if ($attendance) {
             if (Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday')) {
-                return redirect()->back()->with('success', 'Break is created successfully');
+                Session::flash('success', 'Break is created successfully');
+
+                return redirect()->back();
             } else {
-                return redirect()->route('myAttendance')->with('success', 'Break is created successfully');
+                Session::flash('success', 'Break is created successfully');
+
+                return redirect()->route('myAttendance');
             }
         } else {
-            return redirect()->back()->with('error', 'Error while add attendance');
+            Session::flash('error', 'Error while creating attendance');
+
+            return redirect()->back();
         }
     }
 
@@ -395,7 +405,9 @@ class AttendanceController extends Controller
 
         if (! Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday')) {
             if ($currentDate != $time_out_date || $currentDate != $time_in_date) {
-                return redirect()->back()->with('error', 'Please select current date');
+                Session::flash('error', 'Please select current date');
+
+                return redirect()->back();
             }
         }
 
@@ -710,8 +722,9 @@ class AttendanceController extends Controller
         }
 
         $this->storeAttendaceSummary($request);
+        Session::flash('success', 'Attendance is updated successfully');
 
-        return redirect()->back()->with('success', 'Attendance is updated successfully');
+        return redirect()->back();
     }
 
     ///NEW
@@ -739,8 +752,9 @@ class AttendanceController extends Controller
         }
 
         $this->updateTotalTime($request);
+        Session::flash('success', 'Attendance Break is updated successfully');
 
-        return redirect()->back()->with('success', 'Attendance Break is updated successfully');
+        return redirect()->back();
     }
 
     ////
@@ -992,8 +1006,9 @@ class AttendanceController extends Controller
 
             $attendance->delete();
         }
+        Session::flash('success', 'Attendance Break is deleted successfully');
 
-        return redirect()->back()->with('success', 'Attendance Break is deleted successfully');
+        return redirect()->back();
     }
 
     ///NEW
@@ -1011,19 +1026,11 @@ class AttendanceController extends Controller
                 'date'        => $attendance->date,
             ])->count();
 
-            if ($attendanceCount == 1) {
-                $attendance_summary = AttendanceSummary::where([
-                    'employee_id' => $attendance->employee_id,
-                    'date'        => $attendance->date,
-                ])->first();
-
-                $attendance_summary->delete();
-            }
-
             $attendance->delete();
         }
+        Session::flash('success', 'Attendance Break is deleted successfully');
 
-        return redirect()->back()->with('success', 'Attendance Break is deleted successfully');
+        return redirect()->back();
     }
 
     ///
@@ -1313,10 +1320,10 @@ class AttendanceController extends Controller
                 }
                 $message->from('noreply@glowlogix.com', Auth::user()->official_email);
             });
+            Session::flash('success', 'Correction email is sent to the HR');
         } catch (\Exception $e) {
-            Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');
+            Session::flash('error', trans($e->getMessage()));
         }
-        Session::flash('success', 'Correction Email Sent To the HR');
 
         return redirect()->back();
     }
@@ -1325,7 +1332,7 @@ class AttendanceController extends Controller
     {
         $attendance_summary_delete = AttendanceSummary::find($id);
         $attendance_summary_delete->delete();
-        Session::flash('success', 'Attendance Deleted Successfully.');
+        Session::flash('success', 'Attendance is deleted successfully.');
 
         return redirect()->route('today_timeline');
     }
@@ -1363,9 +1370,13 @@ class AttendanceController extends Controller
         }
 
         if ($attendance_correction != '[]') {
-            return redirect()->route('myAttendance')->with('success', 'Change request submitted successfully');
+            Session::flash('success', 'Change request submitted successfully');
+
+            return redirect()->route('myAttendance');
         } else {
-            return redirect()->route('myAttendance')->with('error', 'No change saved');
+            Session::flash('error', 'No change saved');
+
+            return redirect()->route('myAttendance');
         }
     }
 
@@ -1420,12 +1431,15 @@ class AttendanceController extends Controller
             $attendance_summary->total_time = $totaltime;
             $attendance_summary->is_delay = $is_delay;
             $attendance_summary->save();
+            Session::flash('success', 'Changes approved and applied successfully');
 
-            return redirect()->route('today_timeline')->with('success', 'Changes approved and applied successfully');
+            return redirect()->route('today_timeline');
         }
 
         if ($request->decision == 'Rejected') {
-            return redirect()->route('today_timeline')->with('success', 'Changes rejected successfully');
+            Session::flash('success', 'Changes rejected successfully');
+
+            return redirect()->route('today_timeline');
         }
     }
 }

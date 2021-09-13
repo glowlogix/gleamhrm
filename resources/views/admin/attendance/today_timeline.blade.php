@@ -19,36 +19,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if (Session::has('error'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-danger" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Error!</strong> {{Session::get('error')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-@if (Session::has('success'))
-<div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="alert alert-success" align="left">
-                    <a href="#" class="close" data-dismiss="alert">&times;</a>
-                    <strong>Success!</strong> {{Session::get('success')}}
-                </div>
-            </div>
-        </div>
-    </div>
-</div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -156,7 +129,7 @@
                                             <td class="text-nowrap">
                                                 <a class="btn btn-info btn-sm" href="{{route('attendance.createBreak', $employee['id'])}}/{{$today}}" title="Add Attendance"> <i class="fas fa-plus text-white"></i></a>
                                                 <a class="btn btn-warning btn-sm" data-toggle="modal" data-target="#popup{{ $employee['id'] }}" title="Edit Attendance"> <i class="fas fa-pencil-alt text-white"></i></a>
-                                                @if($attendance_corrections != '[]')
+                                                @if($attendance_corrections != '[]' && isset($employee['attendanceSummary'][0]))
                                                     @foreach($attendance_corrections as $attendance_correction)
                                                         @if($attendance_correction->date == $employee['attendanceSummary'][0]->date && $attendance_correction->employee_id == $employee['attendanceSummary'][0]->employee_id && $attendance_correction->status == '')
                                                             <a class="btn btn-primary btn-sm" data-toggle="modal" data-target="#change{{ $employee['attendanceSummary'][0]->id }}" title="Attendance Change Request"><i class="fas fa-clock text-white"></i></a>
@@ -166,73 +139,76 @@
                                             </td>
                                         </tr>
 
-                                        <div class="modal fade" @if($employee['attendanceSummary'] != '[]') id="change{{ $employee['attendanceSummary'][0]->id }}" @endif tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-                                            <div class="modal-dialog">
-                                                <div class="modal-content">
-                                                    <form id="decisionForm" action="{{route('update.attendance.correction')}}" method='POST'>
-                                                        {{ csrf_field() }}
+                                        @if(isset($employee['attendanceSummary'][0]))
+                                            <div class="modal fade" @if($employee['attendanceSummary'] != '[]') id="change{{ $employee['attendanceSummary'][0]->id }}" @endif tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <form id="decisionForm{{ $employee['attendanceSummary'][0]->id }}" action="{{route('update.attendance.correction')}}" method='POST'>
+                                                            {{ csrf_field() }}
 
-                                                        <div class="modal-header">
-                                                            <h4 class="modal-title">Change Attendance</h4>
-                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                                                                <span aria-hidden="true">×</span>
-                                                            </button>
-                                                        </div>
+                                                            <div class="modal-header">
+                                                                <h4 class="modal-title">Change Attendance</h4>
+                                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                    <span aria-hidden="true">×</span>
+                                                                </button>
+                                                            </div>
 
-                                                        <div class="modal-body">
-                                                            Following changes are requested against this Attendance:
-                                                            <br><br>
-                                                            @if($attendance_corrections != '[]')
-                                                                @foreach($attendance_corrections as $attendance_correction)
-                                                                    @if($attendance_correction->date == $employee['attendanceSummary'][0]->date && $attendance_correction->employee_id == $employee['attendanceSummary'][0]->employee_id)
+                                                            <div class="modal-body">
+                                                                Following changes are requested against this Attendance:
+                                                                <br><br>
+                                                                @if($attendance_corrections != '[]')
+                                                                    @foreach($attendance_corrections as $attendance_correction)
+                                                                        @if($attendance_correction->date == $employee['attendanceSummary'][0]->date && $attendance_correction->employee_id == $employee['attendanceSummary'][0]->employee_id)
 
-                                                                        <input type="hidden" name="employee_id" value="{{$attendance_correction->employee_id}}"/>
-                                                                        <input type="hidden" name="correction_id" value="{{$attendance_correction->id}}"/>
-                                                                        <input type="hidden" name="summary_id" value="{{$employee['attendanceSummary'][0]->id}}"/>
-                                                                        <input type="hidden" name="date" value="{{$attendance_correction->date}}"/>
+                                                                            <input type="hidden" name="employee_id" value="{{$attendance_correction->employee_id}}"/>
+                                                                            <input type="hidden" name="correction_id" value="{{$attendance_correction->id}}"/>
+                                                                            <input type="hidden" name="summary_id" value="{{$employee['attendanceSummary'][0]->id}}"/>
+                                                                            <input type="hidden" name="date" value="{{$attendance_correction->date}}"/>
 
-                                                                        @if($attendance_correction->time_in != '')
-                                                                            <b>Time In:</b> {{$attendance_correction->time_in}}
-                                                                            <br>
+                                                                            @if($attendance_correction->time_in != '')
+                                                                                <b>Time In:</b> {{$attendance_correction->time_in}}
+                                                                                <br>
+                                                                            @endif
+                                                                            @if($attendance_correction->time_out != '')
+                                                                                <b>Time Out:</b> {{$attendance_correction->time_out}}
+                                                                                <br>
+                                                                            @endif
+                                                                            @if($attendance_correction->break_start != '')
+                                                                                <b>Break Start:</b> {{$attendance_correction->break_start}}
+                                                                                <br>
+                                                                            @endif
+                                                                            @if($attendance_correction->break_end != '')
+                                                                                <b>Break End:</b> {{$attendance_correction->break_end}}
+                                                                                <br>
+                                                                            @endif
                                                                         @endif
-                                                                        @if($attendance_correction->time_out != '')
-                                                                            <b>Time Out:</b> {{$attendance_correction->time_out}}
-                                                                            <br>
-                                                                        @endif
-                                                                        @if($attendance_correction->break_start != '')
-                                                                            <b>Break Start:</b> {{$attendance_correction->break_start}}
-                                                                            <br>
-                                                                        @endif
-                                                                        @if($attendance_correction->break_end != '')
-                                                                            <b>Break End:</b> {{$attendance_correction->break_end}}
-                                                                            <br>
-                                                                        @endif
-                                                                    @endif
-                                                                @endforeach
-                                                            @endif
-                                                            <br>
-                                                            <div class="row">
-                                                                <div class="col-md-12">
-                                                                    <div class="form-group">
-                                                                        <label class="control-label">Decision</label>
-                                                                        <select class="form-control custom-select" data-placeholder="Select Decision" tabindex="1" name="decision">
-                                                                            <option value="">Select Decision</option>
-                                                                            <option value="Approved">Approve</option>
-                                                                            <option value="Rejected">Reject</option>
-                                                                        </select>
+                                                                    @endforeach
+                                                                @endif
+                                                                <br>
+                                                                <div class="row">
+                                                                    <div class="col-md-12">
+                                                                        <div class="form-group">
+                                                                            <label class="control-label">Decision</label>
+                                                                            <select class="form-control custom-select" data-placeholder="Select Decision" tabindex="1" name="decision" id="decision{{ $employee['attendanceSummary'][0]->id }}" onchange="check('decision'+{!! $employee['attendanceSummary'][0]->id !!});">
+                                                                                <option value="">Select Decision</option>
+                                                                                <option value="Approved">Approve</option>
+                                                                                <option value="Rejected">Reject</option>
+                                                                            </select>
+                                                                            <span id="decision-error{{$employee['attendanceSummary'][0]->id}}"  class="error invalid-feedback">Decision is required</span>
+                                                                        </div>
                                                                     </div>
                                                                 </div>
                                                             </div>
-                                                        </div>
 
-                                                        <div class="modal-footer justify-content-between">
-                                                            <button type="button" class="btn btn-default" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
-                                                            <button type="submit" class="btn btn-primary create-btn" id="add-btn" ><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></button>
-                                                        </div>
-                                                    </form>
+                                                            <div class="modal-footer justify-content-between">
+                                                                <button type="button" class="btn btn-default" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                                                <a class="btn btn-primary create-btn" onclick="validate({!! $employee['attendanceSummary'][0]->id !!});"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></a>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
+                                        @endif
 
                                         <div class="modal fade" id="popup{{ $employee['id'] }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
@@ -272,7 +248,7 @@
 
                                                         <div class="modal-footer justify-content-between">
                                                             <button type="button" class="btn btn-default" data-dismiss="modal"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
-                                                            <button type="submit" class="btn btn-primary create-btn" id="add-btn" ><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Present</span></button>
+                                                            <button type="submit" class="btn btn-primary create-btn"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Present</span></button>
                                                         </div>
                                                     </form>
                                                 </div>
@@ -292,29 +268,6 @@
 
 <script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
 <script>
-    $(function () {
-        $('#decisionForm').validate({
-            rules: {
-                decision: {
-                    required: true,
-                }
-            },
-            messages: {
-                decision: "Decision is required"
-            },
-            errorElement: 'span',
-            errorPlacement: function (error, element) {
-                error.addClass('invalid-feedback');
-                element.closest('.form-group').append(error);
-            },
-            highlight: function (element, errorClass, validClass) {
-              $(element).addClass('is-invalid');
-            },
-            unhighlight: function (element, errorClass, validClass) {
-                $(element).removeClass('is-invalid');
-            }
-        });
-    });
     $(document).ready(function () {
         $('#today_timeline').DataTable({
             "paging": true,
@@ -359,5 +312,32 @@
             return false;
         });
     });
+
+    function validate(id)
+    {
+        if($("#decision"+id).val() == '')
+        {
+            $('#decision-error'+id).addClass('show');
+            $('#decision'+id).addClass('is-invalid');
+        }
+        else
+        {
+            $('#decisionForm'+id).submit();
+        }
+    }
+
+    function check(id)
+    {
+        if($('#'+id).val() != '')
+        {
+            $('#'+id).removeClass('show');
+            $('#'+id).removeClass('is-invalid');
+        }
+        else
+        {
+            $('#'+id).addClass('show');
+            $('#'+id).addClass('is-invalid');
+        }
+    }
 </script>
 @stop

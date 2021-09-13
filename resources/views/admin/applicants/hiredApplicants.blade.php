@@ -20,6 +20,10 @@
 </div>
 <!-- Breadcrumbs End -->
 
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
+
 <!-- Main Content Start -->
 <div class="content">
   <div class="container-fluid">

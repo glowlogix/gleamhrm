@@ -53,7 +53,7 @@ class LeaveTypeController extends Controller
     {
         $leave_type = LeaveType::find($id);
         $leave_type->delete();
-        Session::flash('success', 'Leave type deleted successfully.');
+        Session::flash('success', 'Leave type is deleted successfully.');
 
         return redirect()->route('leave_type.index');
     }

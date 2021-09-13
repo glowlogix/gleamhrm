@@ -50,7 +50,7 @@ class DesignationController extends Controller
     {
         $designation = Designation::find($id);
         $designation->delete();
-        Session::flash('success', 'Designation deleted successfully.');
+        Session::flash('success', 'Designation is deleted successfully.');
 
         return redirect()->route('designations.index');
     }

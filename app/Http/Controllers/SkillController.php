@@ -56,7 +56,7 @@ class SkillController extends Controller
     {
         $skill = Skill::where('id', $id);
         $skill->delete();
-        Session::flash('success', 'Skill deleted successfully.');
+        Session::flash('success', 'Skill is deleted successfully.');
 
         return redirect()->route('skill.index');
     }

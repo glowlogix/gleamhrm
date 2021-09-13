@@ -19,36 +19,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if(Session::has('error'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-@if(Session::has('success'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.session-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
@@ -137,7 +110,7 @@
                                                         <div class="modal-body">
                                                             <div class="form-group">
                                                                 <label class="control-label">Skill Name</label>
-                                                                <input  type="text" name="skill_name" value="{{old('skill_name',$skill->skill_name)}}" placeholder="Enter Skill Name" class="form-control" id="skill_name{{$skill->id}}">
+                                                                <input  type="text" name="skill_name" value="{{old('skill_name',$skill->skill_name)}}" placeholder="Enter Skill Name" class="form-control" id="skill_name{{$skill->id}}" oninput="check('skill_name'+{!! $skill->id !!});">
                                                                 <span id="skill_name-error{{$skill->id}}" class="error invalid-feedback">Skill name is required</span>
                                                             </div>
                                                             <div class="form-group">
@@ -149,7 +122,7 @@
                                                             </div>
                                                             <div class="form-group">
                                                                 <label class="control-label">Description</label>
-                                                                <textarea  type="text" name="description" value="{{$skill->description}}" class="form-control" placeholder="Enter Description" id="description{{$skill->id}}">{{$skill->description}}</textarea>
+                                                                <textarea  type="text" name="description" value="{{$skill->description}}" class="form-control" placeholder="Enter Description" id="description{{$skill->id}}" oninput="check('description'+{!! $skill->id !!});">{{$skill->description}}</textarea>
                                                                 <span id="description-error{{$skill->id}}" class="error invalid-feedback">Description is required</span>
                                                             </div>
                                                         </div>
@@ -284,9 +257,25 @@
             $('#description-error'+id).addClass('show');
             $('#description'+id).addClass('is-invalid');
         }
-        else
+        if($("#description"+id).val() != '' && $("#skill_name"+id).val() != '')
         {
             $('#editSkillForm'+id).submit();
+        }
+    }
+
+
+
+    function check(id)
+    {
+        if($('#'+id).val() != '')
+        {
+            $('#'+id).removeClass('show');
+            $('#'+id).removeClass('is-invalid');
+        }
+        else
+        {
+            $('#'+id).addClass('show');
+            $('#'+id).addClass('is-invalid');
         }
     }
 </script>
