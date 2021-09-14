@@ -15,7 +15,11 @@ use App\Applicant;
 use Illuminate\Support\Facades\Input;
 
 Route::get('/', function () {
-    return view('welcome');
+    if (Auth::user()) {
+        return redirect()->route('admin.dashboard');
+    } else {
+        return view('auth.login');
+    }
 });
 
 Route::get('password/reset', 'ForgotPasswordController@showLinkRequestForm')->name('password.request');
