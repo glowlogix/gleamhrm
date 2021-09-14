@@ -8,11 +8,13 @@ use App\Branch;
 use App\Designation;
 use App\Employee;
 use App\Job;
+use App\Leave;
 use App\Mail\FeedbackMail;
 use App\Mail\Reminder;
 use App\Traits\MetaTrait;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Mail;
 use Session;
 
@@ -30,16 +32,14 @@ class DashboardController extends Controller
         $months = ['January' => '1', 'February' => '2', 'March' => '3', 'April' => '4', 'May' => '5', 'June' => '6', 'July' => '7', 'August' => '8', 'September' => '9', 'October' => '10', 'November' => '11', 'December' => '12'];
         $attArr = [];
         $counts = [];
-//        foreach ($months as $month){
-//            foreach(Employee::all() as $employee){
-//                $count[$month] += AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',$month)->count();
-        ////                $attArr[$month]=AttendanceSummary::where('employee_id',$employee->id)->whereRaw('MONTH(date) = ?',$month)->get();
-//            }
-        ////            $finalcount[]=$count;
-//        }
 
         foreach ($months as $month) {
-            foreach (Employee::all() as $employee) {
+            if (Auth::user()->isAllowed('DashboardController:index')) {
+                $employees = Employee::all();
+            } else {
+                $employees = Employee::where('id', Auth::user()->id)->get();
+            }
+            foreach ($employees as $employee) {
                 $weekend = Branch::where('id', $employee->branch_id)->first();
                 $numberOfDays = cal_days_in_month(CAL_GREGORIAN, $month, Carbon::now()->year);
                 $days = 0;
@@ -56,7 +56,11 @@ class DashboardController extends Controller
 
         $averageAttendance = [];
         foreach ($counts as $date => $array) {
-            $employeesCount = Employee::all()->count();
+            if (Auth::user()->isAllowed('DashboardController:index')) {
+                $employeesCount = Employee::all()->count();
+            } else {
+                $employeesCount = Employee::where('id', Auth::user()->id)->count();
+            }
             $averageAttendance[] = round((array_sum($array) / $employeesCount), 2);
         }
         // $averageAttendance = [5,10,15,8,11,6,20,18,16,25,12,21];
@@ -79,7 +83,8 @@ class DashboardController extends Controller
         $DesignationName = json_encode($DesignationName);
         $designationSeries = json_encode($chartEmployee);
 
-        return view('admin.dashboard.index', $this->metaResponse())
+        if (Auth::user()->isAllowed('DashboardController:index')) {
+            return view('admin.dashboard.index', $this->metaResponse())
             ->with('employee', Employee::orderBy('joining_date', 'Desc')->take(5)->get())
             ->with('totalemployees', Employee::where('employment_status', 'permanent')->orwhere('employment_status', 'probation')->get())
             ->with('designationSeries', $designationSeries)
@@ -89,6 +94,19 @@ class DashboardController extends Controller
             ->with('male', $male)
             ->with('female', $female)
             ->with('applicants', $applicants);
+        } else {
+            $approvedLeaves = Leave::where('employee_id', Auth::user()->id)->where('status', 'Approved')->count();
+            $rejectedLeaves = Leave::where('employee_id', Auth::user()->id)->where('status', 'Declined')->count();
+            $pendingLeaves = Leave::where('employee_id', Auth::user()->id)->where('status', 'pending')->count();
+
+            return view('admin.dashboard.index', $this->metaResponse())
+            ->with('averageAttendance', $averageAttendance)
+            ->with('chartMonths', $chartMonths)
+            ->with('applicants', $applicants)
+            ->with('approvedLeaves', $approvedLeaves)
+            ->with('rejectedLeaves', $rejectedLeaves)
+            ->with('pendingLeaves', $pendingLeaves);
+        }
     }
 
     //    Help
