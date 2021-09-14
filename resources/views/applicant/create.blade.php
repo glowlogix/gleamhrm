@@ -111,6 +111,7 @@
 					<option value="Unemployed" @if(old("job_Status") == "Unemployed") selected @endif >Currently not working</option>
 				</select>
 			</div>
+			<hr>
 			<div class="form-group">
 				<button class="btn btn-primary" type="submit" align="right" data-toggle="tooltip" title="Submit"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Submit</span></button>
 				<button type="button" onclick="window.location.href='{{ url('/') }}'" class="btn btn-default" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>

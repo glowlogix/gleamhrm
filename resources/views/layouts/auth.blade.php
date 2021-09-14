@@ -3,8 +3,12 @@
   <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
-    <link rel="icon" type="image/png" sizes="16x16" href="{{ asset('assets/images/favicon.PNG')}}">
-    <title>HR | Glowlogix</title>
+    @if(isset($platform->logo))
+      <link rel="icon" type="image/png" sizes="16x16" href="{{asset($platform->logo)}}">
+    @else
+      <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/company_logo.png')}}">
+    @endif
+    <title>HRM | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">

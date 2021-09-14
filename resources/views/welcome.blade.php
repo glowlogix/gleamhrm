@@ -5,8 +5,13 @@
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    @if(isset($platform->logo))
+      <link rel="icon" type="image/png" sizes="16x16" href="{{asset($platform->logo)}}">
+    @else
+        <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/company_logo.png')}}">
+    @endif
+    <title>HRM | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif</title>
 
-    <title>HRM | GlowLogix</title>
     <!-- Fonts -->
     <link href="https://fonts.googleapis.com/css?family=Raleway:100,600" rel="stylesheet" type="text/css">
     <link href="{{ asset('css/data.css') }}" rel="stylesheet">
@@ -74,19 +79,18 @@
             <a href="{{ url('/dashboard') }}">Home</a>
             @else
             <a href="{{ route('login') }}">Login</a>
-            {{--
-            <a class="reg" href="{{ route('register') }}">Register</a> --}}
+            {{-- <a class="reg" href="{{ route('register') }}">Register</a> --}}
             @endauth
         </div>
         @endif
 
         <div class="content">
-            <div class="title m-b-md">
-                Welcome to HRM
+            <div>
+                <h1>Welcome to HRM by @if($platform != '') {{$platform->name}} @else Company Name @endif</h1>
             </div>
 
             <div class="links">
-                <a href="{{route('applicant.apply')}}">Apply For Job</a>
+                <a href="{{route('applicant.apply')}}"><h3>Apply For Job</h3></a>
             </div>
         </div>
     </div>

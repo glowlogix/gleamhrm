@@ -3,7 +3,7 @@
 <!-- Main Content Start -->
 <div class="card card-outline card-primary">
     <div class="card-header text-center">
-      <a href="#"><b>HRM</b> | GlowLogix</a>
+      <a href="#"><b>HRM</b> | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif</a>
     </div>
 
     <!-- Error Message Section Start -->
