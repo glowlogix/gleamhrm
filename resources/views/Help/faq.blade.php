@@ -20,7 +20,7 @@
 <!-- Breadcrumbs End -->
 
 <!-- Session Message Section Start -->
-@include('layouts.partials.session-message')
+@include('layouts.partials.error-message')
 <!-- Session Message Section End -->
 
 <!-- Main Content Start -->

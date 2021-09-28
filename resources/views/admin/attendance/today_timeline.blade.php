@@ -20,7 +20,7 @@
 <!-- Breadcrumbs End -->
 
 <!-- Session Message Section Start -->
-@include('layouts.partials.session-message')
+@include('layouts.partials.error-message')
 <!-- Session Message Section End -->
 
 <!-- Main Content Start -->
@@ -266,7 +266,7 @@
 </div>
 <!-- Main Content End -->
 
-<script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/old-moment/moment.js')}}"></script>
 <script>
     $(document).ready(function () {
         $('#today_timeline').DataTable({

@@ -3,7 +3,7 @@
 @section('content')
 <!-- Session Message Section Start -->
 <div class="card-body">
-    @include('layouts.partials.session-message')
+    @include('layouts.partials.error-message')
 </div>
 <!-- Session Message Section End -->
 
