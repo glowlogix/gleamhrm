@@ -182,7 +182,7 @@ $("input.zoho").click(function (event) {
     });
 
 </script>
-<script src="{{asset('assets/plugins/moment/moment.js')}}"></script>
-<script src="{{asset('assets/plugins/footable/js/footable.min.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/old-moment/moment.js')}}"></script>
+<script src="{{asset('assets/backend/plugins/footable/js/footable.min.js')}}"></script>
 @endpush
 @stop

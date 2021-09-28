@@ -1,12 +1,4 @@
 @extends('layouts.master')
-@section('Heading')
-    <button type="button" onclick="window.location.href='{{route('admin.dashboard')}}'" class="btn btn-info float-right">Back</button>
-    <h3 class="text-themecolor">Dashboard</h3>
-    <ol class="breadcrumb">
-        <li class="breadcrumb-item"><a href="javascript:void(0)">Dashboard</a></li>
-        <li class="breadcrumb-item active">Update Profile</li>
-    </ol>
-@stop
 @section('content')
 <!-- Breadcrumbs Start -->
 <div class="content-header">
@@ -26,36 +18,9 @@
 </div>
 <!-- Breadcrumbs End -->
 
-<!-- Error Message Section Start -->
-@if(Session::has('error'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-danger" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Error!</strong> {{Session::get('error')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-@if(Session::has('success'))
-    <div class="content">
-        <div class="container-fluid">
-            <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-success" align="left">
-                        <a href="#" class="close" data-dismiss="alert">&times;</a>
-                        <strong>Success!</strong> {{Session::get('success')}}
-                    </div>
-                </div>
-            </div>
-        </div>
-    </div>
-@endif
-<!-- Error Message Section End -->
+<!-- Session Message Section Start -->
+@include('layouts.partials.error-message')
+<!-- Session Message Section End -->
 
 <!-- Main Content Start -->
 <div class="content">
