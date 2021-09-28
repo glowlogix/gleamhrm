@@ -43,7 +43,7 @@
                                             <select class="form-control custom-select" name="leave_type">
                                                 <option value="">Select Leave Type</option>
                                                 @foreach($leave_types as $leave_type)
-                                                    <option @if($leave->leave_type == $leave_type->id)selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->amount}})</option>
+                                                    <option @if($leave->leave_type == $leave_type->id)selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->count}})</option>
                                                 @endforeach
                                             </select>
                                         </div>

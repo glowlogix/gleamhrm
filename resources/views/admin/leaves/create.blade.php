@@ -40,10 +40,10 @@
 									<div class="col-md-6">
 										<div class="form-group">
 											<label class="control-label">Leave Type</label>
-											<select class="form-control custom-select" name="leave_type">
+											<select class="form-control custom-select" name="leave_type" value="{{old('leave_type')}}">
 												<option value="">Choose Leave Type</option>
 												@foreach($leave_types as $leave_type)
-													<option @if(old('leave_type') == $leave_type->id) selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->amount}})</option>
+													<option @if(old('leave_type') == $leave_type->id) selected @endif value="{{$leave_type->id}}">{{$leave_type->name}} ({{$leave_type->count}})</option>
 												@endforeach
 											</select>
 										</div>
