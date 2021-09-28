@@ -36,9 +36,7 @@ class CreateEmployeesTable extends Migration
             $table->string('picture')->nullable();
             $table->date('joining_date')->nullable();
             $table->date('exit_date')->nullable();
-            $table->integer('basic_salary')->default(0);
-            $table->integer('bonus')->default(0);
-            $table->integer('total_salary')->default(0);
+            $table->integer('gross_salary')->default(0);
             $table->string('branch_id')->default(0);
             $table->string('department_id')->nullable();
             $table->rememberToken();

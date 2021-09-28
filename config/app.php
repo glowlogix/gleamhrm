@@ -179,6 +179,7 @@ return [
         // MaddHatter\LaravelFullcalendar\ServiceProvider::class,
 
         Spatie\Permission\PermissionServiceProvider::class,
+        Barryvdh\Snappy\ServiceProvider::class,
 
     ],
 
@@ -229,6 +230,8 @@ return [
         'Validator'    => Illuminate\Support\Facades\Validator::class,
         'View'         => Illuminate\Support\Facades\View::class,
         'Calendar'     => MaddHatter\LaravelFullcalendar\Facades\Calendar::class,
+        'PDF' => Barryvdh\Snappy\Facades\SnappyPdf::class,
+        'SnappyImage' => Barryvdh\Snappy\Facades\SnappyImage::class,
 
     ],
 

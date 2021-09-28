@@ -31,13 +31,14 @@
             <div class="col-12">
                 <div class="card">
                     <div class="card-body">
+                        @foreach($employees as $employee)
                         <form id="editEmployeeForm" action="{{route('employee.update',['id'=>$employee->id])}}" method="post" enctype="multipart/form-data">
                         {{csrf_field()}}
                             <div class="bs-stepper">
                                 <div class="row justify-content-between">
                                     <div class="bs-stepper-header" role="tablist">
                                         <!-- your steps here -->
-                                        <div class="step" data-target="#personal-part">
+                                        <div class="step" data-target="#personal-part" title="Personal Details">
                                           <button type="button" class="step-trigger p-0" role="tab" aria-controls="personal-part" id="personal-part-trigger">
                                             <span class="bs-stepper-circle">1</span>
                                           </button>
@@ -45,7 +46,7 @@
                                     </div>
                                     <div class="line"></div>
                                     <div class="bs-stepper-header" role="tablist">
-                                        <div class="step" data-target="#contact-part">
+                                        <div class="step" data-target="#contact-part" title="Contact Details">
                                           <button type="button" class="step-trigger p-0" role="tab" aria-controls="contact-part" id="contact-part-trigger">
                                             <span class="bs-stepper-circle">2</span>
                                           </button>
@@ -53,7 +54,7 @@
                                     </div>
                                     <div class="line"></div>
                                     <div class="bs-stepper-header" role="tablist">
-                                        <div class="step" data-target="#additional-part">
+                                        <div class="step" data-target="#additional-part" title="Additional Details">
                                           <button type="button" class="step-trigger p-0" role="tab" aria-controls="additional-part" id="additional-part-trigger">
                                             <span class="bs-stepper-circle">3</span>
                                           </button>
@@ -61,17 +62,25 @@
                                     </div>
                                     <div class="line"></div>
                                     <div class="bs-stepper-header" role="tablist">
-                                        <div class="step" data-target="#role-part">
-                                          <button type="button" class="step-trigger p-0" role="tab" aria-controls="role-part" id="role-part-trigger">
+                                        <div class="step" data-target="#salary-part" title="Salary Details">
+                                          <button type="button" class="step-trigger p-0" role="tab" aria-controls="salary-part" id="salary-part-trigger">
                                             <span class="bs-stepper-circle">4</span>
                                           </button>
                                         </div>
                                     </div>
                                     <div class="line"></div>
                                     <div class="bs-stepper-header" role="tablist">
-                                        <div class="step" data-target="#password-part">
-                                          <button type="button" class="step-trigger p-0" role="tab" aria-controls="password-part" id="password-part-trigger">
+                                        <div class="step" data-target="#role-part" title="Role Details">
+                                          <button type="button" class="step-trigger p-0" role="tab" aria-controls="role-part" id="role-part-trigger">
                                             <span class="bs-stepper-circle">5</span>
+                                          </button>
+                                        </div>
+                                    </div>
+                                    <div class="line"></div>
+                                    <div class="bs-stepper-header" role="tablist">
+                                        <div class="step" data-target="#password-part" title="Password Details">
+                                          <button type="button" class="step-trigger p-0" role="tab" aria-controls="password-part" id="password-part-trigger">
+                                            <span class="bs-stepper-circle">6</span>
                                           </button>
                                         </div>
                                     </div>
@@ -211,12 +220,6 @@
                                                     </select>
                                                 </div>
                                             </div>
-                                            <div class="col-md-6">
-                                                <div class="form-group">
-                                                    <label class="control-label">Salary</label>
-                                                    <input type="text" name="salary" value="{{old('basic_salary',$employee->basic_salary)}}"  class="form-control " placeholder="Enter Salary"/>
-                                                </div>
-                                            </div>
                                         </div>
                                         <hr>
                                         <div>
@@ -225,6 +228,7 @@
                                             <a class="btn btn-info float-right ml-1" onclick="stepper.next()" data-toggle="tooltip" title="Next Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-right"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Next</span></a>
                                         </div>
                                     </div>
+
                                     <div id="contact-part" class="content" role="tabpanel" aria-labelledby="contact-part-trigger">
                                         <h5 class="pt-3"><strong>Contact Information</strong></h5>
                                         <hr class="mt-0">
@@ -300,6 +304,7 @@
                                             <a class="btn btn-secondary float-right ml-1" onclick="stepper.previous()" data-toggle="tooltip" title="Previous Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-left"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Previous</span></a>
                                         </div>
                                     </div>
+
                                     <div id="additional-part" class="content" role="tabpanel" aria-labelledby="additional-part-trigger">
                                         <h5 class="pt-3"><strong>Joining / Exit</strong></h5>
                                         <hr class="mt-0">
@@ -336,6 +341,74 @@
                                             <a class="btn btn-secondary float-right ml-1" onclick="stepper.previous()" data-toggle="tooltip" title="Previous Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-left"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Previous</span></a>
                                         </div>
                                     </div>
+
+                                    <div id="salary-part" class="content" role="tabpanel" aria-labelledby="salary-part-trigger">
+                                        <h5 class="pt-3"><strong>Salary Details</strong></h5>
+                                        <hr class="mt-0">
+                                        <div class="row">
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Gross Salary</label>
+                                                    <input type="text" name="gross_salary" @if(isset($employee['salary']->gross_salary)) value="{{$employee['salary']->gross_salary}}" @else value="{{old('gross_salary')}}" @endif class="form-control" placeholder="Enter Gross Salary"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Basic Salary</label>
+                                                    <input type="text" name="basic_salary" @if(isset($employee['salary']->basic_salary)) value="{{$employee['salary']->basic_salary}}" @else value="{{old('basic_salary')}}" @endif class="form-control" placeholder="Enter Basic Salary"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Home Allowance</label>
+                                                    <input type="text" name="home_allowance" @if(isset($employee['salary']->home_allowance)) value="{{$employee['salary']->home_allowance}}" @else value="{{old('home_allowance')}}" @endif class="form-control" placeholder="Enter Home Allowance"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Medical Allowance</label>
+                                                    <input type="text" name="medical_allowance" @if(isset($employee['salary']->medical_allowance)) value="{{$employee['salary']->medical_allowance}}" @else value="{{old('medical_allowance')}}" @endif class="form-control" placeholder="Enter Medical Allowance"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Special Allowance</label>
+                                                    <input type="text" name="special_allowance" @if(isset($employee['salary']->special_allowance)) value="{{$employee['salary']->special_allowance}}" @else value="{{old('special_allowance')}}" @endif class="form-control" placeholder="Enter Special Allowance"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Meal Allowance</label>
+                                                    <input type="text" name="meal_allowance" @if(isset($employee['salary']->meal_allowance)) value="{{$employee['salary']->meal_allowance}}" @else value="{{old('meal_allowance')}}" @endif class="form-control" placeholder="Enter Meal Allowance"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">Conveyance Allowance</label>
+                                                    <input type="text" name="conveyance_allowance" @if(isset($employee['salary']->conveyance_allowance)) value="{{$employee['salary']->conveyance_allowance}}" @else value="{{old('conveyance_allowance')}}" @endif class="form-control" placeholder="Enter conveyance"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-md-6">
+                                                <div class="form-group">
+                                                    <label class="control-label">PF Deduction</label>
+                                                    <input type="text" name="pf_deduction" @if(isset($employee['salary']->pf_deduction)) value="{{$employee['salary']->pf_deduction}}" @else value="{{old('pf_deduction')}}" @endif class="form-control" placeholder="Enter Salary"/>
+                                                </div>
+                                            </div>
+                                            <div class="col-12">
+                                                <b>Note:</b> PF deduction is excluded from gross salary and it will be deducted at the time of salary generation.
+                                            </div>
+                                        </div>
+
+                                        <hr>
+                                        
+                                        <div>
+                                            <button type="button" onclick="window.location.href='{{route('employees')}}'" class="btn btn-default" data-toggle="tooltip" title="Cancel"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class=" fas fa-window-close"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Cancel</span></button>
+                                            <button class="btn btn-primary float-right ml-1 update" data-toggle="tooltip" title="Update Employee"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-check-circle"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Update</span></button>
+                                            <a class="btn btn-info float-right ml-1" onclick="stepper.next()" data-toggle="tooltip" title="Next Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-right"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Next</span></a>
+                                            <a class="btn btn-secondary float-right ml-1" onclick="stepper.previous()" data-toggle="tooltip" title="Previous Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-left"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Previous</span></a>
+                                        </div>
+                                    </div>
+
                                     <div id="role-part" class="content" role="tabpanel" aria-labelledby="role-part-trigger">
                                         <h5 class="pt-3"><strong>Roles</strong></h5>
                                         <hr class="mt-0">
@@ -371,6 +444,7 @@
                                             <a class="btn btn-secondary float-right ml-1" onclick="stepper.previous()" data-toggle="tooltip" title="Previous Step"><span class="d-xs-inline d-sm-none d-md-none d-lg-none"><i class="fas fa-chevron-left"></i></span><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Previous</span></a>
                                         </div>
                                     </div>
+
                                     <div id="password-part" class="content" role="tabpanel" aria-labelledby="password-part-trigger">
                                         <h5 class="pt-3"><strong>Change Password</strong></h5>
                                         <hr class="mt-0">
@@ -416,6 +490,7 @@
                                 </div>
                             </div>
                         </form>
+                        @endforeach
                     </div>
                 </div>
             </div>

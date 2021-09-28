@@ -178,8 +178,8 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Salary</label>
-                                        <input type="text" name="salary" aria-describedby="salary" value="{{ old('salary') }}"  class="form-control " placeholder="Enter Salary">
+                                        <label class="control-label">Gross Salary</label>
+                                        <input type="text" name="gross_salary" aria-describedby="gross_salary" value="{{ old('gross_salary') }}"  class="form-control " placeholder="Enter Salary">
                                     </div>
                                 </div>
                             </div>
@@ -275,7 +275,7 @@
                 official_email: {
                     required: true
                 },
-                salary: {
+                gross_salary: {
                     required: true
                 },
                 contact_no: {
@@ -305,7 +305,7 @@
                 lastname: "Last name is required",
                 personal_email: "Personal email is required",
                 official_email: "Official email is required",
-                salary: "Salary is required",
+                gross_salary: "Gross salary is required",
                 contact_no: "Contact number is required",
                 emergency_contact: "Emergency contact number is required",
                 date_of_birth: "Date of birth is required",

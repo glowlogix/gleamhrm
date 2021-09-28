@@ -49,6 +49,17 @@ Route::post('/slackbot', 'AttendanceController@newSlackbot')->name('slackbot');
 //Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
 
 Route::group(['middleware' => 'auth'], function () {
+    // Salary Slip routes
+    Route::Get('/slips/salary/{month?}', [
+        'uses' => 'SalarySlipController@index',
+        'as'   => 'salary.slips',
+    ]);
+
+    Route::Get('slip/salary/{data}/{month?}/{user_id}', [
+        'uses' => 'SalarySlipController@showSalarySlip',
+        'as'   => 'salary.slip',
+    ]);
+
     Route::group(['middleware' => 'allowed_permission'], function () {
         //dashboard
 

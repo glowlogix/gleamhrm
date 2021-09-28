@@ -11,6 +11,7 @@ use App\Mail\CompanyPoliciesMail;
 use App\Mail\EmailPasswordChange;
 use App\Mail\UpdateAccount;
 use App\OrganizationHierarchy;
+use App\Salary;
 use App\Team;
 use App\TeamMember;
 use Carbon\Carbon;
@@ -126,7 +127,7 @@ class EmployeeController extends Controller
             'personal_email'                 => $request->personal_email,
             'status'                         => 1,
             'employment_status'              => $request->employment_status,
-            'basic_salary'                   => $request->salary,
+            'gross_salary'                   => $request->gross_salary,
             'department_id'                  => $request->department_id,
             'designation'                    => strtolower($request->designation),
             'type'                           => $request->type,
@@ -153,6 +154,12 @@ class EmployeeController extends Controller
         // $this->storeEmployeeTimings($employee->id);
 
         $employee_id = $employee->id;
+
+        // salary create
+        $salary = new Salary();
+        $salary->gross_salary = $request->gross_salary;
+        $salary->employee_id = $employee_id;
+        $salary->save();
 
         $leave_types = LeaveType::get();
         $arr = [];
@@ -209,29 +216,31 @@ class EmployeeController extends Controller
 
     public function edit($id)
     {
-        $employee = Employee::find($id);
-        if (! $employee) {
-            abort(404);
-        }
+        $employees = Employee::where('id', $id)->with('salary')->get();
+        foreach ($employees as $employee) {
+            if (! $employee) {
+                abort(404);
+            }
 
-        $employee_role_id = ''; //todo
-        if ($employee->roles->count() > 0) {
-            $employee_role_id = $employee->roles[0]->id; //todo
-        }
+            $employee_role_id = ''; //todo
+            if ($employee->roles->count() > 0) {
+                $employee_role_id = $employee->roles[0]->id; //todo
+            }
 
-        $employee_permissions = [];
-        foreach ($employee->permissions as $key => $value) {
-            $employee_permissions[] = $value->id;
-        }
+            $employee_permissions = [];
+            foreach ($employee->permissions as $key => $value) {
+                $employee_permissions[] = $value->id;
+            }
 
-        $role = Role::find($id);
-        $permissions = [];
-        if ($role) {
-            $permissions = $role->permissions()->get();
+            $role = Role::find($id);
+            $permissions = [];
+            if ($role) {
+                $permissions = $role->permissions()->get();
+            }
         }
 
         return view('admin.employees.edit', ['title' => 'Update Employee'])
-            ->with('employee', $employee)
+            ->with('employees', $employees)
             ->with('branches', Branch::all())
             ->with('designations', Designation::all())
             ->with('departments', Department::all())
@@ -289,106 +298,140 @@ class EmployeeController extends Controller
         }
 
         $this->validate($request, [
+            'lastname'       => 'required',
             'official_email' => 'required|email|unique:employees,official_email,'.$id,
             'personal_email' => 'required|email|unique:employees,personal_email,'.$id,
             'contact_no'     => 'required|size:11|unique:employees,contact_no,'.$id,
             'picture'        => 'image|mimes:jpg,png,jpeg,gif,svg|max:1000',
         ]);
 
-        $employee = Employee::find($id);
+        $employeeWithSalary = Employee::where('id', $id)->with('salary')->get();
 
-        $employee->firstname = $request->firstname;
-        $employee->lastname = $request->lastname;
-        $employee->contact_no = $request->contact_no;
-        if ($request->picture != '') {
-            $picture = time().'_'.$request->picture->getClientOriginalName();
-            $request->picture->move('storage/employees/profile/', $picture);
-            $employee->picture = 'storage/employees/profile/'.$picture;
-        }
-        $employee->joining_date = $request->joining_date;
-        $employee->exit_date = $request->exit_date;
-        $employee->emergency_contact = $request->emergency_contact;
-        $employee->emergency_contact_relationship = $request->emergency_contact_relationship;
-        $employee->emergency_contact_address = $request->emergency_contact_address;
-        $employee->official_email = $request->official_email;
-        $employee->personal_email = $request->personal_email;
-        $employee->basic_salary = $request->salary;
-        $employee->designation = $request->designation;
-        $employee->employment_status = $request->employment_status;
-        $employee->type = $request->type;
-        if (! empty($request->branch_id)) {
-            $employee->branch_id = $request->branch_id;
-        }
-        $employee->identity_no = $request->identity_no;
-        $employee->date_of_birth = $request->date_of_birth;
-        $employee->current_address = $request->current_address;
-        $employee->permanent_address = $request->permanent_address;
-        $employee->city = $request->city;
-        $employee->department_id = $request->department_id;
-        $employee->gender = $request->gender;
-        $employee->status = $request->status;
+        foreach ($employeeWithSalary as $employee) {
+            $employee->firstname = $request->firstname;
+            $employee->lastname = $request->lastname;
+            $employee->contact_no = $request->contact_no;
+            if ($request->picture != '') {
+                $picture = time().'_'.$request->picture->getClientOriginalName();
+                $request->picture->move('storage/employees/profile/', $picture);
+                $employee->picture = 'storage/employees/profile/'.$picture;
+            }
+            $employee->joining_date = $request->joining_date;
+            $employee->exit_date = $request->exit_date;
+            $employee->emergency_contact = $request->emergency_contact;
+            $employee->emergency_contact_relationship = $request->emergency_contact_relationship;
+            $employee->emergency_contact_address = $request->emergency_contact_address;
+            $employee->official_email = $request->official_email;
+            $employee->personal_email = $request->personal_email;
+            $employee->gross_salary = $request->gross_salary;
+            $employee->designation = $request->designation;
+            $employee->employment_status = $request->employment_status;
+            $employee->type = $request->type;
+            if (! empty($request->branch_id)) {
+                $employee->branch_id = $request->branch_id;
+            }
+            $employee->identity_no = $request->identity_no;
+            $employee->date_of_birth = $request->date_of_birth;
+            $employee->current_address = $request->current_address;
+            $employee->permanent_address = $request->permanent_address;
+            $employee->city = $request->city;
+            $employee->department_id = $request->department_id;
+            $employee->gender = $request->gender;
+            $employee->status = $request->status;
 
-        if (! empty($request->password)) {
-            $employee->password = Hash::make($request->password);
-        }
+            if (! empty($request->password)) {
+                $employee->password = Hash::make($request->password);
+            }
 
-        if ($request->employee_status === '1') {
-            $employee->status = 1;
-        } elseif ($request->employee_status === '0') {
-            $employee->status = 0;
-        }
+            if ($request->employee_status === '1') {
+                $employee->status = 1;
+            } elseif ($request->employee_status === '0') {
+                $employee->status = 0;
+            }
 
-        $when = Carbon::now()->addMinutes(10);
+            $when = Carbon::now()->addMinutes(10);
 
-        try {
-            Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id, $request->password));
-        } catch (\Exception $e) {
-            Session::flash('error', $e->getMessage());
-        }
+            try {
+                Mail::to($request->official_email)->later($when, new UpdateAccount($employee->id, $request->password));
+            } catch (\Exception $e) {
+                Session::flash('error', $e->getMessage());
+            }
 
-        if ($employee->roles->count() > 0) {
-            $old_role = $employee->roles[0];
-            $employee->removeRole($old_role);
-        }
+            if ($employee->roles->count() > 0) {
+                $old_role = $employee->roles[0];
+                $employee->removeRole($old_role);
+            }
 
-        if (! empty($request->role_id)) {
-            $role = Role::find($request->role_id);
-            $employee->assignRole($role);
-        }
+            if (! empty($request->role_id)) {
+                $role = Role::find($request->role_id);
+                $employee->assignRole($role);
+            }
 
-        if ($request->permissions) {
-            foreach ($request->permissions as $permission_id) {
-                if (isset($request->permissions_checked)) {
-                    if (in_array($permission_id, $request->permissions_checked)) {
-                        $employee->givePermissionTo($permission_id);
-                    } else {
-                        $employee->revokePermissionTo($permission_id);
+            if ($request->permissions) {
+                foreach ($request->permissions as $permission_id) {
+                    if (isset($request->permissions_checked)) {
+                        if (in_array($permission_id, $request->permissions_checked)) {
+                            $employee->givePermissionTo($permission_id);
+                        } else {
+                            $employee->revokePermissionTo($permission_id);
+                        }
                     }
                 }
             }
-        }
-        $employee->save();
+            $employee->save();
 
-        if ($request->manager) {
-            $manager = OrganizationHierarchy::where('employee_id', $employee->id)->first();
-            if ($manager == '') {
-                $org_chart = new OrganizationHierarchy();
-                $org_chart->employee_id = $employee->id;
-                $org_chart->line_manager_id = $request->manager;
-                $org_chart->save();
-            } else {
-                $manager->line_manager_id = $request->manager;
-                $manager->save();
+            if ($request->manager) {
+                $manager = OrganizationHierarchy::where('employee_id', $employee->id)->first();
+                if ($manager == '') {
+                    $org_chart = new OrganizationHierarchy();
+                    $org_chart->employee_id = $employee->id;
+                    $org_chart->line_manager_id = $request->manager;
+                    $org_chart->save();
+                } else {
+                    $manager->line_manager_id = $request->manager;
+                    $manager->save();
+                }
             }
-        }
 
-        if ($request->team) {
-            $team_member = TeamMember::where('employee_id', $employee->id)->where('team_id', $request->team)->first();
-            if ($team_member == '') {
-                $team = new TeamMember();
-                $team->team_id = $request->team;
-                $team->employee_id = $employee->id;
-                $team->save();
+            if ($request->team) {
+                $team_member = TeamMember::where('employee_id', $employee->id)->where('team_id', $request->team)->first();
+                if ($team_member == '') {
+                    $team = new TeamMember();
+                    $team->team_id = $request->team;
+                    $team->employee_id = $employee->id;
+                    $team->save();
+                }
+            }
+
+            $sum = $request->basic_salary + $request->home_allowance + $request->medical_allowance + $request->special_allowance + $request->meal_allowance + $request->conveyance_allowance;
+            if ($sum == $request->gross_salary) {
+                if ($employee['salary'] != '') {
+                    $employee['salary']->gross_salary = $request->gross_salary;
+                    $employee['salary']->basic_salary = $request->basic_salary;
+                    $employee['salary']->home_allowance = $request->home_allowance;
+                    $employee['salary']->medical_allowance = $request->medical_allowance;
+                    $employee['salary']->special_allowance = $request->special_allowance;
+                    $employee['salary']->meal_allowance = $request->meal_allowance;
+                    $employee['salary']->conveyance_allowance = $request->conveyance_allowance;
+                    $employee['salary']->pf_deduction = $request->pf_deduction;
+                    $employee['salary']->save();
+                } else {
+                    $salary = new Salary();
+                    $salary->gross_salary = $request->gross_salary;
+                    $salary->basic_salary = $request->basic_salary;
+                    $salary->home_allowance = $request->home_allowance;
+                    $salary->medical_allowance = $request->medical_allowance;
+                    $salary->special_allowance = $request->special_allowance;
+                    $salary->meal_allowance = $request->meal_allowance;
+                    $salary->conveyance_allowance = $request->conveyance_allowance;
+                    $salary->pf_deduction = $request->pf_deduction;
+                    $salary->employee_id = $employee->id;
+                    $salary->save();
+                }
+            } else {
+                Session::flash('error', 'Sum of salary details are not equal to gross salary');
+
+                return redirect()->back();
             }
         }
 
