@@ -145,6 +145,7 @@
                                                     <div class="modal-content">
                                                         <form id="decisionForm{{ $employee['attendanceSummary'][0]->id }}" action="{{route('update.attendance.correction')}}" method='POST'>
                                                             {{ csrf_field() }}
+                                                            <input type="text" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" hidden>
 
                                                             <div class="modal-header">
                                                                 <h4 class="modal-title">Change Attendance</h4>
@@ -188,7 +189,7 @@
                                                                 <div class="row">
                                                                     <div class="col-md-12">
                                                                         <div class="form-group">
-                                                                            <label class="control-label">Decision</label>
+                                                                            <label class="control-label">Decision<span class="text-danger">*</span></label>
                                                                             <select class="form-control custom-select" data-placeholder="Select Decision" tabindex="1" name="decision" id="decision{{ $employee['attendanceSummary'][0]->id }}" onchange="check('decision'+{!! $employee['attendanceSummary'][0]->id !!});">
                                                                                 <option value="">Select Decision</option>
                                                                                 <option value="Approved">Approve</option>

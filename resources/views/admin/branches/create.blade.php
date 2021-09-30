@@ -36,31 +36,31 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Name</label>
+										<label class="control-label">Name<span class="text-danger">*</span></label>
 										<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Timing Start</label>
+										<label class="control-label">Timing Start<span class="text-danger">*</span></label>
 										<input class="form-control" type="time" name="timing_start" placeholder="Enter Start Timing" id="timing_start" value="{{old('timing_start')}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Timing OFF</label>
+										<label class="control-label">Timing OFF<span class="text-danger">*</span></label>
 										<input class="form-control" type="time" name="timing_off" placeholder="Enter Off Timing"  id="timing_off" value="{{old('timing_off')}}" />
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Phone#</label>
+										<label class="control-label">Phone#<span class="text-danger">*</span></label>
 										<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number')}}">
 									</div>
 								</div>
 								<div class="col-md-12">
 									<div class="form-group">
-										<label class="control-label">Address</label>
+										<label class="control-label">Address<span class="text-danger">*</span></label>
 										<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address')}}">
 									</div>
 								</div>
@@ -68,8 +68,8 @@
 									<div class="form-group">
 										<label class="control-label">Weekend Days</label>
 										<select multiple class="form-control custom-select" data-placeholder="Choose Skills" tabindex="1" name="weekend[]">
-										@foreach($weekDays as $weekday)
-											<option value="{{$weekday}}">{{$weekday}}</option>
+											@foreach($weekDays as $weekday)
+												<option value="{{$weekday}}">{{$weekday}}</option>
 											@endforeach
 										</select>
 									</div>
@@ -94,27 +94,27 @@
 	  	$('#createBranchForm').validate({
 		    rules: {
 		    	name: {
-		        	required: true
+		      	required: true
 		     	},
-				timing_start: {
-		        	required: true
+					timing_start: {
+			      required: true
+			    },
+					timing_off: {
+			      required: true
+			    },
+					address: {
+			      required: true
+			    },
+					phone_number: {
+		        required: true
 		     	},
-				timing_off: {
-		        	required: true
-		     	},
-				address: {
-		        	required: true
-		     	},
-				phone_number: {
-		        	required: true
-		     	}
 		    },
 		    messages: {
 		    	name: "Name is required",
-				timing_start: "Start time is required",
-				timing_off: "Off time is required",
-				address: "Address is required",
-				phone_number: "Phone number is required"
+					timing_start: "Start time is required",
+					timing_off: "Off time is required",
+					address: "Address is required",
+					phone_number: "Phone number is required",
 		    },
 		    errorElement: 'span',
 		    errorPlacement: function (error, element) {

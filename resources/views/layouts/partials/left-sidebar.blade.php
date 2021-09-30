@@ -127,8 +127,8 @@
             </ul>
           </li>
         @endif
-        <li @if(request()->is('attendance/today_timeline') || request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('leave/admin_create/*') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-item menu-open" @else class="nav-item" @endif>
-          <a href="#" @if(request()->is('attendance/today_timeline') || request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('leave/admin_create/*') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-link active" @else class="nav-link" @endif>
+        <li @if(request()->is('attendance/today_timeline') || request()->is('my/attendance') || request()->is('my/attendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('leave/admin_create/*') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if(request()->is('attendance/today_timeline') || request()->is('my/attendance') || request()->is('my/attendance/*') || request()->is('add/attendance/*/*') || request()->is('attendance/create_break/*/*') || request()->is('attendance/timeline') || request()->is('attendance/create_break') || request()->is('leave/create') || request()->is('leave/admin_create') || request()->is('leave/admin_create/*') || request()->is('my_leaves') || request()->is('employee_leaves') || str_contains(Request::fullUrl(),'leave/edit')|| str_contains(Request::fullUrl(),'leave/show')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon mdi mdi-alarm-check pl-1"></i>
             <p>
               Attendance
@@ -136,7 +136,7 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            @if(Auth::user()->isAllowed('AttendanceController:today_timeline'))
+            @if(Auth::user()->isAllowed('AttendanceController:todayTimeline'))
               <li class="nav-item">
                 <a href="{{route('today_timeline')}}" @if(request()->is('attendance/today_timeline') || request()->is('attendance/create_break/*/*')) class="nav-link active" @else class="nav-link" @endif>
                   <i class="far fa-circle nav-icon"></i>
@@ -145,12 +145,12 @@
               </li>
             @endif
             <li class="nav-item">
-              <a href="{{route('myAttendance')}}" @if(request()->is('attendance/myAttendance') || request()->is('attendance/myAttendance/*') || request()->is('add/attendance/*/*')) class="nav-link active" @else class="nav-link" @endif>
+              <a href="{{route('myAttendance')}}" @if(request()->is('my/attendance') || request()->is('my/attendance/*') || request()->is('add/attendance/*/*')) class="nav-link active" @else class="nav-link" @endif>
                 <i class="far fa-circle nav-icon"></i>
                 <p>My Attendance</p>
               </a>
             </li>
-            @if(Auth::user()->isAllowed('AttendanceController:timeline'))
+            @if(Auth::user()->isAllowed('AttendanceController:showTimeline'))
               <li class="nav-item">
                 <a href="{{route('timeline')}}" @if(request()->is('attendance/timeline') || request()->is('attendance/create_break')) class="nav-link active" @else class="nav-link" @endif>
                   <i class="far fa-circle nav-icon"></i>
@@ -174,8 +174,8 @@
             </li>
           </ul>
         </li>
-        <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types') || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform')) class="nav-item menu-open" @else class="nav-item" @endif>
-          <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leave_types')  || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform')) class="nav-link active" @else class="nav-link" @endif>
+        <li @if(str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leaveTypes') || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform') || request()->is('platform/edit')) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if( str_contains(Request::fullUrl(),'documents') || str_contains(Request::fullUrl(),'branch') || str_contains(Request::fullUrl(),'department') || str_contains(Request::fullUrl(),'designations') || request()->is('leaveTypes')  || request()->is('skills') || request()->is('assign_skill/edit/*') || request()->is('vendors/category') || request()->is('platform') || request()->is('platform/edit')) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon fas fa-cog"></i>
             <p>
               Settings
@@ -226,7 +226,7 @@
               @endif
               @if(Auth::user()->isAllowed('LeaveTypeController:index'))
                 <li class="nav-item">
-                  <a href="{{route('leave_type.index')}}" @if(request()->is('leave_types')) class="nav-link active" @else class="nav-link" @endif>
+                  <a href="{{route('leave_type.index')}}" @if(request()->is('leaveTypes')) class="nav-link active" @else class="nav-link" @endif>
                     <i class="far fa-circle nav-icon"></i>
                     <p>Leave Management</p>
                   </a>
@@ -242,7 +242,7 @@
               @endif
             @endif
             <li class="nav-item">
-              <a href="{{route('admin.platform.index')}}" @if(request()->is('platform')) class="nav-link active" @else class="nav-link" @endif>
+              <a href="{{route('admin.platform.index')}}" @if(request()->is('platform') || request()->is('platform/edit')) class="nav-link active" @else class="nav-link" @endif>
                 <i class="far fa-circle nav-icon"></i>
                 <p>Platform Settings</p>
               </a>
@@ -293,8 +293,8 @@
           </ul>
         </li>
         @if(Auth::user()->isAllowed('RolePermissionsController:index'))
-        <li @if(request()->is('rolespermissions') || request()->is('rolespermissions/create') || request()->is('rolespermissions/edit/*'))) class="nav-item menu-open" @else class="nav-item" @endif>
-          <a href="#" @if(request()->is('rolespermissions') || request()->is('rolespermissions/create') || request()->is('rolespermissions/edit/*'))) class="nav-link active" @else class="nav-link" @endif>
+        <li @if(request()->is('roles') || request()->is('role/create') || request()->is('role/edit/*'))) class="nav-item menu-open" @else class="nav-item" @endif>
+          <a href="#" @if(request()->is('roles') || request()->is('role/create') || request()->is('role/edit/*'))) class="nav-link active" @else class="nav-link" @endif>
             <i class="nav-icon mdi mdi-apps pl-1"></i>
             <p>
               Manage Roles
@@ -304,7 +304,7 @@
           <ul class="nav nav-treeview">
             @if(Auth::user()->isAllowed('RolePermissionsController:index'))
               <li class="nav-item">
-                <a href="{{route('roles_permissions')}}" @if(request()->is('rolespermissions') || request()->is('rolespermissions/create') || request()->is('rolespermissions/edit/*'))) class="nav-link active" @else class="nav-link" @endif>
+                <a href="{{route('roles_permissions')}}" @if(request()->is('roles') || request()->is('role/create') || request()->is('role/edit/*'))) class="nav-link active" @else class="nav-link" @endif>
                   <i class="far fa-circle nav-icon"></i>
                   <p>Roles And Permissions</p>
                 </a>
@@ -347,16 +347,12 @@
   <!-- /.sidebar -->
     <!-- Sidebar Footer Items -->
     <hr>
-    <div class="row col-12 bg-primary pb-2 pt-2" style="position: absolute; bottom: 0px; left: 0px; margin-left: 0px; padding-left: 0px;">
-      <a href="{{route('profile.index')}}" class="link col-4 text-center text-light" title="Account Setting">
+    <div class="row col-12 justify-content-between bg-primary pb-2 pt-2 pl-3 pr-3" style="position: absolute; bottom: 0px; left: 0px; margin-left: 0px; padding-left: 0px;">
+      <a href="{{route('profile.index')}}" class="link text-center text-light" title="Account Setting">
         <i class="fas fa-cog"></i>
       </a>
 
-      <a href="https://www.zoho.com/mail" target="_blank" class="link col-4 text-center text-light" title="Email">
-        <i class="mdi mdi-gmail"></i>
-      </a>
-
-      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();" class="link col-4 text-center text-light" title="Logout">
+      <a href="{{ route('logout') }}" onclick="event.preventDefault(); document.getElementById('sidebar-logout').submit();" class="link text-center text-light" title="Logout">
         <i class="fa fa-power-off"></i>
       </a>
       <form id="sidebar-logout" action="{{ route('logout') }}" method="POST" style="display: none;">{{ csrf_field() }}</form>

@@ -103,25 +103,25 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">First Name</label>
+                                                    <label class="control-label">First Name<span class="text-danger">*</span></label>
                                                     <input type="text"  name="firstname" value="{{old('firstname', $employee->firstname)}}" class="form-control" placeholder="Enter First Name"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Last Name</label>
+                                                    <label class="control-label">Last Name<span class="text-danger">*</span></label>
                                                     <input type="text" name="lastname" value="{{old('lastname',$employee->lastname)}}" class="form-control" placeholder="Enter Last Name"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Personal Email</label>
+                                                    <label class="control-label">Personal Email<span class="text-danger">*</span></label>
                                                     <input type="email" name="personal_email" value="{{old('personal_email',$employee->personal_email)}}"  class="form-control" placeholder="Enter Personal Email"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Official Email</label>
+                                                    <label class="control-label">Official Email<span class="text-danger">*</span></label>
                                                     <input type="email" name="official_email" value="{{old('official_email',$employee->official_email)}}" class="form-control" placeholder="Enter Official Email"/>
                                                 </div>
                                             </div>
@@ -235,13 +235,13 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Contact#</label>
+                                                    <label class="control-label">Contact#<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" placeholder="Enter Contact Number" name="contact_no" value="{{old('contact_no',$employee->contact_no)}}">
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Identity#</label>
+                                                    <label class="control-label">Identity#<span class="text-danger">*</span></label>
                                                     <input type="text"  class="form-control " placeholder="Enter Identity Number" name="identity_no" value="{{old('identity_no',$employee->identity_no)}}" maxlength="13" />
                                                 </div>
                                             </div>
@@ -251,13 +251,13 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Emergency Contact#</label>
+                                                    <label class="control-label">Emergency Contact#<span class="text-danger">*</span></label>
                                                     <input type="text"  class="form-control " placeholder="Enter Emergency Contact Number" name="emergency_contact" value="{{old('emergency_contact',$employee->emergency_contact)}}"/>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Emergency Contact Relationship</label>
+                                                    <label class="control-label">Emergency Contact Relationship<span class="text-danger">*</span></label>
                                                     <select class="form-control custom-select" name="emergency_contact_relationship">
                                                         <option value="father" @if($employee->emergency_contact_relationship == "father") selected @endif>Father</option>
                                                         <option value="brother" @if($employee->emergency_contact_relationship == "brother") selected @endif>Brother</option>
@@ -267,7 +267,7 @@
                                             </div>
                                             <div class="col-lg-6 col-md-6 col-sm-12">
                                                 <div class="form-group">
-                                                    <label class="control-label">Emergency Contact Address</label>
+                                                    <label class="control-label">Emergency Contact Address<span class="text-danger">*</span></label>
                                                     <textarea rows="4" class="form-control" placeholder="Enter Emergency Contact Address" name="emergency_contact_address">{{ $employee->emergency_contact_address }}</textarea>
                                                 </div>
                                             </div>
@@ -277,13 +277,13 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Current Address</label>
+                                                    <label class="control-label">Current Address<span class="text-danger">*</span></label>
                                                     <textarea rows="4" class="form-control " placeholder="Enter Current Address" name="current_address" value="{{old('current_address',$employee->current_address)}}">{{$employee->current_address}}</textarea>
                                                 </div>
                                             </div>
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Permanent Address</label>
+                                                    <label class="control-label">Permanent Address<span class="text-danger">*</span></label>
                                                     <textarea rows="4"  class="form-control "  placeholder="Enter Permanent Address" name="permanent_address" value="{{old('permanent_address',$employee->permanent_address)}}" >{{$employee->permanent_address}}</textarea>
                                                 </div>
                                             </div>
@@ -291,7 +291,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">City</label>
+                                                    <label class="control-label">City<span class="text-danger">*</span></label>
                                                     <input type="text" class="form-control" placeholder="Enter City" name="city" value="{{old('city',$employee->city)}}" required />
                                                 </div>
                                             </div>
@@ -348,7 +348,7 @@
                                         <div class="row">
                                             <div class="col-md-6">
                                                 <div class="form-group">
-                                                    <label class="control-label">Gross Salary</label>
+                                                    <label class="control-label">Gross Salary<span class="text-danger">*</span></label>
                                                     <input type="text" name="gross_salary" @if(isset($employee['salary']->gross_salary)) value="{{$employee['salary']->gross_salary}}" @else value="{{old('gross_salary')}}" @endif class="form-control" placeholder="Enter Gross Salary"/>
                                                 </div>
                                             </div>
@@ -519,7 +519,10 @@
                 official_email: {
                     required: true
                 },
-                salary: {
+                gross_salary: {
+                    required: true
+                },
+                contact_no: {
                     required: true
                 },
                 emergency_contact: {
@@ -537,22 +540,35 @@
                 current_address: {
                     required: true
                 },
-                old_password: {
+                picture: {
                     required: true
-                }
+                },
+                identity_no: {
+                    required: true
+                },
+                emergency_contact_relationship: {
+                    required: true
+                },
+                emergency_contact_address: {
+                    required: true
+                },
             },
             messages: {
                 firstname: "First name is required",
                 lastname: "Last name is required",
                 personal_email: "Personal email is required",
                 official_email: "Official email is required",
-                salary: "Salary is required",
+                gross_salary: "Gross salary is required",
+                contact_no: "Contact number is required",
                 emergency_contact: "Emergency contact number is required",
                 date_of_birth: "Date of birth is required",
                 city: "City is required",
                 permanent_address: "Permanent address is required",
                 current_address: "Current address is required",
-                old_password: "Admin password is required"
+                picture: "Picture is required",
+                identity_no: "Identity number is required",
+                emergency_contact_relationship: "Emergency contact relationship is required",
+                emergency_contact_address: "Emergency contact address is required",
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -583,20 +599,54 @@
     });
 
     $(document).ready(function () {
+        if({!! $employee_role_id !!} != 0){
+            var role_id = {!! $employee_role_id !!};
+
+            if (role_id != '') {
+                $('#permissions').load("{{url('role/getPermissionsFromRole')}}/" + role_id + "/{{$employee->id}}");
+                jQuery.ajax({
+                    type: "GET",
+                    url: "/role/checkPermissions/" + role_id + "/{{$employee->id}}",
+                    data: {
+                        role_id: role_id,
+                        employee_id: {!! $employee->id !!},
+                    },
+                    success: function (data) {
+                        console.log(data);
+                        if(data == 1)
+                        {
+                            document.getElementById('select_all_checkbox').style.display = 'block';
+                            document.getElementById('hr_line').style.display = 'block';
+                        }
+                        else
+                        {
+                            document.getElementById('select_all_checkbox').style.display = 'none';
+                            document.getElementById('hr_line').style.display = 'none';
+                        }
+                    }
+                });
+            }
+            else{
+                $('#permissions').html("");
+                document.getElementById('select_all_checkbox').style.display = 'none';
+                document.getElementById('hr_line').style.display = 'none';
+            }
+        }
         $(function () {
             $("#role").on("change",function() {
                 var role_id = this.value;
 
                 if (role_id != '') {
-                    $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id + "/{{$employee->id}}");
+                    $('#permissions').load("{{url('role/getPermissionsFromRole')}}/" + role_id + "/{{$employee->id}}");
                     jQuery.ajax({
                         type: "GET",
-                        url: "/rolespermissions/checkPermissions/" + role_id + "/{{$employee->id}}",
+                        url: "/role/checkPermissions/" + role_id + "/{{$employee->id}}",
                         data: {
                             role_id: role_id,
                             employee_id: {!! $employee->id !!},
                         },
                         success: function (data) {
+                            console.log(data);
                             if(data == 1)
                             {
                                 document.getElementById('select_all_checkbox').style.display = 'block';

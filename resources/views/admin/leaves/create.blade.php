@@ -33,13 +33,14 @@
 					<div class="card-body">
 						<form id="applyLeaveForm" action="{{route('leaves.store')}}" method="post">
 							{{csrf_field()}}
+              <input type="text" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" hidden>
 							<div class="form-body">
 								<h5><strong>Create Leave</strong></h5>
                         		<hr class="mt-0">
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label">Leave Type</label>
+											<label class="control-label">Leave Type<span class="text-danger">*</span></label>
 											<select class="form-control custom-select" name="leave_type" value="{{old('leave_type')}}">
 												<option value="">Choose Leave Type</option>
 												@foreach($leave_types as $leave_type)
@@ -59,13 +60,13 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label">From Date</label>
+											<label class="control-label">From Date<span class="text-danger">*</span></label>
 											<input type="date" class="form-control"   name="datefrom" value="{{old('datefrom')}}"  min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
 										</div>
 									</div>
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label">To Date</label>
+											<label class="control-label">To Date<span class="text-danger">*</span></label>
 											<input type="date" class="form-control" placeholder="dd/mm/yyyy" name="dateto" value="{{old('dateto')}}" min="{{Carbon\Carbon::now()->format('Y-m-d')}}">
 										</div>
 									</div>
@@ -73,7 +74,7 @@
 								<div class="row">
 									<div class="col-md-6">
 										<div class="form-group">
-											<label class="control-label">Back up/ Point of Contact:</label>
+											<label class="control-label">Back up/ Point of Contact<span class="text-danger">*</span></label>
 											<select class="form-control custom-select" name="point_of_contact">
 												<option value="">Select Backup Contact</option>
 												@foreach($employees as $employee)
@@ -95,13 +96,13 @@
 								<div class="row">
 									<div class="col-md-12">
 										<div class="form-group">
-											<label class="control-label">Subject</label>
+											<label class="control-label">Subject<span class="text-danger">*</span></label>
 											<input type="text" class="form-control" placeholder="Enter Subject Here" name="subject" value="{{old('subject')}}">
 										</div>
 									</div>
 									<div class="col-md-12">
 										<div class="form-group">
-											<label class="control-label">Description</label>
+											<label class="control-label">Description<span class="text-danger">*</span></label>
 											<textarea type="text" class="form-control" rows="3" name="description" placeholder="Enter Description Here">{{old('description')}}</textarea>
 										</div>
 									</div>
@@ -123,23 +124,31 @@
 	  $('#applyLeaveForm').validate({
 	    rules: {
 	    	leave_type: {
-				required: true,
-			},
-			datefrom: {
-				required: true,
-			},
-			dateto: {
-				required: true,
-			},
-			point_of_contact: {
-				required: true,
-			}
+					required: true,
+				},
+				datefrom: {
+					required: true,
+				},
+				dateto: {
+					required: true,
+				},
+				point_of_contact: {
+					required: true,
+				},
+				subject: {
+					required: true,
+				},
+				description: {
+					required: true,
+				},
 	    },
 	    messages: {
 	    	leave_type: "Leave type is required",
-			datefrom: "Date-from is required",
-			dateto: "Date-to is required",
-			point_of_contact: "Backup contact is required"
+				datefrom: "Date-from is required",
+				dateto: "Date-to is required",
+				point_of_contact: "Backup contact is required",
+				subject: "Subject is required",
+				description: "Description is required",
 	    },
 	    errorElement: 'span',
 	    errorPlacement: function (error, element) {

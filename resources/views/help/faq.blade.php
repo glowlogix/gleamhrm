@@ -106,17 +106,17 @@
                                                 </div>
                                                 <div class="modal-body">
                                                     <div class="form-group">
-                                                        <label class="control-label">Question</label>
+                                                        <label class="control-label">Question<span class="text-danger">*</span></label>
                                                         <input  type="text" name="question" placeholder="Enter question here" class="form-control" value="{{$faq->question}}" id="question{{$faq->id}}" oninput="check('question'+{!! $faq->id !!});">
                                                         <span id="question-error{{$faq->id}}" class="error invalid-feedback">Question is required</span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label">Answer</label>
+                                                        <label class="control-label">Answer<span class="text-danger">*</span></label>
                                                         <textarea rows="5" name="answer" placeholder="Enter answer here" class="form-control" id="answer{{$faq->id}}" oninput="check('answer'+{!! $faq->id !!});">{{$faq->answer}}</textarea>
                                                         <span id="answer-error{{$faq->id}}" class="error invalid-feedback">Answer is required</span>
                                                     </div>
                                                     <div class="form-group">
-                                                        <label class="control-label">FAQ Category</label>
+                                                        <label class="control-label">FAQ Category<span class="text-danger">*</span></label>
                                                         <select name="category" class="form-control" id="category{{$faq->id}}" oninput="check('category'+{!! $faq->id !!});">
                                                             <option value="">Select Category</option>
                                                             @foreach($faq_categories as $faq_category)
@@ -179,7 +179,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Name</label>
+                            <label class="control-label">Name<span class="text-danger">*</span></label>
                             <input  type="text" name="category_name" placeholder="Enter Category Name" class="form-control">
                         </div>
                     </div>
@@ -204,15 +204,15 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Question</label>
+                            <label class="control-label">Question<span class="text-danger">*</span></label>
                             <input  type="text" name="question" placeholder="Enter question here" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Answer</label>
+                            <label class="control-label">Answer<span class="text-danger">*</span></label>
                             <textarea rows="5" name="answer" placeholder="Enter answer here" class="form-control"></textarea>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">FAQ Category</label>
+                            <label class="control-label">FAQ Category<span class="text-danger">*</span></label>
                             <select  name="category" class="form-control">
                                     <option value="">Select Category</option>
                                 @foreach($faq_categories as $faq_category)

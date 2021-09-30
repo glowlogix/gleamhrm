@@ -78,12 +78,12 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label class="control-label">Name</label>
+                                                                <label class="control-label">Name<span class="text-danger">*</span></label>
                                                                 <input  type="text" name="name" value="{{old('name',$leave_type->name)}}" placeholder="Enter Name Here" class="form-control" id="leave_type_name{{$leave_type->id}}" oninput="check('leave_type_name'+{!! $leave_type->id !!});">
                                                                 <span id="leave_type_name-error{{$leave_type->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Count</label>
+                                                                <label class="control-label">Count<span class="text-danger">*</span></label>
                                                                 <input  type="number" name="amount" value="{{old('count',$leave_type->count)}}" placeholder="Enter Amount Here" class="form-control" id="leave_type_amount{{$leave_type->id}}" oninput="check('leave_type_amount'+{!! $leave_type->id !!});">
                                                                 <span id="leave_type_amount-error{{$leave_type->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
@@ -147,16 +147,16 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Name</label>
+                            <label class="control-label">Name<span class="text-danger">*</span></label>
                             <input  type="text" name="name" placeholder="Enter Name Here" class="form-control">
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Count</label>
+                            <label class="control-label">Count<span class="text-danger">*</span></label>
                             <input  type="number" name="amount" placeholder="Enter Amount Here" class="form-control">
                         </div>
                         <div class="form-group">
                             <label class="control-label">Status</label>
-                            <select  name="status"  class="form-control">
+                            <select name="status" class="form-control">
                                 <option value="1">Active</option>
                                 <option value="0">UnActive</option>
                             </select>

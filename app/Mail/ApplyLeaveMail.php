@@ -13,7 +13,7 @@ class ApplyLeaveMail extends Mailable
     use SerializesModels;
     private $request;
     private $leave;
-    private $approverEmployee;
+    private $employee_email;
 
     /**
      * Create a new message instance.
@@ -22,11 +22,11 @@ class ApplyLeaveMail extends Mailable
      * @param  string  $password
      * @param $type
      */
-    public function __construct($request, $leave, $approverEmployee)
+    public function __construct($request, $leave, $employee_email)
     {
         $this->request = $request;
         $this->leave = $leave;
-        $this->approverEmployee = $approverEmployee;
+        $this->employee_email = $employee_email;
     }
 
     /**
@@ -38,9 +38,8 @@ class ApplyLeaveMail extends Mailable
     {
         $leaveEmployee = Employee::find($this->leave->employee_id);
 
-        return $this->view('emails.leave_apply')
+        return $this->from($this->employee_email)->view('emails.leave_apply')
         ->with('request', $this->request)
-        ->with('approverEmployee', $this->approverEmployee)
         ->with('leaveEmployee', $leaveEmployee);
     }
 }

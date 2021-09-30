@@ -39,7 +39,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Leave Type</label>
+                                            <label class="control-label">Leave Type<span class="text-danger">*</span></label>
                                             <select class="form-control custom-select" name="leave_type">
                                                 <option value="">Select Leave Type</option>
                                                 @foreach($leave_types as $leave_type)
@@ -50,7 +50,7 @@
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Line Manager</label>
+                                            <label class="control-label">Line Manager<span class="text-danger">*</span></label>
                                             <input type="hidden" name="line_manager" value="{{isset($line_manager->id) ? $line_manager->id : ''}}">
                                             <input type="text" class="form-control" value="{{isset($line_manager->id) ? $line_manager->firstname. '' .$line_manager->lastname : ''}}" disabled>
                                         </div>
@@ -59,13 +59,13 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">From Date</label>
+                                            <label class="control-label">From Date<span class="text-danger">*</span></label>
                                             <input type='date' class="form-control" name="datefrom" value="{{Carbon\Carbon::parse($leave->datefrom)->format('Y-m-d')}}" />
                                         </div>
                                     </div>
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">To Date</label>
+                                            <label class="control-label">To Date<span class="text-danger">*</span></label>
                                             <input type='date' class="form-control" name="dateto" value="{{Carbon\Carbon::parse($leave->dateto)->format('Y-m-d')}}"/>
                                         </div>
                                     </div>
@@ -73,7 +73,7 @@
                                 <div class="row">
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Back up/ Point of Contact:</label>
+                                            <label class="control-label">Back up/ Point of Contact<span class="text-danger">*</span></label>
                                             <select class="form-control custom-select" name="point_of_contact">
                                                 <option value="">Select Backup Contact</option>
                                                 @foreach($employees as $employee)
@@ -92,13 +92,13 @@
                                 <div class="row">
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                            <label class="control-label">Subject</label>
+                                            <label class="control-label">Subject<span class="text-danger">*</span></label>
                                             <input type="text" class="form-control" name="subject" value="{{$leave->subject}}">
                                       </div>
                                     </div>
                                     <div class="col-md-12">
                                       <div class="form-group">
-                                            <label class="control-label">Description</label>
+                                            <label class="control-label">Description<span class="text-danger">*</span></label>
                                             <textarea type="text" class="form-control" rows="3" name="description" placeholder="Enter Description Here">{{$leave->description}}</textarea>
                                       </div>
                                     </div>
@@ -129,13 +129,21 @@
             },
             point_of_contact: {
                 required: true,
-            }
+            },
+            subject: {
+                required: true,
+            },
+            description: {
+                required: true,
+            },
         },
         messages: {
             leave_type: "Leave type is required",
             datefrom: "Date-from is required",
             dateto: "Date-to is required",
-            point_of_contact: "Backup contact is required"
+            point_of_contact: "Backup contact is required",
+            subject: "Subject is required",
+            description: "Description is required",
         },
         errorElement: 'span',
         errorPlacement: function (error, element) {

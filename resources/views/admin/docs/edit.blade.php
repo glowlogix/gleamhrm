@@ -36,13 +36,13 @@
                             <div class="row">
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Name</label>
+                                        <label class="control-label">Name<span class="text-danger">*</span></label>
                                         <input type="text" value="{{$document->name}}"  name="document_name" class="form-control" placeholder="Enter Title">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group has-success">
-                                        <label class="control-label">Status</label>
+                                        <label class="control-label">Status<span class="text-danger">*</span></label>
                                         {{ csrf_field() }}
                                         <select name="upload_status" class="form-control custom-select">
                                             <option value="">Select Status</option>

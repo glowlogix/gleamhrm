@@ -36,13 +36,13 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Document Name</label>
+										<label class="control-label">Document Name<span class="text-danger">*</span></label>
 										<input type="text" name="document_name" class="form-control" placeholder="Enter Document Name" value="{{ old('document_name') }}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-					                    <label for="document">Upload Document (Max Size 2MB)</label>
+					                    <label for="document">Upload Document<span class="text-danger">*</span> (Max Size 2MB)</label>
 					                    <div class="input-group">
 					                      	<div class="custom-file">
 					                        	<input type="file" class="custom-file-input" name="document" id="document"/>

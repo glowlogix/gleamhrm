@@ -73,11 +73,16 @@
                                         <td class="text-center">
                                             @if($employee->leave_status == '' || strtolower($employee->leave_status) == 'pending')
                                                 @if(Auth::user()->id == 1 || (Auth::user()->id != $employee->id))
-                                                    <select class="update_status form-control" id="{{$employee->leave_id}}" style="width:160px;">
-                                                        <option value="">Update Status</option>
-                                                        <option value="Approved">Approved</option>
-                                                        <option value="Declined">Declined</option>
-                                                    </select>
+                                                    <form id="statusForm" action="/leave/updateStatus" method="post">
+                                                        {{csrf_field()}}
+                                                        <input type="text" name="id" value="{{$employee->leave_id}}" hidden>
+                                                        <input type="text" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" hidden>
+                                                        <select class="form-control" name="status" style="width:160px;" onchange="$('#statusForm').submit();">
+                                                            <option value="">Update Status</option>
+                                                            <option value="Approved">Approved</option>
+                                                            <option value="Declined">Declined</option>
+                                                        </select>
+                                                    </form>
                                                 @endif
                                             @endif
 
@@ -141,12 +146,6 @@
             }
             return false;
         });
-    });
-
-    $(".update_status").on('change', function (event) {
-        if ($(this).val() !== '') {
-            location.href = "{{url('/')}}/leave/updateStatus/" + $(this).attr('id') + '/' + $(this).val();
-        }
     });
 
     $(document).ready(function () {

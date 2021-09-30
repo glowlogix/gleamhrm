@@ -10,7 +10,7 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Manage Roles</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('roles') }}">Manage Roles</a></li>
           <li class="breadcrumb-item active">Roles and Permissions</li>
         </ol>
       </div>

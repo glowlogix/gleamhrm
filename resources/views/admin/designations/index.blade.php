@@ -98,7 +98,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label class="control-label">Designation Name</label>
+                                                                <label class="control-label">Designation Name<span class="text-danger">*</span></label>
                                                                 <input  type="text" name="name" value="{{old('name',$designation->designation_name)}}" placeholder="Enter Designation Name" class="form-control" id="designation_name{{$designation->id}}" oninput="check('designation_name'+{!! $designation->id !!});">
                                                                 <span id="designation_name-error{{$designation->id}}" class="error invalid-feedback">Designation name is required</span>
                                                             </div>
@@ -140,7 +140,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Designation Name</label>
+                            <label class="control-label">Designation Name<span class="text-danger">*</span></label>
                             <input  type="text" name="designation_name" placeholder="Enter Designation Name" class="form-control">
                         </div>
                         <div class="form-group">
