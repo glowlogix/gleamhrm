@@ -222,7 +222,7 @@ class EmployeeController extends Controller
                 abort(404);
             }
 
-            $employee_role_id = ''; //todo
+            $employee_role_id = 0; //todo
             if ($employee->roles->count() > 0) {
                 $employee_role_id = $employee->roles[0]->id; //todo
             }
@@ -429,7 +429,7 @@ class EmployeeController extends Controller
                     $salary->save();
                 }
             } else {
-                Session::flash('error', 'Sum of salary details are not equal to gross salary');
+                Session::flash('error', 'Sum of salary details are not equal to gross salary. Please update salary details in section 4.');
 
                 return redirect()->back();
             }

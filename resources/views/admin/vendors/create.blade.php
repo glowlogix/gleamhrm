@@ -46,13 +46,13 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Email</label>
+                                        <label class="control-label">Email<span class="text-danger">*</span></label>
                                         <input type="email" name="email" class="form-control" placeholder="Enter Address here" value="{{old('email')}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contact Title</label>
+                                        <label class="control-label">Contact Title<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" name="contact_title">
                                             <option value="">Choose Title</option>
                                             <option value="Mr">Mr</option>
@@ -62,15 +62,15 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Contact Name</label>
+                                        <label class="control-label">Contact Name<span class="text-danger">*</span></label>
                                         <input  type="text" name="contact_name" placeholder="Enter name here" class="form-control" value="{{old('contact_name')}}">
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Vendor Category</label>
+                                        <label class="control-label">Vendor Category<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="vendor_category_id">
-                                            <option value="">Select Vendor Category</option>
+                                            <option value="">Select Vendor Category<span class="text-danger">*</span></option>
                                             @if($vendor_categories->count() > 0 )
                                                 @foreach($vendor_categories as $category)
                                                     <option value="{{$category->id}}">{{$category->category_name}}</option>
@@ -81,7 +81,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Vendor Type</label>
+                                        <label class="control-label">Vendor Type<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" tabindex="1" name="vendor_type">
                                             <option value="">Select Vendor Type</option>
                                                 <option value="individual" @if(old('vendor_type') == 'individual') selected @endif>Individual</option>
@@ -91,7 +91,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Tax Payer</label>
+                                        <label class="control-label">Tax Payer<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" tabindex="1" name="tax_payer" id="tax_payer">
                                             <option value="">Select an Option</option>
                                                 <option value="1" @if(old('tax_payer') == '1') selected @endif>Yes</option>
@@ -101,7 +101,7 @@
                                 </div>
                                 <div class="col-md-6">
                                     <div class="form-group">
-                                        <label class="control-label">Branch</label>
+                                        <label class="control-label">Branch<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" tabindex="1" name="branch">
                                             <option value="">Select Branch</option>
                                             @foreach($branches as $branch)
@@ -112,7 +112,7 @@
                                 </div>
                                 <div class="col-md-6" id="tax" style="display: none;">
                                     <div class="form-group">
-                                        <label class="control-label">Tax#</label>
+                                        <label class="control-label">Tax#<span class="text-danger">*</span></label>
                                         <input  type="number" name="tax_no" placeholder="Enter Tax Number here" class="form-control" value="{{old('tax_no')}}">
                                     </div>
                                 </div>
@@ -164,7 +164,7 @@
                                 <div class="col-md-6">
                                     <div class="form-group">
                                         <label class="control-label">Address</label>
-                                        <textarea rows="1" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address')}}"></textarea>
+                                        <input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address')}}"/>
                                     </div>
                                 </div>
                             </div>
@@ -202,7 +202,7 @@
                 vendor_type: {
                     required: true
                 },
-                filer: {
+                tax_payer: {
                     required: true
                 },
                 tax_no: {
@@ -218,7 +218,7 @@
                 contact_name: "Contact name is required",
                 vendor_category_id: "Vendor category is required",
                 vendor_type: "Vendor Type is required",
-                filer: "Filer information is required",
+                tax_payer: "Tax Payer information is required",
                 tax_no: "Tax number is required",
                 branch: "Branch is required"
             },

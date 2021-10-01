@@ -103,7 +103,7 @@
                                                         <div class="modal-body">
                                                             <div class="col-12 pl-0 pr-0">
                                                                 <div class="form-group">
-                                                                    <label class="control-label">Team Name</label>
+                                                                    <label class="control-label">Team Name<span class="text-danger">*</span></label>
                                                                     <input  type="text" name="name" id="team_name{{$team->id}}" value="{{old('team-name',$team->name)}}" placeholder="Enter Department name here" class="form-control" oninput="check('team_name'+{!! $team->id !!});">
                                                                     <span id="team_name-error{{$team->id}}" class="error invalid-feedback">Team name is required</span>
                                                                 </div>
@@ -187,7 +187,7 @@
                                         <div class="modal-body">
                                             <div class="col-12 pl-0 pr-0">
                                                 <div class="form-group">
-                                                    <label class="control-label">Team Name</label>
+                                                    <label class="control-label">Team Name<span class="text-danger">*</span></label>
                                                     <input  type="text" name="team_name" placeholder="Enter Team Name here" class="form-control">
                                                 </div>
                                             </div>

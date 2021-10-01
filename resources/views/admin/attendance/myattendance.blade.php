@@ -10,7 +10,7 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="{{ url('attendance/myAttendance') }}">Attendance</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('my/attendance') }}">Attendance</a></li>
           <li class="breadcrumb-item active">My Attendance</li>
         </ol>
       </div>
@@ -110,8 +110,11 @@
                                             <div class="row">
                                                 <div class="form-group col-md-12">
                                                     <label class="control-label">To</label>
-                                                    <input  type="email" name="email" value="hr@glowlogix.com" class="form-control" hidden>
-                                                    <input  type="email" value="hr@glowlogix.com" class="form-control" disabled>
+                                                    <input  type="email" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" class="form-control" hidden>
+                                                    <input  type="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" class="form-control" disabled>
+                                                    @if(!isset($platform->hr_email) && !isset($platform->hr_email))
+                                                        <span class="text-danger">Please set platform settings to receive email on your company email.</span>
+                                                    @endif
                                                 </div>
                                                 <div class="form-group col-md-12">
                                                     <label class="control-label">CC to Line Manager</label>
@@ -125,7 +128,7 @@
                                                 </div>
                                                 <input id="date" type="text" name="date" hidden>
                                                 <div class="form-group col-md-12">
-                                                    <label class="control-label">Message</label>
+                                                    <label class="control-label">Message<span class="text-danger">*</span></label>
                                                     <textarea  name="message" class="form-control"></textarea>
                                                 </div>
                                             </div>
@@ -144,6 +147,7 @@
                                     <form id="attendanceTimeCorrectionForm" action="{{ route('attendance.correction') }}" method="post">
                                     {{csrf_field()}}
                                         <input id="timeDate" type="text" name="timeDate" hidden>
+                                        <input type="text" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" hidden>
                                         
                                         <div class="modal-header">
                                             <h4 class="modal-title">Send Time Correction Request</h4>

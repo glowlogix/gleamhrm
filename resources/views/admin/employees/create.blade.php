@@ -50,28 +50,28 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">First Name</label>
+                                        <label class="control-label">First Name<span class="text-danger">*</span></label>
                                         <input type="text" name="firstname" aria-describedby="firstname" value="{{ old('firstname') }}" class="form-control" placeholder="Enter First Name">
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Last Name</label>
+                                        <label class="control-label">Last Name<span class="text-danger">*</span></label>
                                         <input type="text" name="lastname" aria-describedby="lastname" value="{{ old('lastname') }}" class="form-control " placeholder="Enter Last Name">
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Personal Email</label>
+                                        <label class="control-label">Personal Email<span class="text-danger">*</span></label>
                                         <input type="email" name="personal_email" aria-describedby="personal_email" value="{{ old('personal_email') }}"   class="form-control " placeholder="Enter Personal Email">
                                     </div>
                                 </div>
                                 <!--/span-->
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Official Email</label>
+                                        <label class="control-label">Official Email<span class="text-danger">*</span></label>
                                         <input type="email" name="official_email" aria-describedby="official_email" value="{{ old('official_email') }}" class="form-control " placeholder="Enter Official Email">
                                     </div>
                                 </div>
@@ -178,7 +178,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Gross Salary</label>
+                                        <label class="control-label">Gross Salary<span class="text-danger">*</span></label>
                                         <input type="text" name="gross_salary" aria-describedby="gross_salary" value="{{ old('gross_salary') }}"  class="form-control " placeholder="Enter Salary">
                                     </div>
                                 </div>
@@ -189,31 +189,31 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Contact#</label>
+                                        <label class="control-label">Contact#<span class="text-danger">*</span></label>
                                         <input type="text"  class="form-control" placeholder="Enter Contact Number" name="contact_no" value="{{ old('contact_no') }}" pattern="[0-9]{11}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Identity#</label>
+                                        <label class="control-label">Identity#<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control " placeholder="Enter Identity Number" name="identity_no" value="{{ old('identity_no') }}" maxlength="13">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Permanent Address</label>
+                                        <label class="control-label">Permanent Address<span class="text-danger">*</span></label>
                                         <textarea rows="4" class="form-control"  placeholder="Enter Permanent Address" name="permanent_address">{{ old('permanent_address') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Current Address</label>
+                                        <label class="control-label">Current Address<span class="text-danger">*</span></label>
                                         <textarea rows="4" class="form-control" placeholder="Enter Current Address" name="current_address">{{ old('current_address') }}</textarea>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">City</label>
+                                        <label class="control-label">City<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" placeholder="Enter City" name="city" value="{{ old('city') }}">
                                     </div>
                                 </div>
@@ -224,13 +224,13 @@
                             <div class="row">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Emergency Contact#</label>
+                                        <label class="control-label">Emergency Contact#<span class="text-danger">*</span></label>
                                         <input type="text" class="form-control" placeholder="Enter Emergency Contact Number" name="emergency_contact" value="{{ old('emergency_contact') }}">
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Emergency Contact Relationship</label>
+                                        <label class="control-label">Emergency Contact Relationship<span class="text-danger">*</span></label>
                                         <select class="form-control custom-select" name="emergency_contact_relationship">
                                             <option value="father" @if(old("emergency_contact_relationship") == "father") selected @endif>Father</option>
                                             <option value="brother" @if(old('emergency_contact_relationship') == "brother") selected @endif>Brother</option>
@@ -240,7 +240,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Emergency Contact Address</label>
+                                        <label class="control-label">Emergency Contact Address<span class="text-danger">*</span></label>
                                         <textarea rows="4" class="form-control" placeholder="Enter Emergency Contact Address" name="emergency_contact_address">{{ old('emergency_contact_address') }}</textarea>
                                     </div>
                                 </div>
@@ -298,7 +298,16 @@
                 },
                 picture: {
                     required: true
-                }
+                },
+                identity_no: {
+                    required: true
+                },
+                emergency_contact_relationship: {
+                    required: true
+                },
+                emergency_contact_address: {
+                    required: true
+                },
             },
             messages: {
                 firstname: "First name is required",
@@ -312,7 +321,10 @@
                 city: "City is required",
                 permanent_address: "Permanent address is required",
                 current_address: "Current address is required",
-                picture: "Picture is required"
+                picture: "Picture is required",
+                identity_no: "Identity number is required",
+                emergency_contact_relationship: "Emergency contact relationship is required",
+                emergency_contact_address: "Emergency contact address is required",
             },
             errorElement: 'span',
             errorPlacement: function (error, element) {
@@ -332,7 +344,7 @@
         $(function () {
             $("#role").on("change",function() {
                 var role_id = this.value;
-                $('#permissions').load("{{route('roles_permissions')}}/getPermissionsFromRole/" + role_id);
+                $('#permissions').load("{{url('role/getPermissionsFromRole')}}/" + role_id);
             });
         });
 

@@ -263,22 +263,25 @@ class SalarySlipController extends Controller
             return view('admin.salary.print_salary_slip')
             ->with('month', $month)
             ->with('employees', $employees)
-            ->with('subtotal', $subtotal[$employee->id]);
+            ->with('subtotal', $subtotal[$employee->id])
+            ->with('departments', $departments);
         }
 
         if ($data == 'show') {
             return view('admin.salary.monthly_salary_slip')
             ->with('month', $month)
             ->with('employees', $employees)
-            ->with('subtotal', $subtotal[$employee->id]);
+            ->with('subtotal', $subtotal[$employee->id])
+            ->with('departments', $departments);
         }
 
         if ($data == 'generate') {
             $pdf = \PDF::loadView('admin.salary.generate_salary_slip', [
-                'month'     => $month,
-                'employees' => $employees,
-                'subtotal'  => $subtotal[$employee->id],
-                'month'     => $month,
+                'month'       => $month,
+                'employees'   => $employees,
+                'subtotal'    => $subtotal[$employee->id],
+                'month'       => $month,
+                'departments' => $departments,
             ]);
 
             return $pdf->stream();

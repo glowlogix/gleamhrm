@@ -57,7 +57,7 @@
 									<div class="row">
 										<h6 class="col-4"><b>Department:</b></h6>
 										<h6 class="col-8">
-											@if($employee->department != '')
+											@if($employee->department_id != '')
 												@foreach($departments as $department)
 													@if($department->id == $employee->department_id)
 														{{$department->department_name}}

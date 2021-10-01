@@ -259,7 +259,7 @@ class DashboardController extends Controller
         $data = ['name' => "$request->name", 'messages' => "$request->message", 'email' => "$request->email"];
 
         try {
-            Mail::to('awaid.anjum@gmail.com')->send(new FeedbackMail($request->name, $request->message, $request->email));
+            Mail::to($request->email)->send(new FeedbackMail($request->name, $request->message, Auth::user()->official_email));
             Session::flash('success', 'Email Sent To the HR');
         } catch (\Exception $e) {
             Session::flash('error', 'Email Not Send Please Set Email Configuration In .env File');

@@ -12,6 +12,7 @@ class LeaveStatusMail extends Mailable
     use SerializesModels;
     private $leave;
     private $employee;
+    private $email;
 
     /**
      * Create a new message instance.
@@ -20,10 +21,11 @@ class LeaveStatusMail extends Mailable
      * @param  string  $password
      * @param $type
      */
-    public function __construct($leave, $employee)
+    public function __construct($leave, $employee, $email)
     {
         $this->leave = $leave;
         $this->employee = $employee;
+        $this->email = $email;
     }
 
     /**
@@ -33,7 +35,7 @@ class LeaveStatusMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.leave_status')
+        return $this->from($this->email)->view('emails.leave_status')
         ->with('leave', $this->leave)
         ->with('employee', $this->employee);
     }

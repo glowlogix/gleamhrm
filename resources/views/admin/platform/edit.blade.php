@@ -61,19 +61,19 @@
                             <div class="row pt-4">
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Name</label>
+                                        <label class="control-label">Name<span class="text-danger">*</span></label>
                                         <input type="text" name="name" class="form-control" placeholder="Enter company name" @if($platform != '') value="{{ $platform->name }}" @endif>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Website</label>
+                                        <label class="control-label">Website<span class="text-danger">*</span></label>
                                         <input type="text" name="website" class="form-control" placeholder="Enter company website" @if($platform != '') value="{{ $platform->website }}" @endif>
                                     </div>
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Email</label>
+                                        <label class="control-label">Email<span class="text-danger">*</span></label>
                                         <input type="text" name="email" class="form-control" placeholder="Enter company email" @if($platform != '') value="{{ $platform->email }}" @endif>
                                     </div>
                                 </div>
@@ -85,7 +85,7 @@
                                 </div>
                                 <div class="col-lg-6 col-md-6 col-sm-12">
                                     <div class="form-group">
-                                        <label class="control-label">Mobile#</label>
+                                        <label class="control-label">Mobile#<span class="text-danger">*</span></label>
                                         <input type="text" name="mobile_no" class="form-control" placeholder="Enter mobile number" @if($platform != '') value="{{ $platform->mobile_no }}" @endif>
                                     </div>
                                 </div>

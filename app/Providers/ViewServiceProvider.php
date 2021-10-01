@@ -77,5 +77,29 @@ class ViewServiceProvider extends ServiceProvider
             'admin.salary.generate_salary_slip',
             'App\Http\View\Composers\PlatformComposer'
         );
+        View::composer(
+            'admin.attendance.myattendance',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.attendance.today_timeline',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.leaves.admincreateleave',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.leaves.create',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'admin.leaves.employeeleaves',
+            'App\Http\View\Composers\PlatformComposer'
+        );
+        View::composer(
+            'help.contact_us',
+            'App\Http\View\Composers\PlatformComposer'
+        );
     }
 }

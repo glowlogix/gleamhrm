@@ -275,7 +275,7 @@ class LeaveController extends Controller
             if ($leave) {
                 $employee = Employee::find($leave->employee_id);
                 try {
-                    Mail::to($employee->official_email)->send(new AdminApplyLeaveMail($request, $employee));
+                    Mail::to($employee->official_email)->send(new AdminApplyLeaveMail($request, $employee, $request->email));
                 } catch (\Exception $e) {
                     Session::flash('error', trans($e->getMessage()));
                 }
@@ -385,18 +385,11 @@ class LeaveController extends Controller
                 'status'           => 'pending',
             ]);
 
-            $employees = Employee::where('id', '!=', $leave->employee_id)->get();
-            $count = 1;
             if ($leave) {
-                foreach ($employees as $approverEmployee) {
-                    if ($count == 1 && $approverEmployee->isAllowed('LeaveController:updateStatus')) {
-                        try {
-                            Mail::to($approverEmployee->official_email)->send(new ApplyLeaveMail($request, $leave, $approverEmployee));
-                        } catch (\Exception $e) {
-                            Session::flash('error', trans($e->getMessage()));
-                        }
-                        $count++;
-                    }
+                try {
+                    Mail::to($request->email)->send(new ApplyLeaveMail($request, $leave, Auth::user()->official_email));
+                } catch (\Exception $e) {
+                    Session::flash('error', trans($e->getMessage()));
                 }
 
                 Session::flash('success', 'Leave is created succesfully');
@@ -599,16 +592,16 @@ class LeaveController extends Controller
      * @param  \App\Leave  $leave
      * @return \Illuminate\Http\Response
      */
-    public function updateStatus($id, $status)
+    public function updateStatus(Request $request)
     {
-        $leave = Leave::find($id);
+        $leave = Leave::find($request->id);
         if ($leave->status == 'Approved') { // if already approved do nothing
             Session::flash('success', 'Leave already approved');
 
             return redirect()->back();
         }
 
-        if ($status == 'Approved') {
+        if ($request->status == 'Approved') {
             $dateFromTime = Carbon::parse($leave->datefrom);
             $dateToTime = Carbon::parse($leave->dateto);
 
@@ -624,12 +617,12 @@ class LeaveController extends Controller
             DB::statement("UPDATE employee_leave_type SET count = $cnt where employee_id = ".$leave->employee_id.' AND leave_type_id = '.$leave->leave_type);
         }
 
-        $leave->status = $status;
+        $leave->status = $request->status;
         $leave->save();
 
         $employee = Employee::find($leave->employee_id);
         try {
-            Mail::to($employee->official_email)->send(new LeaveStatusMail($leave, $employee));
+            Mail::to($employee->official_email)->send(new LeaveStatusMail($leave, $employee, $request->email));
         } catch (\Exception $e) {
             Session::flash('error', trans($e->getMessage()));
         }

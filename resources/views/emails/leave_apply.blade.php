@@ -8,7 +8,7 @@
 </head>
 
 <body>
-    <b>Hi {{$approverEmployee->firstname}} {{$approverEmployee->lastname}}</b>,
+    <b>Hi</b>,
     <br>
 
     <p>New leave by <b>{{$leaveEmployee->firstname}} {{$leaveEmployee->lastname}}</b> is applied from date <b>{{$request->datefrom}}</b> to <b>{{$request->dateto}}</b>. Please review and submit your decision.</p>

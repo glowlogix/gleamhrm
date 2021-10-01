@@ -109,7 +109,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label class="control-label">Skill Name</label>
+                                                                <label class="control-label">Skill Name<span class="text-danger">*</span></label>
                                                                 <input  type="text" name="skill_name" value="{{old('skill_name',$skill->skill_name)}}" placeholder="Enter Skill Name" class="form-control" id="skill_name{{$skill->id}}" oninput="check('skill_name'+{!! $skill->id !!});">
                                                                 <span id="skill_name-error{{$skill->id}}" class="error invalid-feedback">Skill name is required</span>
                                                             </div>
@@ -121,7 +121,7 @@
                                                                 </select>
                                                             </div>
                                                             <div class="form-group">
-                                                                <label class="control-label">Description</label>
+                                                                <label class="control-label">Description<span class="text-danger">*</span></label>
                                                                 <textarea  type="text" name="description" value="{{$skill->description}}" class="form-control" placeholder="Enter Description" id="description{{$skill->id}}" oninput="check('description'+{!! $skill->id !!});">{{$skill->description}}</textarea>
                                                                 <span id="description-error{{$skill->id}}" class="error invalid-feedback">Description is required</span>
                                                             </div>
@@ -178,7 +178,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Skill Name</label>
+                            <label class="control-label">Skill Name<span class="text-danger">*</span></label>
                             <input  type="text" name="skill_name" placeholder="Enter Skill Name" class="form-control">
                         </div>
                         <div class="form-group">
@@ -189,7 +189,7 @@
                             </select>
                         </div>
                         <div class="form-group">
-                            <label class="control-label">Description</label>
+                            <label class="control-label">Description<span class="text-danger">*</span></label>
                             <textarea  type="text" name="description" class="form-control" placeholder="Enter Description"></textarea>
                         </div>
                     </div>

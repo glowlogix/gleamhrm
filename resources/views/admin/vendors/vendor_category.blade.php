@@ -90,7 +90,7 @@
                                                         </div>
                                                         <div class="modal-body">
                                                             <div class="form-group">
-                                                                <label class="control-label">Category Name</label>
+                                                                <label class="control-label">Category Name<span class="text-danger">*</span></label>
                                                                 <input  type="text" name="category_name" value="{{old('category_name',$category->category_name)}}" placeholder="Enter Category name here" class="form-control" id="category_name{{$category->id}}" oninput="check('category_name'+{!! $category->id !!});">
                                                                 <span id="category_name-error{{$category->id}}"  class="error invalid-feedback">Vendor category name is required</span>
                                                             </div>
@@ -125,7 +125,7 @@
                     </div>
                     <div class="modal-body">
                         <div class="form-group">
-                            <label class="control-label">Name</label>
+                            <label class="control-label">Category Name<span class="text-danger">*</span></label>
                             <input  type="text" name="category_name" placeholder="Enter Vendor Category Name" class="form-control">
                         </div>
                     </div>

@@ -37,13 +37,13 @@
 							<div class="row">
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Name</label>
+										<label class="control-label">Name<span class="text-danger">*</span></label>
 										<input  type="text" name="name" placeholder="Enter name here" class="form-control"  value="{{old('name', $office_location->name)}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group has-success">
-										<label class="control-label">Status</label>
+										<label class="control-label">Status<span class="text-danger">*</span></label>
 										{{ csrf_field() }}
 										<select name="status" id="status" class="form-control custom-select" >
 											<option value="">Select Status</option>
@@ -54,25 +54,25 @@
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Timing Start</label>
+										<label class="control-label">Timing Start<span class="text-danger">*</span></label>
 										<input class="form-control " type="time" name="timing_start" placeholder="Enter Timing Start here"   id="timing_start" value="{{old('timing_start', Carbon\Carbon::parse($office_location->timing_start)->format('h:i'))}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Timing OFF</label>
+										<label class="control-label">Timing OFF<span class="text-danger">*</span></label>
 										<input class="form-control" type="time" name="timing_off" placeholder="Enter Timing Off here"  value="{{old('timing_off', Carbon\Carbon::parse($office_location->timing_off)->format('h:i'))}}" />
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Address</label>
+										<label class="control-label">Address<span class="text-danger">*</span></label>
 										<input type="text" name="address" class="form-control" placeholder="Enter Address here" value="{{old('address', $office_location->address)}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
-										<label class="control-label">Phone#</label>
+										<label class="control-label">Phone#<span class="text-danger">*</span></label>
 										<input type="number" name="phone_number" class="form-control" placeholder="Enter Phone Number here" value="{{old('phone_number', $office_location->phone_number)}}">
 									</div>
 								</div>	

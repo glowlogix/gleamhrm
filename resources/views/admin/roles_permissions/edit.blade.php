@@ -10,8 +10,8 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Manage Roles</a></li>
-          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Roles and Permissions</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('roles') }}">Manage Roles</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('roles') }}">Roles and Permissions</a></li>
           <li class="breadcrumb-item active">Edit</li>
         </ol>
       </div>
@@ -26,23 +26,23 @@
 
 <!-- Main Content Start -->
 <div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
 						<div>
 							<a class="btn btn-info" href="{{route('roles_permissions')}}"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></a>
 						</div>
 
 						<hr>
 
-						<form  action="{{route('roles_permissions.update', $role->id)}}" method="post" enctype="multipart/form-data">
+						<form id="editRoleForm" action="{{route('roles_permissions.update', $role->id)}}" method="post" enctype="multipart/form-data">
 							{{csrf_field()}}
 							<div class="row justify-content-between">
 								<div class="col-6">
 									<div class="form-group">
-										<label class="control-label">Name</label>
+										<label class="control-label">Name<span class="text-danger">*</span></label>
 										<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{$role->name}}">
 										<input type="hidden" name="status" value="1">
 									</div>
@@ -104,6 +104,30 @@
 			    $('div.'+ this.id +' input:checkbox').prop('checked', this.checked);
 			});
 	    });
+	});
+
+	$(function () {
+	  $('#editRoleForm').validate({
+	    rules: {
+	      name: {
+	        required: true,
+	      }
+	    },
+	    messages: {
+	      name: "Role name is required"
+	    },
+	    errorElement: 'span',
+	    errorPlacement: function (error, element) {
+	      error.addClass('invalid-feedback');
+	      element.closest('.form-group').append(error);
+	    },
+	    highlight: function (element, errorClass, validClass) {
+	      $(element).addClass('is-invalid');
+	    },
+	    unhighlight: function (element, errorClass, validClass) {
+	      $(element).removeClass('is-invalid');
+	    }
+	  });
 	});
 </script>
 @stop

@@ -44,10 +44,6 @@ Route::get('/job/skill/{jobId}', [
 
 Route::get('/home', 'HomeController@index')->name('home');
 
-Route::post('/slackbot', 'AttendanceController@newSlackbot')->name('slackbot');
-
-//Route::Post('/newSlackbot', 'AttendanceController@newSlackbot')->name('newSlackbot');
-
 Route::group(['middleware' => 'auth'], function () {
     // Salary Slip routes
     Route::Get('/slips/salary/{month?}', [
@@ -249,20 +245,20 @@ Route::group(['middleware' => 'auth'], function () {
 
         //Leave Types
 
-        Route::Get('/leave_types', [
+        Route::Get('/leaveTypes', [
             'uses' => 'LeaveTypeController@index',
             'as'   => 'leave_type.index',
         ]);
-        Route::post('/leave_type/create', [
+        Route::post('/leaveType/create', [
             'uses' => 'LeaveTypeController@create',
             'as'   => 'leave_type.create',
         ]);
-        Route::post('/leave_type/update/{id}', [
+        Route::post('/leaveType/update/{id}', [
             'uses' => 'LeaveTypeController@update',
             'as'   => 'leave_type.update',
         ]);
 
-        Route::post('/leave_type/delete/{id}', [
+        Route::post('/leaveType/delete/{id}', [
             'uses' => 'LeaveTypeController@delete',
             'as'   => 'leave_type.delete',
         ]);
@@ -360,44 +356,44 @@ Route::group(['middleware' => 'auth'], function () {
             'organization_hierarchy' => 'OrganizationHierarchyController',
         ]);
 
-        Route::Get('/rolespermissions', [
+        Route::Get('/roles', [
             'uses' => 'RolePermissionsController@index',
             'as'   => 'roles_permissions',
         ]);
-        Route::Get('/rolespermissions/create', [
+        Route::Get('/role/create', [
             'uses' => 'RolePermissionsController@create',
             'as'   => 'roles_permissions.create',
         ]);
-        Route::Post('/rolespermissions/store', [
+        Route::Post('/role/store', [
             'uses' => 'RolePermissionsController@store',
             'as'   => 'roles_permissions.store',
         ]);
-        Route::Get('/rolespermissions/applyrole', [
+        Route::Get('/role/applyrole', [
             'uses' => 'RolePermissionsController@applyRole',
             'as'   => 'roles_permissions.applyrole',
         ]);
-        Route::Post('/rolespermissions/applyrolepost', [
+        Route::Post('/role/applyrolepost', [
             'uses' => 'RolePermissionsController@applyRolePost',
             'as'   => 'roles_permissions.applyrolepost',
         ]);
-        Route::Get('/rolespermissions/getPermissionsFromRole/{id}/{employee_id}', [
+        Route::Get('/role/getPermissionsFromRole/{id}/{employee_id}', [
             'uses' => 'RolePermissionsController@getPermissionsFromRole',
             'as'   => 'roles_permissions.getPermissionsFromRole',
         ]);
-        Route::Get('/rolespermissions/checkPermissions/{id}/{employee_id}', [
+        Route::Get('/role/checkPermissions/{id}/{employee_id}', [
             'uses' => 'RolePermissionsController@checkPermissions',
             'as'   => 'roles_permissions.checkPermissions',
         ]);
-        Route::Get('/rolespermissions/edit/{id}', [
+        Route::Get('/role/edit/{id}', [
             'uses' => 'RolePermissionsController@edit',
             'as'   => 'roles_permissions.edit',
         ]);
-        Route::Post('/rolespermissions/update/{id}', [
+        Route::Post('/role/update/{id}', [
             'uses' => 'RolePermissionsController@update',
             'as'   => 'roles_permissions.update',
         ]);
 
-        Route::Post('/rolespermissions/delete/{id}', [
+        Route::Post('/role/delete/{id}', [
             'uses' => 'RolePermissionsController@destroy',
             'as'   => 'roles_permissions.delete',
         ]);
@@ -613,7 +609,7 @@ Route::group(['middleware' => 'auth'], function () {
             'as'   => 'leave.update',
         ]);
 
-        Route::Get('/leave/updateStatus/{id}/{status}', [
+        Route::Post('/leave/updateStatus', [
             'uses' => 'LeaveController@updateStatus',
             'as'   => 'leave.updateStatus',
         ]);
@@ -669,7 +665,7 @@ Route::group(['middleware' => 'auth'], function () {
     });
 
     //My Attendance
-    Route::GET('/attendance/myAttendance/{id?}', [
+    Route::GET('/my/attendance/{id?}', [
         'uses' => 'AttendanceController@authUserTimeline',
         'as'   => 'myAttendance',
     ]);

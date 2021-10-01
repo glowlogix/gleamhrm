@@ -81,7 +81,9 @@ class RolePermissionsController extends Controller
 
     public function getPermissionsFromRole($id, $employee_id)
     {
-        $emp_permissions = Employee::find($employee_id)->permissions()->get()->pluck('id')->toArray();
+        $emp_permissions = Employee::find($employee_id)->permissions;
+        $emp_permissions = $emp_permissions->pluck('id')->toArray();
+
         $role = Role::find($id);
 
         $permissions = $role->permissions()->get();
@@ -248,12 +250,13 @@ class RolePermissionsController extends Controller
                 ];
 
                 $permission = Permission::where($data)->first();
-
-                if (in_array($value, $request->permissions_checked)) {
-                    if (! isset($permission->id)) {
-                        $permission = Permission::create($data);
+                if ($request->permissions_checked != '') {
+                    if (in_array($value, $request->permissions_checked)) {
+                        if (! isset($permission->id)) {
+                            $permission = Permission::create($data);
+                        }
+                        $role->givePermissionTo($permission);
                     }
-                    $role->givePermissionTo($permission);
                 } else {
                     $role->revokePermissionTo($permission);
                 }

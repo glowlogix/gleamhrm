@@ -32,21 +32,22 @@
                     <div class="card-body">
                         <form id="helpForm" action="{{route('contact_us')}}" method="post" novalidate>
                             {{csrf_field()}}
+                            <input type="text" name="email" value="@if(isset($platform->hr_email)) {{$platform->hr_email}} @else @if(isset($platform->email)) {{$platform->email}} @else noreply@email.com @endif @endif" hidden>
                             <div class="row">
                                 <div class="form-group col-md-6">
-                                    <label class="control-label">Name</label>
+                                    <label class="control-label">Name<span class="text-danger">*</span></label>
                                     <input type="text" name="name" class="form-control"  placeholder="Enter Name Here">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="control-label">Email</label>
+                                    <label class="control-label">Email<span class="text-danger">*</span></label>
                                     <input type="email" name="email" class="form-control"  placeholder="Enter email Here">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="control-label">Phone#</label>
+                                    <label class="control-label">Phone#<span class="text-danger">*</span></label>
                                     <input type="number" name="number" class="form-control"  pattern="[0-9]{11}" placeholder="Enter Phone Number Here">
                                 </div>
                                 <div class="form-group col-md-6">
-                                    <label class="control-label">Type</label>
+                                    <label class="control-label">Type<span class="text-danger">*</span></label>
                                     <select class="form-control custom-select" name="type">
                                         <option value="">Select Type</option>
                                         <option value="Feedback">Feedback</option>
@@ -54,7 +55,7 @@
                                     </select>
                                 </div>
                                 <div class="form-group col-12">
-                                    <label class="control-label">Message</label>
+                                    <label class="control-label">Message<span class="text-danger">*</span></label>
                                     <textarea name="message" class="form-control" rows="5" placeholder="Message"></textarea>
                                 </div>
                             </div>

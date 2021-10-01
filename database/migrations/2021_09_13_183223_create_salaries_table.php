@@ -18,7 +18,7 @@ class CreateSalariesTable extends Migration
             // $table->string('filename', 255);
             // $table->integer('status')->default(1);
 
-            $table->string('gross_salary');
+            $table->string('gross_salary')->nullable();
             $table->string('basic_salary')->nullable();
             $table->string('home_allowance')->nullable();
             $table->string('medical_allowance')->nullable();

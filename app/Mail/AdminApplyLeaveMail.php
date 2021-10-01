@@ -12,6 +12,7 @@ class AdminApplyLeaveMail extends Mailable
     use SerializesModels;
     private $leave;
     private $employee;
+    private $email;
 
     /**
      * Create a new message instance.
@@ -20,10 +21,11 @@ class AdminApplyLeaveMail extends Mailable
      * @param  string  $password
      * @param $type
      */
-    public function __construct($leave, $employee)
+    public function __construct($leave, $employee, $email)
     {
         $this->leave = $leave;
         $this->employee = $employee;
+        $this->email = $email;
     }
 
     /**
@@ -33,7 +35,7 @@ class AdminApplyLeaveMail extends Mailable
      */
     public function build()
     {
-        return $this->view('emails.admin_leave_apply')
+        return $this->from($this->email)->view('emails.admin_leave_apply')
         ->with('employee', $this->employee)
         ->with('leave', $this->leave);
     }

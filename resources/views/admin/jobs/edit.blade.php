@@ -41,13 +41,13 @@
 							<div class="row">
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
-										<label class="control-label">Job Title</label>
+										<label class="control-label">Job Title<span class="text-danger">*</span></label>
 										<input type="text" value="{{$job->title}}" name="title" class="form-control" placeholder="Enter Job Title">
 									</div>
 								</div>
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
-										<label class="control-label">Designation</label>
+										<label class="control-label">Designation<span class="text-danger">*</span></label>
 										<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="designation_id">
 											<option value="">Select Designation</option>
 											@foreach($designations as $designation)
@@ -58,7 +58,7 @@
 								</div>
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
-										<label class="control-label">Branch</label>
+										<label class="control-label">Branch<span class="text-danger">*</span></label>
 										<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="branch_id">
 											<option value="">Select Branch</option>
 											@foreach($branches as $branch)
@@ -69,7 +69,7 @@
 								</div>
 								<div class="col-lg-6 col-md-6 col-sm-12">
 									<div class="form-group">
-										<label class="control-label">Department</label>
+										<label class="control-label">Department<span class="text-danger">*</span></label>
 										<select class="form-control custom-select" data-placeholder="Choose a Category" tabindex="1" name="department_id">
 											<option value="">Select Department</option>
 											@foreach($departments as $department)
@@ -91,7 +91,7 @@
 								</div>
 								<div class="col-lg-12 col-md-12 col-sm-12">
 									<div class="form-group">
-										<label class="control-label"><bold>Description:</bold></label>
+										<label class="control-label">Description<span class="text-danger">*</span></label>
 										<textarea class="textarea_editor form-control" name="description" rows="10" placeholder="Enter Description">{{$job->description}}</textarea>
 									</div>
 								</div>

@@ -55,14 +55,16 @@ class Employee extends Authenticatable
 
     public function isAllowed($permission)
     {
-        $allowedLists = $this->permissions()->get()->pluck('name')->toArray();
-        if (
-            $this->hasRole('admin') ||
-            in_array($permission, $allowedLists)
-        ) {
+        $allowedLists = $this->getDirectPermissions()->pluck('name');
+
+        if ($this->hasRole('admin')) {
             return 1;
         } else {
-            return 0;
+            foreach ($allowedLists as $allowedPermission) {
+                if ($allowedPermission == $permission) {
+                    return 1;
+                }
+            }
         }
 
         /*if(!$this->hasPermissionTo($permission)){

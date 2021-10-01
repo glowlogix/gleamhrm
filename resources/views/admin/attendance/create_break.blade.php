@@ -47,7 +47,7 @@
           </div>
           <div class="col-sm-6">
             <ol class="breadcrumb float-sm-right">
-              <li class="breadcrumb-item"><a href="{{ url('attendance/myAttendance') }}">My Attendance</a></li>
+              <li class="breadcrumb-item"><a href="{{ url('my/attendance') }}">My Attendance</a></li>
               <li class="breadcrumb-item active">Add Attendance</li>
             </ol>
           </div>
@@ -138,7 +138,7 @@
                             </div>
                         @endif
 
-                        <form @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday')) action="{{route('attendance.storeAttendanceSummaryToday')}}" @else action="{{route('store.attendance')}}" @endif method='POST'>
+                        <form id="createBreakForm" @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday')) action="{{route('attendance.storeAttendanceSummaryToday')}}" @else action="{{route('store.attendance')}}" @endif method='POST'>
                             {{csrf_field()}}
                             <h5 class="pt-3"><strong>Create CheckIn/CheckOut</strong></h5>
                             <hr class="mt-0">
@@ -146,9 +146,9 @@
                                 @if(Auth::user()->isAllowed('AttendanceController:createBreak'))
                                     <div class="col-md-6">
                                         <div class="form-group">
-                                            <label class="control-label">Select Name Here</label>
+                                            <label class="control-label">Select Name Here<span class="text-danger">*</span></label>
                                             <select class="form-control custom-select" name="employee_id">
-                                                <option value="0">Select Employee</option>
+                                                <option value="">Select Employee</option>
                                                 @foreach($employees as $emp)
                                                 <option value="{{$emp->id}}" @if($emp_id==$emp->id) selected @endif >{{$emp->firstname}} {{$emp->lastname}}</option>
                                                 @endforeach
@@ -199,7 +199,7 @@
                         <div class="modal fade" id="popup" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                             <div class="modal-dialog">
                                 <div class="modal-content">
-                                    <form @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday'))  action="{{route('attendance.storeBreak')}}" @else action="{{route('store.attendance.break')}}" @endif method='POST'>
+                                    <form class="addBreakForm" @if(Auth::user()->isAllowed('AttendanceController:storeAttendanceSummaryToday'))  action="{{route('attendance.storeBreak')}}" @else action="{{route('store.attendance.break')}}" @endif method='POST'>
                                         {{ csrf_field() }}
                                         <div class="modal-header">
                                             <h4 class="modal-title">Add Break</h4>
@@ -217,20 +217,20 @@
                                             <div class="row">
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="date">Date</label>
+                                                        <label for="date">Date<span class="text-danger">*</span></label>
                                                         <input type="date" class="form-control date" name="date" value="{{$current_date}}">
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="time_in">Break Start</label>
-                                                        <input type="datetime-local" class="form-control" name="break_start" value="{{$current_time}}">
+                                                        <label for="time_in">Break Start<span class="text-danger">*</span></label>
+                                                        <input type="datetime-local" class="form-control" name="break_start">
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
                                                     <div class="form-group">
-                                                        <label for="time_out">Break End</label>
-                                                        <input type="datetime-local" class="form-control" name="break_end" value="">
+                                                        <label for="time_out">Break End<span class="text-danger">*</span></label>
+                                                        <input type="datetime-local" class="form-control" name="break_end">
                                                     </div>
                                                 </div>
                                                 <div class="col-12">
@@ -281,7 +281,7 @@
                                         <div class="modal fade" id="edit{{ $att->id }}" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
                                             <div class="modal-dialog">
                                                 <div class="modal-content">
-                                                    <form action="{{ route('attendance.updateBreak' , ['id'=>$att->id] )}}" method="post">
+                                                    <form class="addBreakForm" action="{{ route('attendance.updateBreak' , ['id'=>$att->id] )}}" method="post">
                                                         {{ csrf_field() }}
                                                         <div class="modal-header">
                                                             <h4 class="modal-title">Edit Break</h4>
@@ -293,19 +293,19 @@
                                                             <div class="row">
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="date">Date</label><br>
+                                                                        <label for="date">Date<span class="text-danger">*</span></label>
                                                                         <input type="date" class="form-control" name="date" value="{{$att->date}}" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="time">Break Start</label>
+                                                                        <label for="time">Break Start<span class="text-danger">*</span></label>
                                                                         <input type="datetime-local" class="form-control" name="break_start" value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_start))}}" />
                                                                     </div>
                                                                 </div>
                                                                 <div class="col-12">
                                                                     <div class="form-group">
-                                                                        <label for="time">Break End</label>
+                                                                        <label for="time">Break End<span class="text-danger">*</span></label>
                                                                         <input type="datetime-local" class="form-control" name="break_end" @if($att->timestamp_break_end!=null) value="{{date('Y-m-d\TH:i',strtotime($att->timestamp_break_end))}}" @endif />
                                                                     </div>
                                                                 </div>
@@ -358,6 +358,62 @@
     </div>
 </div>
 <script>
+    $(function () {
+        $('#createBreakForm').validate({
+            rules: {
+                employee_id: {
+                    required: true,
+                }
+            },
+            messages: {
+                employee_id: "Employee name is required"
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
+    $(function () {
+        $('.addBreakForm').validate({
+            rules: {
+                date: {
+                    required: true,
+                },
+                break_start: {
+                    required: true,
+                },
+                break_end: {
+                    required: true,
+                },
+            },
+            messages: {
+                date: "Date is required",
+                break_start: "Break start time is required",
+                break_end: "Break end time is required",
+            },
+            errorElement: 'span',
+            errorPlacement: function (error, element) {
+                error.addClass('invalid-feedback');
+                element.closest('.form-group').append(error);
+            },
+            highlight: function (element, errorClass, validClass) {
+                $(element).addClass('is-invalid');
+            },
+            unhighlight: function (element, errorClass, validClass) {
+                $(element).removeClass('is-invalid');
+            }
+        });
+    });
+
     $(document).ready(function () {
         $('#break').DataTable({
             "paging": true,
@@ -383,11 +439,13 @@
             return false;
         });
         $(".custom-select").on('change', function(e) {
-            var url = '{{route('attendance.createBreak')}}/' + $(this).val() + '/{{$current_date}}';
-            if (url) {
-                window.location = url;
+            if (this.value != '') {
+                var url = '{{route('attendance.createBreak')}}/' + $(this).val() + '/{{$current_date}}';
+                if (url) {
+                    window.location = url;
+                }
+                return false;
             }
-            return false;
         });
     });
 </script>

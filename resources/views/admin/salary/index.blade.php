@@ -46,7 +46,7 @@
 								<thead>
 									<tr>
 										<th>Employee Name</th>
-										<th>Basic Salary</th>
+										<th>Gross Salary</th>
 										<th>Bonus</th>
 										<th>Approved Leaves</th>
 										<th>UnApproved Leaves</th>
@@ -60,7 +60,7 @@
 									@foreach($employees as $employee)
 										<tr>
 											<td>{{$employee->firstname}} {{$employee->lastname}}</td>
-											<td>{{$employee->basic_salary}}</td>
+											<td>{{$employee->gross_salary}}</td>
 											<td>{{$employee->bonus}}</td>
 											@foreach($ApprovedCount as $key=>$cnt)
 												@if($key==$employee->id)

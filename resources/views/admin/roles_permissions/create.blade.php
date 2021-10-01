@@ -10,8 +10,8 @@
       </div>
       <div class="col-sm-6">
         <ol class="breadcrumb float-sm-right">
-          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Manage Roles</a></li>
-          <li class="breadcrumb-item"><a href="{{ url('rolespermissions') }}">Roles and Permissions</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('roles') }}">Manage Roles</a></li>
+          <li class="breadcrumb-item"><a href="{{ url('roles') }}">Roles and Permissions</a></li>
           <li class="breadcrumb-item active">Create</li>
         </ol>
       </div>
@@ -26,12 +26,12 @@
 
 <!-- Main Content Start -->
 <div class="content">
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-12">
-                <div class="card">
-                    <div class="card-body">
-                    	<div>
+  <div class="container-fluid">
+    <div class="row">
+      <div class="col-12">
+        <div class="card">
+          <div class="card-body">
+          	<div>
 							<a class="btn btn-info" href="{{route('roles_permissions')}}"><i class="fas fa-chevron-left"></i><span class="d-none d-xs-none d-sm-inline d-md-inline d-lg-inline"> Back</span></a>
 						</div>
 
@@ -42,7 +42,7 @@
 							<div class="row justify-content-between">
 								<div class="col-6">
 									<div class="form-group">
-										<label class="control-label">Name</label>
+										<label class="control-label">Name<span class="text-danger">*</span></label>
 										<input  type="text" name="name" placeholder="Enter name here" class="form-control" value="{{old('name')}}">
 										<input type="hidden" name="status" value="1">
 									</div>

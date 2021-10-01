@@ -1310,15 +1310,15 @@ class AttendanceController extends Controller
 
     public function correctionEmail(Request $request)
     {
-        $data = ['name' => Auth::user()->firstname, 'messages' => "$request->message", 'email' => Auth::user()->official_email, 'date' => "$request->date"];
+        $data = ['name' => Auth::user()->firstname, 'messages' => $request->message, 'email' => Auth::user()->official_email, 'date' => "$request->date"];
 
         try {
             Mail::send('emails.attendance_correction_email', $data, function ($message) use ($request) {
-                $message->to('awaid.anjum@gmail.com')->subject('Attendance Correction Request For Date '.$request->date);
+                $message->to($request->email)->subject('Attendance Correction Request For Date '.$request->date);
                 if ($request->line_manager_email != '') {
                     $message->cc($request->line_manager_email);
                 }
-                $message->from('noreply@glowlogix.com', Auth::user()->official_email);
+                $message->from(Auth::user()->official_email);
             });
             Session::flash('success', 'Correction email is sent to the HR');
         } catch (\Exception $e) {
@@ -1369,6 +1369,17 @@ class AttendanceController extends Controller
             $attendance_correction->save();
         }
 
+        $data = ['name' => Auth::user()->firstname, 'email' => Auth::user()->official_email, 'date' => $request->timeDate];
+
+        try {
+            Mail::send('emails.attendance_time_correction_email', $data, function ($message) use ($request) {
+                $message->to($request->email)->subject('Attendance Time Correction Request For Date '.$request->timeDate);
+                $message->from(Auth::user()->official_email);
+            });
+        } catch (\Exception $e) {
+            Session::flash('error', trans($e->getMessage()));
+        }
+
         if ($attendance_correction != '[]') {
             Session::flash('success', 'Change request submitted successfully');
 
@@ -1385,6 +1396,8 @@ class AttendanceController extends Controller
         $attendance_correction = AttendanceCorrection::where('id', $request->correction_id)->first();
         $attendance_summary = AttendanceSummary::where('id', $request->summary_id)->first();
         $attendance_break = AttendanceBreak::where('employee_id', $request->employee_id)->where('date', $request->date)->first();
+        $employee = Employee::find($attendance_correction->employee_id);
+        $data = ['employee' => $employee, 'date' => $request->date, 'decision' => $request->decision];
 
         if ($request->decision == 'Approved') {
             if ($attendance_correction->time_in != '') {
@@ -1431,12 +1444,34 @@ class AttendanceController extends Controller
             $attendance_summary->total_time = $totaltime;
             $attendance_summary->is_delay = $is_delay;
             $attendance_summary->save();
+
+            try {
+                Mail::send('emails.attendance_time_correction_decision_email', $data, function ($message) use ($request, $employee) {
+                    $message->to($employee->official_email)->subject('Attendance Time Correction Decision For Date '.$request->date);
+                    $message->from($request->email);
+                });
+            } catch (\Exception $e) {
+                Session::flash('error', trans($e->getMessage()));
+            }
+
             Session::flash('success', 'Changes approved and applied successfully');
 
             return redirect()->route('today_timeline');
         }
 
         if ($request->decision == 'Rejected') {
+            $attendance_correction->status = $request->decision;
+            $attendance_correction->save();
+
+            try {
+                Mail::send('emails.attendance_time_correction_decision_email', $data, function ($message) use ($request, $employee) {
+                    $message->to($employee->official_email)->subject('Attendance Time Correction Decision For Date '.$request->date);
+                    $message->from($request->email);
+                });
+            } catch (\Exception $e) {
+                Session::flash('error', trans($e->getMessage()));
+            }
+
             Session::flash('success', 'Changes rejected successfully');
 
             return redirect()->route('today_timeline');
