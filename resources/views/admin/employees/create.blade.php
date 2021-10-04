@@ -296,9 +296,6 @@
                 current_address: {
                     required: true
                 },
-                picture: {
-                    required: true
-                },
                 identity_no: {
                     required: true
                 },
@@ -321,7 +318,6 @@
                 city: "City is required",
                 permanent_address: "Permanent address is required",
                 current_address: "Current address is required",
-                picture: "Picture is required",
                 identity_no: "Identity number is required",
                 emergency_contact_relationship: "Emergency contact relationship is required",
                 emergency_contact_address: "Emergency contact address is required",

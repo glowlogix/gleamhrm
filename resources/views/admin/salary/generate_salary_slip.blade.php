@@ -4,23 +4,23 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
         @if(isset($platform->logo))
-          <link rel="icon" type="image/png" sizes="16x16" href="{{asset($platform->logo)}}">
+          <link rel="icon" type="image/png" sizes="16x16" href="{{public_path($platform->logo)}}">
         @else
-            <link rel="icon" type="image/png" sizes="16x16" href="{{asset('assets/images/company_logo.png')}}">
+            <link rel="icon" type="image/png" sizes="16x16" href="{{public_path('assets/images/company_logo.png')}}">
         @endif
         <title>HRM | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif</title>
 
         <!-- Google Font: Source Sans Pro StyleSheet -->
-        <link rel="stylesheet" href="{{ asset('assets/backend/plugins/font-googleapis/font.css') }}">
+        <link rel="stylesheet" href="{{ public_path('assets/backend/plugins/font-googleapis/font.css') }}">
 
         <!-- Font Awesome Icons StyleSheet -->
-        <link rel="stylesheet" href="{{ asset('assets/backend/plugins/fontawesome-free/css/all.min.css') }}">
+        <link rel="stylesheet" href="{{ public_path('assets/backend/plugins/fontawesome-free/css/all.min.css') }}">
 
         <!-- Theme  StyleSheet -->
-        <link rel="stylesheet" href="{{ asset('assets/backend/dist/css/adminlte.min.css') }}">
+        <link rel="stylesheet" href="{{ public_path('assets/backend/dist/css/adminlte.min.css') }}">
 
         <!-- jQuery Script -->
-        <script src="{{ asset('assets/backend/plugins/jquery/jquery.min.js') }}"></script>
+        <script src="{{ public_path('assets/backend/plugins/jquery/jquery.min.js') }}"></script>
     </head>
 
     <body>
@@ -28,9 +28,9 @@
         <div class="col-12 text-center">
             <h4>
                 @if(isset($platform->logo))
-                    <img src="{{ asset($platform->logo) }}" alt="Logo" width="50px">
+                    <img src="{{ public_path($platform->logo) }}" alt="Logo" width="40px">
                 @else
-                    <img src="{{ asset('assets/images/company_logo.png') }}" alt="Logo" class="brand-image elevation-3 bg-white" width="100px">
+                    <img src="{{ public_path('assets/images/company_logo.png') }}" alt="Logo" class="brand-image elevation-3 bg-white" width="80px">
                 @endif
 
                 HRM | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif

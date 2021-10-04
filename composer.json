@@ -15,6 +15,8 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "~6.0",
+        "h4cc/wkhtmltoimage-amd64": "0.12.4",
+        "h4cc/wkhtmltopdf-amd64": "0.12.4",
         "laravel/framework": "^8.40",
         "laravel/helpers": "^1.4",
         "laravel/tinker": "^2.5",
