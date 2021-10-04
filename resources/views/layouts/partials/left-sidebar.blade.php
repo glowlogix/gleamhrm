@@ -259,14 +259,15 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
+            @if(Auth::user()->isAllowed('SalariesController:index'))
+              <li class="nav-item">
+                <a href="{{route('salary.show')}}" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
+                  <i class="far fa-circle nav-icon"></i>
+                  <p>Salary</p>
+                </a>
+              </li>
+            @endif
             <li class="nav-item">
-              <a href="{{route('salary.show')}}" @if(request()->is('salary') || request()->is('salary/*')) class="nav-link active" @else class="nav-link" @endif>
-                <i class="far fa-circle nav-icon"></i>
-                <p>Salary</p>
-              </a>
-            </li>
-            <li class="nav-item">
-
               <a href="{{route('salary.slips')}}" @if(request()->is('slips/salary') || request()->is('slips/salary/*') || request()->is('slip/salary/*/*')) class="nav-link active" @else class="nav-link" @endif>
                 <i class="far fa-circle nav-icon"></i>
                 <p>Salary Slips</p>

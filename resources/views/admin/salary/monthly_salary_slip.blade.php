@@ -29,9 +29,9 @@
 						<div class="col-12 text-center">
 							<h4>
 								@if(isset($platform->logo))
-							        <img src="{{ asset($platform->logo) }}" alt="Logo" width="50px">
+							        <img src="{{ asset($platform->logo) }}" alt="Logo" width="40px">
 							    @else
-							        <img src="{{ asset('assets/images/company_logo.png') }}" alt="Logo" class="brand-image elevation-3 bg-white" width="100px">
+							        <img src="{{ asset('assets/images/company_logo.png') }}" alt="Logo" class="brand-image elevation-3 bg-white" width="80px">
 							    @endif
 
        							HRM | @if(isset($platform->name)) {{$platform->name}} @else Company Name @endif

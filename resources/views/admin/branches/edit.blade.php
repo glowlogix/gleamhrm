@@ -55,13 +55,13 @@
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="control-label">Timing Start<span class="text-danger">*</span></label>
-										<input class="form-control " type="time" name="timing_start" placeholder="Enter Timing Start here"   id="timing_start" value="{{old('timing_start', Carbon\Carbon::parse($office_location->timing_start)->format('h:i'))}}">
+										<input class="form-control " type="time" name="timing_start" placeholder="Enter Timing Start here" id="timing_start" value="{{old('timing_start', Carbon\Carbon::parse($office_location->timing_start)->isoFormat('HH:mm'))}}">
 									</div>
 								</div>
 								<div class="col-md-6">
 									<div class="form-group">
 										<label class="control-label">Timing OFF<span class="text-danger">*</span></label>
-										<input class="form-control" type="time" name="timing_off" placeholder="Enter Timing Off here"  value="{{old('timing_off', Carbon\Carbon::parse($office_location->timing_off)->format('h:i'))}}" />
+										<input class="form-control" type="time" name="timing_off" placeholder="Enter Timing Off here"  value="{{old('timing_off', Carbon\Carbon::parse($office_location->timing_off)->isoFormat('HH:mm'))}}" />
 									</div>
 								</div>
 								<div class="col-md-6">

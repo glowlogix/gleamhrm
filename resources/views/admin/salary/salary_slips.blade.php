@@ -58,43 +58,45 @@
 								</thead>
 								<tbody>
 									@foreach($employees as $employee)
-										<tr>
-											<td>{{$employee->firstname}} {{$employee->lastname}}</td>
-											<td>{{$employee->gross_salary}}</td>
-											<td>@if($employee->bonus != '') {{$employee->bonus}} @else 0 @endif</td>
-											@foreach($ApprovedCount as $key=>$cnt)
-												@if($key==$employee->id)
-													<td>{{$cnt}}</td>
-												@endif
-											@endforeach
-											@foreach($unApprovedCount as $key=>$cnt)
-												@if($key==$employee->id)
-													<td>{{$cnt}}</td>
-												@endif
-											@endforeach
-											@foreach($AbsentCounts as $key=>$AbsentCount)
-												@if($key==$employee->id)
-													<td>{{$AbsentCount}}</td>
-												@endif
-											@endforeach
-											@foreach($presents as $key=>$present)
-												@if($key==$employee->id)
-													<td>{{$present}}</td>
-												@endif
-											@endforeach
-											@foreach($netPayables as $key=>$netPayable)
-												@if($key==$employee->id)
-													@if($netPayable < 1)
-														<td>0</td>
-													@else
-														<td>{{$netPayable}}</td>
+										@if($employee->designation != 'admin' && $employee->designation != 'Admin')
+											<tr>
+												<td>{{$employee->firstname}} {{$employee->lastname}}</td>
+												<td>{{$employee->gross_salary}}</td>
+												<td>@if($employee->bonus != '') {{$employee->bonus}} @else 0 @endif</td>
+												@foreach($ApprovedCount as $key=>$cnt)
+													@if($key==$employee->id)
+														<td>{{$cnt}}</td>
 													@endif
-												@endif
-											@endforeach
-											<td>
-												<a class="btn btn-info btn-sm" href="{{ route('salary.slip',['show', $month, $employee->id]) }}" title="View Salary Slip"> <i class="fas fa-eye text-white"></i></a>
-											</td>
-										</tr>
+												@endforeach
+												@foreach($unApprovedCount as $key=>$cnt)
+													@if($key==$employee->id)
+														<td>{{$cnt}}</td>
+													@endif
+												@endforeach
+												@foreach($AbsentCounts as $key=>$AbsentCount)
+													@if($key==$employee->id)
+														<td>{{$AbsentCount}}</td>
+													@endif
+												@endforeach
+												@foreach($presents as $key=>$present)
+													@if($key==$employee->id)
+														<td>{{$present}}</td>
+													@endif
+												@endforeach
+												@foreach($netPayables as $key=>$netPayable)
+													@if($key==$employee->id)
+														@if($netPayable < 1)
+															<td>0</td>
+														@else
+															<td>{{$netPayable}}</td>
+														@endif
+													@endif
+												@endforeach
+												<td>
+													<a class="btn btn-info btn-sm" href="{{ route('salary.slip',['show', $month, $employee->id]) }}" title="View Salary Slip"> <i class="fas fa-eye text-white"></i></a>
+												</td>
+											</tr>
+										@endif
 									@endforeach
 								</tbody>
 							</table>
